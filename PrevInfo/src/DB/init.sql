@@ -16,14 +16,13 @@ CREATE TABLE Categorie(
 CREATE TABLE TypeCours(
 	idTypeCours serial PRIMARY KEY,
 	nomCours    int,
-	coefficient int,
+	coefficient int
 );
 
 CREATE TABLE HeureCours(
 	idTypeCours int references TypeCours(idTypeCours),
 	idModule    int references Module(idModule),
-	heure       int,
-	idAnnee     references Annee(idAnnee)
+	heure       int
 );
 
 CREATE TABLE Module(
@@ -37,7 +36,7 @@ CREATE TABLE Module(
 CREATE TABLE Intervenant(
 	idIntervenant serial PRIMARY KEY, 
 	prenom          varchar(255),
-	nomIntervenant  varchar(255),
+	nom             varchar(255),
 	email           varchar(255),
 	hMinIntervenant int,
 	hMaxIntervenant int,
@@ -46,7 +45,7 @@ CREATE TABLE Intervenant(
 );
 
 CREATE TABLE Intervention(
-	idIntervenant          int references Intervenant(idIntervenant),
+	idIntervention         int references Intervenant(idIntervenant),
 	idModule               int references Module(idModule),
 	idTypeCours            int references TypeCours(idTypeCours),
 	nbSemainesIntervention int,
@@ -57,7 +56,7 @@ CREATE TABLE Intervention(
 );
 
 CREATE TABLE Semestre(
-	idSemestres serial PRIMARY KEY, 
+	idSemestre  serial PRIMARY KEY, 
 	nbGTD       int,
 	nbGTP       int,
 	nbGCM       int,

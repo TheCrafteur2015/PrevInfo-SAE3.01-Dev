@@ -19,5 +19,19 @@ public class TypeCours {
 	
 	public void setNom(String nom)	 {this.nom = nom;}
 	public void setCoefficient(float coefficient){this.coefficient = coefficient;}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setCoefficient(double coefficient) {
+		this.coefficient = coefficient;
+	}
+
+	
 	
 }
