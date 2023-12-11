@@ -8,8 +8,8 @@ call :genererCompileList ".\src"
 echo Compilation...
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: modif ici pour les option de compilation                                     et modif ici aussi ::
-call javac --module-path .\lib --add-modules javafx.controls,javafx.fxml -cp "%CLASSPATH%;.\bin"  -encoding utf8 "@compile.list" -d ".\bin" && ( echo Lancement du programme... & call java --module-path C:\Users\rambo\Documents\javafx-sdk-21.0.1\lib --add-modules javafx.controls,javafx.fxml -cp "%CLASSPATH%;.\bin" "@compile.list" && echo Fin de l'execution. || ( echo. & echo Erreur d'EXECUTION. )) || echo Erreur de COMPILATION.
-                                                                                                                                                                                                            
+call javac --module-path .\lib --add-modules javafx.controls,javafx.fxml -cp "%CLASSPATH%;.\bin"  -encoding utf8 "@compile.list" -d ".\bin" && ( echo Lancement du programme... & call java --module-path \lib --add-modules javafx.controls,javafx.fxml -cp "%CLASSPATH%;.\bin" "@compile.list" && echo Fin de l'execution. || ( echo. & echo Erreur d'EXECUTION. )) || echo Erreur de COMPILATION.
+                                                                                                                                                                                                            ::C:\Users\rambo\Documents\javafx-sdk-21.0.1
 goto :eof
 
 

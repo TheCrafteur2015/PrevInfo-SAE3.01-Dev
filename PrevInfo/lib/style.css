@@ -14,3 +14,7 @@
 .togglebutton{
 	-fx-background-color: white;
 }
+
+.roundButton{
+	-fx-border-radius: 150;
+}

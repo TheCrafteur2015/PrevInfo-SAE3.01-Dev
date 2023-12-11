@@ -1,3 +1,5 @@
+package vue;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,7 +10,7 @@ public class App extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		Parent root = FXMLLoader.load(this.getClass().getResource("lib\\Acceuil.fxml"));
+		Parent root = FXMLLoader.load(this.getClass().getResource("lib\\Accueil.fxml"));
 		stage.setTitle("PrevInfo");
 
 		Scene scene = new Scene(root);
@@ -20,7 +22,9 @@ public class App extends Application {
 	}
 
 	public static void main(String[] args) {
-		Application.launch(args);
+		try {
+			Application.launch((Class<? extends Application>) Class.forName(args[0]));
+		} catch (ClassNotFoundException e) {}
 	}
 
 }

@@ -2,7 +2,7 @@ package modele;
 
 public class Module {
 
-	private String id;
+	private int id;
 	private String nom;
 	private int nbSemaines;
 	private double hTD;
@@ -10,13 +10,19 @@ public class Module {
 	private double hCM;
 	private int idSemestre;
 
-	public Module() {
-		
+	public Module(int id, String nom, int nbSemaines, double hTD, double hTP, double hCM, int idSemestre) {
+		this.id = id;
+		this.nom = nom;
+		this.nbSemaines = nbSemaines;
+		this.hTD = hTD;
+		this.hTP = hTP;
+		this.hCM = hCM;
+		this.idSemestre = idSemestre;
 	}
 
 
-	public String getId() { return id; }
-	public void setId(String id) { this.id = id; }
+	public int getId() { return id; }
+	public void setId(int id) { this.id = id; }
 
 	public String getNom() { return nom; }
 	public void setNom(String nom) { this.nom = nom; }
