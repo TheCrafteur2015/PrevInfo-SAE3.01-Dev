@@ -6,7 +6,7 @@ RIntervenant  ( [idIntervenant], prenom, nomIntervenant, email, hMinIntervenant,
 RIntervention ( [(idIntervenant#, idModule#), idTypeCours#], nbSemainesIntervention, nbGroupe, idAnnee#)
 RSemestre     ( [idSemestre], nbGTD, nbGTP, nbGCM, nbGAutre, idAnnee#)
 RAnnee        ( [idAnnee], annee)
-
+*/
 INSERT INTO Module(  0, "R1.01_Initiation au développement"           , 14, 0);
 INSERT INTO Module(  1, "R1.02_Développement interfaces Web"          , 14, 0);
 INSERT INTO Module(  2, "R1.03_Introduction Architecture"             , 14, 0);
@@ -26,5 +26,14 @@ INSERT INTO Semestre( 3, 2, 4, 1, 0);
 INSERT INTO Semestre( 4, 2, 4, 1, 0);
 INSERT INTO Semestre( 5, 2, 4, 1, 0);
 
-INSERT INTO Intervenant[idIntervenant], prenom, nomIntervenant, email, hMinIntervenant, hMaxIntervenant, idCategorie#)
-INSERT INTO Intervenant (0, "Philippe", "Lepivert", "philippe.le-pivert@univ-lehavre.fr" )
+INSERT INTO Intervenant (0, "Philippe", "Lepivert", "philippe.le-pivert@univ-lehavre.fr", 0, 0, 0)
+
+INSERT INTO Categorie( 0, "Titulaire"   , 384, 192);
+INSERT INTO Categorie( 1, "Contractuel" , 384, 192);
+INSERT INTO Categorie( 2, "Vacataire"   ,   0,   0);
+INSERT INTO Categorie( 3, "Chercheur"   , 182, 172);
+
+INSERT INTO TypeCours( 0, "Travaux dirigés"  , 1);
+INSERT INTO TypeCours( 1, "Travaux pratiques", 1);
+INSERT INTO TypeCours( 2, "Cours magistrales", 1);
+INSERT INTO TypeCours( 3, "Autres"           , 1);

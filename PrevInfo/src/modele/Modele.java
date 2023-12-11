@@ -16,6 +16,7 @@ public class Modele {
 	private List<Module> lstModules;
 	private List<Semestre> lstSemestres;
 	private Map<String,TypeCours> hmTypeCours;
+	private int idAnnee;
 
 	public Modele(Controleur ctrl) {
 
@@ -31,7 +32,7 @@ public class Modele {
 	}
 
 	public void ajouterCategorie(int id, String nom, double hMin, double hMax){
-		this.lstCategories.add(new Categorie(id, nom, hMin, hMax));
+		this.lstCategories.add(new Categorie(id, nom, hMin, hMax, idAnnee));
 	}
 
 	public void ajouterIntervenant(int id,String prenom, String nom, String email, double hMin, double hMax, int idCategorie) {
