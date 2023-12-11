@@ -63,7 +63,7 @@ public class DB {
 			this.psUpdateModule       = connec.prepareStatement("UPDATE Module SET nomModule = ?, nbSemainesModule = ?, idAnnee = ?, idSemestres = ? WHERE idModule = ?");
 			this.psUpdateSemestre     = connec.prepareStatement("UPDATE Semestre SET nbGTD = ?, nbGTP ?, nbGCM = ?, nbGAutre = ?, idAnnee = ? WHERE idSemestre = ?");
 			this.psUpdateHeureCours   = connec.prepareStatement("UPDATE HeureCours SET heure = ? WHERE idTypeCours = ? AND idModule = ?");
-			this.psUpdateTypeCours    = connec.prepareStatement("UPDATE TypeCours SET coeff = ? WHERE nomCours = ?");
+			this.psUpdateTypeCours    = connec.prepareStatement("UPDATE TypeCours SET coeff = ?, nomCours = ? WHERE idTypeCours = ?");
 
 		} 
 		catch (SQLException e) {
@@ -76,14 +76,15 @@ public class DB {
 		return dbInstance;
 	}
 
-	public ArrayList<Categorie> getCategories(int idAnnee) throws SQLException{
-		ArrayList<Categorie> lstCateg = new ArrayList<>();
+	public HashMap<Integer,Categorie> getCategories(int idAnnee) throws SQLException{
+		HashMap<Integer,Categorie> hmCateg = new HashMap<>();
 		this.psSelectCategorie.setInt(1, idAnnee);
 		ResultSet rs = this.psSelectCategorie.executeQuery();
 		while (rs.next()) {
-			lstCateg.add(new Categorie(rs.getInt("idCategorie"), rs.getString("nomCategorie"), rs.getDouble("hMinCategorie"), rs.getDouble("hMaxCategorie"), idAnnee ));
+			hmCateg.put(rs.getInt("idCategorie"),new Categorie(rs.getInt("idCategorie"), rs.getString("nomCategorie"), 
+			rs.getDouble("hMinCategorie"), rs.getDouble("hMaxCategorie"), idAnnee ));
 		}
-		return lstCateg;
+		return hmCateg;
 	}
 	
 	public void ajouterCategorie(Categorie c) throws SQLException{
@@ -103,17 +104,16 @@ public class DB {
 		this.psUpdateCategorie.setDouble(2, hMax);
 		this.psUpdateCategorie.setInt(4,idAnnee);
 		this.psUpdateCategorie.executeUpdate();
-		
 	}
 
-	public ArrayList<Intervenant> getIntervenants(int idAnnee) throws SQLException {
-		ArrayList<Intervenant> lstInter = new ArrayList<>();
+	public HashMap<Integer, Intervenant> getIntervenants(int idAnnee) throws SQLException {
+		HashMap<Integer, Intervenant> hmInter = new HashMap<>();
 		this.psSelectIntervenant.setInt(1, idAnnee);
 		ResultSet rs = this.psSelectIntervenant.executeQuery();
 		while (rs.next()) {
-			lstInter.add(new Intervenant(rs.getInt("idIntervenant"), rs.getString("prenom"), rs.getString("nom"), rs.getString("email"), rs.getDouble("hMinIntervenant"), rs.getDouble("hMaxIntervenant"), idAnnee, rs.getInt("idCategorie")));
+			hmInter.put(rs.getInt("idIntervenant"), new Intervenant(rs.getInt("idIntervenant"), rs.getString("prenom"), rs.getString("nom"), rs.getString("email"), rs.getDouble("hMinIntervenant"), rs.getDouble("hMaxIntervenant"), idAnnee, rs.getInt("idCategorie")));
 		}
-		return lstInter;
+		return hmInter;
 	}
 	public void ajouterIntervenant(Intervenant i) throws SQLException{
 		this.psInsertIntervenant.setInt(1, i.getId());
@@ -141,15 +141,15 @@ public class DB {
 		
 	}
 
-	public ArrayList<Intervention> getInterventions (int idAnnee) throws SQLException{
-		ArrayList<Intervention> lstInterventions = new ArrayList<>();
+	public HashMap<Integer, Intervention> getInterventions (int idAnnee) throws SQLException{
+		HashMap<Integer, Intervention> hmInterventions = new HashMap<>();
 		this.psSelectIntervention.setInt(1, idAnnee);
 		ResultSet rs = this.psSelectIntervention.executeQuery();
 		while (rs.next()) {
-			lstInterventions.add(new Intervention(rs.getInt("idIntervention"), rs.getInt("idModule"), rs.getInt("idTypeCours"),rs.getInt("nbSemainesIntervention"),
+			hmInterventions.put(rs.getInt("idIntervention"), new Intervention(rs.getInt("idIntervention"), rs.getInt("idModule"), rs.getInt("idTypeCours"),rs.getInt("nbSemainesIntervention"),
 			rs.getInt("nbGroupe"),rs.getInt("idAnnee")));
 		}
-		return lstInterventions;
+		return hmInterventions;
 	}
 	
 	public void ajouterIntervention(Intervention i ) throws SQLException {
@@ -173,14 +173,14 @@ public class DB {
 		
 	}
 
-	public ArrayList<Module> getModules(int idAnnee) throws SQLException {
-		ArrayList<Module> lstModule = new ArrayList<>();
+	public HashMap<Integer,Module> getModules(int idAnnee) throws SQLException {
+		HashMap<Integer, Module> hmModule = new HashMap<>();
 		this.psSelectModule.setInt(1, idAnnee);
-		ResultSet rs = this.psSelectIntervenant.executeQuery();
+		ResultSet rs = this.psSelectModule.executeQuery();
 		while (rs.next()) {
-			lstModule.add(new Module(rs.getInt("idModule"), rs.getString("nomModule"), rs.getInt("nbSemainesModule"), idAnnee, rs.getInt("idSemestres")));
+			hmModule.put(rs.getInt("idModule"), new Module(rs.getInt("idModule"), rs.getString("nomModule"), rs.getInt("nbSemainesModule"), idAnnee, rs.getInt("idSemestres")));
 		}
-		return lstModule;
+		return hmModule;
 	}
 	public void ajouterModule(Module m) throws SQLException{
 		this.psInsertModule.setInt(1, m.getId());
@@ -200,14 +200,14 @@ public class DB {
 		this.psUpdateModule.executeUpdate();
 	}
 
-	public ArrayList<Semestre> getSemestres(int idAnnee) throws SQLException {
-		ArrayList<Semestre> lstSemestre = new ArrayList<>();
+	public HashMap<Integer,Semestre> getSemestres(int idAnnee) throws SQLException {
+		HashMap<Integer,Semestre> hmSemestre = new HashMap<>();
 		this.psSelectModule.setInt(1, idAnnee);
 		ResultSet rs = this.psSelectSemestre.executeQuery();
 		while (rs.next()) {
-			lstSemestre.add(new Semestre(rs.getInt("idSemestre"), rs.getInt("nbGTD"), rs.getInt("nbGTP"), rs.getInt("nbGCM"), rs.getInt("nbGAutre"), idAnnee));
+			hmSemestre.put(rs.getInt("idSemestre"), new Semestre(rs.getInt("idSemestre"), rs.getInt("nbGTD"), rs.getInt("nbGTP"), rs.getInt("nbGCM"), rs.getInt("nbGAutre"), idAnnee));
 		}
-		return lstSemestre;
+		return hmSemestre;
 	}
 	public void ajouterSemestre(Semestre s) throws SQLException{
 		this.psInsertSemestre.setInt(1, s.getId());
@@ -229,28 +229,30 @@ public class DB {
 		this.psUpdateSemestre.executeUpdate();
 	}
 	
-	public HashMap<String, TypeCours> getTypeCours () throws SQLException{
-		HashMap<String, TypeCours> lstTypeCours = new HashMap<>();
+	public HashMap<Integer, TypeCours> getTypeCours () throws SQLException{
+		HashMap<Integer, TypeCours> hmTypeCours = new HashMap<>();
 		ResultSet rs = this.psSelectTypeCours.executeQuery();
 		while (rs.next()) {
-			lstTypeCours.put(rs.getString("nomCours"),new TypeCours(rs.getInt("idTypeCours"), rs.getString("nomCours"), rs.getDouble("coefficient")));
+			hmTypeCours.put(rs.getInt("idTypeCours"),new TypeCours(rs.getInt("idTypeCours"), rs.getString("nomCours"), rs.getDouble("coefficient")));
 		}
-		return lstTypeCours;
+		return hmTypeCours;
 	}
 
-	public void changerCoeffTypeCours(String nom, int coeff) throws SQLException {
+	public void updateTypeCours(int id, String nom, int coeff) throws SQLException {
 		this.psUpdateTypeCours.setInt(1, coeff);
 		this.psUpdateTypeCours.setString(2, nom);
+		this.psUpdateTypeCours.setInt(3, id);
 		this.psUpdateTypeCours.executeUpdate();
 	}
 
-	public ArrayList<HeureCours> getHeureCours () throws SQLException{
-		ArrayList<HeureCours> lstHeureCours = new ArrayList<>();
+	public HashMap<String, HeureCours> getHeureCours () throws SQLException{
+		HashMap<String, HeureCours> hmHeureCours = new HashMap<>();
 		ResultSet rs = this.psSelectTypeCours.executeQuery();
 		while (rs.next()) {
-			lstHeureCours.add(new HeureCours(rs.getInt("idTypeCours"), rs.getInt("idModule"), rs.getDouble("heure")));
+			hmHeureCours.put(rs.getInt("idTypeCours")+"-"+rs.getInt("idModule"),new HeureCours(rs.getInt("idTypeCours"), rs.getInt("idModule"), rs.getDouble("heure")));
 		}
-		return lstHeureCours;
+		return hmHeureCours;
+	public void updateTypeCou
 	
 	}
 	public void ajouterHeureCours(HeureCours h) throws SQLException{
@@ -258,6 +260,12 @@ public class DB {
 		this.psInsertHeureCours.setInt   	 (2, h.getIdModule()   );
 		this.psInsertHeureCours.setDouble	 (3, h.getHeure()	   );
 		this.psInsertHeureCours.executeUpdate();
+	}
+	public void updateHeureCours(int idTypeCours, int idModule, double heure) throws SQLException {
+		this.psUpdateHeureCours.setDouble(1, heure);
+		this.psUpdateHeureCours.setInt(2, idTypeCours);
+		this.psUpdateHeureCours.setInt(3, idModule);
+		this.psUpdateHeureCours.executeUpdate();
 	}
 
 

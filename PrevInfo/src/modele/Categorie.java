@@ -56,5 +56,4 @@ public class Categorie {
 		this.idAnnee = idAnnee;
 	}
 
-	
 }
