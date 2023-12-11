@@ -56,4 +56,12 @@ public class Categorie {
 		this.idAnnee = idAnnee;
 	}
 
+	@Override
+	public String toString() {
+		return "Categorie [id=" + id + ", nom=" + nom + ", hMax=" + hMax + ", hMin=" + hMin + ", idAnnee=" + idAnnee
+				+ "]";
+	}
+
+	
+
 }

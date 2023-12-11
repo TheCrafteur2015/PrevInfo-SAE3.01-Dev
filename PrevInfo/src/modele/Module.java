@@ -39,8 +39,15 @@ public class Module {
 		this.idAnnee = idAnnee;
 	}
 
-	
 
+	@Override
+	public String toString() {
+		return "Module [id=" + id + ", nom=" + nom + ", nbSemaines=" + nbSemaines + ", idAnnee=" + idAnnee
+				+ ", idSemestre=" + idSemestre + "]";
+	}
+
+	
+	
 	
 	
 }

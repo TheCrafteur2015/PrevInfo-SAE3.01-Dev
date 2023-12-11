@@ -141,12 +141,12 @@ public class DB {
 		
 	}
 
-	public HashMap<Integer, Intervention> getInterventions (int idAnnee) throws SQLException{
-		HashMap<Integer, Intervention> hmInterventions = new HashMap<>();
+	public HashMap<String, Intervention> getInterventions (int idAnnee) throws SQLException{
+		HashMap<String, Intervention> hmInterventions = new HashMap<>();
 		this.psSelectIntervention.setInt(1, idAnnee);
 		ResultSet rs = this.psSelectIntervention.executeQuery();
 		while (rs.next()) {
-			hmInterventions.put(rs.getInt("idIntervention"), new Intervention(rs.getInt("idIntervention"), rs.getInt("idModule"), rs.getInt("idTypeCours"),rs.getInt("nbSemainesIntervention"),
+			hmInterventions.put(rs.getInt("idIntervention")+"-"+rs.getInt("idModule")+"-"+rs.getInt("idTypeCours"), new Intervention(rs.getInt("idIntervention"), rs.getInt("idModule"), rs.getInt("idTypeCours"),rs.getInt("nbSemainesIntervention"),
 			rs.getInt("nbGroupe"),rs.getInt("idAnnee")));
 		}
 		return hmInterventions;
@@ -178,7 +178,7 @@ public class DB {
 		this.psSelectModule.setInt(1, idAnnee);
 		ResultSet rs = this.psSelectModule.executeQuery();
 		while (rs.next()) {
-			hmModule.put(rs.getInt("idModule"), new Module(rs.getInt("idModule"), rs.getString("nomModule"), rs.getInt("nbSemainesModule"), idAnnee, rs.getInt("idSemestres")));
+			hmModule.put(rs.getInt("idModule"), new Module(rs.getInt("idModule"), rs.getString("nomModule"), rs.getInt("nbSemainesModule"), idAnnee, rs.getInt("idSemestre")));
 		}
 		return hmModule;
 	}
@@ -202,7 +202,7 @@ public class DB {
 
 	public HashMap<Integer,Semestre> getSemestres(int idAnnee) throws SQLException {
 		HashMap<Integer,Semestre> hmSemestre = new HashMap<>();
-		this.psSelectModule.setInt(1, idAnnee);
+		this.psSelectSemestre.setInt(1, idAnnee);
 		ResultSet rs = this.psSelectSemestre.executeQuery();
 		while (rs.next()) {
 			hmSemestre.put(rs.getInt("idSemestre"), new Semestre(rs.getInt("idSemestre"), rs.getInt("nbGTD"), rs.getInt("nbGTP"), rs.getInt("nbGCM"), rs.getInt("nbGAutre"), idAnnee));
@@ -245,16 +245,16 @@ public class DB {
 		this.psUpdateTypeCours.executeUpdate();
 	}
 
-	public HashMap<String, HeureCours> getHeureCours () throws SQLException{
+	public HashMap<String, HeureCours> getHeureCours (int idAnnee) throws SQLException{
 		HashMap<String, HeureCours> hmHeureCours = new HashMap<>();
-		ResultSet rs = this.psSelectTypeCours.executeQuery();
+		this.psSelectHeureCours.setInt(1, idAnnee);
+		ResultSet rs = this.psSelectHeureCours.executeQuery();
 		while (rs.next()) {
 			hmHeureCours.put(rs.getInt("idTypeCours")+"-"+rs.getInt("idModule"),new HeureCours(rs.getInt("idTypeCours"), rs.getInt("idModule"), rs.getDouble("heure")));
 		}
 		return hmHeureCours;
-	public void updateTypeCou
-	
 	}
+	
 	public void ajouterHeureCours(HeureCours h) throws SQLException{
 		this.psInsertHeureCours.setInt		 (1, h.getIdTypeCours());
 		this.psInsertHeureCours.setInt   	 (2, h.getIdModule()   );

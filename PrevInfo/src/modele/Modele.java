@@ -15,7 +15,7 @@ public class Modele {
 
 	private Map<Integer,Categorie> hmCategories;
 	private Map<Integer, Intervenant> hmIntervenants;
-	private Map<Integer, Intervention> hmInterventions;
+	private Map<String, Intervention> hmInterventions;
 	private Map<Integer, Module> hmModules;
 	private Map<Integer,Semestre> hmSemestres;
 	private Map<Integer,TypeCours> hmTypeCours;
@@ -26,6 +26,7 @@ public class Modele {
 
 		this.ctrl = ctrl;
 		this.db = DB.getInstance();
+		this.idAnnee = 1;
 
 		try {
 			this.hmCategories    = this.db.getCategories(idAnnee);
@@ -34,8 +35,19 @@ public class Modele {
 			this.hmModules       = this.db.getModules(idAnnee);
 			this.hmSemestres 	 = this.db.getSemestres(idAnnee);
 			this.hmTypeCours     = this.db.getTypeCours();
-			this.hmHeuresCours   = this.db.getHeureCours();
+			this.hmHeuresCours   = this.db.getHeureCours(idAnnee);
 		} catch (SQLException e) { e.printStackTrace();	}
+
+		try {
+			ajouterCategorie(23, "cozuahjazbfi", 5, 10);
+			ajouterIntervenant(12, "Arthur", "Lecomte", "arthur.lebg@univ-lehavre.fr", 0, 0, 1);
+			ajouterHeureCours(1, 2, 1);
+			ajouterIntervention(1, 2, 3, 4, 5);
+			ajouterModule(45, "Module", 5, idAnnee, idAnnee);
+			ajouterSemestre(2012, 2, 3, 4, 5);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
 	}
 
@@ -70,7 +82,7 @@ public class Modele {
 	public void ajouterIntervention(int idIntervenant, int idModule, int idTypeCours, int nbSemaines, int nbGroupe) throws SQLException {
 		Intervention i = new Intervention(idIntervenant, idModule, idTypeCours, nbSemaines, nbGroupe, idAnnee);
 		this.db.ajouterIntervention(i);
-		this.hmInterventions.put(idIntervenant, i);
+		this.hmInterventions.put(idIntervenant+"-"+idModule+"-"+idTypeCours, i);
 	}
 	public void updateIntervention(int idIntervenant, int idModule, int idTypeCours, int nbSemaines, int nbGroupe) throws SQLException {
 		this.db.updateIntervention(idIntervenant, idModule, idTypeCours, nbSemaines, nbGroupe, idAnnee);

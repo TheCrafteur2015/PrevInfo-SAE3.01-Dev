@@ -32,6 +32,11 @@ public class TypeCours {
 		this.coefficient = coefficient;
 	}
 
+	@Override
+	public String toString() {
+		return "TypeCours [id=" + id + ", nom=" + nom + ", coefficient=" + coefficient + "]";
+	}
+
 	
 	
 }

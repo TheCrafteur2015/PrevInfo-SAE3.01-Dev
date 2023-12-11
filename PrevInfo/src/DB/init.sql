@@ -14,8 +14,8 @@ CREATE TABLE Annee(
 
 CREATE TABLE TypeCours(
 	idTypeCours serial PRIMARY KEY,
-	nomCours    int,
-	coefficient int
+	nomCours    VARCHAR(255),
+	coefficient float
 );
 
 CREATE TABLE Categorie(
@@ -61,14 +61,14 @@ CREATE TABLE Intervenant(
 );
 
 CREATE TABLE Intervention(
-	idIntervention         int references Intervenant(idIntervenant),
+	idIntervenant          int references Intervenant(idIntervenant),
 	idModule               int references Module(idModule),
 	idTypeCours            int references TypeCours(idTypeCours),
 	nbSemainesIntervention int,
 	nbGroupe               int,
 	idAnnee                int references Annee(idAnnee),
 	
-	PRIMARY KEY (idIntervention,idModule,idTypeCours)
+	PRIMARY KEY (idIntervenant,idModule,idTypeCours)
 );
 
 -- ALTER TABLE HeureCours ADD CONSTRAINT fk_HeureCours_TypeCours FOREIGN KEY (idTypeCours) REFERENCES TypeCours(idTypeCours);

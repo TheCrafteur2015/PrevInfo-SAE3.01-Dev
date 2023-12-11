@@ -66,6 +66,12 @@ public class Intervention {
 		this.idAnnee = idAnnee;
 	}
 
-	
+	@Override
+	public String toString() {
+		return "Intervention [idIntervenant=" + idIntervenant + ", idModule=" + idModule + ", idTypeCours="
+				+ idTypeCours + ", nbSemaines=" + nbSemaines + ", nbGroupe=" + nbGroupe + ", idAnnee=" + idAnnee + "]";
+	}
 
+	
+	
 }

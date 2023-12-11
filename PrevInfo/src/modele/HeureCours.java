@@ -43,6 +43,14 @@ public class HeureCours {
 		this.heure = heure;
 	}
 
+
+	@Override
+	public String toString() {
+		return "HeureCours [idTypeCours=" + idTypeCours + ", idModule=" + idModule + ", heure=" + heure + "]";
+	}
+
+
+	
 	
 	
 }

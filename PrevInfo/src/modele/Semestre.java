@@ -69,6 +69,12 @@ public class Semestre {
 		this.idAnnee = idAnnee;
 	}
 
+	@Override
+	public String toString() {
+		return "Semestre [id=" + id + ", nbGTD=" + nbGTD + ", nbGTP=" + nbGTP + ", nbGCM=" + nbGCM + ", nbGAutre="
+				+ nbGAutre + ", idAnnee=" + idAnnee + "]";
+	}
+
 	
 
 }
