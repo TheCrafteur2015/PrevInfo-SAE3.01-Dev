@@ -22,9 +22,12 @@ public class App extends Application {
 	}
 
 	public static void main(String[] args) {
+		/*
 		try {
 			Application.launch((Class<? extends Application>) Class.forName(args[0]));
 		} catch (ClassNotFoundException e) {}
+		*/
+		Application.launch(App.class, (String[]) null);
 	}
 
 }

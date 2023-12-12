@@ -252,8 +252,6 @@ public class DB {
 			hmHeureCours.put(rs.getInt("idTypeCours")+"-"+rs.getInt("idModule"),new HeureCours(rs.getInt("idTypeCours"), rs.getInt("idModule"), rs.getDouble("heure")));
 		}
 		return hmHeureCours;
-	public void updateTypeCou
-	
 	}
 	public void ajouterHeureCours(HeureCours h) throws SQLException{
 		this.psInsertHeureCours.setInt		 (1, h.getIdTypeCours());
@@ -267,8 +265,5 @@ public class DB {
 		this.psUpdateHeureCours.setInt(3, idModule);
 		this.psUpdateHeureCours.executeUpdate();
 	}
-
-
-	  
 	
 }

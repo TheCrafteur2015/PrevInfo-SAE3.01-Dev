@@ -2,6 +2,8 @@
 .\src\controleur\Controleur.java  
  
 .\src\modele\Categorie.java  
+.\src\modele\DB.java  
+.\src\modele\HeureCours.java  
 .\src\modele\Intervenant.java  
 .\src\modele\Intervention.java  
 .\src\modele\Modele.java  

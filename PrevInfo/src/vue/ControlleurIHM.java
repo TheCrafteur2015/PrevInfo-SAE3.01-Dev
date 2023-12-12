@@ -12,7 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 
-public class ControlleurIHM implements Initializable{
+public class ControlleurIHM /* implements Initializable */ {
 
     @FXML
     private AnchorPane centerPaneAccueil;
@@ -20,9 +20,9 @@ public class ControlleurIHM implements Initializable{
 	private Scene scene;
 	private Parent root;
 
-	public ControlleurIHM()
+	public ControlleurIHM(String[] args)
 	{
-		App.main(new String[] {"vue.App"});
+		App.main(args);
 	}
 
 
