@@ -13,9 +13,8 @@ import java.util.ResourceBundle;
 import javafx.scene.control.TableColumn;
 
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
+import javafx.event.EventHandler;
+import javafx.fxml.*;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -68,9 +67,11 @@ public class ControleurIHM implements Initializable {
 
 	@FXML
 	void allerIntervenants(ActionEvent event) {
+		//Reset la center Pane et ajouter le CSS
 		this.centerPaneAccueil.getChildren().clear();
 		this.centerPaneAccueil.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
 
+		//Creer le tableau
 		TableView<IntervenantIHM> tbV = new TableView<>();
 		tbV.setEditable(true);
 
@@ -96,7 +97,8 @@ public class ControleurIHM implements Initializable {
 
 		tbV.setItems(lst);
 
-		tbV.setPrefSize(400, 250);
+		tbV.setPrefHeight(500);
+		tbV.setPrefWidth(667);
 
 		AnchorPane.setTopAnchor(tbV, 20.0);
 		AnchorPane.setLeftAnchor(tbV, 20.0);
@@ -104,18 +106,33 @@ public class ControleurIHM implements Initializable {
 		Button btnParamIntervenants = new Button("Paramètrer les Intervenants");
 		btnParamIntervenants.setStyle("-fx-background-radius: 100");
 
-		AnchorPane.setTopAnchor(btnParamIntervenants, 300.0);
+		btnParamIntervenants.setPrefSize(250, 40);
+
+		AnchorPane.setTopAnchor(btnParamIntervenants, 580.0);
 		AnchorPane.setLeftAnchor(btnParamIntervenants, 20.0);
 
 		Button btnParamCategorie = new Button("Paramètrer une catégorie");
 		btnParamCategorie.setStyle("-fx-background-radius: 100");
 
-		AnchorPane.setTopAnchor(btnParamCategorie, 300.0);
-		AnchorPane.setLeftAnchor(btnParamCategorie, 250.0);
+		btnParamCategorie.setPrefSize(250, 40);
+
+		AnchorPane.setTopAnchor(btnParamCategorie, 580.0);
+		AnchorPane.setLeftAnchor(btnParamCategorie, 400.0);
 
 		this.centerPaneAccueil.getChildren().add(tbV);
 		this.centerPaneAccueil.getChildren().add(btnParamIntervenants);
 		this.centerPaneAccueil.getChildren().add(btnParamCategorie);
+
+		/*
+		Faudra ajouter les supButton et infoButton dans une List ou les stocker quelque part pour avoir leurs ids
+		
+		EventHandler<ActionEvent> handlerSupprimer = new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				if (event.getSource() == ) {
+				}
+			}
+		};*/
 
 	}
 
@@ -176,6 +193,12 @@ public class ControleurIHM implements Initializable {
 		popup.getContent().add(centerPaneAccueil);
 
 		popup.setAutoHide(true);
+	}
+
+	@FXML
+	void parametrerCategories(ActionEvent event)
+	{
+
 	}
 
 }
