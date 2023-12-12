@@ -8,6 +8,6 @@ cd bin
 
 FX_PATH="../lib/javafx-sdk-17.0.9/lib/"
 
-java --module-path "$FX_PATH" --add-modules javafx.controls,javafx.fxml App
+java --module-path "$FX_PATH" --add-modules javafx.controls,javafx.fxml vue.App
 
 read -p "Tapez enter pour continuer..."
