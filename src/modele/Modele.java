@@ -275,5 +275,11 @@ public class Modele {
 	public void setIdAnnee(int idAnnee) {
 		this.idAnnee = idAnnee;
 	}
+
+	public String getNomCateg(int idCategorie) {
+		try {
+			return this.db.getNomCateg(idCategorie);
+		} catch (SQLException e) { return ""; }
+	}
 	
 }

@@ -10,50 +10,81 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vue.ControleurIHM">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="731.0" prefWidth="1345.0" stylesheets="@vue.style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vue.ControleurIHM">
    <children>
-      <BorderPane prefHeight="400.0" prefWidth="600.0">
+      <BorderPane prefHeight="731.0" prefWidth="1345.0">
          <top>
-            <HBox prefHeight="52.0" prefWidth="600.0" style="-fx-background-color: #2E3E97;" BorderPane.alignment="CENTER">
+            <HBox prefHeight="83.0" prefWidth="1345.0" style="-fx-background-color: #2E3E97;" BorderPane.alignment="CENTER">
                <children>
-                  <Label alignment="CENTER" prefHeight="50.0" prefWidth="147.0" style="-fx-text-fill: white;" text="PrevInfo" textFill="WHITE">
+                  <Label alignment="CENTER" prefHeight="85.0" prefWidth="188.0" style="-fx-text-fill: white;" text="PrevInfo" textFill="WHITE">
                      <font>
-                        <Font size="24.0" />
+                        <Font size="37.0" />
                      </font>
                   </Label>
                </children></HBox>
          </top>
          <left>
-            <AnchorPane prefHeight="348.0" prefWidth="134.0" style="-fx-background-color: #4D61CC;" BorderPane.alignment="CENTER">
+            <AnchorPane prefHeight="647.0" prefWidth="211.0" style="-fx-background-color: #4D61CC;" BorderPane.alignment="CENTER">
                <children>
-                  <Button alignment="CENTER" mnemonicParsing="false" onAction="#allerAccueil" prefHeight="38.0" prefWidth="134.0" text="Accueil" />
-                  <Button alignment="CENTER" layoutY="38.0" mnemonicParsing="false" onAction="#allerIntervenants" prefHeight="38.0" prefWidth="134.0" text="Intervenants" />
-                  <Button alignment="CENTER" layoutY="76.0" mnemonicParsing="false" onAction="#allerModules" prefHeight="38.0" prefWidth="134.0" text="Modules" />
-                  <Button alignment="CENTER" contentDisplay="CENTER" layoutY="309.0" mnemonicParsing="false" onAction="#allerExporter" prefHeight="38.0" prefWidth="134.0" text="Exporter" />
+                  <Button alignment="CENTER" layoutX="-1.0" mnemonicParsing="false" onAction="#allerAccueil" prefHeight="66.0" prefWidth="212.0" text="Accueil">
+                     <font>
+                        <Font size="20.0" />
+                     </font></Button>
+                  <Button alignment="CENTER" layoutY="64.0" mnemonicParsing="false" onAction="#allerIntervenants" prefHeight="67.0" prefWidth="211.0" text="Intervenants">
+                     <font>
+                        <Font size="20.0" />
+                     </font></Button>
+                  <Button alignment="CENTER" layoutX="-1.0" layoutY="129.0" mnemonicParsing="false" onAction="#allerModules" prefHeight="69.0" prefWidth="212.0" text="Modules">
+                     <font>
+                        <Font size="20.0" />
+                     </font></Button>
+                  <Button alignment="CENTER" contentDisplay="CENTER" layoutY="608.0" mnemonicParsing="false" onAction="#allerExporter" prefHeight="40.0" prefWidth="211.0" text="Exporter">
+                     <font>
+                        <Font size="20.0" />
+                     </font></Button>
                </children>
             </AnchorPane>
          </left>
          <center>
-            <AnchorPane fx:id="centerPaneAccueil" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <AnchorPane fx:id="centerPaneAccueil" prefHeight="429.0" prefWidth="648.0" BorderPane.alignment="CENTER">
                <children>
-                  <Label layoutX="26.0" layoutY="34.0" prefHeight="34.0" prefWidth="240.0" text="Bienvenue sur prevInfo">
+                  <Label layoutX="26.0" layoutY="34.0" prefHeight="36.0" prefWidth="945.0" text="Bienvenue sur prevInfo">
                      <font>
-                        <Font size="23.0" />
+                        <Font size="55.0" />
                      </font>
                   </Label>
-                  <Label alignment="BASELINE_LEFT" layoutX="14.0" layoutY="72.0" prefHeight="28.0" prefWidth="437.0" text="Cette application permet de gérer les heures prévisionnelles des" />
-                  <Label alignment="BASELINE_LEFT" layoutX="14.0" layoutY="94.0" prefHeight="28.0" prefWidth="437.0" text="enseignants du département Informatique de l’IUT du Havre." />
-                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="151.0" layoutX="66.0" layoutY="166.0" stroke="BLACK" strokeType="INSIDE" width="334.0" />
-                  <Label layoutX="67.0" layoutY="147.0" text="Paramètres" />
-                  <Label layoutX="102.0" layoutY="180.0" text="Année" />
-                  <ToggleButton layoutX="260.0" layoutY="172.0" minHeight="16.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="82.0" text="Duplication">
+                  <Label alignment="BASELINE_LEFT" layoutX="26.0" layoutY="131.0" prefHeight="30.0" prefWidth="1080.0" text="Cette application permet de gérer les heures prévisionnelles des enseignants du">
                      <font>
-                        <Font size="6.0" />
+                        <Font size="26.0" />
+                     </font></Label>
+                  <Label alignment="BASELINE_LEFT" layoutX="25.0" layoutY="163.0" prefHeight="32.0" prefWidth="654.0" text="département Informatique de l’IUT du Havre.">
+                     <font>
+                        <Font size="26.0" />
+                     </font></Label>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="292.0" layoutX="269.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="565.0" />
+                  <Label layoutX="178.0" layoutY="216.0" text="dd ètres">
+                     <font>
+                        <Font size="23.0" />
+                     </font></Label>
+                  <Label layoutX="304.0" layoutY="336.0" prefHeight="32.0" prefWidth="96.0" text="Année">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Label>
+                  <ToggleButton layoutX="635.0" layoutY="325.0" minHeight="16.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="162.0" text="Duplication">
+                     <font>
+                        <Font size="18.0" />
                      </font>
                   </ToggleButton>
-                  <Button layoutX="215.0" layoutY="211.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="173.0" style="-fx-background-radius: 100;" styleClass="roundButton" stylesheets="@../../PrevInfo-SAE3.01-Dev/PrevInfo/lib/style.css" text="Ajouter une année" />
-                  <Button layoutX="112.0" layoutY="268.0" mnemonicParsing="false" onAction="#parametrerMultiplicateurs" prefHeight="30.0" prefWidth="241.0" style="-fx-background-radius: 15;" styleClass="roundButton" text="Paramètrer les multiplicateurs" />
-                  <ChoiceBox fx:id="choiceBoxAnnee" layoutX="93.0" layoutY="197.0" opacity="0.47" prefHeight="28.0" prefWidth="87.0" />
+                  <Button layoutX="403.0" layoutY="528.0" mnemonicParsing="false" onAction="#parametrerMultiplicateurs" prefHeight="40.0" prefWidth="325.0" style="-fx-background-radius: 15;" styleClass="roundButton" text="Paramètrer les multiplicateurs">
+                     <font>
+                        <Font size="18.0" />
+                     </font></Button>
+                  <ChoiceBox fx:id="choiceBoxAnnee" layoutX="302.0" layoutY="366.0" opacity="0.47" prefHeight="21.0" prefWidth="124.0" />
+                  <Button layoutX="576.0" layoutY="369.0" mnemonicParsing="false" onAction="#parametrerMultiplicateurs" prefHeight="34.0" prefWidth="235.0" style="-fx-background-radius: 15;" styleClass="roundButton" text="Ajouter une année">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Button>
                </children></AnchorPane>
          </center>
       </BorderPane>

@@ -3,8 +3,16 @@
 	-fx-background-color: #4D61CC;
 }
 
+.info-button {
+	-fx-background-color: transparent;
+}
+
 .button:hover{
 	-fx-background-color: #758AFF;
+}
+
+.info-button:hover {
+	-fx-background-color: transparent;
 }
 
 .button:pressed{
@@ -17,4 +25,20 @@
 
 .roundButton{
 	-fx-border-radius: 15;
+}
+
+.info-btn {
+	-fx-background-color: transparent;
+}
+
+.info-btn:hover {
+	-fx-background-color: transparent;
+}
+
+.table-column {
+	-fx-alignment: CENTER;
+}
+
+.table-view .column-header {
+	-fx-background-color:transparent;
 }

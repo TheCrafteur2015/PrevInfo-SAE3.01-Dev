@@ -8,6 +8,13 @@ public class Module {
 	private int idAnnee;
 	private int idSemestre;
 
+	/**
+	 * @param id
+	 * @param nom
+	 * @param nbSemaines
+	 * @param idAnnee
+	 * @param idSemestre
+	 */
 	public Module(int id, String nom, int nbSemaines, int idAnnee, int idSemestre) {
 		this.id = id;
 		this.nom = nom;
@@ -16,29 +23,45 @@ public class Module {
 		this.idSemestre = idSemestre;
 	}
 
+	public int getId() {
+		return id;
+	}
 
-	public int getId() { return id; }
-	public void setId(int id) { this.id = id; }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-	public String getNom() { return nom; }
-	public void setNom(String nom) { this.nom = nom; }
+	public String getNom() {
+		return nom;
+	}
 
-	public int getNbSemaines() { return nbSemaines; }
-	public void setNbSemaines(int nbSemaines) { this.nbSemaines = nbSemaines; }
+	public void setNom(String nom) {
+		this.nom = nom;
+	}
 
-	public int getIdSemestre() { return idSemestre; }
-	public void setIdSemestre(int idSemestre) { this.idSemestre = idSemestre; }
+	public int getNbSemaines() {
+		return nbSemaines;
+	}
 
+	public void setNbSemaines(int nbSemaines) {
+		this.nbSemaines = nbSemaines;
+	}
+
+	public int getIdSemestre() {
+		return idSemestre;
+	}
+
+	public void setIdSemestre(int idSemestre) {
+		this.idSemestre = idSemestre;
+	}
 
 	public int getIdAnnee() {
 		return idAnnee;
 	}
 
-
 	public void setIdAnnee(int idAnnee) {
 		this.idAnnee = idAnnee;
 	}
-
 
 	@Override
 	public String toString() {
@@ -46,8 +69,4 @@ public class Module {
 				+ ", idSemestre=" + idSemestre + "]";
 	}
 
-	
-	
-	
-	
 }
