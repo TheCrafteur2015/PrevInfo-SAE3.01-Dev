@@ -10,6 +10,7 @@ public class TypeCours {
 	private double coefficient;
 
 	public TypeCours(int id, String nom, double coefficient) {
+		this.id = id;
 		this.nom = nom;
 		this.coefficient = coefficient;
 	}
@@ -21,7 +22,7 @@ public class TypeCours {
 	public void setCoefficient(float coefficient){this.coefficient = coefficient;}
 
 	public int getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(int id) {

@@ -5,12 +5,14 @@ public class HeureCours {
 	private int idTypeCours;
 	private int idModule;
 	private double heure;
+	private int idAnnee;
 
 	
-	public HeureCours(int idTypeCours, int idModule, double heure) {
+	public HeureCours(int idTypeCours, int idModule, double heure, int idAnnee) {
 		this.idTypeCours = idTypeCours;
 		this.idModule = idModule;
 		this.heure = heure;
+		this.idAnnee = idAnnee;
 	}
 
 
@@ -43,14 +45,20 @@ public class HeureCours {
 		this.heure = heure;
 	}
 
+	
+	public int getIdAnnee() {
+		return idAnnee;
+	}
+
+
+	public void setIdAnnee(int idAnnee) {
+		this.idAnnee = idAnnee;
+	}
+
 
 	@Override
 	public String toString() {
 		return "HeureCours [idTypeCours=" + idTypeCours + ", idModule=" + idModule + ", heure=" + heure + "]";
 	}
-
-
-	
-	
 	
 }

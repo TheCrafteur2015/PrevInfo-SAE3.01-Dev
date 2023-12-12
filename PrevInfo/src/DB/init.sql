@@ -46,7 +46,9 @@ CREATE TABLE Module(
 CREATE TABLE HeureCours(
 	idTypeCours int references TypeCours(idTypeCours),
 	idModule    int references Module(idModule),
-	heure       int
+	heure       int,
+	idAnnee     int references Annee(idAnnee),
+	PRIMARY KEY (idTypeCours, idModule)
 );
 
 CREATE TABLE Intervenant(
