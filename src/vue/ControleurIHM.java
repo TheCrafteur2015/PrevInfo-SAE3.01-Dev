@@ -1,4 +1,6 @@
 package vue;
+
+import modele.Intervenant;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -11,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
@@ -45,8 +48,30 @@ public class ControleurIHM implements Initializable {
 	@FXML
 	void allerIntervenants(ActionEvent event)
 	{
-		Button btn = new Button("bonjour");
-		this.centerPaneAccueil.getChildren().add(btn);
+		this.centerPaneAccueil.getChildren().clear();
+        this.centerPaneAccueil.getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
+        TableView tbV = new TableView<Intervenant>();
+
+        tbV.setPrefSize(400, 250);
+
+        AnchorPane.setTopAnchor(tbV, 20.0);
+        AnchorPane.setLeftAnchor(tbV, 20.0);
+
+        Button btnParamIntervenants = new Button("Paramètrer les Intervenants");
+        btnParamIntervenants.setStyle("-fx-background-radius: 100");
+        
+        AnchorPane.setTopAnchor(btnParamIntervenants, 300.0);
+        AnchorPane.setLeftAnchor(btnParamIntervenants, 20.0);
+
+        Button btnParamCategorie = new Button("Paramètrer une catégorie");
+        btnParamCategorie.setStyle("-fx-background-radius: 100");
+        
+        AnchorPane.setTopAnchor(btnParamCategorie, 300.0);
+        AnchorPane.setLeftAnchor(btnParamCategorie, 250.0);
+
+        this.centerPaneAccueil.getChildren().add(tbV);
+        this.centerPaneAccueil.getChildren().add(btnParamIntervenants);
+        this.centerPaneAccueil.getChildren().add(btnParamCategorie);
 	}
 
 	@FXML
