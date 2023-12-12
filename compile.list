@@ -1,13 +1,14 @@
 
-.\src\modele\Categorie.java  
-.\src\modele\DB.java  
-.\src\modele\HeureCours.java  
-.\src\modele\Intervenant.java  
-.\src\modele\Intervention.java  
-.\src\modele\Modele.java  
-.\src\modele\Module.java  
-.\src\modele\Semestre.java  
-.\src\modele\TypeCours.java  
+.\src\main\java\modele\Categorie.java  
+.\src\main\java\modele\DB.java  
+.\src\main\java\modele\HeureCours.java  
+.\src\main\java\modele\Intervenant.java  
+.\src\main\java\modele\Intervention.java  
+.\src\main\java\modele\Modele.java  
+.\src\main\java\modele\Module.java  
+.\src\main\java\modele\Semestre.java  
+.\src\main\java\modele\TypeCours.java  
  
-.\src\vue\App.java  
-.\src\vue\ControleurIHM.java  
+.\src\main\java\vue\App.java  
+.\src\main\java\vue\ControleurIHM.java  
+ 
