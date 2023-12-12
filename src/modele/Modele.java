@@ -6,13 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import controleur.Controleur;
 
 public class Modele {
 
 	private final static int DEBUT_ANNEE = 2022;
 
-	private Controleur ctrl;
 	private DB db;
 
 	private Map<Integer, Categorie> hmCategories;
@@ -24,9 +22,8 @@ public class Modele {
 	private Map<String, HeureCours> hmHeuresCours;
 	private int idAnnee;
 
-	public Modele(Controleur ctrl) {
+	public Modele() {
 
-		this.ctrl = ctrl;
 		this.db = DB.getInstance();
 
 		try {

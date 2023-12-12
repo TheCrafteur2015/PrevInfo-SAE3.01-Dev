@@ -3,13 +3,16 @@
 :: Création de la compile 
 call :genererCompileList ".\src"
 
+SET "localFX=.\lib\javafx-sdk-17.0.9\lib"
+SET "globalFX=C:\Users\Gabri\.classpath\javafx\lib"
 
+SET "fx=.\lib\javafx\lib"
 
 echo Compilation...
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: modif ici pour les option de compilation                                     et modif ici aussi ::
-call javac --module-path .\lib --add-modules javafx.controls,javafx.fxml -cp "%CLASSPATH%;.\bin"  -encoding utf8 "@compile.list" -d ".\bin" && ( echo Lancement du programme... & call java --module-path \lib --add-modules javafx.controls,javafx.fxml -cp "%CLASSPATH%;.\bin" "@compile.list" && echo Fin de l'execution. || ( echo. & echo Erreur d'EXECUTION. )) || echo Erreur de COMPILATION.
-                                                                                                                                                                                                            ::C:\Users\rambo\Documents\javafx-sdk-21.0.1
+call javac --module-path "%fx%" --add-modules javafx.controls,javafx.fxml -cp "%CLASSPATH%;.\bin"  -encoding utf8 "@compile.list" -d ".\bin" && ( echo Lancement du programme... & call java --module-path "%fx%" --add-modules javafx.controls,javafx.fxml -cp "%CLASSPATH%;.\bin" App && echo Fin de l'execution. || ( echo. & echo Erreur d'EXECUTION. )) || echo Erreur de COMPILATION.
+
 goto :eof
 
 
