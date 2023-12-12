@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.io.File;
-import java.io.IOException;import
+import java.io.IOException;
 
 import java.nio.file.Paths;
 
