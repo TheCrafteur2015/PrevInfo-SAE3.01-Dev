@@ -1,13 +1,13 @@
 
-src/vue/App.java
-src/vue/ControleurIHM.java  
-src/modele/DB.java
-src/modele/Categorie.java  
-src/modele/Intervenant.java  
-src/modele/Intervention.java  
-src/modele/Modele.java  
-src/modele/Module.java  
-src/modele/Semestre.java  
-src/modele/TypeCours.java  
-src/modele/HeureCours.java
+.\src\modele\Categorie.java  
+.\src\modele\DB.java  
+.\src\modele\HeureCours.java  
+.\src\modele\Intervenant.java  
+.\src\modele\Intervention.java  
+.\src\modele\Modele.java  
+.\src\modele\Module.java  
+.\src\modele\Semestre.java  
+.\src\modele\TypeCours.java  
  
+.\src\vue\App.java  
+.\src\vue\ControleurIHM.java  
