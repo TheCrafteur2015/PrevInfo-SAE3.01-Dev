@@ -173,7 +173,7 @@ public class DB {
 		this.psSelectIntervention.setInt(1, idAnnee);
 		ResultSet rs = this.psSelectIntervention.executeQuery();
 		while (rs.next()) {
-			hmInterventions.put(rs.getInt("idIntervention")+"-"+rs.getInt("idModule")+"-"+rs.getInt("idTypeCours"), new Intervention(rs.getInt("idIntervention"), rs.getInt("idModule"), rs.getInt("idTypeCours"),rs.getInt("nbSemainesIntervention"),
+			hmInterventions.put(rs.getInt("idIntervenant")+"-"+rs.getInt("idModule")+"-"+rs.getInt("idTypeCours"), new Intervention(rs.getInt("idIntervenant"), rs.getInt("idModule"), rs.getInt("idTypeCours"),rs.getInt("nbSemainesIntervention"),
 			rs.getInt("nbGroupe"),rs.getInt("idAnnee")));
 		}
 		return hmInterventions;

@@ -11,14 +11,13 @@ public class App extends Application /* implements EventHandler<Event> */ {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		URL url = getClass().getResource("Accueil.fxml");
-		System.out.println(url);
-		Parent root = FXMLLoader.load(url);
+		Parent root = FXMLLoader.load(ResourceManager.ACCUEIL);
 		stage.setTitle("PrevInfo");
 
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
+		scene.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
 
+		
 		stage.setResizable(false);
 		stage.setScene(scene);
 		stage.show();

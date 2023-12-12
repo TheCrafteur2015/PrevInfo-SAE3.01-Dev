@@ -1,6 +1,9 @@
 
 src/vue/App.java
 src/vue/ControleurIHM.java  
+src/vue/IntervenantIHM.java
+src/vue/ResourceManager.java  
+src/controleur/Controleur.java
 src/modele/DB.java
 src/modele/Categorie.java  
 src/modele/Intervenant.java  

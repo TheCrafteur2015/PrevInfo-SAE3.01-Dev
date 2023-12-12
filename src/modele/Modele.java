@@ -39,7 +39,7 @@ public class Modele {
 			e.printStackTrace();
 		}
 
-		this.ajouterCategorie(23, "cozuahjazbfi", 5, 10);
+		/*this.ajouterCategorie(23, "cozuahjazbfi", 5, 10);
 		this.ajouterIntervenant(12, "Arthur", "Lecomte", "arthur.lebg@univ-lehavre.fr", 0, 0, 1);
 		this.ajouterHeureCours(1, 11, 1);
 		this.ajouterIntervention(1, 2, 3, 4, 5);
@@ -52,7 +52,7 @@ public class Modele {
 		this.updateIntervention(new Intervention(1, 2, 3, 5, 6, idAnnee));
 		this.updateModule(new Module(45, "newModule", 10, idAnnee, 1));
 		this.updateSemestre(new Semestre(2012, 4, 5, 6, 8, idAnnee));
-		this.updateTypeCours(new TypeCours(2, "ozeuhizne", 2.5));
+		this.updateTypeCours(new TypeCours(2, "ozeuhizne", 2.5)); */
 
 	}
 
@@ -210,6 +210,70 @@ public class Modele {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
 	}
+
+	public Map<Integer, Categorie> getHmCategories() {
+		return hmCategories;
+	}
+
+	public void setHmCategories(Map<Integer, Categorie> hmCategories) {
+		this.hmCategories = hmCategories;
+	}
+
+	public Map<Integer, Intervenant> getHmIntervenants() {
+		return hmIntervenants;
+	}
+
+	public void setHmIntervenants(Map<Integer, Intervenant> hmIntervenants) {
+		this.hmIntervenants = hmIntervenants;
+	}
+
+	public Map<String, Intervention> getHmInterventions() {
+		return hmInterventions;
+	}
+
+	public void setHmInterventions(Map<String, Intervention> hmInterventions) {
+		this.hmInterventions = hmInterventions;
+	}
+
+	public Map<Integer, Module> getHmModules() {
+		return hmModules;
+	}
+
+	public void setHmModules(Map<Integer, Module> hmModules) {
+		this.hmModules = hmModules;
+	}
+
+	public Map<Integer, Semestre> getHmSemestres() {
+		return hmSemestres;
+	}
+
+	public void setHmSemestres(Map<Integer, Semestre> hmSemestres) {
+		this.hmSemestres = hmSemestres;
+	}
+
+	public Map<Integer, TypeCours> getHmTypeCours() {
+		return hmTypeCours;
+	}
+
+	public void setHmTypeCours(Map<Integer, TypeCours> hmTypeCours) {
+		this.hmTypeCours = hmTypeCours;
+	}
+
+	public Map<String, HeureCours> getHmHeuresCours() {
+		return hmHeuresCours;
+	}
+
+	public void setHmHeuresCours(Map<String, HeureCours> hmHeuresCours) {
+		this.hmHeuresCours = hmHeuresCours;
+	}
+
+	public int getIdAnnee() {
+		return idAnnee;
+	}
+
+	public void setIdAnnee(int idAnnee) {
+		this.idAnnee = idAnnee;
+	}
+	
 }
