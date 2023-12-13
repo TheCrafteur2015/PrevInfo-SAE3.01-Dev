@@ -68,6 +68,7 @@ import javafx.beans.value.*;
 public class FrameParamCategorie {
 	private Controleur ctrl;
 	private AnchorPane centerPaneAccueil;
+	private TextField nomCategorie;
 
 	
 
@@ -86,6 +87,9 @@ public class FrameParamCategorie {
 
 		VBox vbox = new VBox(5);
 		Text nomC;
+		this.nomCategorie = new TextField();
+
+		Text Heuremini = new Text("Heure minimum");
 	
 		StackPane popupLayout = new StackPane();
 

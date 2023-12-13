@@ -93,11 +93,11 @@ public class FrameModule implements EventHandler<Event> {
 		BorderPane borderPane = new BorderPane();
 		borderPane.setCenter(vbox);
 
-		AnchorPane.setTopAnchor (borderPane,20.0);
-		AnchorPane.setLeftAnchor(borderPane,20.0);
-
 		ScrollPane scrollPane = new ScrollPane();
 		scrollPane.setContent(borderPane);
+
+		AnchorPane.setTopAnchor (scrollPane,20.0);
+		AnchorPane.setLeftAnchor(scrollPane,20.0);
 		
 		this.centerPaneAccueil.getChildren().add(scrollPane);
 
