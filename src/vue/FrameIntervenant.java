@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.scene.layout.VBox;
 
 import javax.swing.Action;
 
@@ -29,7 +28,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.scene.Node;
@@ -109,7 +107,8 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		this.majTableIntervenant();
 
 		this.tableViewIntervenant.setPrefHeight(500);
-		this.tableViewIntervenant.setPrefWidth(670);
+		this.tableViewIntervenant.setPrefWidth(1100);
+		this.tableViewIntervenant.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
 		AnchorPane.setTopAnchor(this.tableViewIntervenant, 20.0);
 		AnchorPane.setLeftAnchor(this.tableViewIntervenant, 20.0);
@@ -229,10 +228,12 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		Text hMinText = new Text("Heures Minimales ");
 		this.tfHMin = new TextField();
 		this.tfHMin.setMaxWidth(10 * 7);
+		this.tfHMin.textProperty().addListener(this);
 
 		Text hMaxText = new Text("Heures Maximales ");
 		this.tfHMax = new TextField();
 		this.tfHMax.setMaxWidth(10 * 7);
+		this.tfHMax.textProperty().addListener(this);
 
 		if (choiceBoxCategorie.getItems().size() > 0) {
 			choiceBoxCategorie.setValue(choiceBoxCategorie.getItems().get(0));
@@ -309,16 +310,20 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 			String email = this.tfEmail.getText();
 			String tfHMinText = this.tfHMin.getText();
 			String tfHMaxText = this.tfHMin.getText();
-			double hMin = Double.parseDouble(tfHMinText.isEmpty() ? "0" : tfHMinText);
-			double hMax = Double.parseDouble(tfHMaxText.isEmpty() ? "0" : tfHMaxText);
+
 			Categorie c = this.choiceBoxCategorie.getValue();
 
 			if (prenom.isEmpty() || nom.isEmpty()
-					|| hMax == 0
+					|| this.tfHMin.getText().isEmpty()
 					|| this.tfHMax.getText().isEmpty() || c == null) {
 				System.out.println("Veuillez remplir tous les champs");
+				System.out.println("Prenom : " + prenom);
+				System.out.println("Nom : " + nom);
+				System.out.println("HMax : " + this.tfHMax.getText());
+				System.out.println("Categorie : " + c);
 			} else {
-
+				double hMin = Double.parseDouble(tfHMinText);
+				double hMax = Double.parseDouble(tfHMaxText);
 				int annee = this.ctrl.getModele().getIdAnnee();
 
 				// Intervenant i = new Intervenant(prenom, nom, email, hMin, hMax, annee,
@@ -345,13 +350,20 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 	}
 
 	public void changed(ObservableValue<? extends String> observable, String oldStr, String newStr) {
+		System.out.println(observable);
 
-		if (!(this.tfPrenom.getText().isEmpty() || this.tfNom.getText().isEmpty())) {
-			this.tfEmail.setText(this.tfPrenom.getText() + "." + this.tfNom.getText() + "@univ-lehavre.fr");
-		} else {
-			this.tfEmail.setText("");
+		if ((observable == this.tfPrenom.textProperty()|| observable == this.tfNom.textProperty())&&(!(this.tfPrenom.getText().isEmpty() || this.tfNom.getText().isEmpty()))) {
+			this.tfEmail.setText(this.tfPrenom.getText().toLowerCase() + "." + this.tfNom.getText().toLowerCase() + "@univ-lehavre.fr");
+		} 
+		if (observable == this.tfHMin.textProperty()) {
+			if (!(this.tfHMin.getText().matches("[0-9 .]*"))) {
+				this.tfHMin.setText("");
+			}
+		} else if (observable == this.tfHMax.textProperty()) {
+			if (!(this.tfHMax.getText().matches("[0-9 .]*"))) {
+				this.tfHMax.setText("");
+			}
 		}
 
 	}
-
 }

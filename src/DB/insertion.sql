@@ -8,7 +8,7 @@
 + RSemestre     ( [idSemestre], nbGTD, nbGTP, nbGCM, nbGAutre, idAnnee#)
 + RAnnee        ( [idAnnee], annee)
 */
-INSERT INTO Annee (idAnnee, annee) VALUES (1, '2023/2024');
+INSERT INTO Annee (idAnnee, annee) VALUES (1, '2023-2024');
 
 INSERT INTO Semestre (idSemestre, nbGTD, nbGTP, nbGCM, nbGAutre, idAnnee) VALUES
 	( 1, 4, 8, 1, 1, 1),
