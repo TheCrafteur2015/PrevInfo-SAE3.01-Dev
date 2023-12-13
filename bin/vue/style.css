@@ -39,6 +39,7 @@
 	-fx-alignment: CENTER;
 }
 
-.table-view .column-header {
-	-fx-background-color:transparent;
+.table-view .column-header-background .filler {
+    -fx-background-color: transparent;
+	
 }

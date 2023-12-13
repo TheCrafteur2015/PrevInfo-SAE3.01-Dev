@@ -2,6 +2,7 @@ package modele;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 
@@ -73,8 +74,12 @@ public class DB {
 			this.psSelectTypeCours = connec.prepareStatement("SELECT * FROM TypeCours");
 			this.psSelectHeureCours = connec
 					.prepareStatement("SELECT * FROM HeureCours JOIN Module USING(idModule) WHERE Module.idAnnee = ? ");
-			this.psSelectDerAnnee = connec.prepareStatement("SELECT * FROM Annee LIMIT 1");
+			// this.psSelectDerAnnee = connec.prepareStatement("SELECT * FROM Annee LIMIT
+			// 1");
+			this.psSelectDerAnnee = connec.prepareStatement("SELECT * FROM annee ORDER BY idannee DESC LIMIT 1;");
+			// this.psSelectDerAnnee.setFetchDirection(ResultSet.TYPE_SCROLL_SENSITIVE);
 			this.psSelectNomCateg = connec.prepareStatement("SELECT nomCategorie FROM Categorie WHERE idCategorie = ?");
+			this.psSelectAnnee = connec.prepareStatement("SELECT * FROM Annee");
 
 			this.psInsertCategorie = connec.prepareStatement("INSERT INTO Categorie VALUES (?,?,?,?,?)");
 			this.psInsertIntervenant = connec.prepareStatement("INSERT INTO Intervenant VALUES (?,?,?,?,?,?,?,?)");
@@ -82,7 +87,7 @@ public class DB {
 			this.psInsertModule = connec.prepareStatement("INSERT INTO Module VALUES (?,?,?,?,?)");
 			this.psInsertSemestre = connec.prepareStatement("INSERT INTO Semestre VALUES (?,?,?,?,?,?)");
 			this.psInsertHeureCours = connec.prepareStatement("INSERT INTO HeureCours VALUES (?,?,?,?)");
-			this.psInsertAnnee = connec.prepareStatement("INSERT INTO Annee VALUES (?)");
+			this.psInsertAnnee = connec.prepareStatement("INSERT INTO Annee VALUES (?, ?)");
 
 			this.psUpdateCategorie = connec.prepareStatement(
 					"UPDATE Categorie SET nomCategorie = ?, hMaxCategorie = ?, hMinCategorie = ? WHERE idAnnee = ? AND idCategorie = ?");
@@ -122,11 +127,11 @@ public class DB {
 
 	/**
 	 * @param idAnnee indice de l'année souhaitée
-	 * @return une {@link HashMap} liant les {@link Categorie} a leur indices, sous
+	 * @return une {@link Map} liant les {@link Categorie} a leur indices, sous
 	 *         forme d'{@link Integer}
 	 */
-	public HashMap<Integer, Categorie> getCategories(int idAnnee) throws SQLException {
-		HashMap<Integer, Categorie> hmCateg = new HashMap<Integer, Categorie>();
+	public Map<Integer, Categorie> getCategories(int idAnnee) throws SQLException {
+		Map<Integer, Categorie> hmCateg = new HashMap<>();
 		this.psSelectCategorie.setInt(1, idAnnee);
 		ResultSet rs = this.psSelectCategorie.executeQuery();
 		while (rs.next()) {
@@ -161,11 +166,11 @@ public class DB {
 
 	/**
 	 * @param idAnnee indice de l'année souhaitée
-	 * @return une {@link HashMap} liant les {@link Intervenant} a leur indices,
+	 * @return une {@link Map} liant les {@link Intervenant} a leur indices,
 	 *         sous forme d'{@link Integer}
 	 */
-	public HashMap<Integer, Intervenant> getIntervenants(int idAnnee) throws SQLException {
-		HashMap<Integer, Intervenant> hmInter = new HashMap<Integer, Intervenant>();
+	public Map<Integer, Intervenant> getIntervenants(int idAnnee) throws SQLException {
+		Map<Integer, Intervenant> hmInter = new HashMap<>();
 		this.psSelectIntervenant.setInt(1, idAnnee);
 		ResultSet rs = this.psSelectIntervenant.executeQuery();
 		while (rs.next()) {
@@ -202,19 +207,19 @@ public class DB {
 
 	}
 
-	public void supprimerIntervenant(Intervenant i) throws SQLException {
-		this.psDeleteIntervenant.setInt(1, i.getId());
+	public void supprimerIntervenant(int id) throws SQLException {
+		this.psDeleteIntervenant.setInt(1, id);
 		this.psDeleteIntervenant.executeUpdate();
 	}
 
 	/**
 	 * @param idAnnee indice de l'année souhaitée
-	 * @return une {@link HashMap} liant les {@link Intervention} a leur indices,
+	 * @return une {@link Map} liant les {@link Intervention} a leur indices,
 	 *         sous forme d'un {@link String}, comportant l'id de
 	 *         l'{@link Intervenant}, du {@link Module} et du {@link TypeCours}
 	 */
-	public HashMap<String, Intervention> getInterventions(int idAnnee) throws SQLException {
-		HashMap<String, Intervention> hmInterventions = new HashMap<String, Intervention>();
+	public Map<String, Intervention> getInterventions(int idAnnee) throws SQLException {
+		Map<String, Intervention> hmInterventions = new HashMap<>();
 		this.psSelectIntervention.setInt(1, idAnnee);
 		ResultSet rs = this.psSelectIntervention.executeQuery();
 		while (rs.next()) {
@@ -256,12 +261,12 @@ public class DB {
 
 	/**
 	 * @param idAnnee indice de l'année souhaitée
-	 * @return une {@link HashMap} liant les {@link Module} a leur indices, sous
+	 * @return une {@link Map} liant les {@link Module} a leur indices, sous
 	 *         forme d'un {@link String}, comportant l'id de l'{@link Intervenant},
 	 *         du {@link Module} et du {@link TypeCours}
 	 */
-	public HashMap<Integer, Module> getModules(int idAnnee) throws SQLException {
-		HashMap<Integer, Module> hmModule = new HashMap<Integer, Module>();
+	public Map<Integer, Module> getModules(int idAnnee) throws SQLException {
+		Map<Integer, Module> hmModule = new HashMap<>();
 		this.psSelectModule.setInt(1, idAnnee);
 		ResultSet rs = this.psSelectModule.executeQuery();
 		while (rs.next()) {
@@ -297,12 +302,12 @@ public class DB {
 
 	/**
 	 * @param idAnnee indice de l'année souhaitée
-	 * @return une {@link HashMap} liant les {@link Semestre} a leur indices, sous
+	 * @return une {@link Map} liant les {@link Semestre} a leur indices, sous
 	 *         forme d'un {@link String}, comportant l'id de l'{@link Intervenant},
 	 *         du {@link Module} et du {@link TypeCours}
 	 */
-	public HashMap<Integer, Semestre> getSemestres(int idAnnee) throws SQLException {
-		HashMap<Integer, Semestre> hmSemestre = new HashMap<Integer, Semestre>();
+	public Map<Integer, Semestre> getSemestres(int idAnnee) throws SQLException {
+		Map<Integer, Semestre> hmSemestre = new HashMap<>();
 		this.psSelectSemestre.setInt(1, idAnnee);
 		ResultSet rs = this.psSelectSemestre.executeQuery();
 		while (rs.next()) {
@@ -340,8 +345,8 @@ public class DB {
 	/**
 	 * 
 	 */
-	public HashMap<Integer, TypeCours> getTypeCours() throws SQLException {
-		HashMap<Integer, TypeCours> hmTypeCours = new HashMap<Integer, TypeCours>();
+	public Map<Integer, TypeCours> getTypeCours() throws SQLException {
+		Map<Integer, TypeCours> hmTypeCours = new HashMap<>();
 		ResultSet rs = this.psSelectTypeCours.executeQuery();
 		while (rs.next()) {
 			hmTypeCours.put(rs.getInt("idTypeCours"),
@@ -365,8 +370,8 @@ public class DB {
 	/**
 	 * 
 	 */
-	public HashMap<String, HeureCours> getHeureCours(int idAnnee) throws SQLException {
-		HashMap<String, HeureCours> hmHeureCours = new HashMap<String, HeureCours>();
+	public Map<String, HeureCours> getHeureCours(int idAnnee) throws SQLException {
+		Map<String, HeureCours> hmHeureCours = new HashMap<>();
 		this.psSelectHeureCours.setInt(1, idAnnee);
 		ResultSet rs = this.psSelectHeureCours.executeQuery();
 		while (rs.next()) {
@@ -402,16 +407,24 @@ public class DB {
 	 * 
 	 */
 	public int getDerAnnee() throws SQLException {
-		int ret = 0;
+		// int ret = 0;
 		ResultSet rs = this.psSelectDerAnnee.executeQuery();
-		while (rs.next()) {
-			ret = rs.getInt("idAnnee");
-		}
-		return ret;
+		rs.next();
+		return rs.getInt("idAnnee");
+		// ResultSetMetaData rsmd = rs.getMetaData();
+		// rs.last();
+		// rs.previous();
+		/*
+		 * while (rs.next())
+		 * ret = rs.getInt("idAnnee");
+		 * return ret;
+		 */
+		// return rs.getInt("idAnnee");
 	}
 
-	public void ajouterAnnee(String annee) throws SQLException {
-		this.psInsertAnnee.setString(1, annee);
+	public void ajouterAnnee(int id, String annee) throws SQLException {
+		this.psInsertAnnee.setInt(1, id);
+		this.psInsertAnnee.setString(2, annee);
 		this.psInsertAnnee.executeUpdate();
 	}
 
@@ -425,6 +438,15 @@ public class DB {
 			return rs.getString("nomCategorie");
 		}
 		return "";
+	}
+
+	public Map<Integer, String> getAnnee() throws SQLException {
+		Map<Integer, String> hmAnnee = new HashMap<>();
+		ResultSet rs = this.psSelectAnnee.executeQuery();
+		while (rs.next()) {
+			hmAnnee.put(rs.getInt("idAnnee"), rs.getString("annee"));
+		}
+		return hmAnnee;
 	}
 
 }

@@ -6,12 +6,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import controleur.Controleur;
 
 public class Modele {
 
 	private final static int DEBUT_ANNEE = 2022;
 
 	private DB db;
+
+	private Controleur ctrl;
 
 	private Map<Integer, Categorie> hmCategories;
 	private Map<Integer, Intervenant> hmIntervenants;
@@ -20,14 +23,19 @@ public class Modele {
 	private Map<Integer, Semestre> hmSemestres;
 	private Map<Integer, TypeCours> hmTypeCours;
 	private Map<String, HeureCours> hmHeuresCours;
+	private Map<Integer, String> hmAnnee;
 	private int idAnnee;
 
-	public Modele() {
+	public Modele(Controleur ctrl) {
+
+		this.ctrl = ctrl;
 
 		this.db = DB.getInstance();
 
 		try {
+			this.hmAnnee = this.db.getAnnee();
 			this.idAnnee = this.db.getDerAnnee();
+			this.ctrl.getVue().setAnnee(this.hmAnnee.get(this.idAnnee));
 			this.hmCategories = this.db.getCategories(idAnnee);
 			this.hmIntervenants = this.db.getIntervenants(idAnnee);
 			this.hmInterventions = this.db.getInterventions(idAnnee);
@@ -39,22 +47,28 @@ public class Modele {
 			e.printStackTrace();
 		}
 
-		/*this.ajouterCategorie(23, "cozuahjazbfi", 5, 10);
-		this.ajouterIntervenant(12, "Arthur", "Lecomte", "arthur.lebg@univ-lehavre.fr", 0, 0, 1);
-		this.ajouterHeureCours(1, 11, 1);
-		this.ajouterIntervention(1, 2, 3, 4, 5);
-		this.ajouterModule(45, "Module", 5, idAnnee, 1);
-		this.ajouterSemestre(2012, 2, 3, 4, 5);
-
-		this.updateCategorie(new Categorie(23, "newNom", 5, 10, idAnnee));
-		this.updateIntervenant(new Intervenant(12, "Arthurrr", "Lec", "zadazd", 0, 1, 1, idAnnee));
-		this.updateHeureCours(new HeureCours(1, 11, 10, idAnnee));
-		this.updateIntervention(new Intervention(1, 2, 3, 5, 6, idAnnee));
-		this.updateModule(new Module(45, "newModule", 10, idAnnee, 1));
-		this.updateSemestre(new Semestre(2012, 4, 5, 6, 8, idAnnee));
-		this.updateTypeCours(new TypeCours(2, "ozeuhizne", 2.5)); */
+		/*
+		 * this.ajouterCategorie(23, "cozuahjazbfi", 5, 10);
+		 * this.ajouterIntervenant(12, "Arthur", "Lecomte",
+		 * "arthur.lebg@univ-lehavre.fr", 0, 0, 1);
+		 * this.ajouterHeureCours(1, 11, 1);
+		 * this.ajouterIntervention(1, 2, 3, 4, 5);
+		 * this.ajouterModule(45, "Module", 5, idAnnee, 1);
+		 * this.ajouterSemestre(2012, 2, 3, 4, 5);
+		 * 
+		 * this.updateCategorie(new Categorie(23, "newNom", 5, 10, idAnnee));
+		 * this.updateIntervenant(new Intervenant(12, "Arthurrr", "Lec", "zadazd", 0, 1,
+		 * 1, idAnnee));
+		 * this.updateHeureCours(new HeureCours(1, 11, 10, idAnnee));
+		 * this.updateIntervention(new Intervention(1, 2, 3, 5, 6, idAnnee));
+		 * this.updateModule(new Module(45, "newModule", 10, idAnnee, 1));
+		 * this.updateSemestre(new Semestre(2012, 4, 5, 6, 8, idAnnee));
+		 * this.updateTypeCours(new TypeCours(2, "ozeuhizne", 2.5));
+		 */
 
 	}
+
+
 
 	public void ajouterCategorie(int id, String nom, double hMin, double hMax) {
 		Categorie c = new Categorie(id, nom, hMin, hMax, idAnnee);
@@ -103,6 +117,16 @@ public class Modele {
 		intervenant.sethMax(i.gethMax());
 		intervenant.setIdCategorie(i.getIdCategorie());
 
+	}
+
+	public void supprimerIntervenant(int id) {
+		try {
+			this.db.supprimerIntervenant(id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.hmIntervenants.remove(id);
+		this.ctrl.getVue().majTableIntervenant();
 	}
 
 	public void ajouterIntervention(int idIntervenant, int idModule, int idTypeCours, int nbSemaines, int nbGroupe) {
@@ -196,20 +220,43 @@ public class Modele {
 	public void updateTypeCours(TypeCours tc) {
 		try {
 			this.db.updateTypeCours(tc);
-		} catch (SQLException e) {e.printStackTrace();}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		TypeCours typeCours = this.hmTypeCours.get(tc.getId());
 		typeCours.setCoefficient(tc.getCoefficient());
 		typeCours.setNom(tc.getNom());
 	}
 
 	public void ajouterAnnee() {
-		int iAnnee = 0;
+		int iAnnee = this.idAnnee + 1;
+		String annee = (DEBUT_ANNEE + iAnnee) + "-" + (DEBUT_ANNEE + iAnnee + 1);
 		try {
-			iAnnee = db.getDerAnnee();
-			this.db.ajouterAnnee((DEBUT_ANNEE + iAnnee) + "-" + (DEBUT_ANNEE + iAnnee + 1));
+			this.db.ajouterAnnee(iAnnee, annee);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		this.hmAnnee.put(iAnnee, annee);
+		this.ctrl.getVue().majListAnnee();
+	}
+
+	public void updateAnnee(String date) {
+		for (Integer i : this.hmAnnee.keySet()) {
+			if (this.hmAnnee.get(i).equals(date))
+				this.idAnnee = i;
+		}
+		try {
+			this.hmCategories = this.db.getCategories(idAnnee);
+			this.hmIntervenants = this.db.getIntervenants(idAnnee);
+			this.hmInterventions = this.db.getInterventions(idAnnee);
+			this.hmModules = this.db.getModules(idAnnee);
+			this.hmSemestres = this.db.getSemestres(idAnnee);
+			this.hmTypeCours = this.db.getTypeCours();
+			this.hmHeuresCours = this.db.getHeureCours(idAnnee);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.ctrl.getVue().setAnnee(this.hmAnnee.get(this.idAnnee));
 	}
 
 	public Map<Integer, Categorie> getHmCategories() {
@@ -279,7 +326,17 @@ public class Modele {
 	public String getNomCateg(int idCategorie) {
 		try {
 			return this.db.getNomCateg(idCategorie);
-		} catch (SQLException e) { return ""; }
+		} catch (SQLException e) {
+			return "";
+		}
 	}
-	
+
+	public Map<Integer, String> getHmAnnee() {
+		return hmAnnee;
+	}
+
+	public void setHmAnnee(Map<Integer, String> hmAnnee) {
+		this.hmAnnee = hmAnnee;
+	}
+
 }

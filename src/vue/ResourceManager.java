@@ -11,11 +11,20 @@ import java.nio.file.Paths;
 
 public final class ResourceManager {
 
+	// Fichiers FXML
 	public static final URL ACCUEIL = ResourceManager.class.getResource("Accueil.fxml");
 
+	// Fichiers CSS
 	public static final URL STYLESHEET = ResourceManager.class.getResource("style.css");
 
+	// Fichiers SVG
 	public static final URL BOOK = ResourceManager.class.getResource("book.svg");
+
+	// Images
+	public static final URL HOUSE = ResourceManager.class.getResource("accueil_icone.png");
+	public static final URL INTERVENANT = ResourceManager.class.getResource("prof_icon.png");
+	public static final URL MODULE = ResourceManager.class.getResource("ressource_icone.png");
+	public static final URL DOWNLOAD = ResourceManager.class.getResource("download.png");
 
 	private static final Map<String, String> DATA = new HashMap<>();
 

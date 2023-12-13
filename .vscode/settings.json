@@ -1,0 +1,11 @@
+{
+	"editor.autoIndent": "none",
+	"editor.formatOnSave": false,
+	"editor.wrappingIndent": "none",
+	"editor.detectIndentation": false,
+	"editor.insertSpaces": false,
+	"editor.foldingStrategy": "indentation",
+	"editor.guides.highlightActiveIndentation": false,
+	"editor.guides.indentation": false,
+	"editor.trimAutoWhitespace": false
+}

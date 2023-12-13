@@ -11,7 +11,7 @@ SET "fx=.\lib\javafx\lib"
 echo Compilation...
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: modif ici pour les option de compilation                                     et modif ici aussi ::
-call javac --module-path "%fx%" --add-modules javafx.controls,javafx.fxml -cp "%CLASSPATH%;.\bin"  -encoding utf8 "@compile.list" -d ".\bin" && ( echo Lancement du programme... & call java --module-path "%fx%" --add-modules javafx.controls,javafx.fxml -cp "%CLASSPATH%;.\bin" App && echo Fin de l'execution. || ( echo. & echo Erreur d'EXECUTION. )) || echo Erreur de COMPILATION.
+call javac --module-path "%fx%" --add-modules javafx.controls,javafx.fxml -Xlint:unchecked -cp "%CLASSPATH%;.\bin" -encoding utf8 "@compile.list" -d ".\bin" && ( echo Lancement du programme... & call java --module-path "%fx%" --add-modules javafx.controls,javafx.fxml -cp "%CLASSPATH%;.\bin" App && echo Fin de l'execution. || ( echo. & echo Erreur d'EXECUTION. )) || echo Erreur de COMPILATION.
 
 goto :eof
 
