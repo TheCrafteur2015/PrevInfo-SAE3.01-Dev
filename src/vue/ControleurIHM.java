@@ -1,9 +1,13 @@
 package vue;
 
 import modele.Intervenant;
+import modele.Categorie;
+import modele.TypeCours;
+
 import controleur.Controleur;
 
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import java.io.IOException;
@@ -13,11 +17,11 @@ import javafx.scene.layout.VBox;
 
 import javax.swing.Action;
 
-import org.w3c.dom.events.MouseEvent;
-
 import javafx.scene.control.TableColumn;
 
+import javafx.event.Event;
 import javafx.event.ActionEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.*;
 import javafx.scene.control.Label;
@@ -56,8 +60,9 @@ import javafx.scene.text.Text;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ChoiceBox;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 
-public class ControleurIHM implements Initializable, EventHandler<ActionEvent> {
+public class ControleurIHM implements Initializable, EventHandler<Event> {
 
 	@FXML
 	private AnchorPane centerPaneAccueil;
@@ -82,10 +87,17 @@ public class ControleurIHM implements Initializable, EventHandler<ActionEvent> {
 	@FXML
 	private ImageView imageModule;
 
+	@FXML
+	private ImageView imageDownload;
+
+	private Button btnConfirmerIntervenant;
+	private Button btnConfirmerMultiplicateur;
+
 	public void initialize(URL url, ResourceBundle rb) {
 		this.ctrl = Controleur.getInstance(this);
 
-		this.choiceBoxAnnee.setOnAction(this);
+		// this.choiceBoxAnnee.setOnAction(this);
+		this.choiceBoxAnnee.addEventHandler(ActionEvent.ACTION, this);
 		this.majListAnnee();
 
 		this.setAnnee(this.ctrl.getModele().getHmAnnee().get(this.ctrl.getModele().getIdAnnee()));
@@ -93,6 +105,7 @@ public class ControleurIHM implements Initializable, EventHandler<ActionEvent> {
 		this.imageAccueil.setImage(new Image(ResourceManager.HOUSE.toExternalForm()));
 		this.imageIntervenant.setImage(new Image(ResourceManager.INTERVENANT.toExternalForm()));
 		this.imageModule.setImage(new Image(ResourceManager.MODULE.toExternalForm()));
+		this.imageDownload.setImage(new Image(ResourceManager.DOWNLOAD.toExternalForm()));
 
 		this.tableViewIntervenant = new TableView<>();
 		this.tableViewIntervenant.setEditable(true);
@@ -124,8 +137,54 @@ public class ControleurIHM implements Initializable, EventHandler<ActionEvent> {
 	}
 
 	@FXML
-	void allerIntervenants(ActionEvent event) {
+	void parametrerMultiplicateurs() {
+		Stage popupStage = new Stage();
+		popupStage.initModality(Modality.APPLICATION_MODAL);
+		popupStage.setTitle("Pop-up");
 
+		Map<Integer, TypeCours> hmTypeCours = this.ctrl.getModele().getHmTypeCours();
+
+		ArrayList<Text> alText = new ArrayList<>();
+		ArrayList<TextField> alTextField = new ArrayList<>();
+		Text textTmp;
+		TextField textFieldTmp;
+		for (TypeCours tc : hmTypeCours.values()) {
+			textTmp = new Text(tc.getNom());
+			textFieldTmp = new TextField(tc.getCoefficient() + "");
+			textFieldTmp.setMaxWidth(7*7);
+			alText.add(textTmp);
+			alTextField.add(textFieldTmp);
+		}
+
+		VBox vbox = new VBox(5);
+		vbox.setMaxSize(200, alText.size()*50);
+
+		GridPane gridPane = new GridPane();
+		for (int i = 0; i < alText.size(); i++) {
+			gridPane.add(alText.get(i), 0, i);
+			gridPane.add(alTextField.get(i), 1, i);
+		}
+		gridPane.setPadding(new Insets(10));
+		gridPane.setHgap(10);
+		gridPane.setVgap(10);
+
+		this.btnConfirmerMultiplicateur = new Button("Confirmer");
+		this.btnConfirmerMultiplicateur.addEventHandler(ActionEvent.ACTION, this);
+		BorderPane borderPane = new BorderPane();
+		borderPane.setCenter(this.btnConfirmerMultiplicateur);
+
+		StackPane popupLayout = new StackPane();
+		vbox.getChildren().add(gridPane);
+		vbox.getChildren().add(borderPane);
+		popupLayout.getChildren().add(vbox);
+		Scene popupScene = new Scene(popupLayout, 200, alText.size()*50);
+		popupStage.setScene(popupScene);
+
+		popupStage.showAndWait();
+	}
+
+	@FXML
+	void allerIntervenants(ActionEvent event) {
 		// Reset la center Pane et ajouter le CSS
 		this.centerPaneAccueil.getChildren().clear();
 		this.centerPaneAccueil.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
@@ -155,7 +214,8 @@ public class ControleurIHM implements Initializable, EventHandler<ActionEvent> {
 
 		this.btnParamIntervenants.setPrefSize(250, 40);
 		this.btnParamIntervenants.setId("btnParamIntervenants");
-		this.btnParamIntervenants.setOnAction(this);
+		// this.btnParamIntervenants.setOnAction(this);
+		this.btnParamIntervenants.addEventHandler(ActionEvent.ACTION, this);
 
 		AnchorPane.setTopAnchor(this.btnParamIntervenants, 580.0);
 		AnchorPane.setLeftAnchor(this.btnParamIntervenants, 20.0);
@@ -193,31 +253,45 @@ public class ControleurIHM implements Initializable, EventHandler<ActionEvent> {
 		Stage popupStage = new Stage();
 		popupStage.initModality(Modality.APPLICATION_MODAL);
 		popupStage.setTitle("Pop-up");
+
 		Text pnom = new Text("Prénom  ");
-		TextField prenom = new TextField();
-		prenom.setMaxWidth(30);
+		TextField tprenom = new TextField();
+		tprenom.setMaxWidth(30 * 7);
 
 		Text nom = new Text("Nom  ");
 		TextField tnom = new TextField();
+		tnom.setMaxWidth(30 * 7);
 
 		Text email = new Text("Email ");
 		TextField temail = new TextField();
+		temail.setMaxWidth(30 * 7);
 
 		Text categorie = new Text("Catégorie ");
-		ChoiceBox<String> choiceBoxCategorie = new ChoiceBox<>();
+		ChoiceBox<Categorie> choiceBoxCategorie = new ChoiceBox<>();
+		choiceBoxCategorie.setMaxWidth(30 * 7);
+
+		Map<Integer, Categorie> hmCategorie = this.ctrl.getModele().getHmCategories();
+		for (Categorie c : hmCategorie.values()) {
+			choiceBoxCategorie.getItems().add(c);
+		}
 
 		Text hMinText = new Text("Heures Minimales ");
 		TextField hMin = new TextField();
+		hMin.setMaxWidth(5 * 7);
 
 		Text hMaxText = new Text("Heures Maximales ");
 		TextField hMax = new TextField();
+		hMax.setMaxWidth(5 * 7);
+
+		 this.btnConfirmerIntervenant = new Button("Confirmer");
+		 this.btnConfirmerIntervenant.addEventHandler(ActionEvent.ACTION, this);
 
 		VBox vbox = new VBox(5);
 		vbox.setMaxSize(200, 400);
 
 		BorderPane borderPane = new BorderPane();
 		borderPane.setTop(pnom);
-		borderPane.setCenter(tnom);
+		borderPane.setCenter(tprenom);
 		borderPane.setPadding(new Insets(10));
 
 		BorderPane borderPane2 = new BorderPane();
@@ -228,11 +302,32 @@ public class ControleurIHM implements Initializable, EventHandler<ActionEvent> {
 		BorderPane borderPane3 = new BorderPane();
 		borderPane3.setTop(email);
 		borderPane3.setCenter(temail);
+		borderPane3.setPadding(new Insets(10));
+
+		BorderPane borderPane4 = new BorderPane();
+		borderPane4.setTop(categorie);
+		borderPane4.setCenter(choiceBoxCategorie);
+		borderPane4.setPadding(new Insets(10));
+
+		GridPane gridPane1 = new GridPane();
+		gridPane1.add(hMinText, 0, 0);
+		gridPane1.add(hMin, 1, 0);
+		gridPane1.add(hMaxText, 0, 1);
+		gridPane1.add(hMax, 1, 1);
+		gridPane1.setPadding(new Insets(10));
+		gridPane1.setVgap(10);
+		
+		BorderPane borderPane5 = new BorderPane();
+		borderPane5.setCenter(this.btnConfirmerIntervenant);
+		
+		vbox.setAlignment(Pos.CENTER);
+
+		
+
+
 		StackPane popupLayout = new StackPane();
 		// popupLayout.getChildren().add(closeButton);
-		vbox.getChildren().add(borderPane);
-		vbox.getChildren().add(borderPane2);
-		vbox.getChildren().add(borderPane3);
+		vbox.getChildren().addAll(borderPane, borderPane2, borderPane3, borderPane4, gridPane1, borderPane5);
 		popupLayout.getChildren().add(vbox);
 		Scene popupScene = new Scene(popupLayout, 200, 400);
 		popupStage.setScene(popupScene);
@@ -250,8 +345,10 @@ public class ControleurIHM implements Initializable, EventHandler<ActionEvent> {
 			Button supButton = getSupButton();
 			supButton.setId("Sup-" + i.getId());
 
-			infoButton.setOnAction(this);
-			supButton.setOnAction(this);
+			// infoButton.setOnAction(this);
+			infoButton.addEventHandler(ActionEvent.ACTION, this);
+			// supButton.setOnAction(this);
+			supButton.addEventHandler(ActionEvent.ACTION, this);
 			lst.add(new IntervenantIHM(infoButton, i.getPrenom(), i.getNom(),
 					this.ctrl.getModele().getNomCateg(i.getIdCategorie()), i.getEmail(), supButton));
 		}
@@ -296,20 +393,24 @@ public class ControleurIHM implements Initializable, EventHandler<ActionEvent> {
 
 	@FXML
 	void allerModules(ActionEvent event) {
+		this.centerPaneAccueil.getChildren().clear();
+		this.centerPaneAccueil.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
 
+		VBox vbox = new VBox(5);
+		vbox.getChildren().add(new BorderPane());
+
+		//this.centerPaneAccueil.getChildren().add(new Border)
+
+	}
+
+	public void creerUnSemestre()
+	{
+		
 	}
 
 	@FXML
 	void allerExporter(ActionEvent event) {
 
-	}
-
-	@FXML
-	void parametrerMultiplicateurs(ActionEvent event) {
-		Popup popup = new Popup();
-		popup.getContent().add(centerPaneAccueil);
-
-		popup.setAutoHide(true);
 	}
 
 	@FXML
@@ -322,20 +423,25 @@ public class ControleurIHM implements Initializable, EventHandler<ActionEvent> {
 		this.ctrl.getModele().ajouterAnnee();
 	}
 
-	public void handle(ActionEvent event) {
-		if (event.getSource() == this.btnParamIntervenants) {
-			this.popupParamIntervenant();
-		} else if (event.getSource() instanceof Button) {
-			Button button = (Button) event.getSource();
-			String[] textButton = button.getId().split("-");
-			if (textButton[0].equals("Info")) {
-				System.out.println("Info : " + textButton[1]);
-			} else if (textButton[0].equals("Sup")) {
-				this.ctrl.getModele().supprimerIntervenant(Integer.parseInt(textButton[1]));
+	public void handle(Event event) {
+		if (event instanceof ActionEvent action) {
+			if (action.getSource() == this.btnParamIntervenants) {
+				this.popupParamIntervenant();
+			} else if (action.getSource() instanceof Button) {
+				Button button = (Button) action.getSource();
+				String[] textButton = button.getId().split("-");
+				if (textButton[0].equals("Info")) {
+					System.out.println("Info : " + textButton[1]);
+				} else if (textButton[0].equals("Sup")) {
+					this.ctrl.getModele().supprimerIntervenant(Integer.parseInt(textButton[1]));
+				}
+			} else if (action.getSource() == this.choiceBoxAnnee) {
+				this.ctrl.getModele().updateAnnee(this.choiceBoxAnnee.getValue());
+				this.setAnnee(this.choiceBoxAnnee.getValue());
 			}
-		} else if (event.getSource() == this.choiceBoxAnnee) {
-			this.ctrl.getModele().updateAnnee(this.choiceBoxAnnee.getValue());
-			this.setAnnee(this.choiceBoxAnnee.getValue());
+		}
+		if (event instanceof MouseEvent mouse) {
+
 		}
 	}
 }

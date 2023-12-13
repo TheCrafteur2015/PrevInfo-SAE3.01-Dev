@@ -4,15 +4,14 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ToggleButton?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="731.0" prefWidth="1345.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vue.ControleurIHM">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="731.0" prefWidth="1345.0" stylesheets="@vue.style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vue.ControleurIHM">
    <children>
       <BorderPane prefHeight="731.0" prefWidth="1345.0">
          <top>
@@ -34,32 +33,32 @@
                      </font>
                      <graphic>
                         <ImageView fx:id="imageAccueil" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
-                     </graphic></Button>
+                     </graphic>
+                  </Button>
                   <Button alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutY="64.0" mnemonicParsing="false" onAction="#allerIntervenants" prefHeight="67.0" prefWidth="211.0" text="Intervenants">
                      <font>
                         <Font size="20.0" />
                      </font>
                      <graphic>
-                        <ImageView fx:id="imageIntervenant" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
-                     </graphic></Button>
+                       <ImageView fx:id="imageIntervenant" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                     </graphic>
+                  </Button>
                   <Button alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutX="-1.0" layoutY="129.0" mnemonicParsing="false" onAction="#allerModules" prefHeight="69.0" prefWidth="212.0" text="Modules">
                      <font>
                         <Font size="20.0" />
                      </font>
                      <graphic>
-                         <ImageView fx:id="imageModule" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
-                     </graphic></Button>
+                        <ImageView fx:id="imageModule" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                     </graphic>
+                  </Button>
                   <Button alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutY="608.0" mnemonicParsing="false" onAction="#allerExporter" prefHeight="40.0" prefWidth="211.0" text="Exporter">
                      <font>
                         <Font size="20.0" />
                      </font>
                      <graphic>
-                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../Téléchargements/Vector.png" />
-                           </image>
-                        </ImageView>
-                     </graphic></Button>
+                        <ImageView fx:id="imageDownload" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                     </graphic>
+                 </Button>
                </children>
             </AnchorPane>
          </left>
@@ -79,8 +78,8 @@
                      <font>
                         <Font size="26.0" />
                      </font></Label>
-                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="292.0" layoutX="269.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="565.0" />
-                  <Label layoutX="178.0" layoutY="216.0" text="Paramètres">
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITESMOKE" height="292.0" layoutX="269.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="565.0" />
+                  <Label layoutX="286.0" layoutY="285.0" style="-fx-background-color: #f5f5f5;" text="Paramètres">
                      <font>
                         <Font size="23.0" />
                      </font></Label>

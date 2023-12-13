@@ -1,0 +1,7 @@
+/**
+ * FrameIntervenant
+ */
+public class FrameIntervenant {
+
+	
+}

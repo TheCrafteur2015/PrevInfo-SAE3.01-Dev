@@ -68,8 +68,6 @@ public class Modele {
 
 	}
 
-
-
 	public void ajouterCategorie(int id, String nom, double hMin, double hMax) {
 		Categorie c = new Categorie(id, nom, hMin, hMax, idAnnee);
 		try {
@@ -122,10 +120,10 @@ public class Modele {
 	public void supprimerIntervenant(int id) {
 		try {
 			this.db.supprimerIntervenant(id);
+			this.hmIntervenants.remove(id);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		this.hmIntervenants.remove(id);
 		this.ctrl.getVue().majTableIntervenant();
 	}
 
@@ -229,15 +227,16 @@ public class Modele {
 	}
 
 	public void ajouterAnnee() {
-		int iAnnee = this.idAnnee + 1;
-		String annee = (DEBUT_ANNEE + iAnnee) + "-" + (DEBUT_ANNEE + iAnnee + 1);
 		try {
+			int iAnnee = this.db.getDerAnnee() + 1;
+			String annee = (DEBUT_ANNEE + iAnnee) + "-" + (DEBUT_ANNEE + iAnnee + 1);
 			this.db.ajouterAnnee(iAnnee, annee);
+			this.hmAnnee.put(iAnnee, annee);
+			this.ctrl.getVue().setAnnee(annee);
+			this.ctrl.getVue().majListAnnee();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		this.hmAnnee.put(iAnnee, annee);
-		this.ctrl.getVue().majListAnnee();
 	}
 
 	public void updateAnnee(String date) {

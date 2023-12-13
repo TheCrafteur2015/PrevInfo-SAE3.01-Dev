@@ -58,10 +58,7 @@ public class Categorie {
 
 	@Override
 	public String toString() {
-		return "Categorie [id=" + id + ", nom=" + nom + ", hMax=" + hMax + ", hMin=" + hMin + ", idAnnee=" + idAnnee
-				+ "]";
+		return nom;
 	}
-
-	
 
 }
