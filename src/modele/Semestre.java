@@ -5,6 +5,8 @@ package modele;
  */
 public class Semestre {
 
+public static int NB_SEMESTRE = 0;
+
 	private int id;
 	private int nbGTD;
 	private int nbGTP;
@@ -13,7 +15,11 @@ public class Semestre {
 	private int idAnnee;
 
 	public Semestre(int id, int nbGTD, int nbGTP, int nbGCM, int nbGAutre, int idAnnee) {
-		this.id = id;
+		this(nbGTD, nbGTP, nbGCM, nbGAutre, idAnnee);
+	}
+
+	public Semestre(int nbGTD, int nbGTP, int nbGCM, int nbGAutre, int idAnnee) {
+		this.id = ++NB_SEMESTRE;
 		this.nbGTD = nbGTD;
 		this.nbGTP = nbGTP;
 		this.nbGCM = nbGCM;

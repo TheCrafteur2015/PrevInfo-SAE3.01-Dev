@@ -135,7 +135,7 @@ public class DB {
 		this.psSelectCategorie.setInt(1, idAnnee);
 		ResultSet rs = this.psSelectCategorie.executeQuery();
 		while (rs.next()) {
-			hmCateg.put(rs.getInt("idCategorie"), new Categorie(rs.getInt("idCategorie"), rs.getString("nomCategorie"),
+			hmCateg.put(rs.getInt("idCategorie"), new Categorie(rs.getString("nomCategorie"),
 					rs.getDouble("hMinCategorie"), rs.getDouble("hMaxCategorie"), idAnnee));
 		}
 		return hmCateg;
@@ -281,8 +281,8 @@ public class DB {
 		this.psInsertModule.setInt(1, m.getId());
 		this.psInsertModule.setString(2, m.getNom());
 		this.psInsertModule.setInt(3, m.getNbSemaines());
-		this.psInsertModule.setInt(4, m.getIdSemestre());
-		this.psInsertModule.setInt(5, m.getIdAnnee());
+		this.psInsertModule.setInt(5, m.getIdSemestre());
+		this.psInsertModule.setInt(4, m.getIdAnnee());
 		this.psInsertModule.executeUpdate();
 	}
 

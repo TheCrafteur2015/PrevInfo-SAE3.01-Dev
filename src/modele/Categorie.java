@@ -2,6 +2,8 @@ package modele;
 
 public class Categorie {
 
+	public static int NB_CATEGORIE = 0;
+	
 	private int id;
 	private String nom;
 	private double hMax;
@@ -9,7 +11,11 @@ public class Categorie {
 	private int idAnnee;
 
 	public Categorie(int id, String nom, double hMin, double hMax, int idAnnee) {
-		this.id = id;
+		this(nom, hMin, hMax, idAnnee);
+	}	
+	
+	public Categorie(String nom, double hMin, double hMax, int idAnnee) {
+		this.id = ++NB_CATEGORIE;
 		this.nom = nom;
 		this.hMin = hMin;
 		this.hMax = hMax;

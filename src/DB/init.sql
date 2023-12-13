@@ -48,7 +48,7 @@ CREATE TABLE HeureCours(
 	idModule    int references Module(idModule),
 	heure       int,
 	idAnnee     int references Annee(idAnnee),
-	PRIMARY KEY (idTypeCours, idModule)
+	PRIMARY KEY (idTypeCours, idModule, idAnnee)
 );
 
 CREATE TABLE Intervenant(
@@ -70,7 +70,7 @@ CREATE TABLE Intervention(
 	nbGroupe               int,
 	idAnnee                int references Annee(idAnnee),
 	
-	PRIMARY KEY (idIntervenant,idModule,idTypeCours)
+	PRIMARY KEY (idIntervenant,idModule,idTypeCours,idAnnee)
 );
 
 -- ALTER TABLE HeureCours ADD CONSTRAINT fk_HeureCours_TypeCours FOREIGN KEY (idTypeCours) REFERENCES TypeCours(idTypeCours);

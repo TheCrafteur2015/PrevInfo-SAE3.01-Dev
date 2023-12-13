@@ -26,9 +26,12 @@ public class Modele {
 	private Map<Integer, String> hmAnnee;
 	private int idAnnee;
 
+	private boolean duplication;
+
 	public Modele(Controleur ctrl) {
 
 		this.ctrl = ctrl;
+		this.duplication = false;
 
 		this.db = DB.getInstance();
 
@@ -68,14 +71,14 @@ public class Modele {
 
 	}
 
-	public void ajouterCategorie(int id, String nom, double hMin, double hMax) {
-		Categorie c = new Categorie(id, nom, hMin, hMax, idAnnee);
+	public void ajouterCategorie(String nom, double hMin, double hMax) {
+		Categorie c = new Categorie(nom, hMin, hMax, this.idAnnee);
 		try {
 			this.db.ajouterCategorie(c);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		this.hmCategories.put(id, c);
+		this.hmCategories.put(c.getId(), c);
 	}
 
 	public void updateCategorie(Categorie c) {
@@ -90,15 +93,18 @@ public class Modele {
 		categorie.sethMin(c.gethMin());
 	}
 
-	public void ajouterIntervenant(int id, String prenom, String nom, String email, double hMin, double hMax,
+	public void ajouterIntervenant(String prenom, String nom, String email, double hMin, double hMax,
 			int idCategorie) {
-		Intervenant i = new Intervenant(id, prenom, nom, email, hMin, hMax, idAnnee, idCategorie);
+		ajouterIntervenant(new Intervenant(prenom, nom, email, hMin, hMax, idAnnee, idCategorie));
+	}
+
+	public void ajouterIntervenant(Intervenant i) {
 		try {
 			this.db.ajouterIntervenant(i);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		this.hmIntervenants.put(id, i);
+		this.hmIntervenants.put(i.getId(), i);
 	}
 
 	public void updateIntervenant(Intervenant i) {
@@ -124,7 +130,6 @@ public class Modele {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		this.ctrl.getVue().majTableIntervenant();
 	}
 
 	public void ajouterIntervention(int idIntervenant, int idModule, int idTypeCours, int nbSemaines, int nbGroupe) {
@@ -149,14 +154,14 @@ public class Modele {
 		intervention.setNbGroupe(i.getNbGroupe());
 	}
 
-	public void ajouterModule(int id, String nom, int nbSemaines, int idAnnee, int idSemestre) {
-		Module m = new Module(id, nom, nbSemaines, idAnnee, idSemestre);
+	public void ajouterModule(String nom, int nbSemaines, int idSemestre) {
+		Module m = new Module(nom, nbSemaines, this.idAnnee, idSemestre);
 		try {
 			this.db.ajouterModule(m);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		this.hmModules.put(id, m);
+		this.hmModules.put(m.getId(), m);
 	}
 
 	public void updateModule(Module m) {
@@ -171,14 +176,14 @@ public class Modele {
 		this.hmModules.get(m.getId()).setIdSemestre(m.getIdSemestre());
 	}
 
-	public void ajouterSemestre(int id, int nbGTD, int nbGTP, int nbGCM, int nbGAutre) {
-		Semestre s = new Semestre(id, nbGTD, nbGTD, nbGCM, nbGAutre, idAnnee);
+	public void ajouterSemestre(int nbGTD, int nbGTP, int nbGCM, int nbGAutre) {
+		Semestre s = new Semestre(nbGTD, nbGTD, nbGCM, nbGAutre, idAnnee);
 		try {
 			this.db.ajouterSemestre(s);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		this.hmSemestres.put(id, s);
+		this.hmSemestres.put(s.getId(), s);
 	}
 
 	public void updateSemestre(Semestre s) {
@@ -226,14 +231,39 @@ public class Modele {
 		typeCours.setNom(tc.getNom());
 	}
 
+	public void updateTypeCoursBrut(String nomTypeCours, Double newCoeff) {
+		for (TypeCours tc : hmTypeCours.values()) {
+			if (nomTypeCours.equals(tc.getNom())) {
+				tc.setCoefficient(newCoeff);
+				this.updateTypeCours(tc);
+			}
+		}
+	}
+
 	public void ajouterAnnee() {
 		try {
 			int iAnnee = this.db.getDerAnnee() + 1;
 			String annee = (DEBUT_ANNEE + iAnnee) + "-" + (DEBUT_ANNEE + iAnnee + 1);
 			this.db.ajouterAnnee(iAnnee, annee);
 			this.hmAnnee.put(iAnnee, annee);
-			this.ctrl.getVue().setAnnee(annee);
-			this.ctrl.getVue().majListAnnee();
+			
+			if (this.duplication) {
+				Map<Integer, Categorie>   hmTmpCategories = this.db.getCategories(this.idAnnee);
+				Map<Integer, Intervenant> hmTmpIntervenants = this.db.getIntervenants(this.idAnnee);
+				Map<String, Intervention> hmTmpInterventions = this.db.getInterventions(this.idAnnee);
+				Map<Integer, Module>      hmTmpModules = this.db.getModules(this.idAnnee);
+				Map<Integer, Semestre>    hmTmpSemestres = this.db.getSemestres(this.idAnnee);
+				Map<String, HeureCours>   hmTmpHeuresCours = this.db.getHeureCours(this.idAnnee);
+				this.idAnnee = iAnnee;
+				for (Categorie c : hmTmpCategories.values()) ajouterCategorie(c.getNom(), c.gethMin(), c.gethMax());
+				for (Intervenant i : hmTmpIntervenants.values()) ajouterIntervenant(i.getNom(), i.getNom(), i.getEmail(), i.gethMin(), i.gethMax(), i.getIdCategorie());
+				for (Intervention i : hmTmpInterventions.values()) ajouterIntervention(i.getIdIntervenant(), i.getIdModule(), i.getIdTypeCours(), i.getNbSemaines(), i.getNbGroupe());
+				for (Module m : hmTmpModules.values()) ajouterModule(m.getNom(), m.getNbSemaines(), m.getIdSemestre());	
+				for (Semestre s : hmTmpSemestres.values()) ajouterSemestre(s.getNbGTD(), s.getNbGTP(), s.getNbGCM(), s.getNbGAutre());
+				for (HeureCours hc : hmTmpHeuresCours.values()) ajouterHeureCours(hc.getIdTypeCours(), hc.getIdModule(), hc.getHeure());	
+			} else { this.updateAnnee(annee); }
+			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -250,12 +280,21 @@ public class Modele {
 			this.hmInterventions = this.db.getInterventions(idAnnee);
 			this.hmModules = this.db.getModules(idAnnee);
 			this.hmSemestres = this.db.getSemestres(idAnnee);
-			this.hmTypeCours = this.db.getTypeCours();
 			this.hmHeuresCours = this.db.getHeureCours(idAnnee);
+			this.ctrl.getVue().setAnnee(this.hmAnnee.get(this.idAnnee));
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-		this.ctrl.getVue().setAnnee(this.hmAnnee.get(this.idAnnee));
+		}	
+		
+	
+	}
+
+	public boolean isDuplication() {
+		return duplication;
+	}
+
+	public void setDuplication(boolean duplication) {
+		this.duplication = duplication;
 	}
 
 	public Map<Integer, Categorie> getHmCategories() {

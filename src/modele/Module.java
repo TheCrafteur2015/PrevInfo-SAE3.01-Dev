@@ -1,6 +1,9 @@
 package modele;
 
-public class Module {
+
+public class Module implements Comparable<Module> {
+
+	public static int NB_MODULE = 0;
 
 	private int id;
 	private String nom;
@@ -16,7 +19,11 @@ public class Module {
 	 * @param idSemestre
 	 */
 	public Module(int id, String nom, int nbSemaines, int idAnnee, int idSemestre) {
-		this.id = id;
+		this(nom, nbSemaines, idAnnee, idSemestre);
+	}
+
+	public Module(String nom, int nbSemaines, int idAnnee, int idSemestre) {
+		this.id = ++NB_MODULE;
 		this.nom = nom;
 		this.nbSemaines = nbSemaines;
 		this.idAnnee = idAnnee;
@@ -67,6 +74,12 @@ public class Module {
 	public String toString() {
 		return "Module [id=" + id + ", nom=" + nom + ", nbSemaines=" + nbSemaines + ", idAnnee=" + idAnnee
 				+ ", idSemestre=" + idSemestre + "]";
+	}
+
+	@Override
+	public int compareTo(Module autre)
+	{
+		return this.nom.compareTo(autre.nom);
 	}
 
 }

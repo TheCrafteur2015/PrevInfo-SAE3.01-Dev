@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.image.ImageView?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="731.0" prefWidth="1345.0" stylesheets="@vue.style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vue.ControleurIHM">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="731.0" prefWidth="1345.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vue.ControleurIHM">
    <children>
       <BorderPane prefHeight="731.0" prefWidth="1345.0">
          <top>
@@ -27,12 +27,12 @@
          <left>
             <AnchorPane prefHeight="647.0" prefWidth="211.0" style="-fx-background-color: #4D61CC;" BorderPane.alignment="CENTER">
                <children>
-                  <Button alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutX="-1.0" mnemonicParsing="false" onAction="#allerAccueil" prefHeight="66.0" prefWidth="212.0" text="Accueil">
+                  <Button alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutX="-1.0" mnemonicParsing="false" onAction="#allerAccueil" prefHeight="66.0" prefWidth="212.0" text="Accueil" styleClass="btn-accueil">
                      <font>
                         <Font size="20.0" />
                      </font>
                      <graphic>
-                        <ImageView fx:id="imageAccueil" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageAccueil" fitHeight="30.0" fitWidth="30.0" scaleX="16.0" scaleY="16.0" pickOnBounds="true" preserveRatio="true" />
                      </graphic>
                   </Button>
                   <Button alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutY="64.0" mnemonicParsing="false" onAction="#allerIntervenants" prefHeight="67.0" prefWidth="211.0" text="Intervenants">
@@ -51,7 +51,7 @@
                         <ImageView fx:id="imageModule" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                      </graphic>
                   </Button>
-                  <Button alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutY="608.0" mnemonicParsing="false" onAction="#allerExporter" prefHeight="40.0" prefWidth="211.0" text="Exporter">
+                  <Button alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutY="581.0" mnemonicParsing="false" onAction="#allerExporter" prefHeight="67.0" prefWidth="211.0" text="Exporter">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -87,7 +87,7 @@
                      <font>
                         <Font size="15.0" />
                      </font></Label>
-                  <ToggleButton layoutX="635.0" layoutY="325.0" minHeight="16.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="162.0" text="Duplication">
+                  <ToggleButton layoutX="635.0" layoutY="325.0" minHeight="16.0" mnemonicParsing="false" onAction="#modeDuplication" prefHeight="30.0" prefWidth="162.0" text="Duplication">
                      <font>
                         <Font size="18.0" />
                      </font>

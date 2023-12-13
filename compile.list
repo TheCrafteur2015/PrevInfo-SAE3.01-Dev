@@ -3,6 +3,9 @@ src/vue/App.java
 src/vue/ControleurIHM.java  
 src/vue/IntervenantIHM.java
 src/vue/ResourceManager.java  
+src/vue/FrameIntervenant.java
+src/vue/FrameModule.java  
+src/vue/FrameParamCategorie.java
 src/controleur/Controleur.java
 src/modele/DB.java
 src/modele/Categorie.java  

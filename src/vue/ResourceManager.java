@@ -21,10 +21,10 @@ public final class ResourceManager {
 	public static final URL BOOK = ResourceManager.class.getResource("book.svg");
 
 	// Images
-	public static final URL HOUSE = ResourceManager.class.getResource("accueil_icone.png");
-	public static final URL INTERVENANT = ResourceManager.class.getResource("prof_icon.png");
-	public static final URL MODULE = ResourceManager.class.getResource("ressource_icone.png");
-	public static final URL DOWNLOAD = ResourceManager.class.getResource("download.png");
+	public static final URL HOUSE       = ResourceManager.class.getResource("/images/accueil_icone.png");
+	public static final URL INTERVENANT = ResourceManager.class.getResource("/images/prof_icon.png");
+	public static final URL MODULE      = ResourceManager.class.getResource("/images/ressource_icone.png");
+	public static final URL DOWNLOAD    = ResourceManager.class.getResource("/images/download.png");
 
 	private static final Map<String, String> DATA = new HashMap<>();
 

@@ -43,3 +43,7 @@
     -fx-background-color: transparent;
 	
 }
+
+.btn-accueil {
+	-fx-background-image: url("../images/accueil_icone.png");
+}
