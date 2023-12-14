@@ -1,6 +1,4 @@
 package vue;
-import java.net.URL;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,6 +9,7 @@ public class App extends Application /* implements EventHandler<Event> */ {
 
 	@Override
 	public void start(Stage stage) throws Exception {
+		System.out.println(ResourceManager.ACCUEIL);
 		Parent root = FXMLLoader.load(ResourceManager.ACCUEIL);
 		stage.setTitle("PrevInfo");
 
@@ -24,7 +23,12 @@ public class App extends Application /* implements EventHandler<Event> */ {
 	}
 
 	public static void main(String[] args) {
-		Application.launch(args);
+		try {
+			Application.launch(args);
+		} catch (RuntimeException e) {
+			System.err.println("Exception : " + e.getMessage());
+			e.printStackTrace();
+		}
 	}
 
 }

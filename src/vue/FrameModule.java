@@ -68,7 +68,7 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 	public void majAffichageSemestres(){
 		this.hmSemestres = this.ctrl.getModele().getHmSemestres();	
 
-		for (Semestre semestre : this.hmSemestres.values()) {
+		for (@SuppressWarnings("unused") Semestre semestre : this.hmSemestres.values()) {
 			// BorderPane avec un flowTitre en haut et le tableau au centre
 			BorderPane borderPaneSemestre = new BorderPane();
 			FlowPane flowPaneTitreSemestre = new FlowPane();

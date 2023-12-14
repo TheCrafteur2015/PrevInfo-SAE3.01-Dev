@@ -370,7 +370,7 @@ public class DB {
 		ResultSet rs = this.psSelectModule.executeQuery();
 		while (rs.next()) {
 			hmModule.put(rs.getInt("idModule"),
-					new Module(rs.getInt("idModule"), rs.getString("nomModule"), rs.getInt("nbSemainesModule"), idAnnee,
+					new Module(rs.getInt("idModule"), rs.getString("nomModule"), rs.getString("code"), idAnnee,
 							rs.getInt("idSemestre")));
 		}
 		return hmModule;
@@ -385,7 +385,7 @@ public class DB {
 	public void ajouterModule(Module module) throws SQLException {
 		this.psInsertModule.setInt(1, module.getId());
 		this.psInsertModule.setString(2, module.getNom());
-		this.psInsertModule.setInt(3, module.getNbSemaines());
+		this.psInsertModule.setString(3, module.getCode());
 		this.psInsertModule.setInt(5, module.getIdSemestre());
 		this.psInsertModule.setInt(4, module.getIdAnnee());
 		this.psInsertModule.executeUpdate();
@@ -400,7 +400,7 @@ public class DB {
 	public void updateModule(Module module) throws SQLException {
 		this.psUpdateModule.setInt(5, module.getId());
 		this.psUpdateModule.setString(1, module.getNom());
-		this.psUpdateModule.setInt(2, module.getNbSemaines());
+		this.psUpdateModule.setString(2, module.getCode());
 		this.psUpdateModule.setInt(3, module.getIdAnnee());
 		this.psUpdateModule.setInt(4, module.getIdSemestre());
 		this.psUpdateModule.executeUpdate();
@@ -434,9 +434,10 @@ public class DB {
 		this.psSelectSemestre.setInt(1, idAnnee);
 		ResultSet rs = this.psSelectSemestre.executeQuery();
 		while (rs.next()) {
+//			display(rs);
 			hmSemestre.put(rs.getInt("idSemestre"),
 					new Semestre(rs.getInt("idSemestre"), rs.getInt("nbGTD"), rs.getInt("nbGTP"), rs.getInt("nbGCM"),
-							rs.getInt("nbGAutre"), idAnnee));
+							rs.getInt("nbsemaine"), idAnnee));
 		}
 		return hmSemestre;
 	}
@@ -646,6 +647,17 @@ public class DB {
 			hmAnnee.put(rs.getInt("idAnnee"), rs.getString("annee"));
 		}
 		return hmAnnee;
+	}
+	
+	public static void display(ResultSet set) throws SQLException {
+		ResultSetMetaData rsmd = set.getMetaData();
+		System.out.println("Column count: " + rsmd.getColumnCount());
+		for (int i = 1; i <= rsmd.getColumnCount(); i++)
+			System.out.print(rsmd.getColumnName(i) + " - ");
+		System.out.println();
+		for (int i = 1; i <= rsmd.getColumnCount(); i++)
+			System.out.print(set.getString(i) + ", ");
+		System.out.println();
 	}
 
 }

@@ -2,8 +2,6 @@ package vue;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 public class ModuleIHM {
 

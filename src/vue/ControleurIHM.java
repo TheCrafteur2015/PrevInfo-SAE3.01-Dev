@@ -1,68 +1,41 @@
 package vue;
 
-import modele.Intervenant;
-import modele.Categorie;
-import modele.TypeCours;
-
-import controleur.Controleur;
-
-import java.util.Map;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
-import javax.swing.Action;
-
-import javafx.scene.control.TableColumn;
-
-import javafx.event.Event;
+import controleur.Controleur;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.scene.input.MouseEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.fxml.*;
-import javafx.scene.control.Label;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableView;
-import javafx.stage.Popup;
-import javafx.stage.Stage;
-import javafx.scene.Node;
-import javafx.collections.ObservableList;
-import javafx.collections.FXCollections;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.SVGPath;
-import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.shape.StrokeLineJoin;
-
-import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.*;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.control.Label;
-import javafx.stage.Stage;
-import javafx.stage.Popup;
-import javafx.stage.Modality;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ChoiceBox;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import modele.TypeCours;
 
 public class ControleurIHM implements Initializable, EventHandler<Event> , ChangeListener<String>{
 
@@ -75,10 +48,12 @@ public class ControleurIHM implements Initializable, EventHandler<Event> , Chang
 	private Parent root;
 
 	private FrameIntervenant frameIntervenant;
+	@SuppressWarnings("unused")
 	private FrameModule frameModule;
 
 	private Controleur ctrl;
 
+	@SuppressWarnings("unused")
 	private Button btnConfirmerIntervenant;
 
 	@FXML
@@ -144,7 +119,10 @@ public class ControleurIHM implements Initializable, EventHandler<Event> , Chang
 		Stage popupStage = new Stage();
 		popupStage.initModality(Modality.APPLICATION_MODAL);
 		popupStage.setTitle("Pop-up");
-
+		popupStage.setHeight(350);
+		popupStage.setWidth(300);
+		popupStage.setResizable(false);
+		
 		Map<Integer, TypeCours> hmTypeCours = this.ctrl.getModele().getHmTypeCours();
 
 		this.alText = new ArrayList<>();
@@ -152,39 +130,44 @@ public class ControleurIHM implements Initializable, EventHandler<Event> , Chang
 		Text textTmp;
 		TextField textFieldTmp;
 		for (TypeCours tc : hmTypeCours.values()) {
-			textTmp = new Text(tc.getNom());
-			textFieldTmp = new TextField(tc.getCoefficient() + "");
+			textTmp = new Text(tc.getNom() + " :");
+			textFieldTmp = new TextField(String.valueOf(tc.getCoefficient()));
+			textFieldTmp.getStyleClass().add("coeffValue");
 			textFieldTmp.setMaxWidth(7 * 7);
 			textFieldTmp.textProperty().addListener(this);
-			alText.add(textTmp);
+			this.alText.add(textTmp);
 			
 			this.alTextField.add(textFieldTmp);
 		}
 
 		VBox vbox = new VBox(5);
-		vbox.setMaxSize(200, alText.size() * 50);
+		vbox.setMaxSize(200, this.alText.size() * 50);
+		vbox.setAlignment(Pos.CENTER);
 
 		GridPane gridPane = new GridPane();
-		for (int i = 0; i < alText.size(); i++) {
-			gridPane.add(alText.get(i), 0, i);
-			gridPane.add(alTextField.get(i), 1, i);
+		for (int i = 0; i < this.alText.size(); i++) {
+			gridPane.add(this.alText.get(i), 0, i);
+			gridPane.add(this.alTextField.get(i), 1, i);
 		}
 		gridPane.setPadding(new Insets(10));
 		gridPane.setHgap(10);
 		gridPane.setVgap(10);
 
 		this.btnConfirmerMultiplicateur = new Button("Confirmer");
+		this.btnConfirmerMultiplicateur.getStyleClass().add("confirmBtn");
+		this.btnConfirmerMultiplicateur.setStyle("-fx-background-radius: 150; -fx-background-color: #758AFF; -fx-text-fill: white;");
 		this.btnConfirmerMultiplicateur.addEventHandler(ActionEvent.ACTION, this);
 		StackPane popupLayout = new StackPane();
 		BorderPane borderPane = new BorderPane();
 		borderPane.setCenter(this.btnConfirmerMultiplicateur);
-
+		
 		vbox.getChildren().add(gridPane);
 		vbox.getChildren().add(borderPane);
 		popupLayout.getChildren().add(vbox);
-		Scene popupScene = new Scene(popupLayout, 200, alText.size() * 50);
+		Scene popupScene = new Scene(popupLayout, 200, this.alText.size() * 50);
+		popupScene.getStylesheets().add(ResourceManager.STYLESHEET_POPUP.toExternalForm());
 		popupStage.setScene(popupScene);
-
+		
 		popupStage.showAndWait();
 	}
 

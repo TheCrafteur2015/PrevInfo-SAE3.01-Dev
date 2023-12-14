@@ -1,67 +1,43 @@
 package vue;
 
-import modele.Intervenant;
-import modele.Categorie;
-import modele.Intervention;
-import modele.Module;
+import java.util.Map;
 
 import controleur.Controleur;
-
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-
-import javax.swing.Action;
-
-import javafx.scene.control.TableColumn;
-
-import javafx.event.Event;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.scene.input.MouseEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.fxml.*;
-import javafx.scene.control.Label;
-import javafx.scene.Parent;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableView;
-import javafx.stage.Popup;
-import javafx.stage.Stage;
-import javafx.scene.Node;
-import javafx.collections.ObservableList;
-import javafx.collections.FXCollections;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
-
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.*;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.control.Label;
-import javafx.stage.Stage;
-import javafx.stage.Popup;
-import javafx.stage.Modality;
 import javafx.scene.text.Text;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ChoiceBox;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.beans.value.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Callback;
+import modele.Categorie;
+import modele.Intervenant;
+import modele.Intervention;
+import modele.Module;
 
 public class FrameIntervenant implements EventHandler<Event>, ChangeListener<String> {
 
@@ -77,6 +53,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 	private TextField tfHMin;
 	private TextField tfHMax;
 	private Button btnParamCategorie;
+	@SuppressWarnings("unused")
 	private FrameParamCategorie frameParamCategorie;
 
 	private ChoiceBox<Categorie> choiceBoxCategorie;
@@ -321,6 +298,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		popupStage.showAndWait();
 	}
 
+	@SuppressWarnings("deprecation")
 	public void popupAfficheModule(int idIntervenant) {
 		Stage popupStage = new Stage();
 		popupStage.initModality(Modality.APPLICATION_MODAL);

@@ -16,6 +16,7 @@ public final class ResourceManager {
 
 	// Fichiers CSS
 	public static final URL STYLESHEET = ResourceManager.class.getResource("style.css");
+	public static final URL STYLESHEET_POPUP = ResourceManager.class.getResource("stylePopup.css");
 
 	// Fichiers SVG
 	public static final URL BOOK = ResourceManager.class.getResource("book.svg");
@@ -33,13 +34,15 @@ public final class ResourceManager {
 		try {
 			folder = Paths.get(ResourceManager.class.getResource("").toURI()).toFile();
 		} catch (Exception e) {
-
+			System.err.println("Couldn't get root folder");
 		}
 		for (File file : folder.listFiles()) {
 			if (!file.isFile())
 				continue;
 			String name = file.getName();
-			String suffix = name.substring(name.lastIndexOf("."));
+			String suffix = "";
+			if (name.matches("^.+\\..+$"))
+				name.substring(name.lastIndexOf("."));
 			if (suffix.equals(".data")) {
 				String data = "";
 				try (Scanner sc = new Scanner(file)) {
@@ -47,11 +50,15 @@ public final class ResourceManager {
 						data += sc.nextLine() + "\n";
 				} catch (IOException e) {
 					e.printStackTrace();
+					System.err.println("Exception file listening");
 				} finally {
 					ResourceManager.DATA.put(name.substring(0, name.length() - suffix.length()).toLowerCase(), data);
 				}
 			}
 		}
+		
+		for (String s : ResourceManager.DATA.values())
+			System.out.println(s);
 	}
 
 	private ResourceManager() {

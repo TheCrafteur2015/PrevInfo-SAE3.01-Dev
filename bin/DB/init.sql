@@ -1,75 +1,88 @@
-DROP TABLE IF EXISTS Categorie;
-DROP TABLE IF EXISTS TypeCours;
-DROP TABLE IF EXISTS Module;
-DROP TABLE IF EXISTS Intervenant;
-DROP TABLE IF EXISTS Intervention;
-DROP TABLE IF EXISTS Semestre;
+DROP TABLE IF EXISTS Annee CASCADE;
+DROP TABLE IF EXISTS Categorie CASCADE;
+DROP TABLE IF EXISTS HeureCours CASCADE;
+DROP TABLE IF EXISTS TypeCours CASCADE;
+DROP TABLE IF EXISTS Module CASCADE;
+DROP TABLE IF EXISTS Intervenant CASCADE;
+DROP TABLE IF EXISTS Intervention CASCADE;
+DROP TABLE IF EXISTS Semestre CASCADE;
 
-CREATE TABLE Categorie(
-	idCategorie serial PRIMARY KEY,
-	nomCategorie  varchar(255),
-	hMaxCategorie int,
-	hMinCategorie int,
-	idAnnee     references Annee(idAnnee)
+CREATE TABLE Annee (
+	idAnnee SERIAL PRIMARY KEY,
+	annee   VARCHAR(9)
 );
 
-CREATE TABLE TypeCours(
-	idTypeCours serial PRIMARY KEY,
-	nomCours    int,
-	coefficient int,
-	idAnnee     references Annee(idAnnee)
+CREATE TABLE TypeCours (
+	idTypeCours SERIAL PRIMARY KEY,
+	nomCours    VARCHAR(255),
+	coefficient FLOAT
 );
 
-CREATE TABLE HeureCours(
-	idTypeCours int references TypeCours(idTypeCours),
-	idModule    int references Module(idModule),
-	heure       int,
-	idAnnee     references Annee(idAnnee)
+CREATE TABLE Categorie (
+	idCategorie   SERIAL PRIMARY KEY,
+	nomCategorie  VARCHAR(255),
+	hMaxCategorie FLOAT,
+	hMinCategorie FLOAT,
+	ratioTp       FLOAT,
+	idAnnee       INT REFERENCES Annee(idAnnee)
 );
 
-CREATE TABLE Module(
-	idModule serial PRIMARY KEY,
-	nomModule        varchar(255),
-	nbSemainesModule int,
-	idAnnee     references Annee(idAnnee),
-	idSemestres      int references Semestre(idSemestres)
+CREATE TABLE Semestre (
+	idSemestre SERIAL PRIMARY KEY, 
+	nbGTD      INT,
+	nbGTP      INT,
+	nbGCM      INT,
+	nbGAutre   INT,
+	idAnnee    INT REFERENCES Annee(idAnnee)
+);
+
+CREATE TABLE Module (
+	idModule   SERIAL PRIMARY KEY,
+	nomModule  VARCHAR(255),
+	code       VARCHAR(10),
+	idAnnee    INT REFERENCES Annee(idAnnee),
+	idSemestre INT REFERENCES Semestre(idSemestre)
+);
+
+CREATE TABLE HeureCours (
+	idTypeCours INT REFERENCES TypeCours(idTypeCours),
+	idModule    INT REFERENCES Module(idModule),
+	heure       FLOAT,
+	nbSemaine   INT,
+	hParSemaine FLOAT,
+	idAnnee     INT REFERENCES Annee(idAnnee),
+	PRIMARY KEY (idTypeCours, idModule, idAnnee)
 );
 
 CREATE TABLE Intervenant(
-	idIntervenant serial PRIMARY KEY, 
-	prenom          varchar(255),
-	nomIntervenant  varchar(255),
-	email           varchar(255),
-	hMinIntervenant int,
-	hMaxIntervenant int,
-	idAnnee     references Annee(idAnnee),
-	idCategorie     int references Categorie(idCategorie)
+	idIntervenant   SERIAL PRIMARY KEY, 
+	prenom          VARCHAR(255),
+	nom             VARCHAR(255),
+	email           VARCHAR(255),
+	hMinIntervenant INT,
+	hMaxIntervenant INT,
+	idAnnee         INT REFERENCES Annee(idAnnee),
+	idCategorie     INT REFERENCES Categorie(idCategorie)
 );
 
 CREATE TABLE Intervention(
-	idIntervenant          int references Intervenant(idIntervenant),
-	idModule               int references Module(idModule),
-	idTypeCours            int references TypeCours(idTypeCours),
-	nbSemainesIntervention int,
-	nbGroupe               int,
-	idAnnee     references Annee(idAnnee),
-	
-	PRIMARY KEY ((idIntervenant,idModule),idTypeCours)
+	idIntervenant          INT REFERENCES Intervenant(idIntervenant),
+	idModule               INT REFERENCES Module(idModule),
+	idTypeCours            INT REFERENCES TypeCours(idTypeCours),
+	nbSemainesIntervention INT,
+	nbGroupe               INT,
+	idAnnee                INT REFERENCES Annee(idAnnee),
+	PRIMARY KEY (idIntervenant,idModule,idTypeCours,idAnnee)
 );
 
-CREATE TABLE Semestre(
-	idSemestres serial PRIMARY KEY, 
-	nbGTD       int,
-	nbGTP       int,
-	nbGCM       int,
-	nbGAutre    int,
-	idAnnee     references Annee(idAnnee)
-);
+-- ALTER TABLE HeureCours ADD CONSTRAINT fk_HeureCours_TypeCours FOREIGN KEY (idTypeCours) REFERENCES TypeCours(idTypeCours);
+-- ALTER TABLE HeureCours ADD CONSTRAINT fk_HeureCours_Module FOREIGN KEY (idModule) REFERENCES Module(idModule);
+-- ALTER TABLE Module ADD CONSTRAINT fk_Module_Semestre FOREIGN KEY (idSemestres) REFERENCES Semestre(idSemestre);
+-- ALTER TABLE Intervention ADD CONSTRAINT fk_Intervention_Intervenant FOREIGN KEY (idIntervenant) REFERENCES Intervenant(idIntervenant);
 
-CREATE TABLE Annee(
-	idAnnee serial PRIMARY Key,
-	annee varchar(9)
-);
+-- Ajout des contraintes PRIMARY KEY manquantes
+-- ALTER TABLE Intervention ADD PRIMARY KEY (idIntervention, idModule, idTypeCours);
+
 
 /*
 RCategorie    ( [idCategorie], nomCategorie, hMaxCategorie, hMinCategorie, idAnnee#)
