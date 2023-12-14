@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.scene.layout.VBox;
 
 import javax.swing.Action;
 
@@ -32,7 +31,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.scene.Node;
@@ -73,13 +71,14 @@ public class FrameParamCategorie {
 	private TextField tfHeureMax;
 	private Map<Integer, Categorie> hmCategorie;
 
-	
-
 	public FrameParamCategorie(Controleur ctrl, AnchorPane centerPaneAccueil) {
 		this.ctrl = ctrl;
 		this.centerPaneAccueil = centerPaneAccueil;
-		this.init();
+		System.out.println(this.ctrl.getModele().getHmCategories().size());
 		this.hmCategorie = this.ctrl.getModele().getHmCategories();
+		this.init();
+
+		
 
 	}
 
@@ -88,42 +87,48 @@ public class FrameParamCategorie {
 		popupStage.initModality(Modality.APPLICATION_MODAL);
 		popupStage.setTitle("Pop-up");
 
-        ObservableList<CategorieIHM> olCategorie = FXCollections.observableArrayList();
+		ObservableList<CategorieIHM> olCategorie = FXCollections.observableArrayList();
 
-        for (Categorie c : this.hmCategorie.values()) {
-			Button btnSup = new Button();
-            btnSup.setId(c.getId()+"");
-            olCategorie.add(new CategorieIHM(c.getNom(),btnSup));
+		for (Categorie c : this.hmCategorie.values()) {
+			Button btnSup = this.ctrl.getVue().getFrameIntervenant().getSupButton();
+			btnSup.setId(c.getId() + "");
+			olCategorie.add(new CategorieIHM(c.getNom(), btnSup));
 		}
 
-        TableColumn<CategorieIHM, String> tcNomCategorie = new TableColumn<>("");
-        tcNomCategorie.setCellValueFactory(new PropertyValueFactory<>("nomC"));
+		
 
-        TableColumn<CategorieIHM, Button> tcBtnSup = new TableColumn<>("");
-        tcNomCategorie.setCellValueFactory(new PropertyValueFactory<>("btnSup"));
+		TableView tableView = new TableView<>();
+		
 
-        TableView tableView = new TableView<>();
-        tableView.setItems(olCategorie);
-      
+
+		String[] colonnes = new String[] { "Nom", "Supprimer" };
+
+		if (tableView.getColumns().size() < 2) {
+			for (String colonne : colonnes) {
+				TableColumn<CategorieIHM, String> tbcl = new TableColumn<>(colonne);
+				tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
+				tableView.getColumns().add(tbcl);
+			}
+		}
+		tableView.setItems(olCategorie);
+		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		VBox vbox = new VBox(5);
 		Text nomC = new Text("Nom de la catégorie");
 		this.nomCategorie = new TextField();
 
-		Text tHeureMin       = new Text("Heures minimales: ");
-		 this.tfHeureMin     = new TextField();
+		Text tHeureMin = new Text("Heures minimales: ");
+		this.tfHeureMin = new TextField();
 
-		Text tHeureMax       = new Text("Heure maximales: ");
-		this.tfHeureMax      = new TextField();
+		Text tHeureMax = new Text("Heure maximales: ");
+		this.tfHeureMax = new TextField();
 
-	
 		StackPane popupLayout = new StackPane();
-
+		vbox.getChildren().add(tableView);
 		popupLayout.getChildren().add(vbox);
-		Scene popupScene = new Scene(popupLayout, 200, 400);
+		Scene popupScene = new Scene(popupLayout, 400, 200);
 		popupStage.setScene(popupScene);
 
 		popupStage.showAndWait();
 	}
-
 
 }

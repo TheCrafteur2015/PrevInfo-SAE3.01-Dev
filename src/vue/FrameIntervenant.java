@@ -74,7 +74,6 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 	private TextField tfPrenom;
 	private TextField tfNom;
 	private TextField tfEmail;
-	private TextField tfCategorie;
 	private TextField tfHMin;
 	private TextField tfHMax;
 	private Button btnParamCategorie;
@@ -82,11 +81,14 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 
 	private ChoiceBox<Categorie> choiceBoxCategorie;
 
+	private boolean modifInter;
+
 	public FrameIntervenant(Controleur ctrl, AnchorPane centerPaneAccueil) {
 		this.ctrl = ctrl;
 		this.centerPaneAccueil = centerPaneAccueil;
 		this.tableViewIntervenant = new TableView<>();
 		this.tableViewIntervenant.setEditable(true);
+		this.modifInter = false;
 
 		this.init();
 	}
@@ -124,6 +126,9 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		this.btnParamIntervenants.setId("btnParamIntervenants");
 		// this.btnParamIntervenants.setOnAction(this);
 		this.btnParamIntervenants.addEventHandler(ActionEvent.ACTION, this);
+		if (this.ctrl.getModele().getHmIntervenants().size() == 0) {
+			this.btnParamIntervenants.setDisable(true);
+		}
 
 		AnchorPane.setTopAnchor(this.btnParamIntervenants, 580.0);
 		AnchorPane.setLeftAnchor(this.btnParamIntervenants, 20.0);
@@ -133,6 +138,9 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 
 		btnParamCategorie.setPrefSize(250, 40);
 		this.btnParamCategorie.addEventHandler(ActionEvent.ACTION, this);
+		if (this.ctrl.getModele().getHmCategories().size() == 0) {
+			this.btnParamCategorie.setDisable(true);
+		}
 
 		AnchorPane.setTopAnchor(btnParamCategorie, 580.0);
 		AnchorPane.setLeftAnchor(btnParamCategorie, 400.0);
@@ -199,6 +207,9 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 	}
 
 	public void popupParamIntervenant(IntervenantIHM i) {
+		if (i != null) this.modifInter = true;
+		else this.modifInter = false;
+	
 		Stage popupStage = new Stage();
 		popupStage.initModality(Modality.APPLICATION_MODAL);
 		popupStage.setTitle("Pop-up");
@@ -283,6 +294,22 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		borderPane5.setCenter(this.btnConfirmerIntervenant);
 
 		vbox.setAlignment(Pos.CENTER);
+
+		if (i != null) {
+			Map<Integer, Intervenant> hmInter = this.ctrl.getModele().getHmIntervenants();
+			Intervenant inter = hmInter.get(Integer.parseInt(i.getSupprimer().getId().split("-")[1]));
+			this.tfPrenom.setText(inter.getPrenom());
+			this.tfNom.setText(inter.getNom());
+			this.tfEmail.setText(inter.getEmail());
+			this.tfHMin.setText(inter.gethMin()+"");
+			this.tfHMax.setText(inter.gethMax()+"");
+			for (Categorie c : hmCategorie.values()) {
+				if (inter.getIdCategorie() == c.getId()) {
+					this.choiceBoxCategorie.setValue(c);
+					break;	
+				}
+			}
+		}
 
 		StackPane popupLayout = new StackPane();
 		// popupLayout.getChildren().add(closeButton);
@@ -385,7 +412,12 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 
 				// Intervenant i = new Intervenant(prenom, nom, email, hMin, hMax, annee,
 				// c.getId());
-				this.ctrl.getModele().ajouterIntervenant(prenom, nom, email, hMin, hMax, annee);
+				if (this.modifInter) {
+				
+				} else {
+					this.ctrl.getModele().ajouterIntervenant(prenom, nom, email, hMin, hMax, annee);
+				}
+				
 
 				((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
 				this.majTableIntervenant();
@@ -402,7 +434,6 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 					this.majTableIntervenant();
 				}
 			}
-
 		}
 	}
 

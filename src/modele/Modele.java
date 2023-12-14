@@ -107,19 +107,20 @@ public class Modele {
 		this.hmIntervenants.put(i.getId(), i);
 	}
 
-	public void updateIntervenant(Intervenant i) {
+	public void updateIntervenant(int idIntervenant, String prenom, String nom, String email, double hMin, double hMax,
+			int idCategorie) {
+		Intervenant i = this.hmIntervenants.get(idIntervenant);		
 		try {
 			this.db.updateIntervenant(i);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Intervenant intervenant = this.hmIntervenants.get(i.getId());
-		intervenant.setPrenom(i.getPrenom());
-		intervenant.setNom(i.getNom());
-		intervenant.setEmail(i.getEmail());
-		intervenant.sethMin(i.gethMin());
-		intervenant.sethMax(i.gethMax());
-		intervenant.setIdCategorie(i.getIdCategorie());
+		i.setPrenom(prenom);
+		i.setNom(nom);
+		i.setEmail(email);
+		i.sethMin(hMin);
+		i.sethMax(hMax);
+		i.setIdCategorie(idCategorie);
 
 	}
 

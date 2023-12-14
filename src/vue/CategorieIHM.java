@@ -4,24 +4,24 @@ package vue;/**
 import javafx.scene.control.Button;
 public class CategorieIHM {
 
-	private String nomC;
-	private Button btnSup;
-	public CategorieIHM(String nomC,Button btnSup)
+	private String nom;
+	private Button supprimer;
+	public CategorieIHM(String nom,Button supprimer)
 	{
-		this.nomC = nomC;
-		this.btnSup = btnSup;
+		this.nom = nom;
+		this.supprimer = supprimer;
 	}
-	public String getNomC() {
-		return nomC;
+	public String getNom() {
+		return nom;
 	}
-	public void setNomC(String nomC) {
-		this.nomC = nomC;
+	public void setNom(String nom) {
+		this.nom = nom;
 	}
-	public Button getBtnSup() {
-		return btnSup;
+	public Button getSupprimer() {
+		return supprimer;
 	}
-	public void setBtnSup(Button btnSup) {
-		this.btnSup = btnSup;
+	public void setSupprimer(Button supprimer) {
+		this.supprimer = supprimer;
 	}
 
 	

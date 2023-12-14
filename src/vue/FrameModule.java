@@ -4,68 +4,27 @@ import modele.*;
 
 import controleur.Controleur;
 
-import java.util.Map;
+
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.*;
-
-import javax.swing.Action;
-
-import javafx.scene.control.TableColumn;
 
 import javafx.event.Event;
 import javafx.event.ActionEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.*;
 import javafx.scene.control.Label;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableView;
-import javafx.stage.Popup;
-import javafx.stage.Stage;
-import javafx.scene.Node;
-import javafx.collections.ObservableList;
-import javafx.collections.FXCollections;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.SVGPath;
-import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.shape.StrokeLineJoin;
-
-import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.control.Label;
-import javafx.stage.Stage;
-import javafx.stage.Popup;
-import javafx.stage.Modality;
-import javafx.scene.text.Text;
+import javafx.scene.shape.SVGPath;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ChoiceBox;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.beans.value.*;
-import javafx.util.Callback;
 
 public class FrameModule implements EventHandler<Event>, ChangeListener<String> {
 	private Controleur ctrl;
 	private AnchorPane centerPaneAccueil;
+	private Map<Integer, Semestre> hmSemestres;
 
 	private Button btnAjouterSemestre;
 	private VBox vbox;
@@ -91,6 +50,8 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 		this.vbox.setAlignment(Pos.CENTER);
 		this.vbox.getChildren().add(btnAjouterSemestre);
 
+		this.hmSemestres = this.ctrl.getModele().getHmSemestres();
+
 		//Mettre le vBox dans le content du scrollPane qui va prendre toute la page
 		ScrollPane scrollPane = new ScrollPane();
 		scrollPane.setPrefSize(this.centerPaneAccueil.getHeight(), this.centerPaneAccueil.getWidth());
@@ -102,6 +63,10 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 		this.centerPaneAccueil.getChildren().add(scrollPane);
 
 		this.btnAjouterSemestre.addEventHandler(ActionEvent.ACTION, this);
+	}
+
+	public void majAffichageSemestres(){
+	
 	}
 
 	public void creerSemestre() {
@@ -121,7 +86,10 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 		TextField txtFAutre = new TextField();
 		txtFAutre.setMaxWidth(5 * 7);
 
+		SVGPath svgP = new SVGPath();
+		svgP.setContent("M0.81631 0.813695L26.4489 26.4463M26.4489 0.813695L0.81631 26.4463");
 		Button exit = new Button();
+		exit.setGraphic(svgP);
 		
 	
 		//Ajouter les txtFields et labels au flowPane
@@ -151,6 +119,12 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 	public void handle(Event action) {
 		if (action.getSource() == this.btnAjouterSemestre) 
 			this.creerSemestre();
+		else if (action.getSource() instanceof Button) {
+			Button button = (Button) action.getSource();
+			if (!(button.getId() == null)) {
+				
+			}
+		}
 		
 	}
 
