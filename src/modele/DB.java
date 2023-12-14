@@ -221,7 +221,7 @@ public class DB {
 		ResultSet rs = this.psSelectIntervenant.executeQuery();
 		while (rs.next()) {
 			hmInter.put(rs.getInt("idIntervenant"),
-					new Intervenant(rs.getString("prenom"), rs.getString("nom"),
+					new Intervenant(rs.getInt("idIntervenant"), rs.getString("prenom"), rs.getString("nom"),
 							rs.getString("email"), rs.getDouble("hMinIntervenant"), rs.getDouble("hMaxIntervenant"),
 							idAnnee, rs.getInt("idCategorie")));
 		}
@@ -386,8 +386,8 @@ public class DB {
 		this.psInsertModule.setInt(1, module.getId());
 		this.psInsertModule.setString(2, module.getNom());
 		this.psInsertModule.setInt(3, module.getNbSemaines());
-		this.psInsertModule.setInt(4, module.getIdSemestre());
-		this.psInsertModule.setInt(5, module.getIdAnnee());
+		this.psInsertModule.setInt(5, module.getIdSemestre());
+		this.psInsertModule.setInt(4, module.getIdAnnee());
 		this.psInsertModule.executeUpdate();
 	}
 

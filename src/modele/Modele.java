@@ -107,21 +107,12 @@ public class Modele {
 		this.hmIntervenants.put(i.getId(), i);
 	}
 
-	public void updateIntervenant(int idIntervenant, String prenom, String nom, String email, double hMin, double hMax,
-			int idCategorie) {
-		Intervenant i = this.hmIntervenants.get(idIntervenant);		
+	public void updateIntervenant(Intervenant i) {
 		try {
 			this.db.updateIntervenant(i);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		i.setPrenom(prenom);
-		i.setNom(nom);
-		i.setEmail(email);
-		i.sethMin(hMin);
-		i.sethMax(hMax);
-		i.setIdCategorie(idCategorie);
-
 	}
 
 	public void supprimerIntervenant(int id) {
@@ -257,7 +248,7 @@ public class Modele {
 				Map<String, HeureCours>   hmTmpHeuresCours = this.db.getHeureCours(this.idAnnee);
 				this.idAnnee = iAnnee;
 				for (Categorie c : hmTmpCategories.values()) ajouterCategorie(c.getNom(), c.gethMin(), c.gethMax());
-				for (Intervenant i : hmTmpIntervenants.values()) ajouterIntervenant(i.getNom(), i.getNom(), i.getEmail(), i.gethMin(), i.gethMax(), i.getIdCategorie());
+				for (Intervenant i : hmTmpIntervenants.values()) ajouterIntervenant(i.getPrenom(), i.getNom(), i.getEmail(), i.gethMin(), i.gethMax(), i.getIdCategorie());
 				for (Intervention i : hmTmpInterventions.values()) ajouterIntervention(i.getIdIntervenant(), i.getIdModule(), i.getIdTypeCours(), i.getNbSemaines(), i.getNbGroupe());
 				for (Module m : hmTmpModules.values()) ajouterModule(m.getNom(), m.getNbSemaines(), m.getIdSemestre());	
 				for (Semestre s : hmTmpSemestres.values()) ajouterSemestre(s.getNbGTD(), s.getNbGTP(), s.getNbGCM(), s.getNbGAutre());

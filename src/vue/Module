@@ -2,118 +2,202 @@
 @Override
 public void start(Stage stage) {
 
-	TableView<Module> tableModules = new TableView<Module>();
-	TableView<Module> tableTD      = new TableView<HeureCours>();
-	TableView<Module> tableTP      = new TableView<HeureCours>();
-	TableView<Module> tableCM      = new TableView<HeureCours>();
+	TableView<Module>     tableModules = new TableView<Module>();
+	TableView<HeureCours> tableTD      = new TableView<HeureCours>();
+	TableView<HeureCours> tableTP      = new TableView<HeureCours>();
+	TableView<HeureCours> tableCM      = new TableView<HeureCours>();
 
 	/*-----------------*/
 	/* gestion modules */
 	/*-----------------*/
-/*
-	// Editable
-	tableModules.setEditable(true);
 
-	TableColumn<Module, String> nomCol       = new TableColumn<Module, String>("Nom");
-	TableColumn<Module, String> nbSemaineCol = new TableColumn<Module, String>("nbSemaine");
+		// Editable
+		tableModules.setEditable(true);
+
+		TableColumn<Module, String> nomCol       = new TableColumn<Module, String>("Nom");
+		TableColumn<Module, String> nbSemaineCol = new TableColumn<Module, String>("nbSemaine");
 
 
-	// ==== Nom (TEXT FIELD) ===
-	nomCol.setCellValueFactory(new PropertyValueFactory<>("Nom"));
+		// ==== Nom (TEXT FIELD) ===
+		nomCol.setCellValueFactory(new PropertyValueFactory<>("Nom"));
 
-	nomCol.setCellFactory(TextFieldTableCell.<Module> forTableColumn());
+		nomCol.setCellFactory(TextFieldTableCell.<Module> forTableColumn());
 
-	nomCol.setMinWidth(200);
+		nomCol.setMinWidth(200);
 
-	// On Cell edit commit (for Nom column)
-	nomCol.setOnEditCommit
-	(
-		(CellEditEvent<Module, String> event) -> 
-		{
-			TablePosition<Module, String> pos = event.getTablePosition();
+		// On Cell edit commit (for Nom column)
+		nomCol.setOnEditCommit
+		(
+			(CellEditEvent<Module, String> event) -> 
+			{
+				TablePosition<Module, String> pos = event.getTablePosition();
 
-			String newNom = event.getNewValue(); // on récupère le nouveau nom
+				String newNom = event.getNewValue(); // on récupère le nouveau nom
 
-			int row = pos.getRow();
-			Module module = event.getTableView().getItems().get(row); // on récupère le module concerné
+				int row = pos.getRow();
+				Module module = event.getTableView().getItems().get(row); // on récupère le module concerné
 
-			module.setNom(newNom); // on met le nouveau nom au module concerné
-		}
-	);
+				module.setNom(newNom); // on met le nouveau nom au module concerné
+			}
+		);
 
-	// ==== NbSemaine (TEXT FIELD) ===
-	nbSemaineCol.setCellValueFactory(new PropertyValueFactory<>("nbSemaine"));
+		// ==== NbSemaine (TEXT FIELD) ===
+		nbSemaineCol.setCellValueFactory(new PropertyValueFactory<>("nbSemaine"));
 
-	nbSemaineCol.setCellFactory(TextFieldTableCell.<Module> forTableColumn());
+		nbSemaineCol.setCellFactory(TextFieldTableCell.<Module> forTableColumn());
 
-	nbSemaineCol.setMinWidth(200);
+		nbSemaineCol.setMinWidth(200);
 
-	// On Cell edit commit (for nbSemaine column)
-	nbSemaineCol.setOnEditCommit
-	(
-		(CellEditEvent<Module, String> event) -> 
-		{
-			TablePosition<Module, String> pos = event.getTablePosition();
+		// On Cell edit commit (for nbSemaine column)
+		nbSemaineCol.setOnEditCommit
+		(
+			(CellEditEvent<Module, String> event) -> 
+			{
+				TablePosition<Module, String> pos = event.getTablePosition();
 
-			String newNbSemaine = event.getNewValue(); // on récupère le nouveau nbSemaine
+				String newNbSemaine = event.getNewValue(); // on récupère le nouveau nbSemaine
 
-			int row = pos.getRow();
-			Module module = event.getTableView().getItems().get(row); // on récupère le module concerné
+				int row = pos.getRow();
+				Module module = event.getTableView().getItems().get(row); // on récupère le module concerné
 
-			module.setNbSemaine(newNbSemaine); // on met le nouveau nom au module concerné
-		}
-	);
-*/
+				module.setNbSemaine(newNbSemaine); // on met le nouveau nom au module concerné
+			}
+		);
 
 	/*------------*/
 	/* gestion TD */
 	/*------------*/
 
-	// Editable
-	tableTD.setEditable(true);
+		// Editable
+		tableTD.setEditable(true);
 
-	TableColumn<HeureCours, String> nbHeuresTD = new TableColumn<HeureCours, String>("TD");
+		TableColumn<HeureCours, String> nbHeuresTD = new TableColumn<HeureCours, String>("TD");
 
-	// ==== Nom (TEXT FIELD) ===
-	nbHeuresTD.setCellValueFactory(new PropertyValueFactory<>("TD"));
+		// ==== Nom (TEXT FIELD) ===
+		nbHeuresTD.setCellValueFactory(new PropertyValueFactory<>("TD"));
 
-	nbHeuresTD.setCellFactory(TextFieldTableCell.<Module> forTableColumn());
+		nbHeuresTD.setCellFactory(TextFieldTableCell.<Module> forTableColumn());
 
-	nbHeuresTD.setMinWidth(200);
+		nbHeuresTD.setMinWidth(200);
 
-	// On Cell edit commit (for Nom column)
-	nbHeuresTD.setOnEditCommit
-	(
-		(CellEditEvent<Module, String> event) -> 
-		{
-			TablePosition<HeureCours, String> pos = event.getTablePosition();
+		// On Cell edit commit (for Nom column)
+		nbHeuresTD.setOnEditCommit
+		(
+			(CellEditEvent<Module, String> event) -> 
+			{
+				TablePosition<HeureCours, String> pos = event.getTablePosition();
 
-			String newHeuresTD = event.getNewValue(); // on récupère la nouvelle heure
+				String newHeuresTD = event.getNewValue(); // on récupère la nouvelle heure
 
-			int row = pos.getRow();
-			HeureCours heureCours = event.getTableView().getItems().get(row); // on récupère l'heureCours
+				int row = pos.getRow();
+				HeureCours heureCours = event.getTableView().getItems().get(row); // on récupère l'heureCours
 
-			
-			module.setHeure(Integer.parseInt(newHeuresTD)); // on met la nouvelle heure à l'heureCours concernée
-		}
-	);
+				
+				module.setHeure(Integer.parseInt(newHeuresTD)); // on met la nouvelle heure à l'heureCours concernée
+			}
+		);
 
 	/*------------*/
 	/* gestion TP */
 	/*------------*/
 
+		// Editable
+		tableTP.setEditable(true);
+
+		TableColumn<HeureCours, String> nbHeuresTP = new TableColumn<HeureCours, String>("TP");
+
+		// ==== Nom (TEXT FIELD) ===
+		nbHeuresTP.setCellValueFactory(new PropertyValueFactory<>("TP"));
+
+		nbHeuresTP.setCellFactory(TextFieldTableCell.<Module> forTableColumn());
+
+		nbHeuresTP.setMinWidth(200);
+
+		// On Cell edit commit (for Nom column)
+		nbHeuresTP.setOnEditCommit
+		(
+			(CellEditEvent<Module, String> event) -> 
+			{
+				TablePosition<HeureCours, String> pos = event.getTablePosition();
+
+				String newHeuresTP = event.getNewValue(); // on récupère la nouvelle heure
+
+				int row = pos.getRow();
+				HeureCours heureCours = event.getTableView().getItems().get(row); // on récupère l'heureCours
+
+				
+				module.setHeure(Integer.parseInt(newHeuresTP)); // on met la nouvelle heure à l'heureCours concernée
+			}
+		);
+
 	/*------------*/
 	/* gestion CM */
 	/*------------*/
 
-	ObservableList<Module> list = getModuleList();
-	tableModules.setItems(list);
+		// Editable
+		tableCM.setEditable(true);
+
+		TableColumn<HeureCours, String> nbHeuresCM = new TableColumn<HeureCours, String>("CM");
+
+		// ==== Nom (TEXT FIELD) ===
+		nbHeuresCM.setCellValueFactory(new PropertyValueFactory<>("CM"));
+
+		nbHeuresCM.setCellFactory(TextFieldTableCell.<Module> forTableColumn());
+
+		nbHeuresCM.setMinWidth(200);
+
+		// On Cell edit commit (for Nom column)
+		nbHeuresCM.setOnEditCommit
+		(
+			(CellEditEvent<Module, String> event) -> 
+			{
+				TablePosition<HeureCours, String> pos = event.getTablePosition();
+
+				String newHeuresCM = event.getNewValue(); // on récupère la nouvelle heure
+
+				int row = pos.getRow();
+				HeureCours heureCours = event.getTableView().getItems().get(row); // on récupère l'heureCours
+
+				
+				module.setHeure(Integer.parseInt(newHeuresCM)); // on met la nouvelle heure à l'heureCours concernée
+			}
+		);
+
+	/*----------------------*/
+	/* affectation au stage */
+	/*----------------------*/
+
+	/* Module */
+	List<Module> ensModule = this.getModuleList( 1 ); // on récupère la List des Module du semestre
+	ObservableList<Module> listModule;
+	FXCollections.copy(ObservableList<Module> listModule, List<Module> ensModule); // met la List dans l'observableList
+	tableModules.setItems(listModule);
 
 	tableModules.getColumns().addAll(nomCol, nbSemaineCol);
 
+	/* HeureCours */
+	ObservableList<HeureCours> listTD = getHeureCoursList(ensModule, 1 );
+	tableModules.setItems(listTD);
+	
+	tableTD.getColumns().addAll(nbHeuresTD);
+
+	ObservableList<HeureCours> listTP = getHeureCoursList(ensModule, 1 );
+	tableModules.setItems(listTP);
+	
+	tableTP.getColumns().addAll(nbHeuresTP);
+
+	ObservableList<HeureCours> listCM = getHeureCoursList(ensModule, 1 );
+	tableModules.setItems(listCM);
+	
+	tableCM.getColumns().addAll(nbHeuresCM);
+
+	/* autre */
 	StackPane root = new StackPane();
 	root.setPadding(new Insets(5));
 	root.getChildren().add(tableModules);
+	root.getChildren().add(tableTD);
+	root.getChildren().add(tableTP);
+	root.getChildren().add(tableCM);
 
 	stage.setTitle("TableView (o7planning.org)");
 
@@ -122,26 +206,20 @@ public void start(Stage stage) {
 	stage.show();
 }
 
-private ObservableList<Module> getModuleList() {
+private List<Module> getModuleList( int idSemestre) {
+	List<Module> lst = new ArrayList<HeureCours>();
 
-	Module module1 = new Module( "R1.01_Initiation au développement" , 14, 1, 1),
-	Module module2 = new Module( "R1.02_Développement interfaces Web", 13, 1, 1),
-	Module module3 = new Module( "R1.03_Introduction Architecture"   ,  7, 1, 1),
-	ObservableList<Module> list = FXCollections.observableArrayList(module1, module2, module3);
+	//mettre tout les Module correspondant au semestre dans lst (je sais pas comment)
+
+	return lst;
+}
+
+private ObservableList<HeureCours> getHeureCoursList( ArrayList<Module> lstModules, int idTypeCours) {
+	List<HeureCours> lst = new ArrayList<HeureCours>();
+
+	//mettre toutes les HeuresCours correspondant aux modules et au type cours dans lst (je sais pas comment)
+	// attention de bien respecter l'ordre des heureCours, sinon on va avoir un décallage
+
+	ObservableList<HeureCours> list = FXCollections.observableArrayList(lst);
 	return list;
-}
-
-public Module(String nom, int nbSemaines, int idAnnee, int idSemestre) {
-	this.id = ++NB_MODULE;
-	this.nom = nom;
-	this.nbSemaines = nbSemaines;
-	this.idAnnee = idAnnee;
-	this.idSemestre = idSemestre;
-}
-
-public HeureCours(int idTypeCours, int idModule, double heure, int idAnnee) {
-	this.idTypeCours = idTypeCours;
-	this.idModule = idModule;
-	this.heure = heure;
-	this.idAnnee = idAnnee;
 }

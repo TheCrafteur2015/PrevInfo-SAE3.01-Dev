@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.scene.layout.VBox;
 
 import javax.swing.Action;
 
@@ -32,7 +31,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.scene.Node;
@@ -49,6 +47,8 @@ import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
@@ -64,7 +64,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
-public class ControleurIHM implements Initializable, EventHandler<Event> {
+public class ControleurIHM implements Initializable, EventHandler<Event> , ChangeListener<String>{
 
 	@FXML
 	private AnchorPane centerPaneAccueil;
@@ -101,22 +101,15 @@ public class ControleurIHM implements Initializable, EventHandler<Event> {
 	public void initialize(URL url, ResourceBundle rb) {
 		this.ctrl = Controleur.getInstance(this);
 
-		// this.choiceBoxAnnee.setOnAction(this);
 		this.choiceBoxAnnee.addEventHandler(ActionEvent.ACTION, this);
 		this.majListAnnee();
 
 		this.setAnnee(this.ctrl.getModele().getHmAnnee().get(this.ctrl.getModele().getIdAnnee()));
 
-		// System.out.println(ResourceManager.HOUSE);
-		// System.out.println(ResourceManager.INTERVENANT);
-		// System.out.println(ResourceManager.MODULE);
-		// System.out.println(ResourceManager.DOWNLOAD);
 		this.imageAccueil.setImage(new Image(ResourceManager.HOUSE.toExternalForm()));
 		this.imageIntervenant.setImage(new Image(ResourceManager.INTERVENANT.toExternalForm()));
 		this.imageModule.setImage(new Image(ResourceManager.MODULE.toExternalForm()));
 		this.imageDownload.setImage(new Image(ResourceManager.DOWNLOAD.toExternalForm()));
-
-		//System.out.format("Image url: %1$s\n", this.imageAccueil.getImage().getUrl());
 
 	}
 
@@ -147,6 +140,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event> {
 
 	@FXML
 	void parametrerMultiplicateurs() {
+		System.out.println("izdaziu");
 		Stage popupStage = new Stage();
 		popupStage.initModality(Modality.APPLICATION_MODAL);
 		popupStage.setTitle("Pop-up");
@@ -161,7 +155,9 @@ public class ControleurIHM implements Initializable, EventHandler<Event> {
 			textTmp = new Text(tc.getNom());
 			textFieldTmp = new TextField(tc.getCoefficient() + "");
 			textFieldTmp.setMaxWidth(7 * 7);
+			textFieldTmp.textProperty().addListener(this);
 			alText.add(textTmp);
+			
 			this.alTextField.add(textFieldTmp);
 		}
 
@@ -241,14 +237,25 @@ public class ControleurIHM implements Initializable, EventHandler<Event> {
 					coeff = null;
 					try {
 						coeff = Double.parseDouble(alTextField.get(i).getText());
-					} catch (Exception e) { System.out.println("Le coefficient n'est pas un nombre ! "); }
-					if (coeff != null) {
 						this.ctrl.getModele().updateTypeCoursBrut(alText.get(i).getText(),coeff);
 						((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
-					}
+					} catch (Exception e) { System.out.println("Le coefficient n'est pas un nombre ! "); }
 				}
 			}
 		}
+	}
+
+	@Override
+	public void changed(ObservableValue<? extends String> observable, String oldString, String newString) {
+
+		System.out.println("cc");
+		for (TextField text : alTextField) {
+			if (observable == text.textProperty()) {
+				if (!(text.getText().matches("[0-9 .]*")))
+					text.setText("");
+			}
+		}
+		
 	}
 
 }

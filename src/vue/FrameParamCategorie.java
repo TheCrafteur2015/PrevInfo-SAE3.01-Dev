@@ -58,10 +58,7 @@ import javafx.stage.Popup;
 import javafx.stage.Modality;
 import javafx.scene.text.Text;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ChoiceBox;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.beans.value.*;
+
 
 public class FrameParamCategorie {
 	private Controleur ctrl;

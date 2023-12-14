@@ -50,7 +50,7 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 		this.vbox.setAlignment(Pos.CENTER);
 		this.vbox.getChildren().add(btnAjouterSemestre);
 
-		this.hmSemestres = this.ctrl.getModele().getHmSemestres();
+		majAffichageSemestres();
 
 		//Mettre le vBox dans le content du scrollPane qui va prendre toute la page
 		ScrollPane scrollPane = new ScrollPane();
@@ -66,54 +66,56 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 	}
 
 	public void majAffichageSemestres(){
-	
+		this.hmSemestres = this.ctrl.getModele().getHmSemestres();	
+
+		for (Semestre semestre : this.hmSemestres.values()) {
+			// BorderPane avec un flowTitre en haut et le tableau au centre
+			BorderPane borderPaneSemestre = new BorderPane();
+			FlowPane flowPaneTitreSemestre = new FlowPane();
+
+			// liste de textfields pour saisir les groupes du semestre
+			List<TextField> lsttxtFields = new ArrayList<>();
+			TextField txtFTD = new TextField();
+			txtFTD.setMaxWidth(5 * 7);
+			TextField txtFTP = new TextField();
+			txtFTP.setMaxWidth(5 * 7);
+			TextField txtFCM = new TextField();
+			txtFCM.setMaxWidth(5 * 7);
+			TextField txtFAutre = new TextField();
+			txtFAutre.setMaxWidth(5 * 7);
+
+			SVGPath svgP = new SVGPath();
+			svgP.setContent("M0.81631 0.813695L26.4489 26.4463M26.4489 0.813695L0.81631 26.4463");
+			Button exit = new Button();
+			exit.setGraphic(svgP);
+
+			// Ajouter les txtFields et labels au flowPane
+			flowPaneTitreSemestre.getChildren().add(new Label("Semestre " + Semestre.NB_SEMESTRE + 1));
+			flowPaneTitreSemestre.getChildren().add(new Label("  "));
+			flowPaneTitreSemestre.getChildren().add(new Label("TD : "));
+			flowPaneTitreSemestre.getChildren().add(txtFTD);
+			flowPaneTitreSemestre.getChildren().add(new Label("TP : "));
+			flowPaneTitreSemestre.getChildren().add(txtFTP);
+			flowPaneTitreSemestre.getChildren().add(new Label("CM : "));
+			flowPaneTitreSemestre.getChildren().add(txtFCM);
+			flowPaneTitreSemestre.getChildren().add(new Label("Autre : "));
+			flowPaneTitreSemestre.getChildren().add(txtFAutre);
+			flowPaneTitreSemestre.getChildren().add(exit);
+
+			// flowPaneTitreSemestre.getChildren().add();
+
+			lsttxtFields.add(txtFTD);
+			lsttxtFields.add(txtFTP);
+			lsttxtFields.add(txtFCM);
+			lsttxtFields.add(txtFAutre);
+			this.lstTxtFieldGrps.add(lsttxtFields);
+			borderPaneSemestre.setTop(flowPaneTitreSemestre);
+			this.vbox.getChildren().add(this.vbox.getChildren().size() - 1, borderPaneSemestre);
+		}
 	}
 
 	public void creerSemestre() {
-		Semestre semestre = new Semestre(0,0,1,1,this.ctrl.getModele().getIdAnnee());
-		//BorderPane avec un flowTitre en haut et le tableau au centre
-		BorderPane borderPaneSemestre = new BorderPane();
-		FlowPane flowPaneTitreSemestre = new FlowPane();
-
-		//liste de textfields pour saisir les groupes du semestre
-		List<TextField> lsttxtFields = new ArrayList<>();
-		TextField txtFTD = new TextField();
-		txtFTD.setMaxWidth(5 * 7);
-		TextField txtFTP = new TextField();
-		txtFTP.setMaxWidth(5 * 7);
-		TextField txtFCM = new TextField();
-		txtFCM.setMaxWidth(5 * 7);								
-		TextField txtFAutre = new TextField();
-		txtFAutre.setMaxWidth(5 * 7);
-
-		SVGPath svgP = new SVGPath();
-		svgP.setContent("M0.81631 0.813695L26.4489 26.4463M26.4489 0.813695L0.81631 26.4463");
-		Button exit = new Button();
-		exit.setGraphic(svgP);
-		
-	
-		//Ajouter les txtFields et labels au flowPane
-		flowPaneTitreSemestre.getChildren().add(new Label("Semestre "+ Semestre.NB_SEMESTRE+1));
-		flowPaneTitreSemestre.getChildren().add(new Label("  "));
-		flowPaneTitreSemestre.getChildren().add(new Label("TD : "));
-		flowPaneTitreSemestre.getChildren().add(txtFTD);
-		flowPaneTitreSemestre.getChildren().add(new Label("TP : "));
-		flowPaneTitreSemestre.getChildren().add(txtFTP);
-		flowPaneTitreSemestre.getChildren().add(new Label("CM : "));
-		flowPaneTitreSemestre.getChildren().add(txtFCM);
-		flowPaneTitreSemestre.getChildren().add(new Label("Autre : "));
-		flowPaneTitreSemestre.getChildren().add(txtFAutre);
-		
-	
-		//flowPaneTitreSemestre.getChildren().add();
-
-		lsttxtFields.add(txtFTD);
-		lsttxtFields.add(txtFTP);
-		lsttxtFields.add(txtFCM);
-		lsttxtFields.add(txtFAutre);
-		this.lstTxtFieldGrps.add(lsttxtFields);
-		borderPaneSemestre.setTop(flowPaneTitreSemestre);
-		this.vbox.getChildren().add(this.vbox.getChildren().size() - 1, borderPaneSemestre);
+		this.hmSemestres.put(Semestre.NB_SEMESTRE+1,new Semestre(0,0,1,1,this.ctrl.getModele().getIdAnnee()));
 	}
 
 	public void handle(Event action) {

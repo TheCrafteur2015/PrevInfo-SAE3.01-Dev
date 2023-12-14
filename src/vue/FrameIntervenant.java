@@ -81,14 +81,14 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 
 	private ChoiceBox<Categorie> choiceBoxCategorie;
 
-	private boolean modifInter;
+	private Intervenant modifIntervenant;
 
 	public FrameIntervenant(Controleur ctrl, AnchorPane centerPaneAccueil) {
 		this.ctrl = ctrl;
 		this.centerPaneAccueil = centerPaneAccueil;
 		this.tableViewIntervenant = new TableView<>();
 		this.tableViewIntervenant.setEditable(true);
-		this.modifInter = false;
+		this.modifIntervenant = null;
 
 		this.init();
 	}
@@ -207,8 +207,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 	}
 
 	public void popupParamIntervenant(IntervenantIHM i) {
-		if (i != null) this.modifInter = true;
-		else this.modifInter = false;
+		if (i == null) this.modifIntervenant = null;
 	
 		Stage popupStage = new Stage();
 		popupStage.initModality(Modality.APPLICATION_MODAL);
@@ -298,6 +297,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		if (i != null) {
 			Map<Integer, Intervenant> hmInter = this.ctrl.getModele().getHmIntervenants();
 			Intervenant inter = hmInter.get(Integer.parseInt(i.getSupprimer().getId().split("-")[1]));
+			this.modifIntervenant = inter;
 			this.tfPrenom.setText(inter.getPrenom());
 			this.tfNom.setText(inter.getNom());
 			this.tfEmail.setText(inter.getEmail());
@@ -412,13 +412,17 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 
 				// Intervenant i = new Intervenant(prenom, nom, email, hMin, hMax, annee,
 				// c.getId());
-				if (this.modifInter) {
-				
+				if (this.modifIntervenant != null) {
+					this.modifIntervenant.setPrenom(prenom);
+					this.modifIntervenant.setNom(nom);
+					this.modifIntervenant.setEmail(email);
+					this.modifIntervenant.sethMin(hMin);
+					this.modifIntervenant.sethMax(hMax);
+					this.ctrl.getModele().updateIntervenant(this.modifIntervenant);
 				} else {
 					this.ctrl.getModele().ajouterIntervenant(prenom, nom, email, hMin, hMax, annee);
 				}
 				
-
 				((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
 				this.majTableIntervenant();
 			}
@@ -438,7 +442,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 	}
 
 	public void changed(ObservableValue<? extends String> observable, String oldStr, String newStr) {
-		System.out.println(observable);
+		
 
 		if ((observable == this.tfPrenom.textProperty()|| observable == this.tfNom.textProperty())&&(!(this.tfPrenom.getText().isEmpty() || this.tfNom.getText().isEmpty()))) {
 			this.tfEmail.setText(this.tfPrenom.getText().toLowerCase() + "." + this.tfNom.getText().toLowerCase() + "@univ-lehavre.fr");

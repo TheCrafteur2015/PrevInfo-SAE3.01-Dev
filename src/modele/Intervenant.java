@@ -11,14 +11,21 @@ public class Intervenant {
 	private int idAnnee;
 	private int idCategorie;
 
-	@Deprecated
 	public Intervenant(int id, String prenom, String nom, String email, double hMin, double hMax, int idAnnee, int idCategorie) {
-		this(prenom, nom, email, hMin, hMax, idAnnee, idCategorie);
+		this.id = id;	
+		this.prenom = prenom;
+		this.nom = nom;
+		this.email = email;
+		this.hMin = hMin;
+		this.hMax = hMax;
+		this.idAnnee = idAnnee;
+		this.idCategorie = idCategorie;
+		NB_INTERVENANT++;
 	}
 
 	public Intervenant(String prenom, String nom, String email, double hMin, double hMax, int idAnnee,
 			int idCategorie) {
-		this.id = ++NB_INTERVENANT;
+		this.id = ++NB_INTERVENANT;	
 		this.prenom = prenom;
 		this.nom = nom;
 		this.email = email;
