@@ -96,7 +96,7 @@
                      <font>
                         <Font size="18.0" />
                      </font></Button>
-                  <ChoiceBox fx:id="choiceBoxAnnee" layoutX="302.0" layoutY="366.0" opacity="0.47" prefHeight="21.0" prefWidth="124.0" />
+                  <ChoiceBox fx:id="choiceBoxAnnee" layoutX="302.0" layoutY="366.0" opacity="1" prefHeight="21.0" prefWidth="124.0" />
                   <Button layoutX="576.0" layoutY="369.0" mnemonicParsing="false" onAction="#ajouterAnnee" prefHeight="34.0" prefWidth="235.0" style="-fx-background-radius: 15;" styleClass="roundButton" text="Ajouter une année">
                      <font>
                         <Font size="18.0" />

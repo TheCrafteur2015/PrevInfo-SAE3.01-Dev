@@ -83,7 +83,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 
 	private FrameIntervenant frameIntervenant;
 	private FrameModule frameModule;
-	private FrameExporter frameExporter;
+	//private FrameExporter frameExporter;
 
 	private Controleur ctrl;
 
@@ -217,7 +217,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 
 	@FXML
 	void allerExporter(ActionEvent event) {
-		this.frameExporter = new FrameExporter(this.ctrl, this.centerPaneAccueil);
+		//this.frameExporter = new FrameExporter(this.ctrl, this.centerPaneAccueil);
 	}
 
 	@FXML

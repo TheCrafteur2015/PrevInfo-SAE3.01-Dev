@@ -10,7 +10,7 @@
 */
 INSERT INTO Annee (idAnnee, annee) VALUES (1, '2023-2024');
 
-INSERT INTO Semestre (idSemestre, nbGTD, nbGTP, nbGCM, nbGAutre, idAnnee) VALUES
+INSERT INTO Semestre (idSemestre, nbGTD, nbGTP, nbGCM, nbSemaine, idAnnee) VALUES
 	( 1, 4, 8, 1, 1, 1),
 	( 2, 4, 8, 1, 1, 1),
 	( 3, 2, 4, 1, 0, 1),

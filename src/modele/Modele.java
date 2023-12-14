@@ -1,6 +1,7 @@
 package modele;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 import controleur.Controleur;
@@ -66,6 +67,13 @@ public class Modele {
 		 * this.updateTypeCours(new TypeCours(2, "ozeuhizne", 2.5));
 		 */
 
+	}
+
+	public List<HeureCours> getHeureCoursByModule(int idModule, int idAnnee) {
+		try {
+			return this.db.getHeureCoursByModule(idModule, idAnnee);
+		} catch (SQLException e) { e.printStackTrace();}
+		return null;
 	}
 
 	public void ajouterCategorie(String nom, double hMin, double hMax, double ratioTp) {

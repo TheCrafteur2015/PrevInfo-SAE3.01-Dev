@@ -32,7 +32,7 @@ CREATE TABLE Semestre (
 	nbGTD      INT,
 	nbGTP      INT,
 	nbGCM      INT,
-	nbGAutre   INT,
+	nbSemaine  INT,
 	idAnnee    INT REFERENCES Annee(idAnnee)
 );
 

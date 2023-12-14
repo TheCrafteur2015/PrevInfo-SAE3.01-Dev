@@ -5,7 +5,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,6 +36,7 @@ public class DB {
 	private PreparedStatement psSelectAnnee;
 	private PreparedStatement psSelectDerAnnee;
 	private PreparedStatement psSelectNomCateg;
+	private PreparedStatement psSelectHeureCoursByModule;
 
 	private PreparedStatement psInsertCategorie;
 	private PreparedStatement psInsertIntervenant;
@@ -82,6 +85,7 @@ public class DB {
 			// this.psSelectDerAnnee.setFetchDirection(ResultSet.TYPE_SCROLL_SENSITIVE);
 			this.psSelectNomCateg = connec.prepareStatement("SELECT nomCategorie FROM Categorie WHERE idCategorie = ?");
 			this.psSelectAnnee = connec.prepareStatement("SELECT * FROM Annee");
+			this.psSelectHeureCoursByModule = connec.prepareStatement("SELECT * FROM HeureCours WHERE idModule = ? AND idAnnee = ?");
 
 			this.psInsertCategorie = connec.prepareStatement("INSERT INTO Categorie VALUES (?,?,?,?,?,?)");
 			this.psInsertIntervenant = connec.prepareStatement("INSERT INTO Intervenant VALUES (?,?,?,?,?,?,?,?)");
@@ -100,7 +104,7 @@ public class DB {
 			this.psUpdateModule = connec.prepareStatement(
 					"UPDATE Module SET nomModule = ?, nbSemainesModule = ?, idSemestre = ? WHERE idAnnee = ? AND idModule = ?");
 			this.psUpdateSemestre = connec.prepareStatement(
-					"UPDATE Semestre SET nbGTD = ?, nbGTP = ?, nbGCM = ?, nbGAutre = ? WHERE idAnnee = ? AND idSemestre = ?");
+					"UPDATE Semestre SET nbGTD = ?, nbGTP = ?, nbGCM = ?, nbSemaine = ? WHERE idAnnee = ? AND idSemestre = ?");
 			this.psUpdateHeureCours = connec.prepareStatement(
 					"UPDATE HeureCours SET heure = ?, nbSemaine = ?, hParSemaine = ? WHERE idTypeCours = ? AND idModule = ? AND idAnnee = ? " );
 			this.psUpdateTypeCours = connec
@@ -125,6 +129,17 @@ public class DB {
 			dbInstance = new DB();
 		}
 		return dbInstance;
+	}
+
+	public List<HeureCours> getHeureCoursByModule( int idModule, int idAnnee ) throws SQLException {
+		List<HeureCours> lstHeureCours = new ArrayList<>();
+		this.psSelectHeureCoursByModule.setInt(1, idModule);
+		this.psSelectHeureCoursByModule.setInt(2, idAnnee);
+		ResultSet rs = this.psSelectHeureCoursByModule.executeQuery();
+		while (rs.next()) {
+			lstHeureCours.add(new HeureCours(rs.getInt("idTypeCours"), rs.getInt("idModule"), rs.getDouble("heure"), rs.getInt("nbSemaine"), rs.getDouble("hParSemaine"), idAnnee));
+		}
+		return lstHeureCours;
 	}
 
 	/*-----------*/
@@ -442,7 +457,7 @@ public class DB {
 		while (rs.next()) {
 			hmSemestre.put(rs.getInt("idSemestre"),
 					new Semestre(rs.getInt("idSemestre"), rs.getInt("nbGTD"), rs.getInt("nbGTP"), rs.getInt("nbGCM"),
-							rs.getInt("nbGAutre"), idAnnee));
+							rs.getInt("nbSemaine"), idAnnee));
 		}
 		return hmSemestre;
 	}

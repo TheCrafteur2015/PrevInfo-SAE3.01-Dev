@@ -1,67 +1,43 @@
 package vue;
 
-import modele.Intervenant;
-import modele.Categorie;
-import modele.Intervention;
-import modele.Module;
+import java.util.Map;
 
 import controleur.Controleur;
-
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-
-import javax.swing.Action;
-
-import javafx.scene.control.TableColumn;
-
-import javafx.event.Event;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.scene.input.MouseEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.fxml.*;
-import javafx.scene.control.Label;
-import javafx.scene.Parent;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableView;
-import javafx.stage.Popup;
-import javafx.stage.Stage;
-import javafx.scene.Node;
-import javafx.collections.ObservableList;
-import javafx.collections.FXCollections;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
-
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.*;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.control.Label;
-import javafx.stage.Stage;
-import javafx.stage.Popup;
-import javafx.stage.Modality;
 import javafx.scene.text.Text;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ChoiceBox;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.beans.value.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Callback;
+import modele.Categorie;
+import modele.Intervenant;
+import modele.Intervention;
+import modele.Module;
 
 public class FrameIntervenant implements EventHandler<Event>, ChangeListener<String> {
 
@@ -134,6 +110,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		AnchorPane.setLeftAnchor(this.btnParamIntervenants, 20.0);
 
 		this.btnParamCategorie = new Button("Paramètrer une catégorie");
+		
 		btnParamCategorie.setStyle("-fx-background-radius: 100");
 
 		btnParamCategorie.setPrefSize(250, 40);
@@ -257,6 +234,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		}
 		this.btnConfirmerIntervenant = new Button("Confirmer");
 		this.btnConfirmerIntervenant.addEventHandler(ActionEvent.ACTION, this);
+		this.btnConfirmerIntervenant.setDisable(true);
 
 		VBox vbox = new VBox(5);
 		vbox.setMaxSize(200, 400);
@@ -315,6 +293,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		// popupLayout.getChildren().add(closeButton);
 		vbox.getChildren().addAll(borderPane, borderPane2, borderPane3, borderPane4, gridPane1, borderPane5);
 		popupLayout.getChildren().add(vbox);
+		popupLayout.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
 		Scene popupScene = new Scene(popupLayout, 200, 400);
 		popupStage.setScene(popupScene);
 
@@ -365,6 +344,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		StackPane popupLayout = new StackPane();
 		vbox.getChildren().add(tableViewModules);
 		popupLayout.getChildren().add(vbox);
+		popupLayout.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
 		Scene popupScene = new Scene(popupLayout, 400, 50+lst.size()*40);
 		popupStage.setScene(popupScene);
 
@@ -440,6 +420,10 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 			}
 		}
 	}
+public ObservableList<String> getStylesheets()
+{
+	return this.centerPaneAccueil.getStylesheets();
+}
 
 	public void changed(ObservableValue<? extends String> observable, String oldStr, String newStr) {
 		
@@ -449,13 +433,23 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		} 
 		if (observable == this.tfHMin.textProperty()) {
 			if (!(this.tfHMin.getText().matches("[0-9 .]*"))) {
-				this.tfHMin.setText("");
+				this.tfHMin.setText(oldStr);
 			}
 		} else if (observable == this.tfHMax.textProperty()) {
 			if (!(this.tfHMax.getText().matches("[0-9 .]*"))) {
-				this.tfHMax.setText("");
+				this.tfHMax.setText(oldStr);
 			}
 		}
+		if (this.tfPrenom.getText().isEmpty() || this.tfNom.getText().isEmpty()
+				|| this.tfHMin.getText().isEmpty() || this.tfHMax.getText().isEmpty()
+				|| this.choiceBoxCategorie.getValue() == null) {
+			if (this.btnConfirmerIntervenant != null)
+			this.btnConfirmerIntervenant.setDisable(true);
+		} else {
+			this.btnConfirmerIntervenant.setDisable(false);
+			
+		}
+		
 
 	}
 }
