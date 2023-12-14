@@ -3,8 +3,6 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 
 public class Exportation
@@ -30,8 +28,8 @@ public class Exportation
 		String body ="";
 		body += "	<body>\n";
 
-		Intervenant  interv       = ;// obtenir l'intervenant qui correspond a l'intervenant
-		List<Module> modulesInter = new ArrayList<Module>();// obtenir tout les modules au quel l'intervenant est lié
+		Intervenant  interv       = null;// obtenir l'intervenant qui correspond a l'intervenant
+		List<Module> modulesInter = new ArrayList<>();// obtenir tout les modules au quel l'intervenant est lié
 
 		for (Module mod : modulesInter)
 		{
@@ -52,8 +50,8 @@ public class Exportation
 		String body ="";
 		body += "	<body>\n";
 
-		Module            mod        = ;// obtenir l'intervenant qui correspond a l'intervenant
-		List<Intervenant> intervsMod = new ArrayList<Intervenant>();// obtenir tout les modules au quel l'intervenant est lié
+		Module            mod        = null;// obtenir l'intervenant qui correspond a l'intervenant
+		List<Intervenant> intervsMod = new ArrayList<>();// obtenir tout les modules au quel l'intervenant est lié
 
 		for (Intervenant interv : intervsMod)
 		{

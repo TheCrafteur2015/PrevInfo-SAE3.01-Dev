@@ -6,6 +6,7 @@ src/vue/ResourceManager.java
 src/vue/FrameIntervenant.java
 src/vue/FrameModule.java  
 src/vue/FrameParamCategorie.java
+src/vue/FrameExporter.java
 src/vue/IntervenantModuleIHM.java
 src/vue/CategorieIHM.java
 src/vue/ModuleIHM.java

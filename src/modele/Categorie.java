@@ -8,17 +8,25 @@ public class Categorie {
 	private String nom;
 	private double hMax;
 	private double hMin;
+	private double ratioTp;
 	private int idAnnee;
 
-	public Categorie(int id, String nom, double hMin, double hMax, int idAnnee) {
-		this(nom, hMin, hMax, idAnnee);
+	public Categorie(int id, String nom, double hMin, double hMax, double ratioTp, int idAnnee) {
+		this.id = id;
+		this.nom = nom;
+		this.hMin = hMin;
+		this.hMax = hMax;
+		this.ratioTp = ratioTp;
+		this.idAnnee = idAnnee;
+		NB_CATEGORIE++;
 	}	
 	
-	public Categorie(String nom, double hMin, double hMax, int idAnnee) {
+	public Categorie(String nom, double hMin, double hMax, double ratioTp, int idAnnee) {
 		this.id = ++NB_CATEGORIE;
 		this.nom = nom;
 		this.hMin = hMin;
 		this.hMax = hMax;
+		this.ratioTp = ratioTp;
 		this.idAnnee = idAnnee;
 	}
 
@@ -54,6 +62,14 @@ public class Categorie {
 		this.hMin = hMin;
 	}
 
+	public double getRatioTp() {
+		return ratioTp;
+	}
+
+	public void setRatioTp(double ratioTp) {
+		this.ratioTp = ratioTp;
+	}
+
 	public int getIdAnnee() {
 		return idAnnee;
 	}
@@ -61,6 +77,8 @@ public class Categorie {
 	public void setIdAnnee(int idAnnee) {
 		this.idAnnee = idAnnee;
 	}
+
+	
 
 	@Override
 	public String toString() {

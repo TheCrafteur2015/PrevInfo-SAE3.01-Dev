@@ -101,7 +101,7 @@ public class Intervenant {
 
 	@Override
 	public String toString() {
-		return "Intervenant [prenom=" + prenom + ", nom=" + nom + ", email=" + email + "]";
+		return nom + " " + prenom;
 	}
 
 }

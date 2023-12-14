@@ -11,19 +11,25 @@ public static int NB_SEMESTRE = 0;
 	private int nbGTD;
 	private int nbGTP;
 	private int nbGCM;
-	private int nbGAutre;
+	private int nbSemaine;
 	private int idAnnee;
 
-	public Semestre(int id, int nbGTD, int nbGTP, int nbGCM, int nbGAutre, int idAnnee) {
-		this(nbGTD, nbGTP, nbGCM, nbGAutre, idAnnee);
+	public Semestre(int id, int nbGTD, int nbGTP, int nbGCM, int nbSemaine, int idAnnee) {
+		this.id = id;
+		this.nbGTD = nbGTD;
+		this.nbGTP = nbGTP;
+		this.nbGCM = nbGCM;
+		this.nbSemaine = nbSemaine;
+		this.idAnnee = idAnnee;
+		NB_SEMESTRE++;
 	}
 
-	public Semestre(int nbGTD, int nbGTP, int nbGCM, int nbGAutre, int idAnnee) {
+	public Semestre(int nbGTD, int nbGTP, int nbGCM, int nbSemaine, int idAnnee) {
 		this.id = ++NB_SEMESTRE;
 		this.nbGTD = nbGTD;
 		this.nbGTP = nbGTP;
 		this.nbGCM = nbGCM;
-		this.nbGAutre = nbGAutre;
+		this.nbSemaine = nbSemaine;
 		this.idAnnee = idAnnee;
 	}
 
@@ -59,12 +65,12 @@ public static int NB_SEMESTRE = 0;
 		this.nbGCM = nbGCM;
 	}
 
-	public int getNbGAutre() {
-		return nbGAutre;
+	public int getNbSemaine() {
+		return nbSemaine;
 	}
 
-	public void setNbGAutre(int nbGAutre) {
-		this.nbGAutre = nbGAutre;
+	public void setNbSemaine(int nbSemaine) {
+		this.nbSemaine = nbSemaine;
 	}
 
 	public int getIdAnnee() {
@@ -77,8 +83,8 @@ public static int NB_SEMESTRE = 0;
 
 	@Override
 	public String toString() {
-		return "Semestre [id=" + id + ", nbGTD=" + nbGTD + ", nbGTP=" + nbGTP + ", nbGCM=" + nbGCM + ", nbGAutre="
-				+ nbGAutre + ", idAnnee=" + idAnnee + "]";
+		return "Semestre [id=" + id + ", nbGTD=" + nbGTD + ", nbGTP=" + nbGTP + ", nbGCM=" + nbGCM + ", nbSemaine="
+				+ nbSemaine + ", idAnnee=" + idAnnee + "]";
 	}
 
 	

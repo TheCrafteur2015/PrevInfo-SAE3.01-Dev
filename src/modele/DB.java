@@ -1,8 +1,12 @@
 package modele;
 
-import java.sql.*;
-import java.util.Map;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Classe de liaison à la base de données
@@ -79,16 +83,16 @@ public class DB {
 			this.psSelectNomCateg = connec.prepareStatement("SELECT nomCategorie FROM Categorie WHERE idCategorie = ?");
 			this.psSelectAnnee = connec.prepareStatement("SELECT * FROM Annee");
 
-			this.psInsertCategorie = connec.prepareStatement("INSERT INTO Categorie VALUES (?,?,?,?,?)");
+			this.psInsertCategorie = connec.prepareStatement("INSERT INTO Categorie VALUES (?,?,?,?,?,?)");
 			this.psInsertIntervenant = connec.prepareStatement("INSERT INTO Intervenant VALUES (?,?,?,?,?,?,?,?)");
 			this.psInsertIntervention = connec.prepareStatement("INSERT INTO Intervention VALUES (?,?,?,?,?,?)");
 			this.psInsertModule = connec.prepareStatement("INSERT INTO Module VALUES (?,?,?,?,?)");
 			this.psInsertSemestre = connec.prepareStatement("INSERT INTO Semestre VALUES (?,?,?,?,?,?)");
-			this.psInsertHeureCours = connec.prepareStatement("INSERT INTO HeureCours VALUES (?,?,?,?)");
+			this.psInsertHeureCours = connec.prepareStatement("INSERT INTO HeureCours VALUES (?,?,?,?,?,?)");
 			this.psInsertAnnee = connec.prepareStatement("INSERT INTO Annee VALUES (?, ?)");
 
 			this.psUpdateCategorie = connec.prepareStatement(
-					"UPDATE Categorie SET nomCategorie = ?, hMaxCategorie = ?, hMinCategorie = ? WHERE idAnnee = ? AND idCategorie = ?");
+					"UPDATE Categorie SET nomCategorie = ?, hMaxCategorie = ?, hMinCategorie = ?, ratioTp = ? WHERE idAnnee = ? AND idCategorie = ?");
 			this.psUpdateIntervenant = connec.prepareStatement(
 					"UPDATE Intervenant SET prenom = ?, nom = ?, email = ?, hMinIntervenant = ?, hMaxIntervenant = ?, idCategorie = ? WHERE idAnnee = ? AND idIntervenant = ?");
 			this.psUpdateIntervention = connec.prepareStatement(
@@ -98,7 +102,7 @@ public class DB {
 			this.psUpdateSemestre = connec.prepareStatement(
 					"UPDATE Semestre SET nbGTD = ?, nbGTP = ?, nbGCM = ?, nbGAutre = ? WHERE idAnnee = ? AND idSemestre = ?");
 			this.psUpdateHeureCours = connec.prepareStatement(
-					"UPDATE HeureCours SET heure = ? WHERE idTypeCours = ? AND idModule = ? AND idAnnee = ?");
+					"UPDATE HeureCours SET heure = ?, nbSemaine = ?, hParSemaine = ? WHERE idTypeCours = ? AND idModule = ? AND idAnnee = ? " );
 			this.psUpdateTypeCours = connec
 					.prepareStatement("UPDATE TypeCours SET coefficient = ?, nomCours = ? WHERE idTypeCours = ?");
 
@@ -141,7 +145,7 @@ public class DB {
 		ResultSet rs = this.psSelectCategorie.executeQuery();
 		while (rs.next()) {
 			hmCateg.put(rs.getInt("idCategorie"), new Categorie(rs.getInt("idCategorie"), rs.getString("nomCategorie"),
-					rs.getDouble("hMinCategorie"), rs.getDouble("hMaxCategorie"), idAnnee));
+					rs.getDouble("hMinCategorie"), rs.getDouble("hMaxCategorie"), rs.getDouble("ratioTp"), idAnnee));
 		}
 		return hmCateg;
 	}
@@ -157,7 +161,8 @@ public class DB {
 		this.psInsertCategorie.setString(2, categorie.getNom());
 		this.psInsertCategorie.setDouble(3, categorie.gethMin());
 		this.psInsertCategorie.setDouble(4, categorie.gethMax());
-		this.psInsertCategorie.setInt(5, categorie.getIdAnnee());
+		this.psInsertCategorie.setDouble(5, categorie.getRatioTp());
+		this.psInsertCategorie.setInt(6, categorie.getIdAnnee());
 		this.psInsertCategorie.executeUpdate();
 	}
 
@@ -168,11 +173,12 @@ public class DB {
 	 * @throws SQLException
 	 */
 	public void updateCategorie(Categorie categorie) throws SQLException {
-		this.psUpdateCategorie.setInt(5, categorie.getId());
+		this.psUpdateCategorie.setInt(6, categorie.getId());
 		this.psUpdateCategorie.setString(1, categorie.getNom());
 		this.psUpdateCategorie.setDouble(3, categorie.gethMin());
 		this.psUpdateCategorie.setDouble(2, categorie.gethMax());
-		this.psUpdateCategorie.setInt(4, categorie.getIdAnnee());
+		this.psUpdateCategorie.setDouble(4, categorie.getRatioTp());
+		this.psUpdateCategorie.setInt(5, categorie.getIdAnnee());
 		this.psUpdateCategorie.executeUpdate();
 	}
 
@@ -370,7 +376,7 @@ public class DB {
 		ResultSet rs = this.psSelectModule.executeQuery();
 		while (rs.next()) {
 			hmModule.put(rs.getInt("idModule"),
-					new Module(rs.getInt("idModule"), rs.getString("nomModule"), rs.getInt("nbSemainesModule"), idAnnee,
+					new Module(rs.getInt("idModule"), rs.getString("nomModule"), rs.getString("code"), idAnnee,
 							rs.getInt("idSemestre")));
 		}
 		return hmModule;
@@ -385,7 +391,7 @@ public class DB {
 	public void ajouterModule(Module module) throws SQLException {
 		this.psInsertModule.setInt(1, module.getId());
 		this.psInsertModule.setString(2, module.getNom());
-		this.psInsertModule.setInt(3, module.getNbSemaines());
+		this.psInsertModule.setString(3, module.getCode());
 		this.psInsertModule.setInt(5, module.getIdSemestre());
 		this.psInsertModule.setInt(4, module.getIdAnnee());
 		this.psInsertModule.executeUpdate();
@@ -400,7 +406,7 @@ public class DB {
 	public void updateModule(Module module) throws SQLException {
 		this.psUpdateModule.setInt(5, module.getId());
 		this.psUpdateModule.setString(1, module.getNom());
-		this.psUpdateModule.setInt(2, module.getNbSemaines());
+		this.psUpdateModule.setString(2, module.getCode());
 		this.psUpdateModule.setInt(3, module.getIdAnnee());
 		this.psUpdateModule.setInt(4, module.getIdSemestre());
 		this.psUpdateModule.executeUpdate();
@@ -452,7 +458,7 @@ public class DB {
 		this.psInsertSemestre.setInt(2, semestre.getNbGTD());
 		this.psInsertSemestre.setInt(3, semestre.getNbGTP());
 		this.psInsertSemestre.setInt(4, semestre.getNbGCM());
-		this.psInsertSemestre.setInt(5, semestre.getNbGAutre());
+		this.psInsertSemestre.setInt(5, semestre.getNbSemaine());
 		this.psInsertSemestre.setInt(6, semestre.getIdAnnee());
 		this.psInsertSemestre.executeUpdate();
 	}
@@ -468,7 +474,7 @@ public class DB {
 		this.psUpdateSemestre.setInt(1, semestre.getNbGTD());
 		this.psUpdateSemestre.setInt(2, semestre.getNbGTP());
 		this.psUpdateSemestre.setInt(3, semestre.getNbGCM());
-		this.psUpdateSemestre.setInt(4, semestre.getNbGAutre());
+		this.psUpdateSemestre.setInt(4, semestre.getNbSemaine());
 		this.psUpdateSemestre.setInt(5, semestre.getIdAnnee());
 		this.psUpdateSemestre.executeUpdate();
 	}
@@ -554,6 +560,7 @@ public class DB {
 		while (rs.next()) {
 			hmHeureCours.put(rs.getInt("idTypeCours") + "-" + rs.getInt("idModule"),
 					new HeureCours(rs.getInt("idTypeCours"), rs.getInt("idModule"), rs.getDouble("heure"),
+					rs.getInt("nbSemaine"),rs.getDouble("hParSemaine"),
 							rs.getInt("idAnnee")));
 		}
 		return hmHeureCours;
@@ -569,7 +576,9 @@ public class DB {
 		this.psInsertHeureCours.setInt(1, heureCours.getIdTypeCours());
 		this.psInsertHeureCours.setInt(2, heureCours.getIdModule());
 		this.psInsertHeureCours.setDouble(3, heureCours.getHeure());
-		this.psInsertHeureCours.setInt(4, heureCours.getIdAnnee());
+		this.psInsertHeureCours.setInt(4, heureCours.getNbSemaine());
+		this.psInsertHeureCours.setDouble(5, heureCours.gethParSemaine());
+		this.psInsertHeureCours.setInt(6, heureCours.getIdAnnee());
 		this.psInsertHeureCours.executeUpdate();
 	}
 
@@ -583,7 +592,9 @@ public class DB {
 		this.psUpdateHeureCours.setDouble(1, heureCours.getHeure());
 		this.psUpdateHeureCours.setInt(2, heureCours.getIdTypeCours());
 		this.psUpdateHeureCours.setInt(3, heureCours.getIdModule());
-		this.psUpdateHeureCours.setInt(4, heureCours.getIdAnnee());
+		this.psUpdateHeureCours.setInt(4, heureCours.getNbSemaine());
+		this.psUpdateHeureCours.setDouble(5, heureCours.gethParSemaine());
+		this.psUpdateHeureCours.setInt(6, heureCours.getIdAnnee());
 		this.psUpdateHeureCours.executeUpdate();
 	}
 

@@ -1,70 +1,77 @@
 package vue;
 
-import modele.Intervenant;
-import modele.Categorie;
-import modele.TypeCours;
-
 import controleur.Controleur;
 
-import java.util.Map;
-import java.util.List;
+import modele.Categorie;
+import modele.Intervenant;
+import modele.TypeCours;
+
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ResourceBundle;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ResourceBundle;
 
 import javax.swing.Action;
 
-import javafx.scene.control.TableColumn;
-
-import javafx.event.Event;
-import javafx.event.ActionEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.*;
-import javafx.scene.control.Label;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableView;
-import javafx.stage.Popup;
-import javafx.stage.Stage;
-import javafx.scene.Node;
+
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
-import javafx.scene.control.ContentDisplay;
+import javafx.scene.Scene;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+
 import javafx.scene.paint.Color;
+
 import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
 
+import javafx.scene.control.*;
+/*
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.Label;
+import javafx.scene.control.Button;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+*/
+
+import javafx.scene.control.cell.PropertyValueFactory;
+
+import javafx.scene.input.MouseEvent;
+
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+import javafx.scene.layout.*;
+
+import javafx.scene.text.Text;
+
 import javafx.application.Application;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.*;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.control.Label;
+
 import javafx.stage.Stage;
 import javafx.stage.Popup;
 import javafx.stage.Modality;
-import javafx.scene.text.Text;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ChoiceBox;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.event.Event;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
-public class ControleurIHM implements Initializable, EventHandler<Event> , ChangeListener<String>{
+public class ControleurIHM implements Initializable, EventHandler<Event>, ChangeListener<String> {
 
 	@FXML
 	private AnchorPane centerPaneAccueil;
@@ -76,6 +83,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event> , Chang
 
 	private FrameIntervenant frameIntervenant;
 	private FrameModule frameModule;
+	private FrameExporter frameExporter;
 
 	private Controleur ctrl;
 
@@ -110,7 +118,6 @@ public class ControleurIHM implements Initializable, EventHandler<Event> , Chang
 		this.imageIntervenant.setImage(new Image(ResourceManager.INTERVENANT.toExternalForm()));
 		this.imageModule.setImage(new Image(ResourceManager.MODULE.toExternalForm()));
 		this.imageDownload.setImage(new Image(ResourceManager.DOWNLOAD.toExternalForm()));
-
 	}
 
 	@FXML
@@ -140,7 +147,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event> , Chang
 
 	@FXML
 	void parametrerMultiplicateurs() {
-		System.out.println("izdaziu");
+
 		Stage popupStage = new Stage();
 		popupStage.initModality(Modality.APPLICATION_MODAL);
 		popupStage.setTitle("Pop-up");
@@ -157,7 +164,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event> , Chang
 			textFieldTmp.setMaxWidth(7 * 7);
 			textFieldTmp.textProperty().addListener(this);
 			alText.add(textTmp);
-			
+
 			this.alTextField.add(textFieldTmp);
 		}
 
@@ -210,7 +217,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event> , Chang
 
 	@FXML
 	void allerExporter(ActionEvent event) {
-
+		this.frameExporter = new FrameExporter(this.ctrl, this.centerPaneAccueil);
 	}
 
 	@FXML
@@ -225,22 +232,31 @@ public class ControleurIHM implements Initializable, EventHandler<Event> , Chang
 	}
 
 	public void handle(Event event) {
-		
+
 		if (event instanceof ActionEvent action) {
 			if (action.getSource() == this.choiceBoxAnnee) {
 				this.ctrl.getModele().updateAnnee(this.choiceBoxAnnee.getValue());
 				this.setAnnee(this.choiceBoxAnnee.getValue());
 			} else if (action.getSource() == this.btnConfirmerMultiplicateur) {
-				System.out.println("coucou");
+
 				Double coeff;
+				boolean isEmpty = false;
 				for (int i = 0; i < this.alText.size(); i++) {
 					coeff = null;
-					try {
+					if (!this.alTextField.get(i).getText().isEmpty()) {
 						coeff = Double.parseDouble(alTextField.get(i).getText());
-						this.ctrl.getModele().updateTypeCoursBrut(alText.get(i).getText(),coeff);
-						((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
-					} catch (Exception e) { System.out.println("Le coefficient n'est pas un nombre ! "); }
+						this.ctrl.getModele().updateTypeCoursBrut(alText.get(i).getText(), coeff);
+					} else {
+						isEmpty = true;
+					}
+
 				}
+				if (!isEmpty) {
+					((Stage) this.btnConfirmerMultiplicateur.getScene().getWindow()).close();
+				}
+				else{
+					System.out.println("Un champ est libre");
+	}
 			}
 		}
 	}
@@ -248,14 +264,13 @@ public class ControleurIHM implements Initializable, EventHandler<Event> , Chang
 	@Override
 	public void changed(ObservableValue<? extends String> observable, String oldString, String newString) {
 
-		System.out.println("cc");
 		for (TextField text : alTextField) {
 			if (observable == text.textProperty()) {
 				if (!(text.getText().matches("[0-9 .]*")))
 					text.setText("");
 			}
 		}
-		
+
 	}
 
 }

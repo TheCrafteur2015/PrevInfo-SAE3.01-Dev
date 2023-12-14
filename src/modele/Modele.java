@@ -1,9 +1,6 @@
 package modele;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import controleur.Controleur;
@@ -71,8 +68,8 @@ public class Modele {
 
 	}
 
-	public void ajouterCategorie(String nom, double hMin, double hMax) {
-		Categorie c = new Categorie(nom, hMin, hMax, this.idAnnee);
+	public void ajouterCategorie(String nom, double hMin, double hMax, double ratioTp) {
+		Categorie c = new Categorie(nom, hMin, hMax, ratioTp, this.idAnnee);
 		try {
 			this.db.ajouterCategorie(c);
 		} catch (SQLException e) {
@@ -146,8 +143,8 @@ public class Modele {
 		intervention.setNbGroupe(i.getNbGroupe());
 	}
 
-	public void ajouterModule(String nom, int nbSemaines, int idSemestre) {
-		Module m = new Module(nom, nbSemaines, this.idAnnee, idSemestre);
+	public void ajouterModule(String nom, String code, int idSemestre) {
+		Module m = new Module(nom, code, this.idAnnee, idSemestre);
 		try {
 			this.db.ajouterModule(m);
 		} catch (SQLException e) {
@@ -163,7 +160,7 @@ public class Modele {
 			e.printStackTrace();
 		}
 		this.hmModules.get(m.getId()).setNom(m.getNom());
-		this.hmModules.get(m.getId()).setNbSemaines(m.getNbSemaines());
+		this.hmModules.get(m.getId()).setCode(m.getCode());
 		this.hmModules.get(m.getId()).setIdAnnee(m.getIdAnnee());
 		this.hmModules.get(m.getId()).setIdSemestre(m.getIdSemestre());
 	}
@@ -188,11 +185,11 @@ public class Modele {
 		semestre.setNbGTD(s.getNbGTD());
 		semestre.setNbGTP(s.getNbGTP());
 		semestre.setNbGCM(s.getNbGCM());
-		semestre.setNbGAutre(s.getNbGAutre());
+		semestre.setNbSemaine(s.getNbSemaine());
 	}
 
-	public void ajouterHeureCours(int idTypeCours, int idModule, double heure) {
-		HeureCours hc = new HeureCours(idTypeCours, idModule, heure, idAnnee);
+	public void ajouterHeureCours(int idTypeCours, int idModule, double heure, int nbSemaine, double hParSemaine) {
+		HeureCours hc = new HeureCours(idTypeCours, idModule, heure,nbSemaine,hParSemaine, this.idAnnee);
 		try {
 			this.db.ajouterHeureCours(hc);
 		} catch (SQLException e) {
@@ -247,12 +244,12 @@ public class Modele {
 				Map<Integer, Semestre>    hmTmpSemestres = this.db.getSemestres(this.idAnnee);
 				Map<String, HeureCours>   hmTmpHeuresCours = this.db.getHeureCours(this.idAnnee);
 				this.idAnnee = iAnnee;
-				for (Categorie c : hmTmpCategories.values()) ajouterCategorie(c.getNom(), c.gethMin(), c.gethMax());
+				for (Categorie c : hmTmpCategories.values()) ajouterCategorie(c.getNom(), c.gethMin(), c.gethMax(), c.getRatioTp());
 				for (Intervenant i : hmTmpIntervenants.values()) ajouterIntervenant(i.getPrenom(), i.getNom(), i.getEmail(), i.gethMin(), i.gethMax(), i.getIdCategorie());
 				for (Intervention i : hmTmpInterventions.values()) ajouterIntervention(i.getIdIntervenant(), i.getIdModule(), i.getIdTypeCours(), i.getNbSemaines(), i.getNbGroupe());
-				for (Module m : hmTmpModules.values()) ajouterModule(m.getNom(), m.getNbSemaines(), m.getIdSemestre());	
-				for (Semestre s : hmTmpSemestres.values()) ajouterSemestre(s.getNbGTD(), s.getNbGTP(), s.getNbGCM(), s.getNbGAutre());
-				for (HeureCours hc : hmTmpHeuresCours.values()) ajouterHeureCours(hc.getIdTypeCours(), hc.getIdModule(), hc.getHeure());	
+				for (Module m : hmTmpModules.values()) ajouterModule(m.getNom(), m.getCode(), m.getIdSemestre());	
+				for (Semestre s : hmTmpSemestres.values()) ajouterSemestre(s.getNbGTD(), s.getNbGTP(), s.getNbGCM(), s.getNbSemaine());
+				for (HeureCours hc : hmTmpHeuresCours.values()) ajouterHeureCours(hc.getIdTypeCours(), hc.getIdModule(), hc.getHeure(), hc.getNbSemaine(), hc.gethParSemaine());	
 			} else { this.updateAnnee(annee); }
 			
 
