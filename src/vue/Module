@@ -1,0 +1,91 @@
+
+@Override
+public void start(Stage stage) {
+
+	TableView<Module> table = new TableView<Module>();
+
+	// Editable
+	table.setEditable(true);
+
+	TableColumn<Module, String> nomCol       = new TableColumn<Module, String>("Nom");
+	TableColumn<Module, String> nbSemaineCol = new TableColumn<Module, String>("nbSemaine");
+
+
+	// ==== Nom (TEXT FIELD) ===
+	nomCol.setCellValueFactory(new PropertyValueFactory<>("Nom"));
+
+	nomCol.setCellFactory(TextFieldTableCell.<Module> forTableColumn());
+
+	nomCol.setMinWidth(200);
+
+	// On Cell edit commit (for Nom column)
+	nomCol.setOnEditCommit
+	(
+		(CellEditEvent<Module, String> event) -> 
+		{
+			TablePosition<Module, String> pos = event.getTablePosition();
+
+			String newNom = event.getNewValue(); // on récupère le nouveau nom
+
+			int row = pos.getRow();
+			Module module = event.getTableView().getItems().get(row); // on récupère le module concerné
+
+			module.setNom(newNom); // on met le nouveau nom au module concerné
+		}
+	);
+
+	// ==== NbSemaine (TEXT FIELD) ===
+	nbSemaineCol.setCellValueFactory(new PropertyValueFactory<>("nbSemaine"));
+
+	nbSemaineCol.setCellFactory(TextFieldTableCell.<Module> forTableColumn());
+
+	nbSemaineCol.setMinWidth(200);
+
+	// On Cell edit commit (for nbSemaine column)
+	nbSemaineCol.setOnEditCommit
+	(
+		(CellEditEvent<Module, String> event) -> 
+		{
+			TablePosition<Module, String> pos = event.getTablePosition();
+
+			String newNbSemaine = event.getNewValue(); // on récupère le nouveau nbSemaine
+
+			int row = pos.getRow();
+			Module module = event.getTableView().getItems().get(row); // on récupère le module concerné
+
+			module.setNbSemaine(newNbSemaine); // on met le nouveau nom au module concerné
+		}
+	);
+
+	ObservableList<Module> list = getModuleList();
+	table.setItems(list);
+
+	table.getColumns().addAll(nomCol, nbSemaineCol);
+
+	StackPane root = new StackPane();
+	root.setPadding(new Insets(5));
+	root.getChildren().add(table);
+
+	stage.setTitle("TableView (o7planning.org)");
+
+	Scene scene = new Scene(root, 450, 300);
+	stage.setScene(scene);
+	stage.show();
+}
+
+private ObservableList<Module> getModuleList() {
+
+	Module module1 = new Module( "R1.01_Initiation au développement" , 14, 1, 1),
+	Module module2 = new Module( "R1.02_Développement interfaces Web", 13, 1, 1),
+	Module module3 = new Module( "R1.03_Introduction Architecture"   ,  7, 1, 1),
+	ObservableList<Module> list = FXCollections.observableArrayList(module1, module2, module3);
+	return list;
+}
+
+public Module(String nom, int nbSemaines, int idAnnee, int idSemestre) {
+	this.id = ++NB_MODULE;
+	this.nom = nom;
+	this.nbSemaines = nbSemaines;
+	this.idAnnee = idAnnee;
+	this.idSemestre = idSemestre;
+}

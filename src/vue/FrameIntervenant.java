@@ -2,6 +2,8 @@ package vue;
 
 import modele.Intervenant;
 import modele.Categorie;
+import modele.Intervention;
+import modele.Module;
 
 import controleur.Controleur;
 
@@ -59,6 +61,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.beans.value.*;
+import javafx.util.Callback;
 
 public class FrameIntervenant implements EventHandler<Event>, ChangeListener<String> {
 
@@ -87,7 +90,8 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 
 		this.init();
 	}
-
+	
+	@SuppressWarnings("deprecation")
 	public void init() {
 		this.centerPaneAccueil.getChildren().clear();
 		this.centerPaneAccueil.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
@@ -194,7 +198,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		return supbtn;
 	}
 
-	public void popupParamIntervenant() {
+	public void popupParamIntervenant(IntervenantIHM i) {
 		Stage popupStage = new Stage();
 		popupStage.initModality(Modality.APPLICATION_MODAL);
 		popupStage.setTitle("Pop-up");
@@ -290,13 +294,66 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		popupStage.showAndWait();
 	}
 
+	public void popupAfficheModule(int idIntervenant) {
+		Stage popupStage = new Stage();
+		popupStage.initModality(Modality.APPLICATION_MODAL);
+		popupStage.setTitle("Pop-up");
+
+		TableView<String> tableViewModules;
+		tableViewModules = new TableView<>();
+		tableViewModules.setEditable(true);
+
+		tableViewModules.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+		Map<Integer, Module> hmModule = this.ctrl.getModele().getHmModules();
+		Map<String, Intervention> hmIntervention = this.ctrl.getModele().getHmInterventions();
+		ObservableList<String> lst = FXCollections.observableArrayList();
+
+		String[] colonnes = new String[] { "Nom" };
+
+		TableColumn<String, String> tbcl = new TableColumn<>(colonnes[0]);
+        // tbcl.setCellValueFactory(cellData -> cellData.getValue());
+		tbcl.setCellValueFactory(new Callback<>() {
+            @Override
+            public javafx.beans.value.ObservableValue<String> call(TableColumn.CellDataFeatures<String, String> p) {
+                return javafx.beans.binding.Bindings.createObjectBinding(() -> p.getValue());
+            }
+        });
+
+		tableViewModules.getColumns().add(tbcl);
+
+		for (Intervention i : hmIntervention.values()) {
+			if (i.getIdIntervenant() == idIntervenant && !lst.contains(hmModule.get(i.getIdModule()).getNom())){
+				lst.add(hmModule.get(i.getIdModule()).getNom());
+			}
+		}
+
+		tableViewModules.setItems(lst);
+
+		VBox vbox = new VBox(5);
+		vbox.setMaxSize(400, 50+lst.size()*40);
+
+		vbox.setAlignment(Pos.CENTER);
+
+		StackPane popupLayout = new StackPane();
+		vbox.getChildren().add(tableViewModules);
+		popupLayout.getChildren().add(vbox);
+		Scene popupScene = new Scene(popupLayout, 400, 50+lst.size()*40);
+		popupStage.setScene(popupScene);
+
+		popupStage.showAndWait();
+	}
+
 	public void handle(Event event) {
 		if (event.getSource() == this.btnParamCategorie) {
 			this.frameParamCategorie = new FrameParamCategorie(this.ctrl, this.centerPaneAccueil);
 
 		}
 		if (event.getSource() == this.btnParamIntervenants) {
-			this.popupParamIntervenant();
+			if (this.tableViewIntervenant.getSelectionModel().getSelectedItems().size() != 0 )
+				this.popupParamIntervenant(this.tableViewIntervenant.getSelectionModel().getSelectedItems().get(0));
+			else 
+				this.popupParamIntervenant(null);
 		}
 		if (event.getSource() == this.choiceBoxCategorie) {
 			Categorie c = this.choiceBoxCategorie.getValue();
@@ -339,7 +396,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 			if (!(button.getId() == null)) {
 				String[] textButton = button.getId().split("-");
 				if (textButton[0].equals("Info")) {
-					System.out.println("Info : " + textButton[1]);
+					this.popupAfficheModule(Integer.parseInt(textButton[1]));
 				} else if (textButton[0].equals("Sup")) {
 					this.ctrl.getModele().supprimerIntervenant(Integer.parseInt(textButton[1]));
 					this.majTableIntervenant();

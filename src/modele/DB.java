@@ -1,10 +1,8 @@
 package modele;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Classe de liaison à la base de données
@@ -16,7 +14,7 @@ import java.util.List;
  * @see TypeCours
  * @see HeureCours
  * 
- * @since la version
+ * @since la version Java
  * 
  */
 public class DB {
@@ -125,49 +123,97 @@ public class DB {
 		return dbInstance;
 	}
 
+	/*-----------*/
+	/* Categorie */
+	/*-----------*/
+
 	/**
 	 * @param idAnnee indice de l'année souhaitée
-	 * @return une {@link Map} liant les {@link Categorie} a leur indices, sous
-	 *         forme d'{@link Integer}
+	 * @return une {@link Map} composé de :
+	 *         <ul>
+	 *         <li>indice en {@link Integer}</li>
+	 *         <li>{@link Categorie} correspondante</li>
+	 *         </ul>
 	 */
 	public Map<Integer, Categorie> getCategories(int idAnnee) throws SQLException {
 		Map<Integer, Categorie> hmCateg = new HashMap<>();
 		this.psSelectCategorie.setInt(1, idAnnee);
 		ResultSet rs = this.psSelectCategorie.executeQuery();
 		while (rs.next()) {
-			hmCateg.put(rs.getInt("idCategorie"), new Categorie(rs.getString("nomCategorie"),
+			hmCateg.put(rs.getInt("idCategorie"), new Categorie(rs.getInt("idCategorie"), rs.getString("nomCategorie"),
 					rs.getDouble("hMinCategorie"), rs.getDouble("hMaxCategorie"), idAnnee));
 		}
 		return hmCateg;
 	}
 
-	public void ajouterCategorie(Categorie c) throws SQLException {
-		this.psInsertCategorie.setInt(1, c.getId());
-		this.psInsertCategorie.setString(2, c.getNom());
-		this.psInsertCategorie.setDouble(3, c.gethMin());
-		this.psInsertCategorie.setDouble(4, c.gethMax());
-		this.psInsertCategorie.setInt(5, c.getIdAnnee());
+	/**
+	 * méthode pour ajouter une {@link Categorie} à la base de données
+	 * 
+	 * @param categorie {@link Categorie} à ajouter
+	 * @throws SQLException
+	 */
+	public void ajouterCategorie(Categorie categorie) throws SQLException {
+		this.psInsertCategorie.setInt(1, categorie.getId());
+		this.psInsertCategorie.setString(2, categorie.getNom());
+		this.psInsertCategorie.setDouble(3, categorie.gethMin());
+		this.psInsertCategorie.setDouble(4, categorie.gethMax());
+		this.psInsertCategorie.setInt(5, categorie.getIdAnnee());
 		this.psInsertCategorie.executeUpdate();
 	}
 
-	public void updateCategorie(Categorie c) throws SQLException {
-		this.psUpdateCategorie.setInt(5, c.getId());
-		this.psUpdateCategorie.setString(1, c.getNom());
-		this.psUpdateCategorie.setDouble(3, c.gethMin());
-		this.psUpdateCategorie.setDouble(2, c.gethMax());
-		this.psUpdateCategorie.setInt(4, c.getIdAnnee());
+	/**
+	 * méthode pour modifier une {@link Categorie} de la base de données
+	 * 
+	 * @param categorie {@link Categorie} à modifier
+	 * @throws SQLException
+	 */
+	public void updateCategorie(Categorie categorie) throws SQLException {
+		this.psUpdateCategorie.setInt(5, categorie.getId());
+		this.psUpdateCategorie.setString(1, categorie.getNom());
+		this.psUpdateCategorie.setDouble(3, categorie.gethMin());
+		this.psUpdateCategorie.setDouble(2, categorie.gethMax());
+		this.psUpdateCategorie.setInt(4, categorie.getIdAnnee());
 		this.psUpdateCategorie.executeUpdate();
 	}
 
-	public void supprimerCategorie(Categorie c) throws SQLException {
-		this.psDeleteCategorie.setInt(1, c.getId());
+	/**
+	 * méthode pour supprimer une {@link Categorie} de la base de données
+	 * 
+	 * @param categorie {@link Categorie} à supprimer
+	 * @throws SQLException
+	 */
+	public void supprimerCategorie(Categorie categorie) throws SQLException {
+		this.psDeleteCategorie.setInt(1, categorie.getId());
 		this.psDeleteCategorie.executeUpdate();
 	}
 
 	/**
+	 * méthode pour obtenir le nom d'une {@link Categorie}
+	 * 
+	 * @param idCategorie
+	 * @return
+	 * @throws SQLException
+	 */
+	public String getNomCateg(int idCategorie) throws SQLException {
+		this.psSelectNomCateg.setInt(1, idCategorie);
+		ResultSet rs = this.psSelectNomCateg.executeQuery();
+		while (rs.next()) {
+			return rs.getString("nomCategorie");
+		}
+		return "";
+	}
+
+	/*-------------*/
+	/* Intervenant */
+	/*-------------*/
+
+	/**
 	 * @param idAnnee indice de l'année souhaitée
-	 * @return une {@link Map} liant les {@link Intervenant} a leur indices,
-	 *         sous forme d'{@link Integer}
+	 * @return une {@link Map} composé de :
+	 *         <ul>
+	 *         <li>indice en {@link Integer}</li>
+	 *         <li>{@link Intervenant} correspondant</li>
+	 *         </ul>
 	 */
 	public Map<Integer, Intervenant> getIntervenants(int idAnnee) throws SQLException {
 		Map<Integer, Intervenant> hmInter = new HashMap<>();
@@ -175,95 +221,148 @@ public class DB {
 		ResultSet rs = this.psSelectIntervenant.executeQuery();
 		while (rs.next()) {
 			hmInter.put(rs.getInt("idIntervenant"),
-					new Intervenant(rs.getInt("idIntervenant"), rs.getString("prenom"), rs.getString("nom"),
+					new Intervenant(rs.getString("prenom"), rs.getString("nom"),
 							rs.getString("email"), rs.getDouble("hMinIntervenant"), rs.getDouble("hMaxIntervenant"),
 							idAnnee, rs.getInt("idCategorie")));
 		}
 		return hmInter;
 	}
 
-	public void ajouterIntervenant(Intervenant i) throws SQLException {
-		this.psInsertIntervenant.setInt(1, i.getId());
-		this.psInsertIntervenant.setString(2, i.getPrenom());
-		this.psInsertIntervenant.setString(3, i.getNom());
-		this.psInsertIntervenant.setString(4, i.getEmail());
-		this.psInsertIntervenant.setDouble(5, i.gethMin());
-		this.psInsertIntervenant.setDouble(6, i.gethMax());
-		this.psInsertIntervenant.setInt(7, i.getIdAnnee());
-		this.psInsertIntervenant.setInt(8, i.getIdCategorie());
+	/**
+	 * méthode pour ajouter un {@link Intervenant} de la base de données
+	 * 
+	 * @param itervenant {@link Intervenant} à ajouter
+	 * @throws SQLException
+	 */
+	public void ajouterIntervenant(Intervenant itervenant) throws SQLException {
+		this.psInsertIntervenant.setInt(1, itervenant.getId());
+		this.psInsertIntervenant.setString(2, itervenant.getPrenom());
+		this.psInsertIntervenant.setString(3, itervenant.getNom());
+		this.psInsertIntervenant.setString(4, itervenant.getEmail());
+		this.psInsertIntervenant.setDouble(5, itervenant.gethMin());
+		this.psInsertIntervenant.setDouble(6, itervenant.gethMax());
+		this.psInsertIntervenant.setInt(7, itervenant.getIdAnnee());
+		this.psInsertIntervenant.setInt(8, itervenant.getIdCategorie());
 		this.psInsertIntervenant.executeUpdate();
 	}
 
-	public void updateIntervenant(Intervenant i) throws SQLException {
-		this.psUpdateIntervenant.setInt(8, i.getId());
-		this.psUpdateIntervenant.setString(1, i.getPrenom());
-		this.psUpdateIntervenant.setString(2, i.getNom());
-		this.psUpdateIntervenant.setString(3, i.getEmail());
-		this.psUpdateIntervenant.setDouble(4, i.gethMin());
-		this.psUpdateIntervenant.setDouble(5, i.gethMax());
-		this.psUpdateIntervenant.setInt(6, i.getIdCategorie());
-		this.psUpdateIntervenant.setInt(7, i.getIdAnnee());
+	/**
+	 * méthode pour modifier un {@link Intervenant} de la base de données
+	 * 
+	 * @param itervenant {@link Intervenant} à modifier
+	 * @throws SQLException
+	 */
+	public void updateIntervenant(Intervenant itervenant) throws SQLException {
+		this.psUpdateIntervenant.setInt(8, itervenant.getId());
+		this.psUpdateIntervenant.setString(1, itervenant.getPrenom());
+		this.psUpdateIntervenant.setString(2, itervenant.getNom());
+		this.psUpdateIntervenant.setString(3, itervenant.getEmail());
+		this.psUpdateIntervenant.setDouble(4, itervenant.gethMin());
+		this.psUpdateIntervenant.setDouble(5, itervenant.gethMax());
+		this.psUpdateIntervenant.setInt(6, itervenant.getIdCategorie());
+		this.psUpdateIntervenant.setInt(7, itervenant.getIdAnnee());
 		this.psUpdateIntervenant.executeUpdate();
-
 	}
 
+	/**
+	 * méthode pour supprimer un {@link Intervenant} de la base de données
+	 * 
+	 * @param id de l'{@link Intervenant} à supprimer
+	 * @throws SQLException
+	 */
 	public void supprimerIntervenant(int id) throws SQLException {
 		this.psDeleteIntervenant.setInt(1, id);
 		this.psDeleteIntervenant.executeUpdate();
 	}
 
+	/*--------------*/
+	/* Intervention */
+	/*--------------*/
+
 	/**
 	 * @param idAnnee indice de l'année souhaitée
-	 * @return une {@link Map} liant les {@link Intervention} a leur indices,
-	 *         sous forme d'un {@link String}, comportant l'id de
-	 *         l'{@link Intervenant}, du {@link Module} et du {@link TypeCours}
+	 * @return une {@link Map} composé de :
+	 *         <ul>
+	 *         <li>indice en {@link String}, composé de :
+	 *         <ol>
+	 *         <li>l'indice de l'{@link Intervenant}</li>
+	 *         <li>l'indice du {@link Module}</li>
+	 *         <li>l'indice du {@link TypeCours}</li>
+	 *         </ol>
+	 *         </li>
+	 *         <li>{@link Intervention} correspondante</li>
+	 *         </ul>
 	 */
 	public Map<String, Intervention> getInterventions(int idAnnee) throws SQLException {
 		Map<String, Intervention> hmInterventions = new HashMap<>();
 		this.psSelectIntervention.setInt(1, idAnnee);
 		ResultSet rs = this.psSelectIntervention.executeQuery();
 		while (rs.next()) {
-			hmInterventions.put(
-					rs.getInt("idIntervenant") + "-" + rs.getInt("idModule") + "-" + rs.getInt("idTypeCours"),
-					new Intervention(rs.getInt("idIntervenant"), rs.getInt("idModule"), rs.getInt("idTypeCours"),
-							rs.getInt("nbSemainesIntervention"),
-							rs.getInt("nbGroupe"), rs.getInt("idAnnee")));
+			hmInterventions
+					.put(rs.getInt("idIntervenant") + "-" + rs.getInt("idModule") + "-" + rs.getInt("idTypeCours"),
+							new Intervention(rs.getInt("idIntervenant"), rs.getInt("idModule"),
+									rs.getInt("idTypeCours"), rs.getInt("nbSemainesIntervention"),
+									rs.getInt("nbGroupe"), rs.getInt("idAnnee")));
 		}
 		return hmInterventions;
 	}
 
-	public void ajouterIntervention(Intervention i) throws SQLException {
-		this.psInsertIntervention.setInt(1, i.getIdIntervenant());
-		this.psInsertIntervention.setInt(2, i.getIdModule());
-		this.psInsertIntervention.setInt(3, i.getIdTypeCours());
-		this.psInsertIntervention.setInt(4, i.getNbSemaines());
-		this.psInsertIntervention.setInt(5, i.getNbGroupe());
-		this.psInsertIntervention.setInt(6, i.getIdAnnee());
+	/**
+	 * méthode pour ajouter une {@link Intervention} de la base de données
+	 * 
+	 * @param intervention {@link Intervention} à ajouter
+	 * @throws SQLException
+	 */
+	public void ajouterIntervention(Intervention intervention) throws SQLException {
+		this.psInsertIntervention.setInt(1, intervention.getIdIntervenant());
+		this.psInsertIntervention.setInt(2, intervention.getIdModule());
+		this.psInsertIntervention.setInt(3, intervention.getIdTypeCours());
+		this.psInsertIntervention.setInt(4, intervention.getNbSemaines());
+		this.psInsertIntervention.setInt(5, intervention.getNbGroupe());
+		this.psInsertIntervention.setInt(6, intervention.getIdAnnee());
 		this.psInsertIntervention.executeUpdate();
 	}
 
-	public void updateIntervention(Intervention i) throws SQLException {
-		this.psUpdateIntervention.setInt(4, i.getIdIntervenant());
-		this.psUpdateIntervention.setInt(5, i.getIdModule());
-		this.psUpdateIntervention.setInt(6, i.getIdTypeCours());
-		this.psUpdateIntervention.setInt(1, i.getNbSemaines());
-		this.psUpdateIntervention.setInt(2, i.getNbGroupe());
-		this.psUpdateIntervention.setInt(3, i.getIdAnnee());
+	/**
+	 * méthode pour modifier une {@link Intervention} de la base de données
+	 * 
+	 * @param intervention {@link Intervention} à modifier
+	 * @throws SQLException
+	 */
+	public void updateIntervention(Intervention intervention) throws SQLException {
+		this.psUpdateIntervention.setInt(4, intervention.getIdIntervenant());
+		this.psUpdateIntervention.setInt(5, intervention.getIdModule());
+		this.psUpdateIntervention.setInt(6, intervention.getIdTypeCours());
+		this.psUpdateIntervention.setInt(1, intervention.getNbSemaines());
+		this.psUpdateIntervention.setInt(2, intervention.getNbGroupe());
+		this.psUpdateIntervention.setInt(3, intervention.getIdAnnee());
 		this.psUpdateIntervention.executeUpdate();
 	}
 
-	public void supprimerIntervention(Intervention i) throws SQLException {
-		this.psDeleteIntervention.setInt(1, i.getIdIntervenant());
-		this.psDeleteIntervention.setInt(2, i.getIdModule());
-		this.psDeleteIntervention.setInt(3, i.getIdTypeCours());
+	/**
+	 * méthode pour supprimer une {@link Intervention} de la base de données
+	 * 
+	 * @param intervention {@link Intervention} à supprimer
+	 * @throws SQLException
+	 */
+	public void supprimerIntervention(Intervention intervention) throws SQLException {
+		this.psDeleteIntervention.setInt(1, intervention.getIdIntervenant());
+		this.psDeleteIntervention.setInt(2, intervention.getIdModule());
+		this.psDeleteIntervention.setInt(3, intervention.getIdTypeCours());
 		this.psDeleteIntervention.executeUpdate();
 	}
 
+	/*--------*/
+	/* Module */
+	/*--------*/
+
 	/**
 	 * @param idAnnee indice de l'année souhaitée
-	 * @return une {@link Map} liant les {@link Module} a leur indices, sous
-	 *         forme d'un {@link String}, comportant l'id de l'{@link Intervenant},
-	 *         du {@link Module} et du {@link TypeCours}
+	 * @return une {@link Map} composé de :
+	 *         <ul>
+	 *         <li>indice en {@link Integer}</li>
+	 *         <li>{@link Module} correspondant</li>
+	 *         </ul>
 	 */
 	public Map<Integer, Module> getModules(int idAnnee) throws SQLException {
 		Map<Integer, Module> hmModule = new HashMap<>();
@@ -277,73 +376,125 @@ public class DB {
 		return hmModule;
 	}
 
-	public void ajouterModule(Module m) throws SQLException {
-		this.psInsertModule.setInt(1, m.getId());
-		this.psInsertModule.setString(2, m.getNom());
-		this.psInsertModule.setInt(3, m.getNbSemaines());
-		this.psInsertModule.setInt(5, m.getIdSemestre());
-		this.psInsertModule.setInt(4, m.getIdAnnee());
+	/**
+	 * méthode pour ajouter une {@link Module} de la base de données
+	 * 
+	 * @param module {@link Module} à ajouter
+	 * @throws SQLException
+	 */
+	public void ajouterModule(Module module) throws SQLException {
+		this.psInsertModule.setInt(1, module.getId());
+		this.psInsertModule.setString(2, module.getNom());
+		this.psInsertModule.setInt(3, module.getNbSemaines());
+		this.psInsertModule.setInt(4, module.getIdSemestre());
+		this.psInsertModule.setInt(5, module.getIdAnnee());
 		this.psInsertModule.executeUpdate();
 	}
 
-	public void updateModule(Module m) throws SQLException {
-		this.psUpdateModule.setInt(5, m.getId());
-		this.psUpdateModule.setString(1, m.getNom());
-		this.psUpdateModule.setInt(2, m.getNbSemaines());
-		this.psUpdateModule.setInt(3, m.getIdAnnee());
-		this.psUpdateModule.setInt(4, m.getIdSemestre());
+	/**
+	 * méthode pour modifier une {@link Module} de la base de données
+	 * 
+	 * @param module {@link Module} à modifier
+	 * @throws SQLException
+	 */
+	public void updateModule(Module module) throws SQLException {
+		this.psUpdateModule.setInt(5, module.getId());
+		this.psUpdateModule.setString(1, module.getNom());
+		this.psUpdateModule.setInt(2, module.getNbSemaines());
+		this.psUpdateModule.setInt(3, module.getIdAnnee());
+		this.psUpdateModule.setInt(4, module.getIdSemestre());
 		this.psUpdateModule.executeUpdate();
 	}
 
-	public void supprimerModule(Module m) throws SQLException {
-		this.psDeleteModule.setInt(1, m.getId());
+	/**
+	 * méthode pour supprimer une {@link Module} de la base de données
+	 * 
+	 * @param module {@link Module} à supprimer
+	 * @throws SQLException
+	 */
+	public void supprimerModule(Module module) throws SQLException {
+		this.psDeleteModule.setInt(1, module.getId());
 		this.psDeleteModule.executeUpdate();
 	}
 
+	/*----------*/
+	/* Semestre */
+	/*----------*/
+
 	/**
 	 * @param idAnnee indice de l'année souhaitée
-	 * @return une {@link Map} liant les {@link Semestre} a leur indices, sous
-	 *         forme d'un {@link String}, comportant l'id de l'{@link Intervenant},
-	 *         du {@link Module} et du {@link TypeCours}
+	 * @return une {@link Map} composé de :
+	 *         <ul>
+	 *         <li>indice en {@link Integer}</li>
+	 *         <li>{@link Semestre} correspondant</li>
+	 *         </ul>
 	 */
 	public Map<Integer, Semestre> getSemestres(int idAnnee) throws SQLException {
 		Map<Integer, Semestre> hmSemestre = new HashMap<>();
 		this.psSelectSemestre.setInt(1, idAnnee);
 		ResultSet rs = this.psSelectSemestre.executeQuery();
 		while (rs.next()) {
-			hmSemestre.put(rs.getInt("idSemestre"), new Semestre(rs.getInt("idSemestre"), rs.getInt("nbGTD"),
-					rs.getInt("nbGTP"), rs.getInt("nbGCM"), rs.getInt("nbGAutre"), idAnnee));
+			hmSemestre.put(rs.getInt("idSemestre"),
+					new Semestre(rs.getInt("idSemestre"), rs.getInt("nbGTD"), rs.getInt("nbGTP"), rs.getInt("nbGCM"),
+							rs.getInt("nbGAutre"), idAnnee));
 		}
 		return hmSemestre;
 	}
 
-	public void ajouterSemestre(Semestre s) throws SQLException {
-		this.psInsertSemestre.setInt(1, s.getId());
-		this.psInsertSemestre.setInt(2, s.getNbGTD());
-		this.psInsertSemestre.setInt(3, s.getNbGTP());
-		this.psInsertSemestre.setInt(4, s.getNbGCM());
-		this.psInsertSemestre.setInt(5, s.getNbGAutre());
-		this.psInsertSemestre.setInt(6, s.getIdAnnee());
+	/**
+	 * méthode pour ajouter une {@link Semestre} de la base de données
+	 * 
+	 * @param semestre {@link Semestre} à ajouter
+	 * @throws SQLException
+	 */
+	public void ajouterSemestre(Semestre semestre) throws SQLException {
+		this.psInsertSemestre.setInt(1, semestre.getId());
+		this.psInsertSemestre.setInt(2, semestre.getNbGTD());
+		this.psInsertSemestre.setInt(3, semestre.getNbGTP());
+		this.psInsertSemestre.setInt(4, semestre.getNbGCM());
+		this.psInsertSemestre.setInt(5, semestre.getNbGAutre());
+		this.psInsertSemestre.setInt(6, semestre.getIdAnnee());
 		this.psInsertSemestre.executeUpdate();
 	}
 
-	public void updateSemestre(Semestre s) throws SQLException {
-		this.psUpdateSemestre.setInt(6, s.getId());
-		this.psUpdateSemestre.setInt(1, s.getNbGTD());
-		this.psUpdateSemestre.setInt(2, s.getNbGTP());
-		this.psUpdateSemestre.setInt(3, s.getNbGCM());
-		this.psUpdateSemestre.setInt(4, s.getNbGAutre());
-		this.psUpdateSemestre.setInt(5, s.getIdAnnee());
+	/**
+	 * méthode pour modifier une {@link Semestre} de la base de données
+	 * 
+	 * @param semestre {@link Semestre} à modifier
+	 * @throws SQLException
+	 */
+	public void updateSemestre(Semestre semestre) throws SQLException {
+		this.psUpdateSemestre.setInt(6, semestre.getId());
+		this.psUpdateSemestre.setInt(1, semestre.getNbGTD());
+		this.psUpdateSemestre.setInt(2, semestre.getNbGTP());
+		this.psUpdateSemestre.setInt(3, semestre.getNbGCM());
+		this.psUpdateSemestre.setInt(4, semestre.getNbGAutre());
+		this.psUpdateSemestre.setInt(5, semestre.getIdAnnee());
 		this.psUpdateSemestre.executeUpdate();
 	}
 
-	public void supprimerSemestre(Semestre s) throws SQLException {
-		this.psDeleteSemestre.setInt(1, s.getId());
+	/**
+	 * méthode pour supprimer une {@link Semestre} de la base de données
+	 * 
+	 * @param semestre {@link Semestre} à supprimer
+	 * @throws SQLException
+	 */
+	public void supprimerSemestre(Semestre semestre) throws SQLException {
+		this.psDeleteSemestre.setInt(1, semestre.getId());
 		this.psDeleteSemestre.executeUpdate();
 	}
 
+	/*-----------*/
+	/* TypeCours */
+	/*-----------*/
+
 	/**
-	 * 
+	 * @param idAnnee indice de l'année souhaitée
+	 * @return une {@link Map} composé de :
+	 *         <ul>
+	 *         <li>indice en {@link Integer}</li>
+	 *         <li>{@link TypeCours} correspondant</li>
+	 *         </ul>
 	 */
 	public Map<Integer, TypeCours> getTypeCours() throws SQLException {
 		Map<Integer, TypeCours> hmTypeCours = new HashMap<>();
@@ -355,57 +506,103 @@ public class DB {
 		return hmTypeCours;
 	}
 
-	public void updateTypeCours(TypeCours tc) throws SQLException {
-		this.psUpdateTypeCours.setDouble(1, tc.getCoefficient());
-		this.psUpdateTypeCours.setString(2, tc.getNom());
-		this.psUpdateTypeCours.setInt(3, tc.getId());
+	/**
+	 * méthode pour modifier une {@link TypeCours} de la base de données
+	 * 
+	 * @param semestre {@link TypeCours} à modifier
+	 * @throws SQLException
+	 */
+	public void updateTypeCours(TypeCours typeCours) throws SQLException {
+		this.psUpdateTypeCours.setDouble(1, typeCours.getCoefficient());
+		this.psUpdateTypeCours.setString(2, typeCours.getNom());
+		this.psUpdateTypeCours.setInt(3, typeCours.getId());
 		this.psUpdateTypeCours.executeUpdate();
 	}
 
-	public void supprimerTypeCours(TypeCours tc) throws SQLException {
-		this.psDeleteTypeCours.setInt(1, tc.getId());
+	/**
+	 * méthode pour supprimer une {@link TypeCours} de la base de données
+	 * 
+	 * @param semestre {@link TypeCours} à supprimer
+	 * @throws SQLException
+	 */
+	public void supprimerTypeCours(TypeCours typeCours) throws SQLException {
+		this.psDeleteTypeCours.setInt(1, typeCours.getId());
 		this.psDeleteTypeCours.executeUpdate();
 	}
 
+	/*------------*/
+	/* HeureCours */
+	/*------------*/
+
 	/**
-	 * 
+	 * @param idAnnee indice de l'année souhaitée
+	 * @return une {@link Map} composé de :
+	 *         <ul>
+	 *         <li>indice en {@link String}, composé de :
+	 *         <ol>
+	 *         <li>l'indice du {@link TypeCours}</li>
+	 *         <li>l'indice du {@link Module}</li>
+	 *         </ol>
+	 *         </li>
+	 *         <li>{@link HeureCours} correspondante</li>
+	 *         </ul>
 	 */
 	public Map<String, HeureCours> getHeureCours(int idAnnee) throws SQLException {
 		Map<String, HeureCours> hmHeureCours = new HashMap<>();
 		this.psSelectHeureCours.setInt(1, idAnnee);
 		ResultSet rs = this.psSelectHeureCours.executeQuery();
 		while (rs.next()) {
-			hmHeureCours.put(rs.getInt("idTypeCours") + "-" + rs.getInt("idModule"), new HeureCours(
-					rs.getInt("idTypeCours"), rs.getInt("idModule"), rs.getDouble("heure"), rs.getInt("idAnnee")));
+			hmHeureCours.put(rs.getInt("idTypeCours") + "-" + rs.getInt("idModule"),
+					new HeureCours(rs.getInt("idTypeCours"), rs.getInt("idModule"), rs.getDouble("heure"),
+							rs.getInt("idAnnee")));
 		}
 		return hmHeureCours;
 	}
 
-	public void ajouterHeureCours(HeureCours h) throws SQLException {
-		this.psInsertHeureCours.setInt(1, h.getIdTypeCours());
-		this.psInsertHeureCours.setInt(2, h.getIdModule());
-		this.psInsertHeureCours.setDouble(3, h.getHeure());
-		this.psInsertHeureCours.setInt(4, h.getIdAnnee());
+	/**
+	 * méthode pour ajouter une {@link HeureCours} de la base de données
+	 * 
+	 * @param semestre {@link HeureCours} à ajouter
+	 * @throws SQLException
+	 */
+	public void ajouterHeureCours(HeureCours heureCours) throws SQLException {
+		this.psInsertHeureCours.setInt(1, heureCours.getIdTypeCours());
+		this.psInsertHeureCours.setInt(2, heureCours.getIdModule());
+		this.psInsertHeureCours.setDouble(3, heureCours.getHeure());
+		this.psInsertHeureCours.setInt(4, heureCours.getIdAnnee());
 		this.psInsertHeureCours.executeUpdate();
 	}
 
-	public void updateHeureCours(HeureCours hc) throws SQLException {
-		this.psUpdateHeureCours.setDouble(1, hc.getHeure());
-		this.psUpdateHeureCours.setInt(2, hc.getIdTypeCours());
-		this.psUpdateHeureCours.setInt(3, hc.getIdModule());
-		this.psUpdateHeureCours.setInt(4, hc.getIdAnnee());
+	/**
+	 * méthode pour modifier une {@link HeureCours} de la base de données
+	 * 
+	 * @param semestre {@link HeureCours} à modifier
+	 * @throws SQLException
+	 */
+	public void updateHeureCours(HeureCours heureCours) throws SQLException {
+		this.psUpdateHeureCours.setDouble(1, heureCours.getHeure());
+		this.psUpdateHeureCours.setInt(2, heureCours.getIdTypeCours());
+		this.psUpdateHeureCours.setInt(3, heureCours.getIdModule());
+		this.psUpdateHeureCours.setInt(4, heureCours.getIdAnnee());
 		this.psUpdateHeureCours.executeUpdate();
 	}
 
-	public void supprimerHeureCours(HeureCours hc) throws SQLException {
-		this.psDeleteHeureCours.setInt(1, hc.getIdTypeCours());
-		this.psDeleteTypeCours.setInt(2, hc.getIdModule());
+	/**
+	 * méthode pour supprimer une {@link HeureCours} de la base de données
+	 * 
+	 * @param semestre {@link HeureCours} à supprimer
+	 * @throws SQLException
+	 */
+	public void supprimerHeureCours(HeureCours heureCours) throws SQLException {
+		this.psDeleteHeureCours.setInt(1, heureCours.getIdTypeCours());
+		this.psDeleteTypeCours.setInt(2, heureCours.getIdModule());
 		this.psDeleteHeureCours.executeUpdate();
 	}
 
-	/**
-	 * 
-	 */
+	/*-------*/
+	/* annee */
+	/*-------*/
+
 	public int getDerAnnee() throws SQLException {
 		// int ret = 0;
 		ResultSet rs = this.psSelectDerAnnee.executeQuery();
@@ -422,6 +619,12 @@ public class DB {
 		// return rs.getInt("idAnnee");
 	}
 
+	/**
+	 * méthode pour ajouter une année de la base de données
+	 * 
+	 * @param semestre année à supprimer
+	 * @throws SQLException
+	 */
 	public void ajouterAnnee(int id, String annee) throws SQLException {
 		this.psInsertAnnee.setInt(1, id);
 		this.psInsertAnnee.setString(2, annee);
@@ -429,17 +632,13 @@ public class DB {
 	}
 
 	/**
-	 * 
+	 * @param idAnnee indice de l'année souhaitée
+	 * @return une {@link Map} composé de :
+	 *         <ul>
+	 *         <li>indice en {@link Integer}</li>
+	 *         <li>l'année correspondante en {@link String}</li>
+	 *         </ul>
 	 */
-	public String getNomCateg(int idCategorie) throws SQLException {
-		this.psSelectNomCateg.setInt(1, idCategorie);
-		ResultSet rs = this.psSelectNomCateg.executeQuery();
-		while (rs.next()) {
-			return rs.getString("nomCategorie");
-		}
-		return "";
-	}
-
 	public Map<Integer, String> getAnnee() throws SQLException {
 		Map<Integer, String> hmAnnee = new HashMap<>();
 		ResultSet rs = this.psSelectAnnee.executeQuery();

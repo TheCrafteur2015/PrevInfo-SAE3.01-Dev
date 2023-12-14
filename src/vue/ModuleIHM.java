@@ -2,6 +2,8 @@ package vue;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class ModuleIHM {
 
@@ -23,35 +25,62 @@ public class ModuleIHM {
 		this.supprimer = supprimer;
 	}
 
-// source action, generate setter, getter
+	public Button getAjouterProf() {
+		return ajouterProf;
+	}
+
+	public void setAjouterProf(Button ajouterProf) {
+		this.ajouterProf = ajouterProf;
+	}
+
+	public TextField getNom() {
+		return nom;
+	}
+
+	public void setNom(TextField nom) {
+		this.nom = nom;
+	}
+
+	public TextField getNbSemaines() {
+		return nbSemaines;
+	}
+
+	public void setNbSemaines(TextField nbSemaines) {
+		this.nbSemaines = nbSemaines;
+	}
+
+	public TextField gethTD() {
+		return hTD;
+	}
+
+	public void sethTD(TextField hTD) {
+		this.hTD = hTD;
+	}
+
+	public TextField gethTP() {
+		return hTP;
+	}
+
+	public void sethTP(TextField hTP) {
+		this.hTP = hTP;
+	}
+
+	public TextField gethCM() {
+		return hCM;
+	}
+
+	public void sethCM(TextField hCM) {
+		this.hCM = hCM;
+	}
+
+	public Button getSupprimer() {
+		return supprimer;
+	}
+
+	public void setSupprimer(Button supprimer) {
+		this.supprimer = supprimer;
+	}
+
+	
 
 }
-/*
-TableView<Module> table = new TableView<Module>();
-
-// Editable
-table.setEditable(true);
-
-TableColumn<Module, String> nomCol //
-		= new TableColumn<Module, String>("Full Name");
-
-// ==== FULL NAME (TEXT FIELD) ===
-nomCol.setCellValueFactory(new PropertyValueFactory<>("Nom"));
-
-nomCol.setCellFactory(TextFieldTableCell.<Module> forTableColumn());
-
-nomCol.setMinWidth(200);
-
-// On Cell edit commit (for Nom column)
-nomCol.setOnEditCommit((CellEditEvent<Module, String> event) ->
-{
-	TablePosition<Module, String> pos = event.getTablePosition();
-
-	String newNom = event.getNewValue();
-
-	int row = pos.getRow();
-	Module Module = event.getTableView().getItems().get(row);
-
-	Module.setNom(newNom);
-});
-*/

@@ -69,6 +69,9 @@ public class FrameParamCategorie {
 	private Controleur ctrl;
 	private AnchorPane centerPaneAccueil;
 	private TextField nomCategorie;
+	private TextField tfHeureMin;
+	private TextField tfHeureMax;
+	private Map<Integer, Categorie> hmCategorie;
 
 	
 
@@ -76,7 +79,7 @@ public class FrameParamCategorie {
 		this.ctrl = ctrl;
 		this.centerPaneAccueil = centerPaneAccueil;
 		this.init();
-		
+		this.hmCategorie = this.ctrl.getModele().getHmCategories();
 
 	}
 
@@ -85,11 +88,33 @@ public class FrameParamCategorie {
 		popupStage.initModality(Modality.APPLICATION_MODAL);
 		popupStage.setTitle("Pop-up");
 
+        ObservableList<CategorieIHM> olCategorie = FXCollections.observableArrayList();
+
+        for (Categorie c : this.hmCategorie.values()) {
+			Button btnSup = new Button();
+            btnSup.setId(c.getId()+"");
+            olCategorie.add(new CategorieIHM(c.getNom(),btnSup));
+		}
+
+        TableColumn<CategorieIHM, String> tcNomCategorie = new TableColumn<>("");
+        tcNomCategorie.setCellValueFactory(new PropertyValueFactory<>("nomC"));
+
+        TableColumn<CategorieIHM, Button> tcBtnSup = new TableColumn<>("");
+        tcNomCategorie.setCellValueFactory(new PropertyValueFactory<>("btnSup"));
+
+        TableView tableView = new TableView<>();
+        tableView.setItems(olCategorie);
+      
 		VBox vbox = new VBox(5);
-		Text nomC;
+		Text nomC = new Text("Nom de la catégorie");
 		this.nomCategorie = new TextField();
 
-		Text Heuremini = new Text("Heure minimum");
+		Text tHeureMin       = new Text("Heures minimales: ");
+		 this.tfHeureMin     = new TextField();
+
+		Text tHeureMax       = new Text("Heure maximales: ");
+		this.tfHeureMax      = new TextField();
+
 	
 		StackPane popupLayout = new StackPane();
 
@@ -99,5 +124,6 @@ public class FrameParamCategorie {
 
 		popupStage.showAndWait();
 	}
+
 
 }

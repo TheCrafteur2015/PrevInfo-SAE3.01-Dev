@@ -66,8 +66,6 @@ public class IntervenantIHM {
 
 	public void setSupprimer(Button supprimer) {
 		this.supprimer = supprimer;
-	}
-
-	
+	}	
 
 }
