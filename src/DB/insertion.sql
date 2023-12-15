@@ -385,7 +385,7 @@ INSERT INTO HeureCours (idTypeCours,idModule,heure,nbSemaine,hParSemaine, idAnne
 	(2, 52, 0, 0, 0, 1),
 	(5, 52, 0, 0, 0, 1),
 	(7, 52, 0, 0, 0, 1),
-	(4, 52, 0, 0, 0, 1),
+	(4, 53, 0, 0, 0, 1),
 	(5, 53, 0, 0, 0, 1),
 	(7, 53, 0, 0, 0, 1),
 	(3, 54, 0, 0, 0, 1),
