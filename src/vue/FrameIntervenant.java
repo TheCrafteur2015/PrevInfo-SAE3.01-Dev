@@ -74,7 +74,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 	public void init() {
 		this.centerPaneAccueil.getChildren().clear();
 		this.centerPaneAccueil.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
-
+		
 		// Creer le tableau
 
 		String[] colonnes = new String[] { "Infos", "Prenom", "Nom", "Categorie", "Email", "Supprimer" };
@@ -188,26 +188,34 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 	
 		Stage popupStage = new Stage();
 		popupStage.initModality(Modality.APPLICATION_MODAL);
-		popupStage.setTitle("Pop-up");
-
+		popupStage.centerOnScreen();
+		popupStage.setTitle("Ajouter un intervenant");
+		popupStage.setHeight(450);
+		popupStage.setWidth(300);
+		popupStage.setResizable(false);
+		
 		Text pnom = new Text("Prénom  ");
 		this.tfPrenom = new TextField();
 		this.tfPrenom.setMaxWidth(30 * 7);
 		this.tfPrenom.textProperty().addListener(this);
+		this.tfPrenom.getStyleClass().add("textField");
 
 		Text nom = new Text("Nom  ");
 		this.tfNom = new TextField();
 		this.tfNom.setMaxWidth(30 * 7);
 		this.tfNom.textProperty().addListener(this);
+		this.tfNom.getStyleClass().add("textField");
 
 		Text email = new Text("Email  ");
 		this.tfEmail = new TextField();
 		this.tfEmail.setMaxWidth(30 * 7);
 		this.tfEmail.textProperty().addListener(this);
+		this.tfEmail.getStyleClass().add("textField");
 
 		Text categorie = new Text("Catégorie ");
 		this.choiceBoxCategorie = new ChoiceBox<>();
-		choiceBoxCategorie.setMaxWidth(30 * 7);
+		this.choiceBoxCategorie.setMaxWidth(30 * 7);
+		this.choiceBoxCategorie.getStyleClass().add("choiceBox");
 
 		Map<Integer, Categorie> hmCategorie = this.ctrl.getModele().getHmCategories();
 		for (Categorie c : hmCategorie.values()) {
@@ -220,11 +228,13 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		this.tfHMin = new TextField();
 		this.tfHMin.setMaxWidth(10 * 7);
 		this.tfHMin.textProperty().addListener(this);
+		this.tfHMin.getStyleClass().add("textField");
 
 		Text hMaxText = new Text("Heures Maximales ");
 		this.tfHMax = new TextField();
 		this.tfHMax.setMaxWidth(10 * 7);
 		this.tfHMax.textProperty().addListener(this);
+		this.tfHMax.getStyleClass().add("textField");
 
 		if (choiceBoxCategorie.getItems().size() > 0) {
 			choiceBoxCategorie.setValue(choiceBoxCategorie.getItems().get(0));
@@ -232,7 +242,8 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 			this.tfHMin.setText("" + c.gethMin());
 			this.tfHMax.setText("" + c.gethMax());
 		}
-		this.btnConfirmerIntervenant = new Button("Confirmer");
+		this.btnConfirmerIntervenant = new Button("⊕  Ajouter");
+		this.btnConfirmerIntervenant.getStyleClass().add("confirmBtn");
 		this.btnConfirmerIntervenant.addEventHandler(ActionEvent.ACTION, this);
 
 		VBox vbox = new VBox(5);
@@ -272,6 +283,8 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		vbox.setAlignment(Pos.CENTER);
 
 		if (i != null) {
+			popupStage.setTitle("Modifier un intervenant");
+			this.btnConfirmerIntervenant.setText("Confirmer");
 			Map<Integer, Intervenant> hmInter = this.ctrl.getModele().getHmIntervenants();
 			Intervenant inter = hmInter.get(Integer.parseInt(i.getSupprimer().getId().split("-")[1]));
 			this.modifIntervenant = inter;
@@ -293,6 +306,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		vbox.getChildren().addAll(borderPane, borderPane2, borderPane3, borderPane4, gridPane1, borderPane5);
 		popupLayout.getChildren().add(vbox);
 		Scene popupScene = new Scene(popupLayout, 200, 400);
+		popupScene.getStylesheets().add(ResourceManager.STYLESHEET_POPUP.toExternalForm());
 		popupStage.setScene(popupScene);
 
 		popupStage.showAndWait();
@@ -420,17 +434,17 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 	}
 
 	public void changed(ObservableValue<? extends String> observable, String oldStr, String newStr) {
-		
+		final String regex = "\\d*\\.?\\d+";
 
 		if ((observable == this.tfPrenom.textProperty()|| observable == this.tfNom.textProperty())&&(!(this.tfPrenom.getText().isEmpty() || this.tfNom.getText().isEmpty()))) {
 			this.tfEmail.setText(this.tfPrenom.getText().toLowerCase() + "." + this.tfNom.getText().toLowerCase() + "@univ-lehavre.fr");
 		} 
 		if (observable == this.tfHMin.textProperty()) {
-			if (!(this.tfHMin.getText().matches("[0-9 .]*"))) {
+			if (!(this.tfHMin.getText().matches(regex))) {
 				this.tfHMin.setText("");
 			}
 		} else if (observable == this.tfHMax.textProperty()) {
-			if (!(this.tfHMax.getText().matches("[0-9 .]*"))) {
+			if (!(this.tfHMax.getText().matches(regex))) {
 				this.tfHMax.setText("");
 			}
 		}

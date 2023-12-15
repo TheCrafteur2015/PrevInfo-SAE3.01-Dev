@@ -605,19 +605,17 @@ public class DB {
 	/*-------*/
 
 	public int getDerAnnee() throws SQLException {
-		// int ret = 0;
+		 int ret = 0;
 		ResultSet rs = this.psSelectDerAnnee.executeQuery();
-		rs.next();
-		return rs.getInt("idAnnee");
+//		rs.next();
+//		return rs.getInt("idAnnee");
 		// ResultSetMetaData rsmd = rs.getMetaData();
 		// rs.last();
 		// rs.previous();
-		/*
-		 * while (rs.next())
-		 * ret = rs.getInt("idAnnee");
-		 * return ret;
-		 */
-		// return rs.getInt("idAnnee");
+		
+		while (rs.next())
+			ret = rs.getInt("idAnnee");
+		 return ret;
 	}
 
 	/**

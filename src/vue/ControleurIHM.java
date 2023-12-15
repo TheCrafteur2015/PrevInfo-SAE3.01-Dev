@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import org.controlsfx.control.ToggleSwitch;
+
 import controleur.Controleur;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -24,16 +26,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import modele.TypeCours;
 
@@ -85,7 +86,10 @@ public class ControleurIHM implements Initializable, EventHandler<Event> , Chang
 		this.imageIntervenant.setImage(new Image(ResourceManager.INTERVENANT.toExternalForm()));
 		this.imageModule.setImage(new Image(ResourceManager.MODULE.toExternalForm()));
 		this.imageDownload.setImage(new Image(ResourceManager.DOWNLOAD.toExternalForm()));
-
+		
+//		System.out.println(new Button("").getTypeSelector().toLowerCase());
+//		System.out.println(new ToggleButton("").getTypeSelector().toLowerCase());
+//		System.out.println(new ChoiceBox<>().getTypeSelector().toLowerCase());
 	}
 
 	@FXML
@@ -99,6 +103,8 @@ public class ControleurIHM implements Initializable, EventHandler<Event> , Chang
 		this.stage.setScene(this.scene);
 
 		stage.show();
+		
+		btnOnClick(event.getSource());
 	}
 
 	public void majListAnnee() {
@@ -116,12 +122,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event> , Chang
 	@FXML
 	void parametrerMultiplicateurs() {
 		System.out.println("izdaziu");
-		Stage popupStage = new Stage();
-		popupStage.initModality(Modality.APPLICATION_MODAL);
-		popupStage.setTitle("Pop-up");
-		popupStage.setHeight(350);
-		popupStage.setWidth(300);
-		popupStage.setResizable(false);
+		Stage popupStage = FXHelper.createPopup("Modification des multiplicateurs", 350, 300, false);
 		
 		Map<Integer, TypeCours> hmTypeCours = this.ctrl.getModele().getHmTypeCours();
 
@@ -132,19 +133,20 @@ public class ControleurIHM implements Initializable, EventHandler<Event> , Chang
 		for (TypeCours tc : hmTypeCours.values()) {
 			textTmp = new Text(tc.getNom() + " :");
 			textFieldTmp = new TextField(String.valueOf(tc.getCoefficient()));
-			textFieldTmp.getStyleClass().add("coeffValue");
+			FXHelper.addClass(textFieldTmp, "coeffValue");
 			textFieldTmp.setMaxWidth(7 * 7);
 			textFieldTmp.textProperty().addListener(this);
-			this.alText.add(textTmp);
 			
+			this.alText.add(textTmp);
 			this.alTextField.add(textFieldTmp);
 		}
 
 		VBox vbox = new VBox(5);
 		vbox.setMaxSize(200, this.alText.size() * 50);
-		vbox.setAlignment(Pos.CENTER);
+//		vbox.setAlignment(Pos.CENTER);
 
 		GridPane gridPane = new GridPane();
+		gridPane.setAlignment(Pos.CENTER);
 		for (int i = 0; i < this.alText.size(); i++) {
 			gridPane.add(this.alText.get(i), 0, i);
 			gridPane.add(this.alTextField.get(i), 1, i);
@@ -154,32 +156,33 @@ public class ControleurIHM implements Initializable, EventHandler<Event> , Chang
 		gridPane.setVgap(10);
 
 		this.btnConfirmerMultiplicateur = new Button("Confirmer");
-		this.btnConfirmerMultiplicateur.getStyleClass().add("confirmBtn");
-		this.btnConfirmerMultiplicateur.setStyle("-fx-background-radius: 150; -fx-background-color: #758AFF; -fx-text-fill: white;");
+		FXHelper.addClass(this.btnConfirmerMultiplicateur, "confirmBtn");
 		this.btnConfirmerMultiplicateur.addEventHandler(ActionEvent.ACTION, this);
 		StackPane popupLayout = new StackPane();
 		BorderPane borderPane = new BorderPane();
 		borderPane.setCenter(this.btnConfirmerMultiplicateur);
 		
-		vbox.getChildren().add(gridPane);
-		vbox.getChildren().add(borderPane);
-		popupLayout.getChildren().add(vbox);
-		Scene popupScene = new Scene(popupLayout, 200, this.alText.size() * 50);
-		popupScene.getStylesheets().add(ResourceManager.STYLESHEET_POPUP.toExternalForm());
-		popupStage.setScene(popupScene);
 		
+		FXHelper.append(vbox, gridPane);
+		FXHelper.append(vbox, borderPane);
+		FXHelper.append(popupLayout, vbox);
+		Scene popupScene = new Scene(popupLayout, 200, this.alText.size() * 50);
+		FXHelper.addStylesheet(popupScene, ResourceManager.STYLESHEET_POPUP);
+		
+		popupStage.setScene(popupScene);
 		popupStage.showAndWait();
 	}
 
 	@FXML
-	void modeDuplication(ActionEvent event) {
+	void modeDuplication(MouseEvent event) {
 		// this.ctrl.getModele().setDuplication(!this.ctrl.getModele().isDuplication());
-		this.ctrl.getModele().setDuplication(((ToggleButton) event.getSource()).isSelected());
+		this.ctrl.getModele().setDuplication(((ToggleSwitch) event.getSource()).isSelected());
 	}
 
 	@FXML
 	void allerIntervenants(ActionEvent event) {
 		this.frameIntervenant = new FrameIntervenant(this.ctrl, this.centerPaneAccueil);
+		btnOnClick(event.getSource());
 	}
 
 	public FrameIntervenant getFrameIntervenant() {
@@ -189,11 +192,12 @@ public class ControleurIHM implements Initializable, EventHandler<Event> , Chang
 	@FXML
 	void allerModules(ActionEvent event) {
 		this.frameModule = new FrameModule(this.ctrl, this.centerPaneAccueil);
+		btnOnClick(event.getSource());
 	}
 
 	@FXML
 	void allerExporter(ActionEvent event) {
-
+		btnOnClick(event.getSource());
 	}
 
 	@FXML
@@ -205,6 +209,15 @@ public class ControleurIHM implements Initializable, EventHandler<Event> , Chang
 	void ajouterAnnee() {
 		this.ctrl.getModele().ajouterAnnee();
 		this.majListAnnee();
+	}
+	
+	void btnOnClick(Object source) {
+		if (source instanceof Button b) {
+			System.out.println(b.getText());
+			System.out.println("Height: " + b.getHeight());
+			System.out.println("Width: " + b.getWidth());
+			System.out.println("-".repeat(20));
+		}
 	}
 
 	public void handle(Event event) {

@@ -1,13 +1,15 @@
 package vue;
 
-import java.net.URL;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Scanner;
 import java.io.File;
 import java.io.IOException;
-
+import java.lang.reflect.Field;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.Scanner;
 
 public final class ResourceManager {
 
@@ -19,7 +21,7 @@ public final class ResourceManager {
 	public static final URL STYLESHEET_POPUP = ResourceManager.class.getResource("stylePopup.css");
 
 	// Fichiers SVG
-	public static final URL BOOK = ResourceManager.class.getResource("book.svg");
+	// public static final URL BOOK = ResourceManager.class.getResource("book.svg");
 
 	// Images
 	public static final URL HOUSE       = ResourceManager.class.getResource("/images/accueil_icone.png");
@@ -30,6 +32,17 @@ public final class ResourceManager {
 	private static final Map<String, String> DATA = new HashMap<>();
 
 	static {
+		for (Field field : ResourceManager.class.getFields()) {
+			try {
+				if (field.get(null) == null) {
+					String name = field.getName();
+					throw new MissingResourceException("Resource file missing: " + name, ResourceManager.class.getSimpleName(), name);
+				}
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
+//		displayFiles();
 		File folder = null;
 		try {
 			folder = Paths.get(ResourceManager.class.getResource("").toURI()).toFile();
@@ -66,6 +79,32 @@ public final class ResourceManager {
 
 	public static String getData(String key) {
 		return ResourceManager.DATA.get(key);
+	}
+	
+	private static int indent = 0;
+	
+	public static void displayFiles() {
+		try {
+			File root = new File(ResourceManager.class.getResource("").toURI());
+			ResourceManager.indent = 0;
+			displayFilesRecursively(root);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void displayFilesRecursively(File file) {
+		if (file == null)
+			return;
+		System.out.println("\t".repeat(indent) + file);
+		for (File f : file.listFiles())
+			if (f.isDirectory()) {
+				System.out.println("\t".repeat(indent) + f);
+				indent++;
+				displayFilesRecursively(f);
+			} else
+				System.out.println("\t".repeat(indent) + f);
+		indent--;
 	}
 
 }

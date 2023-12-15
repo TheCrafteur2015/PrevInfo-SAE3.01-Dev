@@ -10,6 +10,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.image.ImageView?>
+<?import org.controlsfx.control.ToggleSwitch?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="731.0" prefWidth="1345.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vue.ControleurIHM">
    <children>
@@ -25,17 +26,17 @@
                </children></HBox>
          </top>
          <left>
-            <AnchorPane prefHeight="647.0" prefWidth="211.0" style="-fx-background-color: #4D61CC;" BorderPane.alignment="CENTER">
+            <AnchorPane prefHeight="647.0" prefWidth="212.0" style="-fx-background-color: #4D61CC;" BorderPane.alignment="CENTER">
                <children>
-                  <Button alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutX="-1.0" mnemonicParsing="false" onAction="#allerAccueil" prefHeight="66.0" prefWidth="212.0" text="Accueil" styleClass="btn-accueil">
+                  <Button alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutX="0.0" mnemonicParsing="false" onAction="#allerAccueil" prefHeight="65.0" prefWidth="212.0" text="Accueil" styleClass="btn-accueil">
+                      <graphic>
+                        <ImageView fx:id="imageAccueil" fitHeight="30.0" fitWidth="30.0" scaleX="16.0" scaleY="16.0" pickOnBounds="true" preserveRatio="true" />
+                     </graphic>
                      <font>
                         <Font size="20.0" />
                      </font>
-                     <graphic>
-                        <ImageView fx:id="imageAccueil" fitHeight="30.0" fitWidth="30.0" scaleX="16.0" scaleY="16.0" pickOnBounds="true" preserveRatio="true" />
-                     </graphic>
                   </Button>
-                  <Button alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutY="64.0" mnemonicParsing="false" onAction="#allerIntervenants" prefHeight="67.0" prefWidth="211.0" text="Intervenants">
+                  <Button alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutY="64.0" mnemonicParsing="false" onAction="#allerIntervenants" prefHeight="65.0" prefWidth="212.0" text="Intervenants">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -43,7 +44,7 @@
                        <ImageView fx:id="imageIntervenant" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                      </graphic>
                   </Button>
-                  <Button alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutX="-1.0" layoutY="129.0" mnemonicParsing="false" onAction="#allerModules" prefHeight="69.0" prefWidth="212.0" text="Modules">
+                  <Button alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutX="0.0" layoutY="128.0" mnemonicParsing="false" onAction="#allerModules" prefHeight="65.0" prefWidth="212.0" text="Modules">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -51,7 +52,7 @@
                         <ImageView fx:id="imageModule" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                      </graphic>
                   </Button>
-                  <Button alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutY="581.0" mnemonicParsing="false" onAction="#allerExporter" prefHeight="67.0" prefWidth="211.0" text="Exporter">
+                  <Button alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutY="580.0" mnemonicParsing="false" onAction="#allerExporter" prefHeight="65.0" prefWidth="212.0" text="Exporter">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -87,11 +88,16 @@
                      <font>
                         <Font size="15.0" />
                      </font></Label>
-                  <ToggleButton layoutX="635.0" layoutY="325.0" minHeight="16.0" mnemonicParsing="false" onAction="#modeDuplication" prefHeight="30.0" prefWidth="162.0" text="Duplication">
+                  <!-- <ToggleButton layoutX="635.0" layoutY="325.0" minHeight="16.0" mnemonicParsing="false" onAction="#modeDuplication" prefHeight="30.0" prefWidth="162.0" text="Duplication">
                      <font>
                         <Font size="18.0" />
                      </font>
-                  </ToggleButton>
+                  </ToggleButton>-->
+                  <ToggleSwitch layoutX="615.0" layoutY="320.0" minHeight="16.0" mnemonicParsing="false" onMouseClicked="#modeDuplication" prefHeight="30.0" prefWidth="162.0" text="Duplication">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </ToggleSwitch>
                   <Button layoutX="403.0" layoutY="528.0" mnemonicParsing="false" onAction="#parametrerMultiplicateurs" prefHeight="40.0" prefWidth="325.0" style="-fx-background-radius: 15;" styleClass="roundButton" text="Paramètrer les multiplicateurs">
                      <font>
                         <Font size="18.0" />

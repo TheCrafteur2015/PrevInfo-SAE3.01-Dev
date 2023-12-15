@@ -3,6 +3,10 @@
 	-fx-background-color: #4D61CC;
 }
 
+.button:hover, .toggle-button:hover, .choice-box:hover {
+	-fx-cursor: hand;
+}
+
 .button:hover{
 	-fx-background-color: #758AFF;
 }
@@ -11,10 +15,28 @@
 	-fx-background-color: #758AFF;
 }
 
-.togglebutton{
-	-fx-background-color: white;
+.toggle-button {
+	/*-fx-background-color: red;*/
+	-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #4D61CC 20%, transparent 100%);
+}
+
+.toggle-button:selected {
+	-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, transparent 0%, #4D61CC 80%);
 }
 
 .roundButton{
 	-fx-border-radius: 150;
+}
+
+.image-view {
+	/*-fx-image: url("../images/accueil_icone.png");*/
+	-fx-content-display: graphic-only;
+}
+
+.labelD {
+	-fx-content-display: graphic-only;
+}
+
+.image-view:hover {
+	-fx-cursor: hand;
 }

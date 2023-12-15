@@ -1,5 +1,6 @@
 
 src/vue/App.java
+src/vue/FXHelper.java
 src/vue/ControleurIHM.java  
 src/vue/IntervenantIHM.java
 src/vue/ResourceManager.java  
