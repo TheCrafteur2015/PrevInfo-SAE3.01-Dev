@@ -2,7 +2,7 @@
 	"editor.autoIndent": "none",
 	"editor.formatOnSave": false,
 	"editor.wrappingIndent": "none",
-	"editor.detectIndentation": false,
+	"editor.detectIndentation": true,
 	"editor.insertSpaces": false,
 	"editor.foldingStrategy": "indentation",
 	"editor.guides.highlightActiveIndentation": false,

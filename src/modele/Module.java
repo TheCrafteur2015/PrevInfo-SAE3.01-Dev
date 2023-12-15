@@ -8,6 +8,7 @@ public class Module implements Comparable<Module> {
 	private int id;
 	private String nom;
 	private String code;
+	private int idTypeModule;
 	private int idAnnee;
 	private int idSemestre;
 
@@ -18,21 +19,32 @@ public class Module implements Comparable<Module> {
 	 * @param idAnnee
 	 * @param idSemestre
 	 */
-	public Module(int id, String nom, String code, int idAnnee, int idSemestre) {
+	public Module(int id, String nom, String code, int idTypeModule, int idAnnee, int idSemestre) {
 		this.id = id;
 		this.nom = nom;
 		this.code = code;
+		this.idTypeModule = idTypeModule;
 		this.idAnnee = idAnnee;
 		this.idSemestre = idSemestre;
 		NB_MODULE++;
 	}
 
-	public Module(String nom, String code, int idAnnee, int idSemestre) {
+	public Module(String nom, String code, int idTypeModule, int idAnnee, int idSemestre) {
 		this.id = ++NB_MODULE;
 		this.nom = nom;
 		this.code = code;
+		this.idTypeModule = idTypeModule;
 		this.idAnnee = idAnnee;
 		this.idSemestre = idSemestre;
+	}
+
+
+	public int getIdTypeModule() {
+		return idTypeModule;
+	}
+
+	public void setIdTypeModule(int idTypeModule) {
+		this.idTypeModule = idTypeModule;
 	}
 
 	public int getId() {

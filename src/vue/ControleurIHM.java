@@ -40,7 +40,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableView;
+import javafx.scene.control.TableVi.button:hover, .togglebutton:hover, .choicebox:hover {
+	-fx-cursor: hand;
+}ew;
 import javafx.scene.control.TextField;
 */
 
@@ -114,10 +116,13 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 
 		this.setAnnee(this.ctrl.getModele().getHmAnnee().get(this.ctrl.getModele().getIdAnnee()));
 
-		this.imageAccueil.setImage(new Image(ResourceManager.HOUSE.toExternalForm()));
-		this.imageIntervenant.setImage(new Image(ResourceManager.INTERVENANT.toExternalForm()));
-		this.imageModule.setImage(new Image(ResourceManager.MODULE.toExternalForm()));
-		this.imageDownload.setImage(new Image(ResourceManager.DOWNLOAD.toExternalForm()));
+		// this.imageAccueil.setImage(new Image(ResourceManager.HOUSE.toExternalForm()));
+		// this.imageAccueil.setImage(new Image(this.getClass().getResourceAsStream("/images/accueil_icone.png")));
+		// this.imageIntervenant.setImage(new Image(ResourceManager.INTERVENANT.toExternalForm()));
+		// this.imageModule.setImage(new Image(ResourceManager.MODULE.toExternalForm()));
+		// this.imageDownload.setImage(new Image(ResourceManager.DOWNLOAD.toExternalForm()));
+
+		// FXHelper.append(this.btnAccueil, new ImageView(new Image(ResourceManager.HOUSE.toExternalForm())));
 	}
 
 	@FXML
@@ -150,7 +155,11 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 
 		Stage popupStage = new Stage();
 		popupStage.initModality(Modality.APPLICATION_MODAL);
-		popupStage.setTitle("Pop-up");
+		popupStage.centerOnScreen();
+		popupStage.setTitle("Modification des multiplicateurs");
+		popupStage.setHeight(350);
+		popupStage.setWidth(300);
+		popupStage.setResizable(false);
 
 		Map<Integer, TypeCours> hmTypeCours = this.ctrl.getModele().getHmTypeCours();
 
@@ -161,6 +170,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 		for (TypeCours tc : hmTypeCours.values()) {
 			textTmp = new Text(tc.getNom());
 			textFieldTmp = new TextField(tc.getCoefficient() + "");
+			textFieldTmp.getStyleClass().add("coeffValue");
 			textFieldTmp.setMaxWidth(7 * 7);
 			textFieldTmp.textProperty().addListener(this);
 			alText.add(textTmp);
@@ -172,6 +182,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 		vbox.setMaxSize(200, alText.size() * 50);
 
 		GridPane gridPane = new GridPane();
+		gridPane.setAlignment(Pos.CENTER);
 		for (int i = 0; i < alText.size(); i++) {
 			gridPane.add(alText.get(i), 0, i);
 			gridPane.add(alTextField.get(i), 1, i);
@@ -181,6 +192,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 		gridPane.setVgap(10);
 
 		this.btnConfirmerMultiplicateur = new Button("Confirmer");
+		this.btnConfirmerMultiplicateur.getStyleClass().add("confirmBtn");
 		this.btnConfirmerMultiplicateur.addEventHandler(ActionEvent.ACTION, this);
 		StackPane popupLayout = new StackPane();
 		BorderPane borderPane = new BorderPane();
@@ -190,6 +202,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 		vbox.getChildren().add(borderPane);
 		popupLayout.getChildren().add(vbox);
 		Scene popupScene = new Scene(popupLayout, 200, alText.size() * 50);
+		popupScene.getStylesheets().add(ResourceManager.STYLESHEET_POPUP.toExternalForm());
 		popupStage.setScene(popupScene);
 
 		popupStage.showAndWait();

@@ -36,10 +36,16 @@ CREATE TABLE Semestre (
 	idAnnee    INT REFERENCES Annee(idAnnee)
 );
 
+CREATE TABLE TypeModule (
+	idTypeModule INT PRIMARY KEY,
+	nomTypeModule VARCHAR(15)
+);
+
 CREATE TABLE Module (
 	idModule   SERIAL PRIMARY KEY,
 	nomModule  VARCHAR(255),
 	code       VARCHAR(10),
+	idTypeModule INT REFERENCES TypeModule(idTypeModule),
 	idAnnee    INT REFERENCES Annee(idAnnee),
 	idSemestre INT REFERENCES Semestre(idSemestre)
 );

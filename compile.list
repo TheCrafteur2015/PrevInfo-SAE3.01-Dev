@@ -1,5 +1,6 @@
 
 src/vue/App.java
+src/vue/FXHelper.java
 src/vue/ControleurIHM.java  
 src/vue/IntervenantIHM.java
 src/vue/ResourceManager.java  
@@ -7,6 +8,7 @@ src/vue/FrameIntervenant.java
 src/vue/FrameModule.java  
 src/vue/FrameParamCategorie.java
 src/vue/FrameExporter.java
+src/vue/FrameIntervention.java
 src/vue/IntervenantModuleIHM.java
 src/vue/CategorieIHM.java
 src/vue/ModuleIHM.java
@@ -20,5 +22,6 @@ src/modele/Modele.java
 src/modele/Module.java  
 src/modele/Semestre.java  
 src/modele/TypeCours.java  
+src/modele/TypeModule.java  
 src/modele/HeureCours.java
  

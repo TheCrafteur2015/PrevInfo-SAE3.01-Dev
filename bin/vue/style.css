@@ -1,6 +1,11 @@
 .button{
 	-fx-text-fill: white;
 	-fx-background-color: #4D61CC;
+	/* -fx-background-color: transparent; */
+}
+
+.button:hover, .togglebutton:hover, .choicebox:hover {
+	-fx-cursor: hand;
 }
 
 .info-button {
@@ -8,7 +13,7 @@
 }
 
 .button:hover{
-	-fx-background-color: #758AFF;
+	-fx-background-color: #758AFFAA;
 }
 
 .info-button:hover {

@@ -2,10 +2,12 @@ package vue;
 
 import java.net.URL;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 
 import java.nio.file.Paths;
 
@@ -16,6 +18,7 @@ public final class ResourceManager {
 
 	// Fichiers CSS
 	public static final URL STYLESHEET = ResourceManager.class.getResource("style.css");
+	public static final URL STYLESHEET_POPUP = ResourceManager.class.getResource("stylePopup.css");
 
 	// Fichiers SVG
 	public static final URL BOOK = ResourceManager.class.getResource("book.svg");
@@ -29,6 +32,16 @@ public final class ResourceManager {
 	private static final Map<String, String> DATA = new HashMap<>();
 
 	static {
+		for (Field field : ResourceManager.class.getFields()) {
+			try {
+				if (field.get(null) == null) {
+					String name = field.getName();
+					throw new MissingResourceException("Resource file missing: " + name, ResourceManager.class.getSimpleName(), name);
+				}
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
 		File folder = null;
 		try {
 			folder = Paths.get(ResourceManager.class.getResource("").toURI()).toFile();

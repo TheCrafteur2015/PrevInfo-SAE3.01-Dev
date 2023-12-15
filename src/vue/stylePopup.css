@@ -1,0 +1,19 @@
+.root {
+	-fx-background-color: #F4E6E6;
+}
+
+.coeffValue {
+	-fx-background-radius: 25;
+	-fx-background-color: white;
+}
+
+.confirmBtn {
+	-fx-background-radius: 150;
+	-fx-background-color: #758AFF;
+	-fx-text-fill: white;
+}
+
+.textField, .choiceBox {
+	-fx-background-radius: 10;
+	-fx-background-color: -fx-control-inner-background;
+}

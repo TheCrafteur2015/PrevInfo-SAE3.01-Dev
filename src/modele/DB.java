@@ -31,12 +31,14 @@ public class DB {
 	private PreparedStatement psSelectIntervention;
 	private PreparedStatement psSelectModule;
 	private PreparedStatement psSelectSemestre;
+	private PreparedStatement psSelectModuleBySemestre;
 	private PreparedStatement psSelectTypeCours;
 	private PreparedStatement psSelectHeureCours;
 	private PreparedStatement psSelectAnnee;
 	private PreparedStatement psSelectDerAnnee;
 	private PreparedStatement psSelectNomCateg;
 	private PreparedStatement psSelectHeureCoursByModule;
+	private PreparedStatement psSelectTypeModule;
 
 	private PreparedStatement psInsertCategorie;
 	private PreparedStatement psInsertIntervenant;
@@ -76,6 +78,7 @@ public class DB {
 			this.psSelectIntervention = connec.prepareStatement("SELECT * FROM Intervention WHERE idAnnee = ?");
 			this.psSelectModule = connec.prepareStatement("SELECT * FROM Module WHERE idAnnee = ?");
 			this.psSelectSemestre = connec.prepareStatement("SELECT * FROM Semestre WHERE idAnnee = ?");
+			this.psSelectModuleBySemestre = connec.prepareStatement("SELECT * FROM Module WHERE idSemestre = ? AND idAnnee = ?");
 			this.psSelectTypeCours = connec.prepareStatement("SELECT * FROM TypeCours");
 			this.psSelectHeureCours = connec
 					.prepareStatement("SELECT * FROM HeureCours JOIN Module USING(idModule) WHERE Module.idAnnee = ? ");
@@ -86,11 +89,12 @@ public class DB {
 			this.psSelectNomCateg = connec.prepareStatement("SELECT nomCategorie FROM Categorie WHERE idCategorie = ?");
 			this.psSelectAnnee = connec.prepareStatement("SELECT * FROM Annee");
 			this.psSelectHeureCoursByModule = connec.prepareStatement("SELECT * FROM HeureCours WHERE idModule = ? AND idAnnee = ?");
+			this.psSelectTypeModule = connec.prepareStatement("SELECT * FROM TypeModule");
 
 			this.psInsertCategorie = connec.prepareStatement("INSERT INTO Categorie VALUES (?,?,?,?,?,?)");
 			this.psInsertIntervenant = connec.prepareStatement("INSERT INTO Intervenant VALUES (?,?,?,?,?,?,?,?)");
 			this.psInsertIntervention = connec.prepareStatement("INSERT INTO Intervention VALUES (?,?,?,?,?,?)");
-			this.psInsertModule = connec.prepareStatement("INSERT INTO Module VALUES (?,?,?,?,?)");
+			this.psInsertModule = connec.prepareStatement("INSERT INTO Module VALUES (?,?,?,?,?,?)");
 			this.psInsertSemestre = connec.prepareStatement("INSERT INTO Semestre VALUES (?,?,?,?,?,?)");
 			this.psInsertHeureCours = connec.prepareStatement("INSERT INTO HeureCours VALUES (?,?,?,?,?,?)");
 			this.psInsertAnnee = connec.prepareStatement("INSERT INTO Annee VALUES (?, ?)");
@@ -102,7 +106,7 @@ public class DB {
 			this.psUpdateIntervention = connec.prepareStatement(
 					"UPDATE Intervention SET nbSemainesIntervention = ?, nbGroupe = ? WHERE idAnnee = ? AND idIntervenant = ? AND idModule = ? AND idTypeCours = ?");
 			this.psUpdateModule = connec.prepareStatement(
-					"UPDATE Module SET nomModule = ?, nbSemainesModule = ?, idSemestre = ? WHERE idAnnee = ? AND idModule = ?");
+					"UPDATE Module SET nomModule = ?, nbSemainesModule = ?, idSemestre = ?, idTypeModule = ? WHERE idAnnee = ? AND idModule = ?");
 			this.psUpdateSemestre = connec.prepareStatement(
 					"UPDATE Semestre SET nbGTD = ?, nbGTP = ?, nbGCM = ?, nbSemaine = ? WHERE idAnnee = ? AND idSemestre = ?");
 			this.psUpdateHeureCours = connec.prepareStatement(
@@ -140,6 +144,18 @@ public class DB {
 			lstHeureCours.add(new HeureCours(rs.getInt("idTypeCours"), rs.getInt("idModule"), rs.getDouble("heure"), rs.getInt("nbSemaine"), rs.getDouble("hParSemaine"), idAnnee));
 		}
 		return lstHeureCours;
+	}
+
+	public List<Module> getModuleBySemestre (int idSemestre, int idAnnee) throws SQLException {
+		List<Module> lstModules = new ArrayList<>();
+		this.psSelectModuleBySemestre.setInt(1, idSemestre);
+		this.psSelectModuleBySemestre.setInt(2, idAnnee);
+		ResultSet rs = this.psSelectModuleBySemestre.executeQuery();
+		while (rs.next()) {
+			lstModules.add(new Module(rs.getInt("idModule"), rs.getString("nomModule"), rs.getString("code"), rs.getInt("idTypeModule"), idAnnee,
+							rs.getInt("idSemestre")));
+		}
+		return lstModules;
 	}
 
 	/*-----------*/
@@ -391,7 +407,7 @@ public class DB {
 		ResultSet rs = this.psSelectModule.executeQuery();
 		while (rs.next()) {
 			hmModule.put(rs.getInt("idModule"),
-					new Module(rs.getInt("idModule"), rs.getString("nomModule"), rs.getString("code"), idAnnee,
+					new Module(rs.getInt("idModule"), rs.getString("nomModule"), rs.getString("code"), rs.getInt("idTypeModule"), idAnnee,
 							rs.getInt("idSemestre")));
 		}
 		return hmModule;
@@ -407,8 +423,9 @@ public class DB {
 		this.psInsertModule.setInt(1, module.getId());
 		this.psInsertModule.setString(2, module.getNom());
 		this.psInsertModule.setString(3, module.getCode());
-		this.psInsertModule.setInt(5, module.getIdSemestre());
-		this.psInsertModule.setInt(4, module.getIdAnnee());
+		this.psInsertModule.setInt(4, module.getIdTypeModule());
+		this.psInsertModule.setInt(6, module.getIdSemestre());
+		this.psInsertModule.setInt(5, module.getIdAnnee());
 		this.psInsertModule.executeUpdate();
 	}
 
@@ -525,6 +542,16 @@ public class DB {
 					new TypeCours(rs.getInt("idTypeCours"), rs.getString("nomCours"), rs.getDouble("coefficient")));
 		}
 		return hmTypeCours;
+	}
+
+	public Map<Integer, TypeModule> getTypeModule() throws SQLException {
+		Map<Integer, TypeModule> hmTypeModule = new HashMap<>();
+		ResultSet rs = this.psSelectTypeModule.executeQuery();
+		while (rs.next()) {
+			hmTypeModule.put(rs.getInt("idTypeModule"),
+					new TypeModule(rs.getInt("idTypeModule"), rs.getString("nomTypeModule")));
+		}
+		return hmTypeModule;
 	}
 
 	/**

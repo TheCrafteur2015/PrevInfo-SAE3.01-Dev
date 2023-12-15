@@ -20,6 +20,7 @@ public class Modele {
 	private Map<Integer, Module> hmModules;
 	private Map<Integer, Semestre> hmSemestres;
 	private Map<Integer, TypeCours> hmTypeCours;
+	private Map<Integer, TypeModule> hmTypeModule;;
 	private Map<String, HeureCours> hmHeuresCours;
 	private Map<Integer, String> hmAnnee;
 	private int idAnnee;
@@ -43,6 +44,7 @@ public class Modele {
 			this.hmModules = this.db.getModules(idAnnee);
 			this.hmSemestres = this.db.getSemestres(idAnnee);
 			this.hmTypeCours = this.db.getTypeCours();
+			this.hmTypeModule = this.db.getTypeModule();
 			this.hmHeuresCours = this.db.getHeureCours(idAnnee);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -76,6 +78,13 @@ public class Modele {
 		return null;
 	}
 
+	public List<Module> getModuleBySemestre(int idSemestre, int idAnnee) {
+		try {
+			return this.db.getModuleBySemestre(idSemestre, idAnnee);
+		} catch (SQLException e) { e.printStackTrace();}
+		return null;
+	}
+
 	public void ajouterCategorie(String nom, double hMin, double hMax, double ratioTp) {
 		Categorie c = new Categorie(nom, hMin, hMax, ratioTp, this.idAnnee);
 		try {
@@ -97,6 +106,15 @@ public class Modele {
 		categorie.sethMax(c.gethMax());
 		categorie.sethMin(c.gethMin());
 	}
+
+	public void supprimerCategorie(int id) {
+			try {
+				this.db.supprimerCategorie(this.hmCategories.get(id));
+				this.hmCategories.remove(id);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 
 	public void ajouterIntervenant(String prenom, String nom, String email, double hMin, double hMax,
 			int idCategorie) {
@@ -151,8 +169,8 @@ public class Modele {
 		intervention.setNbGroupe(i.getNbGroupe());
 	}
 
-	public void ajouterModule(String nom, String code, int idSemestre) {
-		Module m = new Module(nom, code, this.idAnnee, idSemestre);
+	public void ajouterModule(String nom, String code, int idTypeModule, int idSemestre) {
+		Module m = new Module(nom, code, idTypeModule, this.idAnnee, idSemestre);
 		try {
 			this.db.ajouterModule(m);
 		} catch (SQLException e) {
@@ -252,6 +270,8 @@ public class Modele {
 		}
 	}
 
+
+
 	public void ajouterAnnee() {
 		try {
 			int iAnnee = this.db.getDerAnnee() + 1;
@@ -270,7 +290,7 @@ public class Modele {
 				for (Categorie c : hmTmpCategories.values()) ajouterCategorie(c.getNom(), c.gethMin(), c.gethMax(), c.getRatioTp());
 				for (Intervenant i : hmTmpIntervenants.values()) ajouterIntervenant(i.getPrenom(), i.getNom(), i.getEmail(), i.gethMin(), i.gethMax(), i.getIdCategorie());
 				for (Intervention i : hmTmpInterventions.values()) ajouterIntervention(i.getIdIntervenant(), i.getIdModule(), i.getIdTypeCours(), i.getNbSemaines(), i.getNbGroupe());
-				for (Module m : hmTmpModules.values()) ajouterModule(m.getNom(), m.getCode(), m.getIdSemestre());	
+				for (Module m : hmTmpModules.values()) ajouterModule(m.getNom(), m.getCode(), m.getIdTypeModule(), m.getIdSemestre());	
 				for (Semestre s : hmTmpSemestres.values()) ajouterSemestre(s.getNbGTD(), s.getNbGTP(), s.getNbGCM(), s.getNbSemaine());
 				for (HeureCours hc : hmTmpHeuresCours.values()) ajouterHeureCours(hc.getIdTypeCours(), hc.getIdModule(), hc.getHeure(), hc.getNbSemaine(), hc.gethParSemaine());	
 			} else { this.updateAnnee(annee); }
@@ -386,5 +406,15 @@ public class Modele {
 	public void setHmAnnee(Map<Integer, String> hmAnnee) {
 		this.hmAnnee = hmAnnee;
 	}
+
+	public Map<Integer, TypeModule> getHmTypeModule() {
+		return hmTypeModule;
+	}
+
+	public void setHmTypeModule(Map<Integer, TypeModule> hmTypeModule) {
+		this.hmTypeModule = hmTypeModule;
+	}
+
+	
 
 }
