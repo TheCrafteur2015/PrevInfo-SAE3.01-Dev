@@ -193,10 +193,10 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 
 	@Override
 	public void changed(ObservableValue<? extends String> observable, String oldString, String newString) {
-		if (!this.tfHeureMin.getText().matches("[0-9 .]*")) {
+		if (!this.tfHeureMin.getText().matches("[0-9.]*")) {
 			this.tfHeureMin.setText(oldString);
 		}
-		if (!this.tfHeureMax.getText().matches("[0-9 .]*")) {
+		if (!this.tfHeureMax.getText().matches("[0-9.]*")) {
 			this.tfHeureMax.setText(oldString);
 		}
 		if (this.nomCategorie.getText().length() > 0 && this.tfHeureMin.getText().length() > 0

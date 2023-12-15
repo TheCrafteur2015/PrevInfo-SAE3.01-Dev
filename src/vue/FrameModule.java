@@ -18,6 +18,7 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -30,20 +31,21 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
+import javafx.util.Callback;
 import modele.Semestre;
 import modele.HeureCours;
 import modele.Module;
 import modele.TypeCours;
 import modele.TypeModule;
 
-public class FrameModule implements EventHandler<Event>, ChangeListener<String>{
+public class FrameModule implements EventHandler<Event>, ChangeListener<String> {
 	private Controleur ctrl;
 	private AnchorPane centerPaneAccueil;
 	private Map<Integer, Semestre> hmSemestres;
 
 	private FrameIntervention frameIntervention;
-	
-	private HashMap<Semestre,ArrayList<TextField>> hmTF;
+
+	private HashMap<Semestre, ArrayList<TextField>> hmTF;
 	private Map<Integer, Module> hmModule;
 	private Map<Integer, TypeCours> hmTypeCours;
 	private Map<Integer, TypeModule> hmTypeModule;
@@ -54,16 +56,13 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String>{
 	private ObservableList<LigneModuleIHM> lst;
 	private TextField txtFTD;
 	private TextField txtFTP;
-	private TextField txtFCM;	
+	private TextField txtFCM;
 	private TextField txtFNbSemaines;
-		
-
-	
 
 	public FrameModule(Controleur ctrl, AnchorPane centerPaneAccueil) {
 		this.ctrl = ctrl;
 		this.centerPaneAccueil = centerPaneAccueil;
-		this.hmTF = new HashMap<Semestre,ArrayList<TextField>>();		
+		this.hmTF = new HashMap<Semestre, ArrayList<TextField>>();
 
 		this.init();
 	}
@@ -77,7 +76,7 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String>{
 		this.centerPaneAccueil.getChildren().addAll(tabPane);
 	}
 
-	public void majTabs(){
+	public void majTabs() {
 		this.tabPane = new TabPane();
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 
@@ -85,23 +84,61 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String>{
 		this.lstTableView = new ArrayList<TableView>();
 
 		Tab[] tabTab = new Tab[this.hmSemestres.size()];
-	
+
 		int cpt = 0;
 		for (Semestre semestre : this.hmSemestres.values()) {
-		
+
 			BorderPane borderPaneTab = new BorderPane();
 			ArrayList<TextField> lsttxtF = new ArrayList<TextField>();
-			this.txtFTD = new TextField(semestre.getNbGTD()+"");
-			
-			this.txtFTP = new TextField(semestre.getNbGTP()+"");
-			this.txtFCM = new TextField(semestre.getNbGCM()+"");
-			this.txtFNbSemaines = new TextField(semestre.getNbSemaine()+"");
+			this.txtFTD = new TextField(semestre.getNbGTD() + "");
 
-			this.txtFTD.textProperty().addListener(this);
-			this.txtFTP.textProperty().addListener(this);
-			this.txtFCM.textProperty().addListener(this);
+			this.txtFTP = new TextField(semestre.getNbGTP() + "");
+			this.txtFCM = new TextField(semestre.getNbGCM() + "");
+			this.txtFNbSemaines = new TextField(semestre.getNbSemaine() + "");
+
+			this.txtFTD.textProperty().addListener((observable, oldStr, newStr) -> {
+				final String regex = "\\d+";
+				if (newStr.matches(regex)) {
+					this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
+							.setNbGTD(Integer.parseInt(newStr));
+				} else {
+					this.txtFTD.setText(oldStr);
+				}
+
+			});
+			this.txtFTP.textProperty().addListener((observable, oldStr, newStr) -> {
+				final String regex = "\\d+";
+				if (newStr.matches(regex)) {
+					this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
+							.setNbGTD(Integer.parseInt(newStr));
+				} else {
+					this.txtFTD.setText(oldStr);
+				}
+
+			});
+			this.txtFCM.textProperty().addListener((observable, oldStr, newStr) -> {
+				final String regex = "\\d+";
+				if (newStr.matches(regex)) {
+					this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
+							.setNbGCM(Integer.parseInt(newStr));
+				} else {
+					this.txtFTD.setText(oldStr);
+				}
+
+			});
+			this.txtFTP.textProperty().addListener((observable, oldStr, newStr) -> {
+				final String regex = "\\d+";
+				if (newStr.matches(regex)) {
+					this.txtFTD.setText(oldStr);
+				} else {
+					
+this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
+							.setNbGTD(Integer.parseInt(newStr));
+				}
+
+			});
 			this.txtFNbSemaines.textProperty().addListener(this);
-			
+
 			FlowPane flowPaneTxtF = new FlowPane();
 			flowPaneTxtF.setHgap(5);
 			flowPaneTxtF.getChildren().add(new Label("nbGroupeTD :"));
@@ -116,62 +153,67 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String>{
 			flowPaneTxtF.getChildren().add(new Label("nbSemaines :"));
 			flowPaneTxtF.getChildren().add(txtFNbSemaines);
 
-				
 			lsttxtF.add(txtFTD);
 			lsttxtF.add(txtFTP);
 			lsttxtF.add(txtFCM);
 			lsttxtF.add(txtFNbSemaines);
-			this.hmTF.put(semestre,lsttxtF);
+			this.hmTF.put(semestre, lsttxtF);
 
 			TableView<LigneModuleIHM> tbV = new TableView<LigneModuleIHM>();
-			//tbV.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+			// tbV.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-			String[] colonnes = new String[] { "id", "info", "Nom", "CM", "TD", "TP", "REH", "HTut", "SAE", "HP", "supprimer" };
+			// Créez une usine de cellules personnalisée pour permettre l'édition
+			Callback<TableColumn<LigneModuleIHM, String>, TableCell<LigneModuleIHM, String>> cellFactory = col -> new EditableTableCell();
+
+			String[] colonnes = new String[] { "id", "info", "Code", "Nom", "CM", "TD", "TP", "REH", "HTut", "SAE",
+					"HP", "supprimer" };
 
 			if (tbV.getColumns().size() < 11) {
 				for (String colonne : colonnes) {
 					TableColumn<LigneModuleIHM, String> tbcl = new TableColumn<>(colonne);
 					tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
-					if (colonne.equals("id")) tbcl.setVisible(false);
-					else if (colonne.equals("Nom")) tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.3));
-					else if (colonne.equals("supprimer")) tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.14));
-					else tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.07));
+					if (!colonne.equals("id") && !colonne.equals("info") && !colonne.equals("supprimer")) tbcl.setCellFactory(cellFactory);
+					if (colonne.equals("id"))
+						tbcl.setVisible(false);
+					else if (colonne.equals("Nom"))
+						tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.3));
+					else if (colonne.equals("supprimer"))
+						tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.093));
+					else
+						tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.065));
 					tbV.getColumns().add(tbcl);
 				}
 			}
-			
-			List<Module> lstModule = this.ctrl.getModele().getModuleBySemestre(semestre.getId(), semestre.getIdAnnee());	
-			// System.out.println(hmModule);	
+
+			List<Module> lstModule = this.ctrl.getModele().getModuleBySemestre(semestre.getId(), semestre.getIdAnnee());
+			// System.out.println(hmModule);
 			this.hmTypeCours = this.ctrl.getModele().getHmTypeCours();
 			this.lst = FXCollections.observableArrayList();
 
-
-	
 			for (Module m : lstModule) {
 				switch (this.hmTypeModule.get(m.getIdTypeModule()).getNom()) {
-					case "PPP"    -> ajouterModulePPP(m);
-					case "SAE"    -> ajouterModuleSAE(m);
+					case "PPP" -> ajouterModulePPP(m);
+					case "SAE" -> ajouterModuleSAE(m);
 					case "normal" -> ajouterModuleNormale(m);
-					case "stage"  -> ajouterModuleStage(m);
+					case "stage" -> ajouterModuleStage(m);
 				}
 			}
 			tbV.setItems(lst);
 			lstTableView.add(tbV);
 
-
 			borderPaneTab.setCenter(tbV);
 			borderPaneTab.setTop(flowPaneTxtF);
 
-			Tab tab = new Tab("Semestre "+(cpt+1), borderPaneTab);
+			Tab tab = new Tab("Semestre " + (cpt + 1), borderPaneTab);
 			tabTab[cpt++] = tab;
-			
-		}		
+
+		}
 
 		this.tabPane.getTabs().addAll(tabTab);
-		AnchorPane.setTopAnchor   (tabPane, 5.0);
-		AnchorPane.setRightAnchor (tabPane, 5.0);
+		AnchorPane.setTopAnchor(tabPane, 5.0);
+		AnchorPane.setRightAnchor(tabPane, 5.0);
 		AnchorPane.setBottomAnchor(tabPane, 5.0);
-		AnchorPane.setLeftAnchor  (tabPane, 5.0);
+		AnchorPane.setLeftAnchor(tabPane, 5.0);
 	}
 
 	public void ajouterModulePPP(Module m) {
@@ -183,24 +225,29 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String>{
 				switch (this.hmTypeCours.get(hc.getIdTypeCours()).getNom()) {
 					case "TP" -> moduleIHM.setTp(hc);
 					case "TD" -> moduleIHM.setTd(hc);
-					case "CM" -> moduleIHM.setCm(hc);				
-					case "Tut" -> moduleIHM.setTut(hc);		
-					case "HP" -> moduleIHM.setHp(hc);			
+					case "CM" -> moduleIHM.setCm(hc);
+					case "Tut" -> moduleIHM.setTut(hc);
+					case "HP" -> moduleIHM.setHp(hc);
 				}
 			}
 		}
 		Button btnAjouterIntervenant = this.getAjouterIntervenantButton();
 		btnAjouterIntervenant.setId("AjouterIntervenant-" + id);
-		btnAjouterIntervenant.addEventFilter(ActionEvent.ACTION, this);			
+		btnAjouterIntervenant.addEventFilter(ActionEvent.ACTION, this);
 
 		Button supButton = getSupButton();
 		supButton.setId("Sup-" + id);
 		supButton.addEventHandler(ActionEvent.ACTION, this);
-		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, m.getNom(), "", "", "", "", "", "", "", supButton));
-		this.lst.add(new LigneModuleIHM(id, null, "nombre d'heures totales"   , moduleIHM.getCmHeure()+""       , moduleIHM.getTdHeure()+""       , moduleIHM.getTpHeure()+""       , "", moduleIHM.getTutHeure()+"", "", moduleIHM.getHpHeure()+"", null));
-		this.lst.add(new LigneModuleIHM(id, null, "nombre de semaines"        , moduleIHM.getCmSemaine()+""     , moduleIHM.getTdSemaine()+""     , moduleIHM.getTpSemaine()+""     , "", ""                        , "", ""                       , null));
-		this.lst.add(new LigneModuleIHM(id, null, "nombre d'heure par semaine", moduleIHM.getCmHeureSemaine()+"", moduleIHM.getTdHeureSemaine()+"", moduleIHM.getTpHeureSemaine()+"", "", ""                        , "", ""                       , null));
-		this.lst.add(new LigneModuleIHM(id, null, "", "", "", "", "", "", "", "", null));
+		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, m.getCode(), m.getNom(), "", "", "", "", "", "", "",
+				supButton));
+		this.lst.add(new LigneModuleIHM(id, null, "", "nombre d'heures totales", moduleIHM.getCmHeure() + "",
+				moduleIHM.getTdHeure() + "", moduleIHM.getTpHeure() + "", "", moduleIHM.getTutHeure() + "", "",
+				moduleIHM.getHpHeure() + "", null));
+		this.lst.add(new LigneModuleIHM(id, null, "", "nombre de semaines", moduleIHM.getCmSemaine() + "",
+				moduleIHM.getTdSemaine() + "", moduleIHM.getTpSemaine() + "", "", "", "", "", null));
+		this.lst.add(new LigneModuleIHM(id, null, "", "nombre d'heure par semaine", moduleIHM.getCmHeureSemaine() + "",
+				moduleIHM.getTdHeureSemaine() + "", moduleIHM.getTpHeureSemaine() + "", "", "", "", "", null));
+		this.lst.add(new LigneModuleIHM(id, null, "", "", "", "", "", "", "", "", "", null));
 	}
 
 	public void ajouterModuleSAE(Module m) {
@@ -209,23 +256,25 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String>{
 		ModuleIHM moduleIHM = new ModuleIHM();
 		if (lstHeuresCours != null) {
 			for (HeureCours hc : lstHeuresCours) {
-				switch (this.hmTypeCours.get(hc.getIdTypeCours()).getNom()) {				
-					case "Tut" -> moduleIHM.setTut(hc);		
-					case "SAE" -> moduleIHM.setSae(hc);	
-					case "HP" -> moduleIHM.setHp(hc);				
+				switch (this.hmTypeCours.get(hc.getIdTypeCours()).getNom()) {
+					case "Tut" -> moduleIHM.setTut(hc);
+					case "SAE" -> moduleIHM.setSae(hc);
+					case "HP" -> moduleIHM.setHp(hc);
 				}
 			}
 		}
 		Button btnAjouterIntervenant = getAjouterIntervenantButton();
 		btnAjouterIntervenant.setId("AjouterIntervenant-" + id);
-		btnAjouterIntervenant.addEventFilter(ActionEvent.ACTION, this);			
+		btnAjouterIntervenant.addEventFilter(ActionEvent.ACTION, this);
 
 		Button supButton = getSupButton();
 		supButton.setId("Sup-" + id);
 		supButton.addEventHandler(ActionEvent.ACTION, this);
-		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, m.getNom(), "", "", "", "", "", "", "", supButton));
-		this.lst.add(new LigneModuleIHM(id, null, "nombre d'heures totales"   ,"", "" , "", "", moduleIHM.getTutHeure()+"", moduleIHM.getSaeHeure()+"", moduleIHM.getHpHeure()+"", null));
-		this.lst.add(new LigneModuleIHM(id, null, "", "", "", "", "", "", "", "", null));
+		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, m.getCode(), m.getNom(), "", "", "", "", "", "", "",
+				supButton));
+		this.lst.add(new LigneModuleIHM(id, null, "", "nombre d'heures totales", "", "", "", "",
+				moduleIHM.getTutHeure() + "", moduleIHM.getSaeHeure() + "", moduleIHM.getHpHeure() + "", null));
+		this.lst.add(new LigneModuleIHM(id, null, "", "", "", "", "", "", "", "", "", null));
 	}
 
 	public void ajouterModuleNormale(Module m) {
@@ -237,23 +286,28 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String>{
 				switch (this.hmTypeCours.get(hc.getIdTypeCours()).getNom()) {
 					case "TP" -> moduleIHM.setTp(hc);
 					case "TD" -> moduleIHM.setTd(hc);
-					case "CM" -> moduleIHM.setCm(hc);			
-					case "HP" -> moduleIHM.setHp(hc);							
+					case "CM" -> moduleIHM.setCm(hc);
+					case "HP" -> moduleIHM.setHp(hc);
 				}
 			}
 		}
 		Button btnAjouterIntervenant = getAjouterIntervenantButton();
 		btnAjouterIntervenant.setId("AjouterIntervenant-" + id);
-		btnAjouterIntervenant.addEventFilter(ActionEvent.ACTION, this);			
+		btnAjouterIntervenant.addEventFilter(ActionEvent.ACTION, this);
 
 		Button supButton = getSupButton();
 		supButton.setId("Sup-" + id);
 		supButton.addEventHandler(ActionEvent.ACTION, this);
-		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, m.getNom(), "", "", "", "", "", "", "", supButton));
-		this.lst.add(new LigneModuleIHM(id, null, "nombre d'heures totales"   , moduleIHM.getCmHeure()+""       , moduleIHM.getTdHeure()+""       , moduleIHM.getTpHeure()+""       , "", "", "", moduleIHM.getHpHeure()+"", null));
-		this.lst.add(new LigneModuleIHM(id, null, "nombre de semaines"        , moduleIHM.getCmSemaine()+""     , moduleIHM.getTdSemaine()+""     , moduleIHM.getTpSemaine()+""     , "", "", "", "", null));
-		this.lst.add(new LigneModuleIHM(id, null, "nombre d'heure par semaine", moduleIHM.getCmHeureSemaine()+"", moduleIHM.getTdHeureSemaine()+"", moduleIHM.getTpHeureSemaine()+"", "", "", "", "", null));
-		this.lst.add(new LigneModuleIHM(id, null, "", "", "", "", "", "", "", "", null));
+		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, m.getCode(), m.getNom(), "", "", "", "", "", "", "",
+				supButton));
+		this.lst.add(new LigneModuleIHM(id, null, "", "nombre d'heures totales", moduleIHM.getCmHeure() + "",
+				moduleIHM.getTdHeure() + "", moduleIHM.getTpHeure() + "", "", "", "", moduleIHM.getHpHeure() + "",
+				null));
+		this.lst.add(new LigneModuleIHM(id, null, "", "nombre de semaines", moduleIHM.getCmSemaine() + "",
+				moduleIHM.getTdSemaine() + "", moduleIHM.getTpSemaine() + "", "", "", "", "", null));
+		this.lst.add(new LigneModuleIHM(id, null, "", "nombre d'heure par semaine", moduleIHM.getCmHeureSemaine() + "",
+				moduleIHM.getTdHeureSemaine() + "", moduleIHM.getTpHeureSemaine() + "", "", "", "", "", null));
+		this.lst.add(new LigneModuleIHM(id, null, "", "", "", "", "", "", "", "", "", null));
 	}
 
 	public void ajouterModuleStage(Module m) {
@@ -262,23 +316,25 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String>{
 		ModuleIHM moduleIHM = new ModuleIHM();
 		if (lstHeuresCours != null) {
 			for (HeureCours hc : lstHeuresCours) {
-				switch (this.hmTypeCours.get(hc.getIdTypeCours()).getNom()) {				
-					case "Tut" -> moduleIHM.setTut(hc);		
-					case "REH" -> moduleIHM.setReh(hc);		
-					case "HP" -> moduleIHM.setHp(hc);		
+				switch (this.hmTypeCours.get(hc.getIdTypeCours()).getNom()) {
+					case "Tut" -> moduleIHM.setTut(hc);
+					case "REH" -> moduleIHM.setReh(hc);
+					case "HP" -> moduleIHM.setHp(hc);
 				}
 			}
 		}
 		Button btnAjouterIntervenant = getAjouterIntervenantButton();
 		btnAjouterIntervenant.setId("AjouterIntervenant-" + id);
-		btnAjouterIntervenant.addEventFilter(ActionEvent.ACTION, this);			
+		btnAjouterIntervenant.addEventFilter(ActionEvent.ACTION, this);
 
 		Button supButton = getSupButton();
 		supButton.setId("Sup-" + id);
 		supButton.addEventHandler(ActionEvent.ACTION, this);
-		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, m.getNom(), "", "", "", "", "", "", "", supButton));
-		this.lst.add(new LigneModuleIHM(id, null, "nombre d'heures totales"   ,"", "" , "", moduleIHM.getRehHeure()+"", moduleIHM.getTutHeure()+"", "", moduleIHM.getHpHeure()+"", null));
-		this.lst.add(new LigneModuleIHM(id, null, "", "", "", "", "", "", "", "", null));
+		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, m.getCode(), m.getNom(), "", "", "", "", "", "", "",
+				supButton));
+		this.lst.add(new LigneModuleIHM(id, null, "", "nombre d'heures totales", "", "", "",
+				moduleIHM.getRehHeure() + "", moduleIHM.getTutHeure() + "", "", moduleIHM.getHpHeure() + "", null));
+		this.lst.add(new LigneModuleIHM(id, null, "", "", "", "", "", "", "", "", "", null));
 	}
 
 	public Button getSupButton() {
@@ -298,9 +354,10 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String>{
 		return supbtn;
 	}
 
-	public Button getAjouterIntervenantButton(){
+	public Button getAjouterIntervenantButton() {
 		SVGPath supsvg = new SVGPath();
-		supsvg.setContent("M25 21H16M20.5 17V25M1 25C1 19.8453 5.70102 15.6667 11.5 15.6667C12.5425 15.6667 13.5495 15.8017 14.5 16.0532M17.5 6.33333C17.5 9.27885 14.8137 11.6667 11.5 11.6667C8.18629 11.6667 5.5 9.27885 5.5 6.33333C5.5 3.38781 8.18629 1 11.5 1C14.8137 1 17.5 3.38781 17.5 6.33333Z");
+		supsvg.setContent(
+				"M25 21H16M20.5 17V25M1 25C1 19.8453 5.70102 15.6667 11.5 15.6667C12.5425 15.6667 13.5495 15.8017 14.5 16.0532M17.5 6.33333C17.5 9.27885 14.8137 11.6667 11.5 11.6667C8.18629 11.6667 5.5 9.27885 5.5 6.33333C5.5 3.38781 8.18629 1 11.5 1C14.8137 1 17.5 3.38781 17.5 6.33333Z");
 		supsvg.setStroke(Color.BLACK);
 		supsvg.setFill(Color.WHITE);
 		supsvg.setStrokeWidth(1.5);
@@ -308,7 +365,7 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String>{
 		supsvg.setStrokeLineJoin(StrokeLineJoin.ROUND);
 
 		Button btnAjouterIntervenant = new Button();
-		btnAjouterIntervenant.setGraphic(supsvg);	
+		btnAjouterIntervenant.setGraphic(supsvg);
 		btnAjouterIntervenant.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 		btnAjouterIntervenant.getStyleClass().add("info-btn");
 		return btnAjouterIntervenant;
@@ -318,16 +375,17 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String>{
 	public void handle(Event action) {
 		if (action instanceof ActionEvent) {
 			if (action.getSource() instanceof Button) {
-				Button btn = (Button)action.getSource();
+				Button btn = (Button) action.getSource();
 				String[] textBtn = btn.getId().split("-");
 				if (textBtn[0].equals("Sup")) {
 					this.ctrl.getModele().supprimerModule(Integer.parseInt(textBtn[1]));
 				}
 				if (textBtn[0].equals("AjouterIntervenant")) {
-					this.frameIntervention = new FrameIntervention(this.ctrl,this.centerPaneAccueil,this.hmModule.get(Integer.parseInt(textBtn[1])));
+					this.frameIntervention = new FrameIntervention(this.ctrl, this.centerPaneAccueil,
+							this.hmModule.get(Integer.parseInt(textBtn[1])));
 				}
 			}
-				
+
 		}
 		this.init();
 	}
@@ -336,32 +394,89 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String>{
 		final String regex = "\\d+";
 		System.out.println("changed");
 		if (observable == this.txtFTD.textProperty()) {
+			System.out.println("fonctionne");
 			if (newStr.matches(regex)) {
-				this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex()).setNbGTD(Integer.parseInt(newStr));
+				this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
+						.setNbGTD(Integer.parseInt(newStr));
 			} else {
 				this.txtFTD.setText(oldStr);
 			}
-	}
-	if (observable == this.txtFTP.textProperty()) {
+		}
+		if (observable == this.txtFTP.textProperty()) {
 			if (newStr.matches(regex)) {
-				this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex()).setNbGTP(Integer.parseInt(newStr));
+				this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
+						.setNbGTP(Integer.parseInt(newStr));
 			} else {
 				this.txtFTP.setText(oldStr);
 			}
 		}
 		if (observable == this.txtFCM.textProperty()) {
 			if (newStr.matches(regex)) {
-				this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex()).setNbGCM(Integer.parseInt(newStr));
+				this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
+						.setNbGCM(Integer.parseInt(newStr));
 			} else {
 				this.txtFCM.setText(oldStr);
 			}
 		}
 		if (observable == this.txtFNbSemaines.textProperty()) {
 			if (newStr.matches(regex)) {
-				this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex()).setNbSemaine(Integer.parseInt(newStr));
+				this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
+						.setNbSemaine(Integer.parseInt(newStr));
 			} else {
 				this.txtFNbSemaines.setText(oldStr);
 			}
 		}
+	}
+
+	public static class EditableTableCell extends TableCell<LigneModuleIHM, String> {
+
+    private TextField textField;
+
+    public EditableTableCell() {
+        this.textField = new TextField();
+        this.textField.setOnAction(event -> commitEdit(textField.getText()));
+        this.textField.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                commitEdit(textField.getText());
+            }
+        });
+    }
+
+    @Override
+    public void startEdit() {
+        super.startEdit();
+
+        if (isEmpty()) {
+            return;
+        }
+
+        setText(null);
+        setGraphic(textField);
+        textField.setText(getItem());
+        textField.requestFocus();
+    }
+
+    @Override
+    public void cancelEdit() {
+        super.cancelEdit();
+
+        setText(getItem());
+        setGraphic(null);
+    }
+
+    @Override
+    public void updateItem(String item, boolean empty) {
+        super.updateItem(item, empty);
+
+        if (empty) {
+            setText(null);
+            setGraphic(null);
+        } else {
+            setText(item);
+            setGraphic(null);
+        }
+    }
 }
+
+
 }

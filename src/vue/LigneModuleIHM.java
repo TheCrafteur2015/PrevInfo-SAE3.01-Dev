@@ -6,6 +6,7 @@ public class LigneModuleIHM {
 	
 	private Integer id;
 	private Button info;
+	private String code;
 	private String nom;
 	private String cm;
 	private String td;
@@ -17,10 +18,11 @@ public class LigneModuleIHM {
 	private Button supprimer;
 
 
-	public LigneModuleIHM(Integer id, Button info, String nom, String cm, String td, String tp, String reh, String htut,
+	public LigneModuleIHM(Integer id, Button info, String code, String nom, String cm, String td, String tp, String reh, String htut,
 			String sae, String hp, Button supprimer) {
 		this.id = id;
 		this.info = info;
+		this.code = code;
 		this.nom = nom;
 		this.cm = cm;
 		this.td = td;
@@ -52,6 +54,8 @@ public class LigneModuleIHM {
 		this.info = info;
 	}
 
+
+	
 
 	public String getNom() {
 		return nom;
@@ -140,6 +144,16 @@ public class LigneModuleIHM {
 
 	public void setSupprimer(Button supprimer) {
 		this.supprimer = supprimer;
+	}
+
+
+	public String getCode() {
+		return code;
+	}
+
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	

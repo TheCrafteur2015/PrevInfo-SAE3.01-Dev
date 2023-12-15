@@ -61,7 +61,7 @@ INSERT INTO Module (idModule, code, nomModule, idSemestre,idAnnee, idTypeModule 
 	( 25, 'R2.13', 'Communication Technique'                                     , 2, 1, 3),
 	( 26, 'R2.14', 'Projet Professionnel et Personnel'                           , 2, 1, 1),
 	( 27, 'R3.01', 'Développement WEB'                                           , 3, 1, 3),
-	( 28, 'R3.02', 'Développement Efficace, 3'                                   , 1, 1, 3),
+	( 28, 'R3.02', 'Développement Efficace'                                      , 3, 1, 3),
 	( 29, 'R3.03', 'Analyse'                                                     , 3, 1, 3),
 	( 30, 'R3.04', 'Qualité de développement 3'                                  , 3, 1, 3),
 	( 31, 'R3.05', 'Programmation Système'                                       , 3, 1, 3),
@@ -107,7 +107,7 @@ INSERT INTO Module (idModule, code, nomModule, idSemestre,idAnnee, idTypeModule 
 	( 71, 'R6.04', 'Projet Personnel et Professionnel'                           , 6, 1, 1),
 	( 72, 'R6.05', 'Développement avancé'                                        , 6, 1, 3),
 	( 73, 'R6.06', 'Maintenance applicative'                                     , 6, 1, 3),
-	( 74, 'R6.01', 'Stage'                                                       , 6, 1, 3)
+	( 74, 'R6.01', 'Stage'                                                       , 6, 1, 4)
 	;
 
 INSERT INTO TypeCours (idTypeCours ,nomCours, coefficient) VALUES
