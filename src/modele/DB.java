@@ -433,8 +433,8 @@ public class DB {
 	 * @param module {@link Module} à supprimer
 	 * @throws SQLException
 	 */
-	public void supprimerModule(Module module) throws SQLException {
-		this.psDeleteModule.setInt(1, module.getId());
+	public void supprimerModule(int idModule) throws SQLException {
+		this.psDeleteModule.setInt(1,idModule);
 		this.psDeleteModule.executeUpdate();
 	}
 
@@ -621,7 +621,7 @@ public class DB {
 	 */
 	public void supprimerHeureCours(HeureCours heureCours) throws SQLException {
 		this.psDeleteHeureCours.setInt(1, heureCours.getIdTypeCours());
-		this.psDeleteTypeCours.setInt(2, heureCours.getIdModule());
+		this.psDeleteHeureCours.setInt(2, heureCours.getIdModule());
 		this.psDeleteHeureCours.executeUpdate();
 	}
 

@@ -83,7 +83,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 
 	private FrameIntervenant frameIntervenant;
 	private FrameModule frameModule;
-	//private FrameExporter frameExporter;
+	private FrameExporter frameExporter;
 
 	private Controleur ctrl;
 
@@ -196,13 +196,13 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 	}
 
 	@FXML
-	void modeDuplication(ActionEvent event) {
-		// this.ctrl.getModele().setDuplication(!this.ctrl.getModele().isDuplication());
-		this.ctrl.getModele().setDuplication(((ToggleButton) event.getSource()).isSelected());
+	void modeDuplication() {
+		this.ctrl.getModele().setDuplication(!this.ctrl.getModele().isDuplication());
 	}
 
 	@FXML
 	void allerIntervenants(ActionEvent event) {
+		modeDuplication();
 		this.frameIntervenant = new FrameIntervenant(this.ctrl, this.centerPaneAccueil);
 	}
 
@@ -212,12 +212,14 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 
 	@FXML
 	void allerModules(ActionEvent event) {
+		modeDuplication();
 		this.frameModule = new FrameModule(this.ctrl, this.centerPaneAccueil);
 	}
 
 	@FXML
 	void allerExporter(ActionEvent event) {
-		//this.frameExporter = new FrameExporter(this.ctrl, this.centerPaneAccueil);
+		modeDuplication();
+		this.frameExporter = new FrameExporter(this.ctrl, this.centerPaneAccueil);
 	}
 
 	@FXML
@@ -229,7 +231,9 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 	void ajouterAnnee() {
 		this.ctrl.getModele().ajouterAnnee();
 		this.majListAnnee();
+		this.setAnnee(this.ctrl.getModele().getHmAnnee().get(this.ctrl.getModele().getIdAnnee()));
 	}
+
 
 	public void handle(Event event) {
 

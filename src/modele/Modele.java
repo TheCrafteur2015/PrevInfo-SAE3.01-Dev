@@ -173,6 +173,21 @@ public class Modele {
 		this.hmModules.get(m.getId()).setIdSemestre(m.getIdSemestre());
 	}
 
+	public void supprimerModule(int id) {
+		try {
+			List<HeureCours> lstHeuresCours = this.ctrl.getModele().getHeureCoursByModule(id,this.idAnnee);
+			for (HeureCours hc : lstHeuresCours) {
+				this.db.supprimerHeureCours(hc);
+				this.hmHeuresCours.remove(hc.getIdTypeCours()+"-"+hc.getIdModule());
+			}
+			this.db.supprimerModule(id);
+			this.hmModules.remove(id);
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void ajouterSemestre(int nbGTD, int nbGTP, int nbGCM, int nbGAutre) {
 		Semestre s = new Semestre(nbGTD, nbGTD, nbGCM, nbGAutre, idAnnee);
 		try {
@@ -259,7 +274,6 @@ public class Modele {
 				for (Semestre s : hmTmpSemestres.values()) ajouterSemestre(s.getNbGTD(), s.getNbGTP(), s.getNbGCM(), s.getNbSemaine());
 				for (HeureCours hc : hmTmpHeuresCours.values()) ajouterHeureCours(hc.getIdTypeCours(), hc.getIdModule(), hc.getHeure(), hc.getNbSemaine(), hc.gethParSemaine());	
 			} else { this.updateAnnee(annee); }
-			
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -278,7 +292,6 @@ public class Modele {
 			this.hmModules = this.db.getModules(idAnnee);
 			this.hmSemestres = this.db.getSemestres(idAnnee);
 			this.hmHeuresCours = this.db.getHeureCours(idAnnee);
-			this.ctrl.getVue().setAnnee(this.hmAnnee.get(this.idAnnee));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}	
