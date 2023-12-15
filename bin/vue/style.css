@@ -1,37 +1,52 @@
-.button{
+.button {
 	-fx-text-fill: white;
 	-fx-background-color: #4D61CC;
+	/*
+	-fx-background-radius: 150;
+	-fx-background-color: #758AFF;
+	-fx-text-fill: white;
+	*/
 }
 
 .button:hover, .toggle-button:hover, .choice-box:hover, .toggle-switch:hover {
 	-fx-cursor: hand;
 }
 
-.button:hover{
-	-fx-background-color: #758AFF;
-}
-
-.button:pressed{
-	-fx-background-color: #758AFF;
+.text-field, .choice-box {
+	-fx-background-radius: 10;
+	-fx-background-color: -fx-control-inner-background;
 }
 
 .toggle-switch:selected .thumb-area {
 	-fx-background-color: #4D61CC;
 }
 
+.info-button, .info-button:hover,
+.info-btn, .info-btn:hover {
+	-fx-background-color: transparent;
+}
+
+.button:hover {
+	-fx-background-color: #758AFF;
+}
+
+.button:pressed {
+	-fx-background-color: #758AFF;
+}
+
+.toggle-button {
+	-fx-background-color: white;
+}
+
 .roundButton{
-	-fx-border-radius: 150;
+	-fx-border-radius: 15;
 }
 
-.image-view {
-	/*-fx-image: url("../images/accueil_icone.png");*/
-	-fx-content-display: graphic-only;
+.table-column {
+	-fx-alignment: CENTER;
 }
 
-.labelD {
-	-fx-content-display: graphic-only;
-}
-
-.image-view:hover {
-	-fx-cursor: hand;
+.table-view .column-header-background .filler {
+	-fx-background-color: transparent;
+	
 }

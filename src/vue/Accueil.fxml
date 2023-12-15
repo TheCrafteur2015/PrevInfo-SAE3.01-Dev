@@ -10,100 +10,107 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.image.ImageView?>
+<?import org.controlsfx.control.ToggleSwitch?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="731.0" prefWidth="1345.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vue.ControleurIHM">
-   <children>
-      <BorderPane prefHeight="731.0" prefWidth="1345.0">
-         <top>
-            <HBox prefHeight="83.0" prefWidth="1345.0" style="-fx-background-color: #2E3E97;" BorderPane.alignment="CENTER">
-               <children>
-                  <Label alignment="CENTER" prefHeight="85.0" prefWidth="188.0" style="-fx-text-fill: white;" text="PrevInfo" textFill="WHITE">
-                     <font>
-                        <Font size="37.0" />
-                     </font>
-                  </Label>
-               </children></HBox>
-         </top>
-         <left>
-            <AnchorPane prefHeight="647.0" prefWidth="212.0" style="-fx-background-color: #4D61CC;" BorderPane.alignment="CENTER">
-               <children>
-                  <Button alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutX="0.0" mnemonicParsing="false" onAction="#allerAccueil" prefHeight="65.0" prefWidth="212.0" text="Accueil" styleClass="btn-accueil">
-                      <graphic>
-                        <ImageView fx:id="imageAccueil" fitHeight="30.0" fitWidth="30.0" scaleX="16.0" scaleY="16.0" pickOnBounds="true" preserveRatio="true" />
-                     </graphic>
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                  </Button>
-                  <Button alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutY="64.0" mnemonicParsing="false" onAction="#allerIntervenants" prefHeight="65.0" prefWidth="212.0" text="Intervenants">
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                     <graphic>
-                       <ImageView fx:id="imageIntervenant" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
-                     </graphic>
-                  </Button>
-                  <Button alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutX="0.0" layoutY="128.0" mnemonicParsing="false" onAction="#allerModules" prefHeight="65.0" prefWidth="212.0" text="Modules">
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fx:id="imageModule" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
-                     </graphic>
-                  </Button>
-                  <Button alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutY="580.0" mnemonicParsing="false" onAction="#allerExporter" prefHeight="65.0" prefWidth="212.0" text="Exporter">
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fx:id="imageDownload" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
-                     </graphic>
-                 </Button>
-               </children>
-            </AnchorPane>
-         </left>
-         <center>
-            <AnchorPane fx:id="centerPaneAccueil" prefHeight="429.0" prefWidth="648.0" BorderPane.alignment="CENTER">
-               <children>
-                  <Label layoutX="26.0" layoutY="34.0" prefHeight="36.0" prefWidth="945.0" text="Bienvenue sur prevInfo">
-                     <font>
-                        <Font size="55.0" />
-                     </font>
-                  </Label>
-                  <Label alignment="BASELINE_LEFT" layoutX="26.0" layoutY="131.0" prefHeight="30.0" prefWidth="1080.0" text="Cette application permet de gérer les heures prévisionnelles des enseignants du">
-                     <font>
-                        <Font size="26.0" />
-                     </font></Label>
-                  <Label alignment="BASELINE_LEFT" layoutX="25.0" layoutY="163.0" prefHeight="32.0" prefWidth="654.0" text="département Informatique de l’IUT du Havre.">
-                     <font>
-                        <Font size="26.0" />
-                     </font></Label>
-                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITESMOKE" height="292.0" layoutX="269.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="565.0" />
-                  <Label layoutX="286.0" layoutY="285.0" style="-fx-background-color: #f5f5f5;" text="Paramètres">
-                     <font>
-                        <Font size="23.0" />
-                     </font></Label>
-                  <Label layoutX="304.0" layoutY="336.0" prefHeight="32.0" prefWidth="96.0" text="Année">
-                     <font>
-                        <Font size="15.0" />
-                     </font></Label>
-                  <ToggleButton layoutX="635.0" layoutY="325.0" minHeight="16.0" mnemonicParsing="false" onAction="#modeDuplication" prefHeight="30.0" prefWidth="162.0" text="Duplication">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </ToggleButton>
-                  <Button layoutX="403.0" layoutY="528.0" mnemonicParsing="false" onAction="#parametrerMultiplicateurs" prefHeight="40.0" prefWidth="325.0" style="-fx-background-radius: 15;" styleClass="roundButton" text="Paramètrer les multiplicateurs">
-                     <font>
-                        <Font size="18.0" />
-                     </font></Button>
-                  <ChoiceBox fx:id="choiceBoxAnnee" layoutX="302.0" layoutY="366.0" opacity="0.47" prefHeight="21.0" prefWidth="124.0" />
-                  <Button layoutX="576.0" layoutY="369.0" mnemonicParsing="false" onAction="#ajouterAnnee" prefHeight="34.0" prefWidth="235.0" style="-fx-background-radius: 15;" styleClass="roundButton" text="Ajouter une année">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Button>
-               </children></AnchorPane>
-         </center>
-      </BorderPane>
-   </children>
+	<children>
+		<BorderPane prefHeight="731.0" prefWidth="1345.0">
+			<top>
+				<HBox prefHeight="83.0" prefWidth="1345.0" style="-fx-background-color: #2E3E97;" BorderPane.alignment="CENTER">
+					<children>
+						<BorderPane prefHeight="83.0" prefWidth="1345.0" BorderPane.alignment="CENTER">
+							<left>
+								<Label alignment="CENTER_RIGHT" prefHeight="85.0" prefWidth="188.0" style="-fx-text-fill: white;" text="PrevInfo" textFill="WHITE">
+									<font>
+										<Font size="37.0" />
+									</font>
+								</Label>
+							</left>
+						</BorderPane>
+					</children>
+				</HBox>
+			</top>
+			<left>
+				<AnchorPane prefHeight="647.0" prefWidth="212.0" style="-fx-background-color: #4D61CC;" BorderPane.alignment="CENTER">
+					<children>
+						<Button alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutX="0.0" mnemonicParsing="false" onAction="#allerAccueil" prefHeight="65.0" prefWidth="212.0" text="Accueil" styleClass="btn-accueil">
+							<graphic>
+								<ImageView fx:id="imageAccueil" fitHeight="30.0" fitWidth="30.0" scaleX="16.0" scaleY="16.0" pickOnBounds="true" preserveRatio="true" />
+							</graphic>
+							<font>
+								<Font size="20.0" />
+							</font>
+						</Button>
+						<Button alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutY="64.0" mnemonicParsing="false" onAction="#allerIntervenants" prefHeight="65.0" prefWidth="212.0" text="Intervenants">
+							<font>
+								<Font size="20.0" />
+							</font>
+							<graphic>
+								<ImageView fx:id="imageIntervenant" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+							</graphic>
+						</Button>
+						<Button alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutX="0.0" layoutY="128.0" mnemonicParsing="false" onAction="#allerModules" prefHeight="65.0" prefWidth="212.0" text="Modules">
+							<font>
+								<Font size="20.0" />
+							</font>
+							<graphic>
+								<ImageView fx:id="imageModule" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+							</graphic>
+						</Button>
+						<Button alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutY="580.0" mnemonicParsing="false" onAction="#allerExporter" prefHeight="65.0" prefWidth="212.0" text="Exporter">
+							<font>
+								<Font size="20.0" />
+							</font>
+							<graphic>
+								<ImageView fx:id="imageDownload" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+							</graphic>
+						</Button>
+					</children>
+				</AnchorPane>
+			</left>
+			<center>
+				<AnchorPane fx:id="centerPaneAccueil" prefHeight="429.0" prefWidth="648.0" BorderPane.alignment="CENTER">
+					<children>
+						<Label layoutX="26.0" layoutY="34.0" prefHeight="36.0" prefWidth="945.0" text="Bienvenue sur prevInfo">
+							<font>
+								<Font size="55.0" />
+							</font>
+						</Label>
+						<Label alignment="BASELINE_LEFT" layoutX="26.0" layoutY="131.0" prefHeight="30.0" prefWidth="1080.0" text="Cette application permet de gérer les heures prévisionnelles des enseignants du">
+							<font>
+								<Font size="26.0" />
+							</font></Label>
+						<Label alignment="BASELINE_LEFT" layoutX="25.0" layoutY="163.0" prefHeight="32.0" prefWidth="654.0" text="département Informatique de l’IUT du Havre.">
+							<font>
+								<Font size="26.0" />
+							</font></Label>
+						<Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITESMOKE" height="292.0" layoutX="269.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="565.0" />
+						<Label layoutX="286.0" layoutY="285.0" style="-fx-background-color: #f5f5f5;" text="Paramètres">
+							<font>
+								<Font size="23.0" />
+							</font></Label>
+						<Label layoutX="304.0" layoutY="336.0" prefHeight="32.0" prefWidth="96.0" text="Année">
+							<font>
+								<Font size="15.0" />
+							</font></Label>
+						<ToggleSwitch layoutX="615.0" layoutY="320.0" minHeight="16.0" mnemonicParsing="false" onMouseClicked="#modeDuplication" prefHeight="30.0" prefWidth="162.0" text="Duplication">
+							<font>
+								<Font size="18.0" />
+							</font>
+						</ToggleSwitch>
+						<Button layoutX="403.0" layoutY="528.0" mnemonicParsing="false" onAction="#parametrerMultiplicateurs" prefHeight="40.0" prefWidth="325.0" style="-fx-background-radius: 15;" styleClass="roundButton" text="Paramètrer les multiplicateurs">
+							<font>
+								<Font size="18.0" />
+							</font></Button>
+						<ChoiceBox fx:id="choiceBoxAnnee" layoutX="302.0" layoutY="366.0" opacity="0.47" prefHeight="21.0" prefWidth="124.0" />
+						<Button layoutX="576.0" layoutY="369.0" mnemonicParsing="false" onAction="#ajouterAnnee" prefHeight="34.0" prefWidth="235.0" style="-fx-background-radius: 15;" styleClass="roundButton" text="Ajouter une année">
+							<font>
+								<Font size="18.0" />
+							</font>
+						</Button>
+					</children>
+				</AnchorPane>
+			</center>
+		</BorderPane>
+	</children>
 </AnchorPane>
