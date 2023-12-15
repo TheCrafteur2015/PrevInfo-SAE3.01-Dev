@@ -1,15 +1,10 @@
 package vue;
 
 import java.lang.reflect.Method;
-import java.net.URL;
 
 import javafx.collections.ObservableList;
-import javafx.css.Styleable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 public class FXHelper {
 	

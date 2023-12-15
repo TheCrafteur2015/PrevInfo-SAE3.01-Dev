@@ -40,6 +40,8 @@ public class DB {
 	private PreparedStatement psSelectHeureCoursByModule;
 	private PreparedStatement psSelectTypeModule;
 
+	private PreparedStatement psSelectIdTypeCoursByNom;
+
 	private PreparedStatement psInsertCategorie;
 	private PreparedStatement psInsertIntervenant;
 	private PreparedStatement psInsertIntervention;
@@ -91,6 +93,8 @@ public class DB {
 			this.psSelectHeureCoursByModule = connec.prepareStatement("SELECT * FROM HeureCours WHERE idModule = ? AND idAnnee = ?");
 			this.psSelectTypeModule = connec.prepareStatement("SELECT * FROM TypeModule");
 
+			this.psSelectIdTypeCoursByNom = connec.prepareStatement("SELECT idTypeCours FROM TypeCours WHERE nomCours = ?");
+
 			this.psInsertCategorie = connec.prepareStatement("INSERT INTO Categorie VALUES (?,?,?,?,?,?)");
 			this.psInsertIntervenant = connec.prepareStatement("INSERT INTO Intervenant VALUES (?,?,?,?,?,?,?,?)");
 			this.psInsertIntervention = connec.prepareStatement("INSERT INTO Intervention VALUES (?,?,?,?,?,?)");
@@ -106,7 +110,7 @@ public class DB {
 			this.psUpdateIntervention = connec.prepareStatement(
 					"UPDATE Intervention SET nbSemainesIntervention = ?, nbGroupe = ? WHERE idAnnee = ? AND idIntervenant = ? AND idModule = ? AND idTypeCours = ?");
 			this.psUpdateModule = connec.prepareStatement(
-					"UPDATE Module SET nomModule = ?, nbSemainesModule = ?, idSemestre = ?, idTypeModule = ? WHERE idAnnee = ? AND idModule = ?");
+					"UPDATE Module SET nomModule = ?, code = ?, idSemestre = ?, idTypeModule = ? WHERE idAnnee = ? AND idModule = ?");
 			this.psUpdateSemestre = connec.prepareStatement(
 					"UPDATE Semestre SET nbGTD = ?, nbGTP = ?, nbGCM = ?, nbSemaine = ? WHERE idAnnee = ? AND idSemestre = ?");
 			this.psUpdateHeureCours = connec.prepareStatement(
@@ -133,29 +137,6 @@ public class DB {
 			dbInstance = new DB();
 		}
 		return dbInstance;
-	}
-
-	public List<HeureCours> getHeureCoursByModule( int idModule, int idAnnee ) throws SQLException {
-		List<HeureCours> lstHeureCours = new ArrayList<>();
-		this.psSelectHeureCoursByModule.setInt(1, idModule);
-		this.psSelectHeureCoursByModule.setInt(2, idAnnee);
-		ResultSet rs = this.psSelectHeureCoursByModule.executeQuery();
-		while (rs.next()) {
-			lstHeureCours.add(new HeureCours(rs.getInt("idTypeCours"), rs.getInt("idModule"), rs.getDouble("heure"), rs.getInt("nbSemaine"), rs.getDouble("hParSemaine"), idAnnee));
-		}
-		return lstHeureCours;
-	}
-
-	public List<Module> getModuleBySemestre (int idSemestre, int idAnnee) throws SQLException {
-		List<Module> lstModules = new ArrayList<>();
-		this.psSelectModuleBySemestre.setInt(1, idSemestre);
-		this.psSelectModuleBySemestre.setInt(2, idAnnee);
-		ResultSet rs = this.psSelectModuleBySemestre.executeQuery();
-		while (rs.next()) {
-			lstModules.add(new Module(rs.getInt("idModule"), rs.getString("nomModule"), rs.getString("code"), rs.getInt("idTypeModule"), idAnnee,
-							rs.getInt("idSemestre")));
-		}
-		return lstModules;
 	}
 
 	/*-----------*/
@@ -227,8 +208,8 @@ public class DB {
 	/**
 	 * méthode pour obtenir le nom d'une {@link Categorie}
 	 * 
-	 * @param idCategorie
-	 * @return
+	 * @param idCategorie identifiant de la {@link Categorie}
+	 * @return le nom de la {@link Categorie}
 	 * @throws SQLException
 	 */
 	public String getNomCateg(int idCategorie) throws SQLException {
@@ -414,6 +395,25 @@ public class DB {
 	}
 
 	/**
+	 * méthode pour obtenir la list des modules d'un semestre
+	 * @param idSemestre identifiant du {@link Semestre}
+	 * @param idAnnee identifiant de l'année
+	 * @return {@link List} de {@link Module} du {@link Semestre}
+	 * @throws SQLException
+	 */
+	public List<Module> getModuleBySemestre (int idSemestre, int idAnnee) throws SQLException {
+		List<Module> lstModules = new ArrayList<>();
+		this.psSelectModuleBySemestre.setInt(1, idSemestre);
+		this.psSelectModuleBySemestre.setInt(2, idAnnee);
+		ResultSet rs = this.psSelectModuleBySemestre.executeQuery();
+		while (rs.next()) {
+			lstModules.add(new Module(rs.getInt("idModule"), rs.getString("nomModule"), rs.getString("code"), rs.getInt("idTypeModule"), idAnnee,
+							rs.getInt("idSemestre")));
+		}
+		return lstModules;
+	}
+
+	/**
 	 * méthode pour ajouter une {@link Module} de la base de données
 	 * 
 	 * @param module {@link Module} à ajouter
@@ -436,18 +436,19 @@ public class DB {
 	 * @throws SQLException
 	 */
 	public void updateModule(Module module) throws SQLException {
-		this.psUpdateModule.setInt(5, module.getId());
+		this.psUpdateModule.setInt(6, module.getId());
 		this.psUpdateModule.setString(1, module.getNom());
 		this.psUpdateModule.setString(2, module.getCode());
-		this.psUpdateModule.setInt(3, module.getIdAnnee());
-		this.psUpdateModule.setInt(4, module.getIdSemestre());
+		this.psUpdateModule.setInt(5, module.getIdAnnee());
+		this.psUpdateModule.setInt(3, module.getIdSemestre());
+		this.psUpdateModule.setInt(4, module.getIdTypeModule());
 		this.psUpdateModule.executeUpdate();
 	}
 
 	/**
 	 * méthode pour supprimer une {@link Module} de la base de données
 	 * 
-	 * @param module {@link Module} à supprimer
+	 * @param idModule indentifiant du {@link Module} à supprimer
 	 * @throws SQLException
 	 */
 	public void supprimerModule(int idModule) throws SQLException {
@@ -522,6 +523,28 @@ public class DB {
 		this.psDeleteSemestre.executeUpdate();
 	}
 
+	/*------------*/
+	/* TypeModule */
+	/*------------*/
+
+	/**
+	 * @param idAnnee indice de l'année souhaitée
+	 * @return une {@link Map} composé de :
+	 *         <ul>
+	 *         <li>indice en {@link Integer}</li>
+	 *         <li>{@link TypeModule} correspondant</li>
+	 *         </ul>
+	 */
+	public Map<Integer, TypeModule> getTypeModule() throws SQLException {
+		Map<Integer, TypeModule> hmTypeModule = new HashMap<>();
+		ResultSet rs = this.psSelectTypeModule.executeQuery();
+		while (rs.next()) {
+			hmTypeModule.put(rs.getInt("idTypeModule"),
+					new TypeModule(rs.getInt("idTypeModule"), rs.getString("nomTypeModule")));
+		}
+		return hmTypeModule;
+	}
+
 	/*-----------*/
 	/* TypeCours */
 	/*-----------*/
@@ -544,20 +567,10 @@ public class DB {
 		return hmTypeCours;
 	}
 
-	public Map<Integer, TypeModule> getTypeModule() throws SQLException {
-		Map<Integer, TypeModule> hmTypeModule = new HashMap<>();
-		ResultSet rs = this.psSelectTypeModule.executeQuery();
-		while (rs.next()) {
-			hmTypeModule.put(rs.getInt("idTypeModule"),
-					new TypeModule(rs.getInt("idTypeModule"), rs.getString("nomTypeModule")));
-		}
-		return hmTypeModule;
-	}
-
 	/**
 	 * méthode pour modifier une {@link TypeCours} de la base de données
 	 * 
-	 * @param semestre {@link TypeCours} à modifier
+	 * @param typeCours {@link TypeCours} à modifier
 	 * @throws SQLException
 	 */
 	public void updateTypeCours(TypeCours typeCours) throws SQLException {
@@ -570,7 +583,7 @@ public class DB {
 	/**
 	 * méthode pour supprimer une {@link TypeCours} de la base de données
 	 * 
-	 * @param semestre {@link TypeCours} à supprimer
+	 * @param typeCours {@link TypeCours} à supprimer
 	 * @throws SQLException
 	 */
 	public void supprimerTypeCours(TypeCours typeCours) throws SQLException {
@@ -609,9 +622,27 @@ public class DB {
 	}
 
 	/**
+	 * méthode pour obtenir les {@link HeureCours} d'un {@link Module}
+	 * @param idModule identifiant du {@link Module}
+	 * @param idAnnee indice de l'année souhaitée
+	 * @return {@link List} des {@link HeureCours} du {@link Module}
+	 * @throws SQLException
+	 */
+	public List<HeureCours> getHeureCoursByModule( int idModule, int idAnnee ) throws SQLException {
+		List<HeureCours> lstHeureCours = new ArrayList<>();
+		this.psSelectHeureCoursByModule.setInt(1, idModule);
+		this.psSelectHeureCoursByModule.setInt(2, idAnnee);
+		ResultSet rs = this.psSelectHeureCoursByModule.executeQuery();
+		while (rs.next()) {
+			lstHeureCours.add(new HeureCours(rs.getInt("idTypeCours"), rs.getInt("idModule"), rs.getDouble("heure"), rs.getInt("nbSemaine"), rs.getDouble("hParSemaine"), idAnnee));
+		}
+		return lstHeureCours;
+	}
+
+	/**
 	 * méthode pour ajouter une {@link HeureCours} de la base de données
 	 * 
-	 * @param semestre {@link HeureCours} à ajouter
+	 * @param heureCours {@link HeureCours} à ajouter
 	 * @throws SQLException
 	 */
 	public void ajouterHeureCours(HeureCours heureCours) throws SQLException {
@@ -627,15 +658,15 @@ public class DB {
 	/**
 	 * méthode pour modifier une {@link HeureCours} de la base de données
 	 * 
-	 * @param semestre {@link HeureCours} à modifier
+	 * @param heureCours {@link HeureCours} à modifier
 	 * @throws SQLException
 	 */
 	public void updateHeureCours(HeureCours heureCours) throws SQLException {
 		this.psUpdateHeureCours.setDouble(1, heureCours.getHeure());
-		this.psUpdateHeureCours.setInt(2, heureCours.getIdTypeCours());
-		this.psUpdateHeureCours.setInt(3, heureCours.getIdModule());
-		this.psUpdateHeureCours.setInt(4, heureCours.getNbSemaine());
-		this.psUpdateHeureCours.setDouble(5, heureCours.gethParSemaine());
+		this.psUpdateHeureCours.setInt(4, heureCours.getIdTypeCours());
+		this.psUpdateHeureCours.setInt(5, heureCours.getIdModule());
+		this.psUpdateHeureCours.setInt(2, heureCours.getNbSemaine());
+		this.psUpdateHeureCours.setDouble(3, heureCours.gethParSemaine());
 		this.psUpdateHeureCours.setInt(6, heureCours.getIdAnnee());
 		this.psUpdateHeureCours.executeUpdate();
 	}
@@ -643,7 +674,7 @@ public class DB {
 	/**
 	 * méthode pour supprimer une {@link HeureCours} de la base de données
 	 * 
-	 * @param semestre {@link HeureCours} à supprimer
+	 * @param heureCours {@link HeureCours} à supprimer
 	 * @throws SQLException
 	 */
 	public void supprimerHeureCours(HeureCours heureCours) throws SQLException {
@@ -656,6 +687,11 @@ public class DB {
 	/* annee */
 	/*-------*/
 
+	/**
+	 * méthode pour obtenir la derniere année
+	 * @return la derniere année
+	 * @throws SQLException
+	 */
 	public int getDerAnnee() throws SQLException {
 		// int ret = 0;
 		ResultSet rs = this.psSelectDerAnnee.executeQuery();
@@ -675,7 +711,8 @@ public class DB {
 	/**
 	 * méthode pour ajouter une année de la base de données
 	 * 
-	 * @param semestre année à supprimer
+	 * @param id identifiant de l'année à supprimer
+	 * @param annee {@link String} représentant l'année exemple : {@code 2022-2023}
 	 * @throws SQLException
 	 */
 	public void ajouterAnnee(int id, String annee) throws SQLException {
@@ -700,5 +737,13 @@ public class DB {
 		}
 		return hmAnnee;
 	}
+
+	public int getIdTypeCoursByNom(String nom) throws SQLException {
+		this.psSelectIdTypeCoursByNom.setString(1, nom);
+		ResultSet rs = this.psSelectIdTypeCoursByNom.executeQuery();
+		rs.next();
+		return rs.getInt("idTypeCours");
+	}
+
 
 }

@@ -18,9 +18,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -91,6 +93,28 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		this.tableViewIntervenant.setPrefHeight(500);
 		this.tableViewIntervenant.setPrefWidth(1100);
 		this.tableViewIntervenant.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+		this.tableViewIntervenant.setRowFactory(new Callback<TableView<IntervenantIHM>, TableRow<IntervenantIHM>>() {
+			@Override
+			public TableRow<IntervenantIHM> call(TableView<IntervenantIHM> tableView2) {
+				final TableRow<IntervenantIHM> row = new TableRow<>();
+				row.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+
+					@Override
+					public void handle(MouseEvent event) {
+						final int index = row.getIndex();
+						if (index >= 0 && index < tableViewIntervenant.getItems().size()
+								&& tableViewIntervenant.getSelectionModel().isSelected(index)) {
+							tableViewIntervenant.getSelectionModel().clearSelection();
+							
+							event.consume();
+						} 
+
+					}
+				});
+				return row;
+			}
+		});
 
 		AnchorPane.setTopAnchor(this.tableViewIntervenant, 20.0);
 		AnchorPane.setLeftAnchor(this.tableViewIntervenant, 20.0);
@@ -311,7 +335,8 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 
 		popupStage.showAndWait();
 	}
-
+	
+	@SuppressWarnings("deprecation")
 	public void popupAfficheModule(int idIntervenant) {
 		Stage popupStage = new Stage();
 		popupStage.initModality(Modality.APPLICATION_MODAL);
@@ -339,6 +364,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
         });
 
 		tableViewModules.getColumns().add(tbcl);
+
 
 		for (Intervention i : hmIntervention.values()) {
 			if (i.getIdIntervenant() == idIntervenant && !lst.contains(hmModule.get(i.getIdModule()).getNom())){

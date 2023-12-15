@@ -4,8 +4,12 @@
 	/* -fx-background-color: transparent; */
 }
 
-.button:hover, .togglebutton:hover, .choicebox:hover {
+.button:hover, .togglebutton:hover, .choicebox:hover, .toggle-switch:hover {
 	-fx-cursor: hand;
+}
+
+.toggle-switch:selected .thumb-area {
+	-fx-background-color: #4D61CC;
 }
 
 .info-button {

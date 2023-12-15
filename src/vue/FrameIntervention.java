@@ -5,30 +5,46 @@ import java.util.Map;
 
 import controleur.Controleur;
 import modele.*;
+import modele.Module;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class FrameIntervention{
+public class FrameIntervention implements EventHandler<ActionEvent>{
 	private Controleur ctrl;
 	private AnchorPane centerPaneAccueil;
-	private modele.Module module;
+	private Module module;
 
-	private ArrayList<CheckBox> lstCheckBoxs;
-	
-	private ChoiceBox<Intervenant> chBoxIntervenants;
 	private Map<Integer,Intervenant> hmIntervenants;
 	private Map<Integer, TypeCours> hmTypeCours;
+	private Map<Integer, TypeModule> hmTypeModule;
 
-	public FrameIntervention(Controleur ctrl, AnchorPane centerPaneAccueil,modele.Module module){
+	private ArrayList<RadioButton> lstrButton;
+
+	private TextField tfNbSemaines;
+	private TextField tfNbGroupes;
+
+	private Button btnAjouter;
+	
+	private ChoiceBox<Intervenant> chBoxIntervenants;
+
+	private TableView<InterventionIHM> tbV; 
+	
+
+	public FrameIntervention(Controleur ctrl, AnchorPane centerPaneAccueil,Module module){
 		this.ctrl = ctrl;
 		this.centerPaneAccueil = centerPaneAccueil;
+		this.module = module;
 
 		this.init();
 	}
@@ -39,12 +55,20 @@ public class FrameIntervention{
 		popupStage.setTitle(this.module.getNom());
 
 		BorderPane borderPaneCentral = new BorderPane();
+
+
+		/*---------------------*/
+		/*-- BorderPane left --*/
+		/*---------------------*/
+		
 		VBox vbox = new VBox();
+		vbox.setSpacing(10);
 		GridPane gridIntervenant = new GridPane();
 		GridPane gridEntree = new GridPane();
 		gridEntree.setHgap(5);
 		gridEntree.setVgap(5);
-		FlowPane flowCheckbox = new FlowPane();
+		FlowPane flowrButton = new FlowPane();
+		
 
 		//GridIntervenants
 		this.hmIntervenants = this.ctrl.getModele().getHmIntervenants();
@@ -55,36 +79,77 @@ public class FrameIntervention{
 			this.chBoxIntervenants.getItems().add(intervenant);
 		
 		gridIntervenant.add(new Label("Intervenant"), 0, 0);
-		gridIntervenant.add(this.chBoxIntervenants, 1, 0);
+		gridIntervenant.add(this.chBoxIntervenants, 0, 1);
 
 		
 		//GridEntree pour le nombre de semaines et nombre de groupes
-		TextField tfNbSemaines = new TextField();
-		TextField tfNbGroupes  = new TextField();
+		this.tfNbSemaines = new TextField();
+		this.tfNbGroupes  = new TextField();
 		gridEntree.add(new Label("Nombre de semaines : "),0,0);
-		gridEntree.add(tfNbSemaines,0,1);
-		gridEntree.add(new Label("Nombre de groupes : "),1,0);
-		gridEntree.add(tfNbGroupes,1,1);
+		gridEntree.add(this.tfNbSemaines,1,0);
+		gridEntree.add(new Label("Nombre de groupes : "),0,1);
+		gridEntree.add(this.tfNbGroupes,1,1);
 
 
-		//FlowPane de Checkbox
+		//FlowPane de RadioButton
 		this.hmTypeCours = this.ctrl.getModele().getHmTypeCours();
-		this.lstCheckBoxs = new ArrayList<CheckBox>();
+		this.lstrButton = new ArrayList<RadioButton>();
+		ToggleGroup group = new ToggleGroup();
 
 		HBox hBox = new HBox();  
-		hBox.setSpacing(5); 
+		hBox.setSpacing(5); 		
+		
+		this.hmTypeModule = this.ctrl.getModele().getHmTypeModule();
+	
+		//Créer les 
+		String nomTypeModule = this.hmTypeModule.get(this.module.getIdTypeModule()).getNom();
+		System.out.println(nomTypeModule);
+		if (nomTypeModule.equals("normal") || nomTypeModule.equals("PPP")) {
+			//CM, TD, TP, Tut, REH,      HP
+			for (TypeCours typeCours : this.hmTypeCours.values()) {
+				if (!typeCours.getNom().equals("SAE") && !typeCours.getNom().equals("REH") && !typeCours.getNom().equals("Tut") ){
+						RadioButton rb = new RadioButton(typeCours.getNom());
+						rb.setToggleGroup(group);
+						this.lstrButton.add(rb);
+						hBox.getChildren().add(rb);
+				}
 
-		for (TypeCours typeCours : this.hmTypeCours.values()) {
-			CheckBox cb = new CheckBox(typeCours.getNom());
-			this.lstCheckBoxs.add(cb);
-			hBox.getChildren().add(cb);
+				if((typeCours.getNom().equals("Tut")) && nomTypeModule.equals("PPP")){
+					RadioButton rb = new RadioButton(typeCours.getNom());
+					rb.setToggleGroup(group);
+					this.lstrButton.add(rb);
+					hBox.getChildren().add(rb);
+				}	
+			}
 		}
 
-		flowCheckbox.getChildren().add(hBox);
+		if (nomTypeModule.equals("SAE") || nomTypeModule.equals("stage") ) {
+			//REH, SAE, HP
+			RadioButton rb1 = new RadioButton("Tut");
+			RadioButton rb2 = new RadioButton("HP");
+			RadioButton rb3 = new RadioButton();
 
-		Button btnAjouter = new Button("Ajouter");
+			if (nomTypeModule.equals("SAE")) rb3.setText("SAE");
+			if (nomTypeModule.equals("stage")) rb3.setText("REH");
 
-		vbox.getChildren().addAll(gridIntervenant, gridEntree, flowCheckbox, btnAjouter);
+			this.lstrButton.add(rb1);
+			this.lstrButton.add(rb2);
+			this.lstrButton.add(rb3);
+
+			rb1.setToggleGroup(group);
+			rb2.setToggleGroup(group);
+			rb3.setToggleGroup(group);
+
+			hBox.getChildren().addAll(rb1,rb2,rb3);
+		}
+
+		flowrButton.getChildren().add(hBox);
+
+		this.btnAjouter = new Button("Ajouter");
+		this.btnAjouter.addEventHandler(ActionEvent.ACTION, this);
+
+		
+		vbox.getChildren().addAll(gridIntervenant, gridEntree, flowrButton, this.btnAjouter);
 		//Centrer le VBox
 		StackPane stackPane = new StackPane();		
 		stackPane.getChildren().addAll(vbox);
@@ -93,12 +158,31 @@ public class FrameIntervention{
 	
 		//Mettre le vbox à gauche
 		borderPaneCentral.setLeft(stackPane);	
+
+
+		/*--------------------*/
+		/*--BorderPane Right--*/
+		/*--------------------*/
+		
+
+
+
+
+
+
 		popupLayout.getChildren().add(borderPaneCentral);
 		popupLayout.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
 		Scene popupScene = new Scene(popupLayout, 500, 320);
 		popupStage.setScene(popupScene);
 
+		popupStage.setResizable(false);
 		popupStage.showAndWait();
 		
+	}
+
+	@Override
+	public void handle(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'handle'");
 	}
 }

@@ -2,44 +2,7 @@
 @Override
 public void start(Stage stage) {
 
-	TableView<Module>     tableModules = new TableView<Module>();
-	TableView<HeureCours> tableTD      = new TableView<HeureCours>();
-	TableView<HeureCours> tableTP      = new TableView<HeureCours>();
-	TableView<HeureCours> tableCM      = new TableView<HeureCours>();
-
-	/*-----------------*/
-	/* gestion modules */
-	/*-----------------*/
-
-		// Editable
-		tableModules.setEditable(true);
-
-		TableColumn<Module, String> nomCol       = new TableColumn<Module, String>("Nom");
 		TableColumn<Module, String> nbSemaineCol = new TableColumn<Module, String>("nbSemaine");
-
-
-		// ==== Nom (TEXT FIELD) ===
-		nomCol.setCellValueFactory(new PropertyValueFactory<>("Nom"));
-
-		nomCol.setCellFactory(TextFieldTableCell.<Module> forTableColumn());
-
-		nomCol.setMinWidth(200);
-
-		// On Cell edit commit (for Nom column)
-		nomCol.setOnEditCommit
-		(
-			(CellEditEvent<Module, String> event) -> 
-			{
-				TablePosition<Module, String> pos = event.getTablePosition();
-
-				String newNom = event.getNewValue(); // on récupère le nouveau nom
-
-				int row = pos.getRow();
-				Module module = event.getTableView().getItems().get(row); // on récupère le module concerné
-
-				module.setNom(newNom); // on met le nouveau nom au module concerné
-			}
-		);
 
 		// ==== NbSemaine (TEXT FIELD) ===
 		nbSemaineCol.setCellValueFactory(new PropertyValueFactory<>("nbSemaine"));
@@ -64,105 +27,6 @@ public void start(Stage stage) {
 			}
 		);
 
-	/*------------*/
-	/* gestion TD */
-	/*------------*/
-
-		// Editable
-		tableTD.setEditable(true);
-
-		TableColumn<HeureCours, String> nbHeuresTD = new TableColumn<HeureCours, String>("TD");
-
-		// ==== Nom (TEXT FIELD) ===
-		nbHeuresTD.setCellValueFactory(new PropertyValueFactory<>("TD"));
-
-		nbHeuresTD.setCellFactory(TextFieldTableCell.<Module> forTableColumn());
-
-		nbHeuresTD.setMinWidth(200);
-
-		// On Cell edit commit (for Nom column)
-		nbHeuresTD.setOnEditCommit
-		(
-			(CellEditEvent<Module, String> event) -> 
-			{
-				TablePosition<HeureCours, String> pos = event.getTablePosition();
-
-				String newHeuresTD = event.getNewValue(); // on récupère la nouvelle heure
-
-				int row = pos.getRow();
-				HeureCours heureCours = event.getTableView().getItems().get(row); // on récupère l'heureCours
-
-				
-				module.setHeure(Integer.parseInt(newHeuresTD)); // on met la nouvelle heure à l'heureCours concernée
-			}
-		);
-
-	/*------------*/
-	/* gestion TP */
-	/*------------*/
-
-		// Editable
-		tableTP.setEditable(true);
-
-		TableColumn<HeureCours, String> nbHeuresTP = new TableColumn<HeureCours, String>("TP");
-
-		// ==== Nom (TEXT FIELD) ===
-		nbHeuresTP.setCellValueFactory(new PropertyValueFactory<>("TP"));
-
-		nbHeuresTP.setCellFactory(TextFieldTableCell.<Module> forTableColumn());
-
-		nbHeuresTP.setMinWidth(200);
-
-		// On Cell edit commit (for Nom column)
-		nbHeuresTP.setOnEditCommit
-		(
-			(CellEditEvent<Module, String> event) -> 
-			{
-				TablePosition<HeureCours, String> pos = event.getTablePosition();
-
-				String newHeuresTP = event.getNewValue(); // on récupère la nouvelle heure
-
-				int row = pos.getRow();
-				HeureCours heureCours = event.getTableView().getItems().get(row); // on récupère l'heureCours
-
-				
-				module.setHeure(Integer.parseInt(newHeuresTP)); // on met la nouvelle heure à l'heureCours concernée
-			}
-		);
-
-	/*------------*/
-	/* gestion CM */
-	/*------------*/
-
-		// Editable
-		tableCM.setEditable(true);
-
-		TableColumn<HeureCours, String> nbHeuresCM = new TableColumn<HeureCours, String>("CM");
-
-		// ==== Nom (TEXT FIELD) ===
-		nbHeuresCM.setCellValueFactory(new PropertyValueFactory<>("CM"));
-
-		nbHeuresCM.setCellFactory(TextFieldTableCell.<Module> forTableColumn());
-
-		nbHeuresCM.setMinWidth(200);
-
-		// On Cell edit commit (for Nom column)
-		nbHeuresCM.setOnEditCommit
-		(
-			(CellEditEvent<Module, String> event) -> 
-			{
-				TablePosition<HeureCours, String> pos = event.getTablePosition();
-
-				String newHeuresCM = event.getNewValue(); // on récupère la nouvelle heure
-
-				int row = pos.getRow();
-				HeureCours heureCours = event.getTableView().getItems().get(row); // on récupère l'heureCours
-
-				
-				module.setHeure(Integer.parseInt(newHeuresCM)); // on met la nouvelle heure à l'heureCours concernée
-			}
-		);
-
 	/*----------------------*/
 	/* affectation au stage */
 	/*----------------------*/
@@ -173,24 +37,7 @@ public void start(Stage stage) {
 	FXCollections.copy(ObservableList<Module> listModule, List<Module> ensModule); // met la List dans l'observableList
 	tableModules.setItems(listModule);
 
-	tableModules.getColumns().addAll(nomCol, nbSemaineCol);
-
-	/* HeureCours */
-	ObservableList<HeureCours> listTD = getHeureCoursList(ensModule, 1 );
-	tableModules.setItems(listTD);
-	
-	tableTD.getColumns().addAll(nbHeuresTD);
-
-	ObservableList<HeureCours> listTP = getHeureCoursList(ensModule, 1 );
-	tableModules.setItems(listTP);
-	
-	tableTP.getColumns().addAll(nbHeuresTP);
-
-	ObservableList<HeureCours> listCM = getHeureCoursList(ensModule, 1 );
-	tableModules.setItems(listCM);
-	
-	tableCM.getColumns().addAll(nbHeuresCM);
-
+	tableModules.getColumns().addAll(nbSemaineCol)
 	/* autre */
 	StackPane root = new StackPane();
 	root.setPadding(new Insets(5));

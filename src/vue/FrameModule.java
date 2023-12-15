@@ -20,10 +20,15 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TabPane.TabClosingPolicy;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -49,6 +54,7 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 	private Map<Integer, Module> hmModule;
 	private Map<Integer, TypeCours> hmTypeCours;
 	private Map<Integer, TypeModule> hmTypeModule;
+	private Map<String, HeureCours> hmHeureCours;
 
 	private TabPane tabPane;
 
@@ -59,6 +65,8 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 	private TextField txtFCM;
 	private TextField txtFNbSemaines;
 
+	private List<TableColumn<LigneModuleIHM, String>> lstTableColumns;
+
 	public FrameModule(Controleur ctrl, AnchorPane centerPaneAccueil) {
 		this.ctrl = ctrl;
 		this.centerPaneAccueil = centerPaneAccueil;
@@ -68,6 +76,7 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 	}
 
 	public void init() {
+		this.hmHeureCours = this.ctrl.getModele().getHmHeuresCours();
 		this.centerPaneAccueil.getChildren().clear();
 		this.centerPaneAccueil.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
 		this.hmTypeModule = this.ctrl.getModele().getHmTypeModule();
@@ -80,8 +89,11 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 		this.tabPane = new TabPane();
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 
+		this.hmModule = this.ctrl.getModele().getHmModules();
+
 		this.hmSemestres = this.ctrl.getModele().getHmSemestres();
 		this.lstTableView = new ArrayList<TableView>();
+		this.lstTableColumns = new ArrayList<>();
 
 		Tab[] tabTab = new Tab[this.hmSemestres.size()];
 
@@ -131,8 +143,8 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 				if (newStr.matches(regex)) {
 					this.txtFTD.setText(oldStr);
 				} else {
-					
-this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
+
+					this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
 							.setNbGTD(Integer.parseInt(newStr));
 				}
 
@@ -161,9 +173,9 @@ this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
 
 			TableView<LigneModuleIHM> tbV = new TableView<LigneModuleIHM>();
 			// tbV.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
 			// Créez une usine de cellules personnalisée pour permettre l'édition
-			Callback<TableColumn<LigneModuleIHM, String>, TableCell<LigneModuleIHM, String>> cellFactory = col -> new EditableTableCell();
+			// Callback<TableColumn<LigneModuleIHM, String>, TableCell<LigneModuleIHM,
+			// String>> cellFactory = col -> new EditableTableCell();
 
 			String[] colonnes = new String[] { "id", "info", "Code", "Nom", "CM", "TD", "TP", "REH", "HTut", "SAE",
 					"HP", "supprimer" };
@@ -171,8 +183,36 @@ this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
 			if (tbV.getColumns().size() < 11) {
 				for (String colonne : colonnes) {
 					TableColumn<LigneModuleIHM, String> tbcl = new TableColumn<>(colonne);
+					this.lstTableColumns.add(tbcl);
 					tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
-					if (!colonne.equals("id") && !colonne.equals("info") && !colonne.equals("supprimer")) tbcl.setCellFactory(cellFactory);
+
+					if (!colonne.equals("id") && !colonne.equals("info") && !colonne.equals("supprimer")) {
+						tbcl.setEditable(true);
+						tbcl.setCellFactory(TextFieldTableCell.forTableColumn());
+						tbcl.setOnEditCommit((TableColumn.CellEditEvent<LigneModuleIHM, String> event) -> {
+							String oldValue = event.getOldValue();
+							if (!oldValue.isEmpty() && !oldValue.equals("nombre d'heures totales") && !oldValue.equals("nombre de semaine") && !oldValue.equals("nombre d'heures par semaine")) {
+								LigneModuleIHM ligne = event.getTableView().getItems().get(event.getTablePosition().getRow());
+								int id = ligne.getId();
+								String col = event.getTableColumn().getText();
+								String newValue = event.getNewValue();
+								Module m = this.hmModule.get(id);
+								if (col.equals("Nom"))  m.setNom(newValue);
+								else if (col.equals("Code")) m.setCode(newValue);
+								else {
+									int idTypeCours = this.ctrl.getModele().getIdTypeCoursByNom(col);
+									HeureCours hc = this.hmHeureCours.get(idTypeCours+"-"+m.getId());
+									if (ligne.getNom().equals("nombre de semaine")) hc.setNbSemaine(Integer.parseInt(newValue));
+									else if (ligne.getNom().equals("nombre d'heures totales")) hc.setHeure(Double.parseDouble(newValue));
+									else if (ligne.getNom().equals("nombre d'heures par semaine")) hc.sethParSemaine(Double.parseDouble(newValue));
+									this.ctrl.getModele().updateHeureCours(hc);
+								}	
+								this.ctrl.getModele().updateModule(m);
+							}
+						});
+
+					}
+
 					if (colonne.equals("id"))
 						tbcl.setVisible(false);
 					else if (colonne.equals("Nom"))
@@ -184,6 +224,9 @@ this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
 					tbV.getColumns().add(tbcl);
 				}
 			}
+
+			tbV.setEditable(true);
+			tbV.getSelectionModel().setCellSelectionEnabled(true);
 
 			List<Module> lstModule = this.ctrl.getModele().getModuleBySemestre(semestre.getId(), semestre.getIdAnnee());
 			// System.out.println(hmModule);
@@ -198,6 +241,7 @@ this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
 					case "stage" -> ajouterModuleStage(m);
 				}
 			}
+
 			tbV.setItems(lst);
 			lstTableView.add(tbV);
 
@@ -243,9 +287,9 @@ this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
 		this.lst.add(new LigneModuleIHM(id, null, "", "nombre d'heures totales", moduleIHM.getCmHeure() + "",
 				moduleIHM.getTdHeure() + "", moduleIHM.getTpHeure() + "", "", moduleIHM.getTutHeure() + "", "",
 				moduleIHM.getHpHeure() + "", null));
-		this.lst.add(new LigneModuleIHM(id, null, "", "nombre de semaines", moduleIHM.getCmSemaine() + "",
+		this.lst.add(new LigneModuleIHM(id, null, "", "nombre de semaine", moduleIHM.getCmSemaine() + "",
 				moduleIHM.getTdSemaine() + "", moduleIHM.getTpSemaine() + "", "", "", "", "", null));
-		this.lst.add(new LigneModuleIHM(id, null, "", "nombre d'heure par semaine", moduleIHM.getCmHeureSemaine() + "",
+		this.lst.add(new LigneModuleIHM(id, null, "", "nombre d'heures par semaine", moduleIHM.getCmHeureSemaine() + "",
 				moduleIHM.getTdHeureSemaine() + "", moduleIHM.getTpHeureSemaine() + "", "", "", "", "", null));
 		this.lst.add(new LigneModuleIHM(id, null, "", "", "", "", "", "", "", "", "", null));
 	}
@@ -303,9 +347,9 @@ this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
 		this.lst.add(new LigneModuleIHM(id, null, "", "nombre d'heures totales", moduleIHM.getCmHeure() + "",
 				moduleIHM.getTdHeure() + "", moduleIHM.getTpHeure() + "", "", "", "", moduleIHM.getHpHeure() + "",
 				null));
-		this.lst.add(new LigneModuleIHM(id, null, "", "nombre de semaines", moduleIHM.getCmSemaine() + "",
+		this.lst.add(new LigneModuleIHM(id, null, "", "nombre de semaine", moduleIHM.getCmSemaine() + "",
 				moduleIHM.getTdSemaine() + "", moduleIHM.getTpSemaine() + "", "", "", "", "", null));
-		this.lst.add(new LigneModuleIHM(id, null, "", "nombre d'heure par semaine", moduleIHM.getCmHeureSemaine() + "",
+		this.lst.add(new LigneModuleIHM(id, null, "", "nombre d'heures par semaine", moduleIHM.getCmHeureSemaine() + "",
 				moduleIHM.getTdHeureSemaine() + "", moduleIHM.getTpHeureSemaine() + "", "", "", "", "", null));
 		this.lst.add(new LigneModuleIHM(id, null, "", "", "", "", "", "", "", "", "", null));
 	}
@@ -427,56 +471,4 @@ this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
 			}
 		}
 	}
-
-	public static class EditableTableCell extends TableCell<LigneModuleIHM, String> {
-
-    private TextField textField;
-
-    public EditableTableCell() {
-        this.textField = new TextField();
-        this.textField.setOnAction(event -> commitEdit(textField.getText()));
-        this.textField.focusedProperty().addListener((obs, oldVal, newVal) -> {
-            if (!newVal) {
-                commitEdit(textField.getText());
-            }
-        });
-    }
-
-    @Override
-    public void startEdit() {
-        super.startEdit();
-
-        if (isEmpty()) {
-            return;
-        }
-
-        setText(null);
-        setGraphic(textField);
-        textField.setText(getItem());
-        textField.requestFocus();
-    }
-
-    @Override
-    public void cancelEdit() {
-        super.cancelEdit();
-
-        setText(getItem());
-        setGraphic(null);
-    }
-
-    @Override
-    public void updateItem(String item, boolean empty) {
-        super.updateItem(item, empty);
-
-        if (empty) {
-            setText(null);
-            setGraphic(null);
-        } else {
-            setText(item);
-            setGraphic(null);
-        }
-    }
-}
-
-
 }

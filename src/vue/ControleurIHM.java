@@ -2,35 +2,21 @@ package vue;
 
 import controleur.Controleur;
 
-import modele.Categorie;
-import modele.Intervenant;
 import modele.TypeCours;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import java.io.IOException;
 import java.net.URL;
 
-import javax.swing.Action;
-
 import javafx.fxml.*;
-
-import javafx.collections.ObservableList;
-import javafx.collections.FXCollections;
 
 import javafx.scene.Scene;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-
-import javafx.scene.paint.Color;
-
-import javafx.scene.shape.SVGPath;
-import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.shape.StrokeLineJoin;
 
 import javafx.scene.control.*;
 /*
@@ -46,24 +32,16 @@ import javafx.scene.control.TableVi.button:hover, .togglebutton:hover, .choicebo
 import javafx.scene.control.TextField;
 */
 
-import javafx.scene.control.cell.PropertyValueFactory;
-
-import javafx.scene.input.MouseEvent;
-
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import javafx.scene.layout.*;
 
 import javafx.scene.text.Text;
 
-import javafx.application.Application;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
 import javafx.stage.Stage;
-import javafx.stage.Popup;
 import javafx.stage.Modality;
 
 import javafx.event.ActionEvent;
@@ -107,6 +85,9 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 
 	private List<Text> alText;
 	private List<TextField> alTextField;
+	
+	private Button btnOui;
+	private Button btnAnnuler;
 
 	public void initialize(URL url, ResourceBundle rb) {
 		this.ctrl = Controleur.getInstance(this);
@@ -131,6 +112,8 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 		this.stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
 		this.scene = new Scene(this.root);
+		// Supposons que primaryStage est votre objet Stage
+
 		scene.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
 
 		this.stage.setScene(this.scene);
@@ -276,7 +259,32 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 	}
 			}
 		}
+		// TODO: if (event.getSource() )
 	}
+	
+	public boolean popupValider()
+	{
+		//popoUp pour demander si il souhaite vraiment supprimer
+		Stage popupStage = new Stage();
+		popupStage.initModality(Modality.APPLICATION_MODAL);
+		popupStage.centerOnScreen();
+		popupStage.setTitle("Suppression");
+		popupStage.setHeight(150);
+		popupStage.setWidth(300);
+		popupStage.setResizable(false);
+		
+		Text text = new Text("Souhaitez-vous valider ?");
+		Button btnOui = new Button("Oui");
+		Button btnAnnuler = new Button("Annuler");
+
+		btnOui.addEventHandler(ActionEvent.ACTION, this );
+		btnAnnuler.addEventHandler(ActionEvent.ACTION, this);
+		
+
+
+		return false;
+
+}
 
 	@Override
 	public void changed(ObservableValue<? extends String> observable, String oldString, String newString) {

@@ -71,6 +71,13 @@ public class Modele {
 
 	}
 
+	public Integer getIdTypeCoursByNom(String nom) {
+		try {
+			return this.db.getIdTypeCoursByNom(nom);
+		} catch (SQLException e) { e.printStackTrace(); }
+		return null;
+	}
+
 	public List<HeureCours> getHeureCoursByModule(int idModule, int idAnnee) {
 		try {
 			return this.db.getHeureCoursByModule(idModule, idAnnee);
