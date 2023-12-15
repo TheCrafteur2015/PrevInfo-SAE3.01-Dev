@@ -27,5 +27,9 @@ public class TypeModule {
 		this.nom = nom;
 	}
 
+	public String toString() {
+		return this.nom;	
+	}
+
 	
 }

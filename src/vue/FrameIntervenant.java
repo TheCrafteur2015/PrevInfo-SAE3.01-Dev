@@ -264,7 +264,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 			this.tfHMin.setText("" + c.gethMin());
 			this.tfHMax.setText("" + c.gethMax());
 		}
-		this.btnConfirmerIntervenant = new Button("⊕  Ajouter");
+		this.btnConfirmerIntervenant = new Button("⨁  Ajouter");
 		this.btnConfirmerIntervenant.getStyleClass().add("confirmBtn");
 		this.btnConfirmerIntervenant.addEventHandler(ActionEvent.ACTION, this);
 		this.btnConfirmerIntervenant.setDisable(true);

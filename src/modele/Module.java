@@ -95,7 +95,7 @@ public class Module implements Comparable<Module> {
 	@Override
 	public int compareTo(Module autre)
 	{
-		return this.nom.compareTo(autre.nom);
+		return this.code.compareTo(autre.code);
 	}
 
 }

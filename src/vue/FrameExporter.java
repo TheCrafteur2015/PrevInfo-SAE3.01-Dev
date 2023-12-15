@@ -80,16 +80,24 @@ public class FrameExporter implements EventHandler<Event>{
 		gridPane2.setVgap(20);
 		gridPane2.setHgap(20);
 
-		borderPane.setTop(gridPane1);
-		borderPane.setBottom(gridPane2);
+		GridPane gridPane3 = new GridPane();
+
+		gridPane3.setAlignment(Pos.CENTER);
+		gridPane3.add(this.choiceBoxIntervenant, 0, 0);
+		gridPane3.add(gridPane1, 1, 0);
+		gridPane3.add(gridPane2, 1, 1);
+
+
+		
 
 		this.choiceBoxIntervenant.setMaxWidth(500);
 		this.choiceBoxModule.setMaxWidth(500);
 
-		vbox.setAlignment(Pos.CENTER);
+		
 		vbox.getChildren().addAll(borderPane);
 
-		this.centerPaneAccueil.getChildren().addAll(vbox);
+		this.centerPaneAccueil.getChildren().add(gridPane3);
+		
 		
 	}
 

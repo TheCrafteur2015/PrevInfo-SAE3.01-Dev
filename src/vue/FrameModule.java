@@ -14,6 +14,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
@@ -30,8 +31,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.StrokeLineCap;
@@ -67,6 +70,9 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 
 	private List<TableColumn<LigneModuleIHM, String>> lstTableColumns;
 
+	private Button btnAjouter;
+	private ChoiceBox<TypeModule> choiceBoxTypeModule;
+
 	public FrameModule(Controleur ctrl, AnchorPane centerPaneAccueil) {
 		this.ctrl = ctrl;
 		this.centerPaneAccueil = centerPaneAccueil;
@@ -80,9 +86,24 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 		this.centerPaneAccueil.getChildren().clear();
 		this.centerPaneAccueil.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
 		this.hmTypeModule = this.ctrl.getModele().getHmTypeModule();
+
 		this.majTabs();
 
-		this.centerPaneAccueil.getChildren().addAll(tabPane);
+	
+		FlowPane flowPane = new FlowPane();
+		this.btnAjouter = new Button("Ajouter");
+		this.btnAjouter.addEventHandler(ActionEvent.ACTION, this);
+		this.choiceBoxTypeModule = new ChoiceBox<>();
+		for (TypeModule tm : this.hmTypeModule.values()) {
+			this.choiceBoxTypeModule.getItems().add(tm);
+		}
+		flowPane.getChildren().addAll(this.choiceBoxTypeModule, this.btnAjouter);
+		flowPane.setHgap(15);
+		
+		AnchorPane.setLeftAnchor(flowPane,this.centerPaneAccueil.getWidth()/2.0 - 80);
+		AnchorPane.setBottomAnchor(flowPane, 15.0);
+		
+		this.centerPaneAccueil.getChildren().addAll(tabPane, flowPane);
 	}
 
 	public void majTabs() {
@@ -229,6 +250,7 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 			tbV.getSelectionModel().setCellSelectionEnabled(true);
 
 			List<Module> lstModule = this.ctrl.getModele().getModuleBySemestre(semestre.getId(), semestre.getIdAnnee());
+			lstModule.sort(null);
 			// System.out.println(hmModule);
 			this.hmTypeCours = this.ctrl.getModele().getHmTypeCours();
 			this.lst = FXCollections.observableArrayList();
@@ -256,7 +278,7 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 		this.tabPane.getTabs().addAll(tabTab);
 		AnchorPane.setTopAnchor(tabPane, 5.0);
 		AnchorPane.setRightAnchor(tabPane, 5.0);
-		AnchorPane.setBottomAnchor(tabPane, 5.0);
+		AnchorPane.setBottomAnchor(tabPane, 50.0);
 		AnchorPane.setLeftAnchor(tabPane, 5.0);
 	}
 
@@ -267,11 +289,11 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 		if (lstHeuresCours != null) {
 			for (HeureCours hc : lstHeuresCours) {
 				switch (this.hmTypeCours.get(hc.getIdTypeCours()).getNom()) {
-					case "TP" -> moduleIHM.setTp(hc);
-					case "TD" -> moduleIHM.setTd(hc);
-					case "CM" -> moduleIHM.setCm(hc);
+					case "TP"  -> moduleIHM.setTp(hc);
+					case "TD"  -> moduleIHM.setTd(hc);
+					case "CM"  -> moduleIHM.setCm(hc);
 					case "Tut" -> moduleIHM.setTut(hc);
-					case "HP" -> moduleIHM.setHp(hc);
+					case "HP"  -> moduleIHM.setHp(hc);
 				}
 			}
 		}
@@ -416,17 +438,42 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 
 	}
 
+	public void nouveauModule(List<Integer> lstTypesCours, TypeModule tm) {
+		int idSemestre = tabPane.getSelectionModel().getSelectedIndex()+1;
+		this.ctrl.getModele().ajouterModule("Nom de la ressource", "R"+idSemestre+".00", tm.getId(), idSemestre);
+		int idModule = Module.NB_MODULE;
+		for (Integer i : lstTypesCours) {
+			this.ctrl.getModele().ajouterHeureCours(i, idModule, 0, 0, 0);
+		}
+	}
+
 	public void handle(Event action) {
 		if (action instanceof ActionEvent) {
 			if (action.getSource() instanceof Button) {
 				Button btn = (Button) action.getSource();
-				String[] textBtn = btn.getId().split("-");
-				if (textBtn[0].equals("Sup")) {
-					this.ctrl.getModele().supprimerModule(Integer.parseInt(textBtn[1]));
-				}
-				if (textBtn[0].equals("AjouterIntervenant")) {
-					this.frameIntervention = new FrameIntervention(this.ctrl, this.centerPaneAccueil,
-							this.hmModule.get(Integer.parseInt(textBtn[1])));
+				if (btn == this.btnAjouter) {
+					if (this.choiceBoxTypeModule.getValue() != null) {
+						TypeModule tm = this.choiceBoxTypeModule.getValue();
+						List<Integer> lstTypesCours = new ArrayList<>();
+						switch (tm.getNom()) {
+							case "PPP" -> lstTypesCours = List.of(1, 2, 3, 4, 7);
+							case "SAE" -> lstTypesCours = List.of(6, 4, 7);
+							case "normal" -> lstTypesCours = List.of(1, 2, 3, 7);
+							case "stage" -> lstTypesCours = List.of(5, 4, 7);
+						}
+						nouveauModule(lstTypesCours, tm);
+						this.init();
+					}
+				} 	
+				else {
+					String[] textBtn = btn.getId().split("-");
+					if (textBtn[0].equals("Sup")) {
+						this.ctrl.getModele().supprimerModule(Integer.parseInt(textBtn[1]));
+					}
+					if (textBtn[0].equals("AjouterIntervenant")) {
+						this.frameIntervention = new FrameIntervention(this.ctrl, this.centerPaneAccueil,
+								this.hmModule.get(Integer.parseInt(textBtn[1])));
+					}
 				}
 			}
 

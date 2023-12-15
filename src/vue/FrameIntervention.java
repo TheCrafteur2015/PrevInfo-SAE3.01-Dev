@@ -6,6 +6,8 @@ import java.util.Map;
 import controleur.Controleur;
 import modele.*;
 import modele.Module;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -13,8 +15,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
@@ -28,6 +32,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>{
 	private Map<Integer,Intervenant> hmIntervenants;
 	private Map<Integer, TypeCours> hmTypeCours;
 	private Map<Integer, TypeModule> hmTypeModule;
+	private Map<String, Intervention> hmIntervention;
 
 	private ArrayList<RadioButton> lstrButton;
 
@@ -71,6 +76,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>{
 		
 
 		//GridIntervenants
+
 		this.hmIntervenants = this.ctrl.getModele().getHmIntervenants();
 
 		this.chBoxIntervenants = new ChoiceBox<Intervenant>();
@@ -81,15 +87,8 @@ public class FrameIntervention implements EventHandler<ActionEvent>{
 		gridIntervenant.add(new Label("Intervenant"), 0, 0);
 		gridIntervenant.add(this.chBoxIntervenants, 0, 1);
 
-		
-		//GridEntree pour le nombre de semaines et nombre de groupes
-		this.tfNbSemaines = new TextField();
-		this.tfNbGroupes  = new TextField();
-		gridEntree.add(new Label("Nombre de semaines : "),0,0);
-		gridEntree.add(this.tfNbSemaines,1,0);
-		gridEntree.add(new Label("Nombre de groupes : "),0,1);
-		gridEntree.add(this.tfNbGroupes,1,1);
-
+		//Get le Type de Module
+		String nomTypeModule = this.hmTypeModule.get(this.module.getIdTypeModule()).getNom();
 
 		//FlowPane de RadioButton
 		this.hmTypeCours = this.ctrl.getModele().getHmTypeCours();
@@ -101,9 +100,8 @@ public class FrameIntervention implements EventHandler<ActionEvent>{
 		
 		this.hmTypeModule = this.ctrl.getModele().getHmTypeModule();
 	
-		//Créer les 
-		String nomTypeModule = this.hmTypeModule.get(this.module.getIdTypeModule()).getNom();
-		System.out.println(nomTypeModule);
+		
+		
 		if (nomTypeModule.equals("normal") || nomTypeModule.equals("PPP")) {
 			//CM, TD, TP, Tut, REH,      HP
 			for (TypeCours typeCours : this.hmTypeCours.values()) {
@@ -149,7 +147,21 @@ public class FrameIntervention implements EventHandler<ActionEvent>{
 		this.btnAjouter.addEventHandler(ActionEvent.ACTION, this);
 
 		
-		vbox.getChildren().addAll(gridIntervenant, gridEntree, flowrButton, this.btnAjouter);
+		vbox.getChildren().add(gridIntervenant);
+
+		if (nomTypeModule.equals("normal") || nomTypeModule.equals("PPP")) {
+			//GridEntree pour le nombre de semaines et nombre de groupes
+			this.tfNbSemaines = new TextField();
+			this.tfNbGroupes  = new TextField();
+			gridEntree.add(new Label("Nombre de semaines : "),0,0);
+			gridEntree.add(this.tfNbSemaines,1,0);
+			gridEntree.add(new Label("Nombre de groupes : "),0,1);
+			gridEntree.add(this.tfNbGroupes,1,1);
+
+			vbox.getChildren().add(gridEntree);
+		}
+		
+		vbox.getChildren().addAll(flowrButton, this.btnAjouter);
 		//Centrer le VBox
 		StackPane stackPane = new StackPane();		
 		stackPane.getChildren().addAll(vbox);
@@ -164,10 +176,36 @@ public class FrameIntervention implements EventHandler<ActionEvent>{
 		/*--BorderPane Right--*/
 		/*--------------------*/
 		
+		ObservableList<InterventionIHM> olInterventionIHMs = FXCollections.observableArrayList();
+		this.hmIntervention = this.ctrl.getModele().getHmInterventions();
 
+		if (nomTypeModule.equals("normal") || nomTypeModule.equals("PPP")) {
+			for (Intervention i : this.hmIntervention.values()) {
+			Button btnSup = this.ctrl.getVue().getFrameIntervenant().getSupButton();
+			btnSup.setId(i.getIdIntervenant() + "-" + i.getIdModule() + "-" + i.getIdTypeCours());
+			btnSup.addEventHandler(ActionEvent.ACTION, this);
 
+			//olInterventionIHMs.add(new InterventionIHM());
+			}
+		}
+		else {	
+		
+		}
+		/*
+		}*/
 
+		this.tbV = new TableView<>();
 
+		String[] colonnes = new String[] { "Prenom","Nom","nombre semaines","nombre groupe","type","heure","heures réelles","Supprimer" };
+
+		if (tbV.getColumns().size() < colonnes.length) {
+			for (String colonne : colonnes) {
+				TableColumn<InterventionIHM, String> tbcl = new TableColumn<>(colonne);
+				tbcl.setStyle("-fx-alignment: CENTER;");
+				tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
+				tbV.getColumns().add(tbcl);
+			}
+		}
 
 
 		popupLayout.getChildren().add(borderPaneCentral);
