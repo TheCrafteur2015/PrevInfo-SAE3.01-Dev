@@ -193,12 +193,12 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 
 	@FXML
 	void modeDuplication() {
-		this.ctrl.getModele().setDuplication(!this.ctrl.getModele().isDuplication());
+		this.ctrl.getModele().setDuplication(!this.ctrl.getModele().isDuplication());		
 	}
 
 	@FXML
 	void allerIntervenants(ActionEvent event) {
-		modeDuplication();
+		if(this.ctrl.getModele().isDuplication()) modeDuplication();
 		this.frameIntervenant = new FrameIntervenant(this.ctrl, this.centerPaneAccueil);
 	}
 
@@ -208,13 +208,13 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 
 	@FXML
 	void allerModules(ActionEvent event) {
-		modeDuplication();
+		if(this.ctrl.getModele().isDuplication()) modeDuplication();
 		this.frameModule = new FrameModule(this.ctrl, this.centerPaneAccueil);
 	}
 
 	@FXML
 	void allerExporter(ActionEvent event) {
-		modeDuplication();
+		if(this.ctrl.getModele().isDuplication()) modeDuplication();
 		this.frameExporter = new FrameExporter(this.ctrl, this.centerPaneAccueil);
 	}
 

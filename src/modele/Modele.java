@@ -186,6 +186,19 @@ public class Modele {
 		this.hmModules.put(m.getId(), m);
 	}
 
+	public void duppliquerModule(int id, String nom, String code, int idTypeModule, int idSemestre) {
+		List<HeureCours> lstHeureCours = this.getHeureCoursByModule(id, this.idAnnee-1);
+		Module m = new Module(nom, code, idTypeModule, this.idAnnee, idSemestre);
+		try {
+			this.db.ajouterModule(m);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.hmModules.put(m.getId(), m);
+		for (HeureCours hc : lstHeureCours) ajouterHeureCours(hc.getIdTypeCours(), m.getId(), hc.getHeure(), hc.getNbSemaine(), hc.gethParSemaine());
+	}
+	
+
 	public void updateModule(Module m) {
 		try {
 			this.db.updateModule(m);
@@ -222,6 +235,18 @@ public class Modele {
 		}
 		this.hmSemestres.put(s.getId(), s);
 	}
+
+	public void duppliquerSemestre(List<Module> lstModuleParSemestre, int nbGTD, int nbGTP, int nbGCM, int nbGAutre) {
+		Semestre s = new Semestre(nbGTD, nbGTD, nbGCM, nbGAutre, idAnnee);
+		try {
+			this.db.ajouterSemestre(s);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.hmSemestres.put(s.getId(), s);
+		for (Module m : lstModuleParSemestre) duppliquerModule(m.getId(),m.getNom(), m.getCode(), m.getIdTypeModule(), s.getId());
+	}
+
 
 	public void updateSemestre(Semestre s) {
 		try {
@@ -290,17 +315,20 @@ public class Modele {
 				Map<Integer, Categorie>   hmTmpCategories = this.db.getCategories(this.idAnnee);
 				Map<Integer, Intervenant> hmTmpIntervenants = this.db.getIntervenants(this.idAnnee);
 				Map<String, Intervention> hmTmpInterventions = this.db.getInterventions(this.idAnnee);
-				Map<Integer, Module>      hmTmpModules = this.db.getModules(this.idAnnee);
+				// Map<Integer, Module>      hmTmpModules = this.db.getModules(this.idAnnee);
 				Map<Integer, Semestre>    hmTmpSemestres = this.db.getSemestres(this.idAnnee);
-				Map<String, HeureCours>   hmTmpHeuresCours = this.db.getHeureCours(this.idAnnee);
 				this.idAnnee = iAnnee;
 				for (Categorie c : hmTmpCategories.values()) ajouterCategorie(c.getNom(), c.gethMin(), c.gethMax(), c.getRatioTp());
 				for (Intervenant i : hmTmpIntervenants.values()) ajouterIntervenant(i.getPrenom(), i.getNom(), i.getEmail(), i.gethMin(), i.gethMax(), i.getIdCategorie());
 				for (Intervention i : hmTmpInterventions.values()) ajouterIntervention(i.getIdIntervenant(), i.getIdModule(), i.getIdTypeCours(), i.getNbSemaines(), i.getNbGroupe());
-				for (Module m : hmTmpModules.values()) ajouterModule(m.getNom(), m.getCode(), m.getIdTypeModule(), m.getIdSemestre());	
-				for (Semestre s : hmTmpSemestres.values()) ajouterSemestre(s.getNbGTD(), s.getNbGTP(), s.getNbGCM(), s.getNbSemaine());
-				for (HeureCours hc : hmTmpHeuresCours.values()) ajouterHeureCours(hc.getIdTypeCours(), hc.getIdModule(), hc.getHeure(), hc.getNbSemaine(), hc.gethParSemaine());	
-			} else { this.updateAnnee(annee); }
+				for (Semestre s : hmTmpSemestres.values()) duppliquerSemestre(this.getModuleBySemestre(s.getId(), this.idAnnee-1), s.getNbGTD(), s.getNbGTP(), s.getNbGCM(), s.getNbSemaine());	
+			} 
+			else { 
+				this.updateAnnee(annee); 
+				for (int i = 0; i < 6; i++) {
+					this.ajouterSemestre(0, 0, 0, 0);
+				}
+			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
