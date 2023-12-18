@@ -2,7 +2,7 @@ package modele;
 
 public class Categorie {
 
-	public static int NB_CATEGORIE = 0;
+	public static int nbCategorie = 0;
 	
 	private int id;
 	private String nom;
@@ -18,11 +18,11 @@ public class Categorie {
 		this.hMax = hMax;
 		this.ratioTp = ratioTp;
 		this.idAnnee = idAnnee;
-		NB_CATEGORIE++;
+		Categorie.nbCategorie++;
 	}	
 	
 	public Categorie(String nom, double hMin, double hMax, double ratioTp, int idAnnee) {
-		this.id = ++NB_CATEGORIE;
+		this.id = ++Categorie.nbCategorie;
 		this.nom = nom;
 		this.hMin = hMin;
 		this.hMax = hMax;
@@ -31,7 +31,7 @@ public class Categorie {
 	}
 
 	public int getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(int id) {
@@ -39,7 +39,7 @@ public class Categorie {
 	}
 
 	public String getNom() {
-		return nom;
+		return this.nom;
 	}
 
 	public void setNom(String nom) {
@@ -47,7 +47,7 @@ public class Categorie {
 	}
 
 	public double gethMax() {
-		return hMax;
+		return this.hMax;
 	}
 
 	public void sethMax(double hMax) {
@@ -55,7 +55,7 @@ public class Categorie {
 	}
 
 	public double gethMin() {
-		return hMin;
+		return this.hMin;
 	}
 
 	public void sethMin(double hMin) {
@@ -63,7 +63,7 @@ public class Categorie {
 	}
 
 	public double getRatioTp() {
-		return ratioTp;
+		return this.ratioTp;
 	}
 
 	public void setRatioTp(double ratioTp) {
@@ -71,18 +71,16 @@ public class Categorie {
 	}
 
 	public int getIdAnnee() {
-		return idAnnee;
+		return this.idAnnee;
 	}
 
 	public void setIdAnnee(int idAnnee) {
 		this.idAnnee = idAnnee;
 	}
 
-	
-
 	@Override
 	public String toString() {
-		return nom;
+		return this.nom;
 	}
 
 }

@@ -16,38 +16,33 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TabPane.TabClosingPolicy;
-import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TablePosition;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
-import javafx.util.Callback;
 import modele.Semestre;
 import modele.HeureCours;
+import modele.Modele;
 import modele.Module;
 import modele.TypeCours;
 import modele.TypeModule;
 
-public class FrameModule implements EventHandler<Event>, ChangeListener<String> {
+public class FrameModule implements EventHandler<Event> {
 	private Controleur ctrl;
 	private AnchorPane centerPaneAccueil;
 	private Map<Integer, Semestre> hmSemestres;
@@ -74,6 +69,9 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 	private Button btnAjouter;
 	private ChoiceBox<TypeModule> choiceBoxTypeModule;
 
+	private List<TextField> lstTxtF;
+	private ColorPicker colorPicker;
+
 	public FrameModule(Controleur ctrl, AnchorPane centerPaneAccueil) {
 		this.ctrl = ctrl;
 		this.centerPaneAccueil = centerPaneAccueil;
@@ -87,6 +85,7 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 		this.centerPaneAccueil.getChildren().clear();
 		this.centerPaneAccueil.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
 		this.hmTypeModule = this.ctrl.getModele().getHmTypeModule();
+		this.lstTxtF = new ArrayList<>();
 
 		this.majTabs();
 
@@ -113,91 +112,68 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 
 		this.hmModule = this.ctrl.getModele().getHmModules();
 
-		this.hmSemestres = this.ctrl.getModele().getHmSemestres();
-		this.lstTableView = new ArrayList<TableView>();
+		this.hmSemestres= this.ctrl.getModele().getHmSemestres();
+	 	List<Integer> keysList = new ArrayList<>(this.hmSemestres.keySet());
+		keysList.sort(null);
+			
+		this.lstTableView = new ArrayList<>();
 		this.lstTableColumns = new ArrayList<>();
 
 		Tab[] tabTab = new Tab[this.hmSemestres.size()];
 
 		int cpt = 0;
-		for (Semestre semestre : this.hmSemestres.values()) {
-
+		for (Integer i : keysList) {
+			Semestre semestre = this.hmSemestres.get(i);
 			BorderPane borderPaneTab = new BorderPane();
-			ArrayList<TextField> lsttxtF = new ArrayList<TextField>();
-			this.txtFTD = new TextField(semestre.getNbGTD() + "");
-
-			this.txtFTP = new TextField(semestre.getNbGTP() + "");
-			this.txtFCM = new TextField(semestre.getNbGCM() + "");
-			this.txtFNbSemaines = new TextField(semestre.getNbSemaine() + "");
-
-			this.txtFTD.textProperty().addListener((observable, oldStr, newStr) -> {
-				final String regex = "\\d+";
-				if (newStr.matches(regex)) {
-					this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
-							.setNbGTD(Integer.parseInt(newStr));
-				} else {
-					this.txtFTD.setText(oldStr);
-				}
-
-			});
-			this.txtFTP.textProperty().addListener((observable, oldStr, newStr) -> {
-				final String regex = "\\d+";
-				if (newStr.matches(regex)) {
-					this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
-							.setNbGTD(Integer.parseInt(newStr));
-				} else {
-					this.txtFTD.setText(oldStr);
-				}
-
-			});
-			this.txtFCM.textProperty().addListener((observable, oldStr, newStr) -> {
-				final String regex = "\\d+";
-				if (newStr.matches(regex)) {
-					this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
-							.setNbGCM(Integer.parseInt(newStr));
-				} else {
-					this.txtFTD.setText(oldStr);
-				}
-
-			});
-			this.txtFTP.textProperty().addListener((observable, oldStr, newStr) -> {
-				final String regex = "\\d+";
-				if (newStr.matches(regex)) {
-					this.txtFTD.setText(oldStr);
-				} else {
-
-					this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
-							.setNbGTD(Integer.parseInt(newStr));
-				}
-
-			});
-			this.txtFNbSemaines.textProperty().addListener(this);
-
 			FlowPane flowPaneTxtF = new FlowPane();
 			flowPaneTxtF.setHgap(5);
-			flowPaneTxtF.getChildren().add(new Label("nbGroupeTD :"));
-			flowPaneTxtF.getChildren().add(txtFTD);
+		
+			GridPane gridPaneTmp = new GridPane();
+			TextField textFieldTmp = new TextField(semestre.getNbGTD() + "");
+			textFieldTmp.setMaxWidth(5*7);
+			textFieldTmp.setId("TD-"+semestre.getId());
+			this.lstTxtF.add(textFieldTmp);
+			gridPaneTmp.add(new Label("nbGroupeTD : "), 0, 0);
+			gridPaneTmp.add(textFieldTmp, 1, 0);
+			flowPaneTxtF.getChildren().add(gridPaneTmp);
 
-			flowPaneTxtF.getChildren().add(new Label("nbGroupeTP :"));
-			flowPaneTxtF.getChildren().add(txtFTP);
+			
+			gridPaneTmp = new GridPane();
+			textFieldTmp = new TextField(semestre.getNbGTP() + "");
+			textFieldTmp.setMaxWidth(5*7);
+			textFieldTmp.setId("TP-"+semestre.getId());
+			this.lstTxtF.add(textFieldTmp);
+			gridPaneTmp.add(new Label("nbGroupeTP : "), 0, 0);
+			gridPaneTmp.add(textFieldTmp, 1, 0);
+			flowPaneTxtF.getChildren().add(gridPaneTmp);
 
-			flowPaneTxtF.getChildren().add(new Label("nbGroupeCM :"));
-			flowPaneTxtF.getChildren().add(txtFCM);
+			gridPaneTmp = new GridPane();
+			textFieldTmp = new TextField(semestre.getNbGCM() + "");
+			textFieldTmp.setMaxWidth(5*7);
+			textFieldTmp.setId("CM-"+semestre.getId());
+			this.lstTxtF.add(textFieldTmp);
+			gridPaneTmp.add(new Label("nbGroupeCM : "), 0, 0);
+			gridPaneTmp.add(textFieldTmp, 1, 0);
+			flowPaneTxtF.getChildren().add(gridPaneTmp);
 
-			flowPaneTxtF.getChildren().add(new Label("nbSemaines :"));
-			flowPaneTxtF.getChildren().add(txtFNbSemaines);
+			gridPaneTmp = new GridPane();
+			textFieldTmp = new TextField(semestre.getNbSemaine() + "");
+			textFieldTmp.setMaxWidth(5*7);
+			textFieldTmp.setId("Semaine-"+semestre.getId());
+			this.lstTxtF.add(textFieldTmp);
+			gridPaneTmp.add(new Label("nbSemaines : "), 0, 0);
+			gridPaneTmp.add(textFieldTmp, 1, 0);
+			flowPaneTxtF.getChildren().add(gridPaneTmp);
 
-			lsttxtF.add(txtFTD);
-			lsttxtF.add(txtFTP);
-			lsttxtF.add(txtFCM);
-			lsttxtF.add(txtFNbSemaines);
-			this.hmTF.put(semestre, lsttxtF);
+			this.colorPicker = new ColorPicker(Color.CORAL);
+			colorPicker.addEventHandler(ActionEvent.ACTION, this);
+			
+			flowPaneTxtF.setVgap(20);
+			flowPaneTxtF.setHgap(20);
+			flowPaneTxtF.getChildren().add(colorPicker);
 
 			TableView<LigneModuleIHM> tbV = new TableView<LigneModuleIHM>();
-			// tbV.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-			// Créez une usine de cellules personnalisée pour permettre l'édition
-			// Callback<TableColumn<LigneModuleIHM, String>, TableCell<LigneModuleIHM,
-			// String>> cellFactory = col -> new EditableTableCell();
+
 
 			String[] colonnes = new String[] { "id", "info", "Code", "Nom", "CM", "TD", "TP", "REH", "HTut", "SAE",
 					"HP", "supprimer" };
@@ -276,6 +252,28 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 
 		}
 
+		for (TextField txt : lstTxtF) {
+			txt.textProperty().addListener(new ChangeListener<String>() {
+				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+					if (txt.textProperty() == observable)
+						if (newValue.matches(Modele.REGEX_INT)) {
+							
+							String[] partTxt = txt.getId().split("-");
+							Semestre s = hmSemestres.get(Integer.parseInt(partTxt[1]));							
+							int nb = 0;
+							if (!txt.getText().isEmpty()) nb = Integer.parseInt(txt.getText());
+							switch (partTxt[0]) {
+								case "TD" -> s.setNbGTD(nb);
+								case "TP" ->s.setNbGTP(nb);
+								case "CM" -> s.setNbGCM(nb);
+								case "Semaine" -> s.setNbSemaine(nb);
+							}
+							ctrl.getModele().updateSemestre(s);
+						} else {txt.setText(oldValue);}
+				}
+			});
+		}
+
 		this.tabPane.getTabs().addAll(tabTab);
 		AnchorPane.setTopAnchor(tabPane, 5.0);
 		AnchorPane.setRightAnchor(tabPane, 5.0);
@@ -302,7 +300,7 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 		btnAjouterIntervenant.setId("AjouterIntervenant-" + id);
 		btnAjouterIntervenant.addEventFilter(ActionEvent.ACTION, this);
 
-		Button supButton = getSupButton();
+		Button supButton = ResourceManager.getSupButton();
 		supButton.setId("Sup-" + id);
 		supButton.addEventHandler(ActionEvent.ACTION, this);
 		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, m.getCode(), m.getNom(), "", "", "", "", "", "", "",
@@ -334,7 +332,7 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 		btnAjouterIntervenant.setId("AjouterIntervenant-" + id);
 		btnAjouterIntervenant.addEventFilter(ActionEvent.ACTION, this);
 
-		Button supButton = getSupButton();
+		Button supButton = ResourceManager.getSupButton();
 		supButton.setId("Sup-" + id);
 		supButton.addEventHandler(ActionEvent.ACTION, this);
 		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, m.getCode(), m.getNom(), "", "", "", "", "", "", "",
@@ -361,8 +359,7 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 		Button btnAjouterIntervenant = getAjouterIntervenantButton();
 		btnAjouterIntervenant.setId("AjouterIntervenant-" + id);
 		btnAjouterIntervenant.addEventFilter(ActionEvent.ACTION, this);
-
-		Button supButton = getSupButton();
+		Button supButton = ResourceManager.getSupButton();
 		supButton.setId("Sup-" + id);
 		supButton.addEventHandler(ActionEvent.ACTION, this);
 		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, m.getCode(), m.getNom(), "", "", "", "", "", "", "",
@@ -394,7 +391,7 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 		btnAjouterIntervenant.setId("AjouterIntervenant-" + id);
 		btnAjouterIntervenant.addEventFilter(ActionEvent.ACTION, this);
 
-		Button supButton = getSupButton();
+		Button supButton = ResourceManager.getSupButton();
 		supButton.setId("Sup-" + id);
 		supButton.addEventHandler(ActionEvent.ACTION, this);
 		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, m.getCode(), m.getNom(), "", "", "", "", "", "", "",
@@ -404,22 +401,7 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 		this.lst.add(new LigneModuleIHM(id, null, "", "", "", "", "", "", "", "", "", null));
 	}
 
-	public Button getSupButton() {
-		SVGPath supsvg = new SVGPath();
-		supsvg.setContent(
-				"M13.7766 10.1543L13.3857 21.6924M7.97767 21.6924L7.58686 10.1543M18.8458 6.03901C19.2321 6.10567 19.6161 6.17618 20.0001 6.25182M18.8458 6.03901L17.6395 23.8373C17.5902 24.5619 17.3018 25.2387 16.8319 25.7324C16.362 26.2261 15.7452 26.5002 15.1049 26.5H6.25856C5.61824 26.5002 5.00145 26.2261 4.53152 25.7324C4.0616 25.2387 3.77318 24.5619 3.72395 23.8373L2.51764 6.03901M18.8458 6.03901C17.5422 5.81532 16.2318 5.64555 14.9174 5.53005M2.51764 6.03901C2.13135 6.10439 1.74731 6.1749 1.36328 6.25054M2.51764 6.03901C3.82124 5.81532 5.13158 5.64556 6.44606 5.53005M14.9174 5.53005V4.35572C14.9174 2.84294 13.8895 1.58144 12.5567 1.534C11.307 1.48867 10.0564 1.48867 8.80673 1.534C7.47391 1.58144 6.44606 2.84422 6.44606 4.35572V5.53005M14.9174 5.53005C12.0978 5.28272 9.26562 5.28272 6.44606 5.53005");
-		supsvg.setStroke(Color.BLACK);
-		supsvg.setFill(Color.WHITE);
-		supsvg.setStrokeWidth(1.5);
-		supsvg.setStrokeLineCap(StrokeLineCap.ROUND);
-		supsvg.setStrokeLineJoin(StrokeLineJoin.ROUND);
-
-		Button supbtn = new Button();
-		supbtn.setGraphic(supsvg);
-		supbtn.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-		supbtn.getStyleClass().add("info-btn");
-		return supbtn;
-	}
+	
 
 	public Button getAjouterIntervenantButton() {
 		SVGPath supsvg = new SVGPath();
@@ -442,7 +424,7 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 	public void nouveauModule(List<Integer> lstTypesCours, TypeModule tm) {
 		int idSemestre = tabPane.getSelectionModel().getSelectedIndex()+1;
 		this.ctrl.getModele().ajouterModule("Nom de la ressource", "R"+idSemestre+".00", tm.getId(), idSemestre);
-		int idModule = Module.NB_MODULE;
+		int idModule = Module.nbModule;
 		for (Integer i : lstTypesCours) {
 			this.ctrl.getModele().ajouterHeureCours(i, idModule, 0, 0, 0);
 		}
@@ -469,6 +451,8 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 				else {
 					String[] textBtn = btn.getId().split("-");
 					if (textBtn[0].equals("Sup")) {
+						this.ctrl.getVue().popupValider();
+						if (ControleurIHM.bIsValidate)
 						this.ctrl.getModele().supprimerModule(Integer.parseInt(textBtn[1]));
 					}
 					if (textBtn[0].equals("AjouterIntervenant")) {
@@ -477,46 +461,13 @@ public class FrameModule implements EventHandler<Event>, ChangeListener<String> 
 					}
 				}
 			}
+			else if (action.getSource() instanceof ColorPicker) {
+				System.out.println(this.colorPicker.getValue());
+			}
 
 		}
 		this.init();
 	}
 
-	public void changed(ObservableValue<? extends String> observable, String oldStr, String newStr) {
-		final String regex = "\\d+";
-		System.out.println("changed");
-		if (observable == this.txtFTD.textProperty()) {
-			System.out.println("fonctionne");
-			if (newStr.matches(regex)) {
-				this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
-						.setNbGTD(Integer.parseInt(newStr));
-			} else {
-				this.txtFTD.setText(oldStr);
-			}
-		}
-		if (observable == this.txtFTP.textProperty()) {
-			if (newStr.matches(regex)) {
-				this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
-						.setNbGTP(Integer.parseInt(newStr));
-			} else {
-				this.txtFTP.setText(oldStr);
-			}
-		}
-		if (observable == this.txtFCM.textProperty()) {
-			if (newStr.matches(regex)) {
-				this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
-						.setNbGCM(Integer.parseInt(newStr));
-			} else {
-				this.txtFCM.setText(oldStr);
-			}
-		}
-		if (observable == this.txtFNbSemaines.textProperty()) {
-			if (newStr.matches(regex)) {
-				this.hmSemestres.get(this.tabPane.getSelectionModel().getSelectedIndex())
-						.setNbSemaine(Integer.parseInt(newStr));
-			} else {
-				this.txtFNbSemaines.setText(oldStr);
-			}
-		}
-	}
+	
 }

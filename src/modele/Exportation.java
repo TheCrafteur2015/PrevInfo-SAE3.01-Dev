@@ -5,16 +5,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Exportation
-{
+public class Exportation {
 	private DB baseDonnees;
 
 	/**
 	 * constructeur de l'exportation
 	 * @throws SQLException
 	 */
-	public Exportation() throws SQLException
-	{
+	public Exportation() throws SQLException {
 		this.baseDonnees = DB.getInstance();
 	}
 
@@ -23,18 +21,15 @@ public class Exportation
 	 * @param idModule   identifiant du {@link Intervenant} à exporter
 	 * @param nomFichier nom du fichier de sortie
 	 */
-	public void exportIntervenant(int idIntervenant, String nomFichier)
-	{
-		String body ="";
+	public void exportIntervenant(int idIntervenant, String nomFichier) {
+		String body = "";
 		body += "	<body>\n";
 
 		Intervenant  interv       = null;// obtenir l'intervenant qui correspond a l'intervenant
 		List<Module> modulesInter = new ArrayList<>();// obtenir tout les modules au quel l'intervenant est lié
 
 		for (Module mod : modulesInter)
-		{
 			body += sModule(mod);
-		}
 
 		body += "	</body>\n";
 		ecrireFichier(nomFichier, body);
@@ -45,8 +40,7 @@ public class Exportation
 	 * @param idModule   identifiant du {@link Module} à exporter
 	 * @param nomFichier nom du fichier de sortie
 	 */
-	public void exportModule(int idModule, String nomFichier)
-	{
+	public void exportModule(int idModule, String nomFichier) {
 		String body ="";
 		body += "	<body>\n";
 
@@ -54,9 +48,7 @@ public class Exportation
 		List<Intervenant> intervsMod = new ArrayList<>();// obtenir tout les modules au quel l'intervenant est lié
 
 		for (Intervenant interv : intervsMod)
-		{
 			body += sIntervenant(interv);
-		}
 
 		body += "	</body>\n";
 		ecrireFichier(nomFichier, body);
@@ -67,9 +59,8 @@ public class Exportation
 	 * @param mod {@link Module} a transformer
 	 * @return un {@link String} contenant le nom du {@link Module} et ???
 	 */
-	private String sModule(Module mod)
-	{
-		// je sais pas quoi mettre dans le tableau
+	private String sModule(Module mod) {
+		// TODO: je sais pas quoi mettre dans le tableau
 		String ret ="";
 		ret += "		<tr>\n";
 		ret += "			<th> " + mod.getNom() + " </th>\n";
@@ -91,7 +82,7 @@ public class Exportation
 	 */
 	private String sIntervenant(Intervenant interv)
 	{
-		// je sais pas quoi mettre dans le tableau
+		// TODO: je sais pas quoi mettre dans le tableau
 		String ret ="";
 		ret += "		<tr>\n";
 		ret += "			<th> " + interv.getNom() + " </th>\n";
@@ -112,8 +103,7 @@ public class Exportation
 	 * @param nomFichierDestination Le nom du fichier dans lequel écrire les données.
 	 * @param body contenue du Fichier
 	 */
-	private void ecrireFichier(String nomFichierDestination, String body)
-	{
+	private void ecrireFichier(String nomFichierDestination, String body) {
 		try {
 			PrintWriter pw = new PrintWriter(new FileOutputStream(nomFichierDestination));
 	
@@ -129,8 +119,7 @@ public class Exportation
 		}
 	}
 
-	private String head()
-	{
+	private String head() {
 		String ret = "";
 		ret += "<!DOCTYPE html>";
 		ret += "<html lang=\"en\">";
@@ -142,10 +131,9 @@ public class Exportation
 		return ret;
 	}
 
-	private String foot()
-	{
+	// Why??
+	private String foot() {
 		String ret ="</html>";
-
 		return ret;
 	}
 

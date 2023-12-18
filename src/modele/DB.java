@@ -29,6 +29,7 @@ public class DB {
 	private PreparedStatement psSelectCategorie;
 	private PreparedStatement psSelectIntervenant;
 	private PreparedStatement psSelectIntervention;
+	private PreparedStatement psSelectInterventionModule;
 	private PreparedStatement psSelectModule;
 	private PreparedStatement psSelectSemestre;
 	private PreparedStatement psSelectModuleBySemestre;
@@ -39,8 +40,9 @@ public class DB {
 	private PreparedStatement psSelectNomCateg;
 	private PreparedStatement psSelectHeureCoursByModule;
 	private PreparedStatement psSelectTypeModule;
-
+	private PreparedStatement psSelectInterventionByIntervenant;
 	private PreparedStatement psSelectIdTypeCoursByNom;
+	private PreparedStatement psSelectIntervenantByCateg;
 
 	private PreparedStatement psInsertCategorie;
 	private PreparedStatement psInsertIntervenant;
@@ -78,9 +80,11 @@ public class DB {
 			this.psSelectCategorie = connec.prepareStatement("SELECT * FROM Categorie WHERE idAnnee = ?");
 			this.psSelectIntervenant = connec.prepareStatement("SELECT * FROM Intervenant WHERE idAnnee = ?");
 			this.psSelectIntervention = connec.prepareStatement("SELECT * FROM Intervention WHERE idAnnee = ?");
+			this.psSelectInterventionModule = connec.prepareStatement("SELECT * FROM Intervention WHERE idAnnee = ? AND idModule = ?");
 			this.psSelectModule = connec.prepareStatement("SELECT * FROM Module WHERE idAnnee = ?");
 			this.psSelectSemestre = connec.prepareStatement("SELECT * FROM Semestre WHERE idAnnee = ?");
-			this.psSelectModuleBySemestre = connec.prepareStatement("SELECT * FROM Module WHERE idSemestre = ? AND idAnnee = ?");
+			this.psSelectModuleBySemestre = connec
+					.prepareStatement("SELECT * FROM Module WHERE idSemestre = ? AND idAnnee = ?");
 			this.psSelectTypeCours = connec.prepareStatement("SELECT * FROM TypeCours");
 			this.psSelectHeureCours = connec
 					.prepareStatement("SELECT * FROM HeureCours JOIN Module USING(idModule) WHERE Module.idAnnee = ? ");
@@ -90,14 +94,19 @@ public class DB {
 			// this.psSelectDerAnnee.setFetchDirection(ResultSet.TYPE_SCROLL_SENSITIVE);
 			this.psSelectNomCateg = connec.prepareStatement("SELECT nomCategorie FROM Categorie WHERE idCategorie = ?");
 			this.psSelectAnnee = connec.prepareStatement("SELECT * FROM Annee");
-			this.psSelectHeureCoursByModule = connec.prepareStatement("SELECT * FROM HeureCours WHERE idModule = ? AND idAnnee = ?");
+			this.psSelectHeureCoursByModule = connec
+					.prepareStatement("SELECT * FROM HeureCours WHERE idModule = ? AND idAnnee = ?");
 			this.psSelectTypeModule = connec.prepareStatement("SELECT * FROM TypeModule");
 
-			this.psSelectIdTypeCoursByNom = connec.prepareStatement("SELECT idTypeCours FROM TypeCours WHERE nomCours = ?");
+			this.psSelectIdTypeCoursByNom = connec
+					.prepareStatement("SELECT idTypeCours FROM TypeCours WHERE nomCours = ?");
+			this.psSelectInterventionByIntervenant = connec.prepareStatement("SELECT * FROM Intervention WHERE idIntervenant = ?");
+			this.psSelectIntervenantByCateg = connec.prepareStatement("SELECT * FROM Intervenant WHERE idCategorie = ? AND idAnnee = ?");
+
 
 			this.psInsertCategorie = connec.prepareStatement("INSERT INTO Categorie VALUES (?,?,?,?,?,?)");
 			this.psInsertIntervenant = connec.prepareStatement("INSERT INTO Intervenant VALUES (?,?,?,?,?,?,?,?)");
-			this.psInsertIntervention = connec.prepareStatement("INSERT INTO Intervention VALUES (?,?,?,?,?,?)");
+			this.psInsertIntervention = connec.prepareStatement("INSERT INTO Intervention VALUES (?,?,?,?,?,?,?,?)");
 			this.psInsertModule = connec.prepareStatement("INSERT INTO Module VALUES (?,?,?,?,?,?)");
 			this.psInsertSemestre = connec.prepareStatement("INSERT INTO Semestre VALUES (?,?,?,?,?,?)");
 			this.psInsertHeureCours = connec.prepareStatement("INSERT INTO HeureCours VALUES (?,?,?,?,?,?)");
@@ -108,20 +117,21 @@ public class DB {
 			this.psUpdateIntervenant = connec.prepareStatement(
 					"UPDATE Intervenant SET prenom = ?, nom = ?, email = ?, hMinIntervenant = ?, hMaxIntervenant = ?, idCategorie = ? WHERE idAnnee = ? AND idIntervenant = ?");
 			this.psUpdateIntervention = connec.prepareStatement(
-					"UPDATE Intervention SET nbSemainesIntervention = ?, nbGroupe = ? WHERE idAnnee = ? AND idIntervenant = ? AND idModule = ? AND idTypeCours = ?");
+					"UPDATE Intervention SET commentaire = ?, nbSemainesIntervention = ?, nbGroupe = ?, idIntervenant = ?, idModule = ? WHERE idIntervention = ? AND idAnnee = ?");
 			this.psUpdateModule = connec.prepareStatement(
 					"UPDATE Module SET nomModule = ?, code = ?, idSemestre = ?, idTypeModule = ? WHERE idAnnee = ? AND idModule = ?");
 			this.psUpdateSemestre = connec.prepareStatement(
 					"UPDATE Semestre SET nbGTD = ?, nbGTP = ?, nbGCM = ?, nbSemaine = ? WHERE idAnnee = ? AND idSemestre = ?");
 			this.psUpdateHeureCours = connec.prepareStatement(
-					"UPDATE HeureCours SET heure = ?, nbSemaine = ?, hParSemaine = ? WHERE idTypeCours = ? AND idModule = ? AND idAnnee = ? " );
+					"UPDATE HeureCours SET heure = ?, nbSemaine = ?, hParSemaine = ? WHERE idTypeCours = ? AND idModule = ? AND idAnnee = ? ");
 			this.psUpdateTypeCours = connec
 					.prepareStatement("UPDATE TypeCours SET coefficient = ?, nomCours = ? WHERE idTypeCours = ?");
+		
 
 			this.psDeleteCategorie = connec.prepareStatement("DELETE FROM Categorie WHERE idCategorie = ?");
 			this.psDeleteIntervenant = connec.prepareStatement("DELETE FROM Intervenant WHERE idIntervenant = ?");
 			this.psDeleteIntervention = connec.prepareStatement(
-					"DELETE FROM Intervention WHERE idIntervenant = ? AND idModule = ? AND idTypeCours = ?");
+					"DELETE FROM Intervention WHERE idIntervention = ?");
 			this.psDeleteModule = connec.prepareStatement("DELETE FROM Module WHERE idModule = ?");
 			this.psDeleteSemestre = connec.prepareStatement("DELETE FROM Semestre WHERE idSemestre = ?");
 			this.psDeleteHeureCours = connec
@@ -301,26 +311,49 @@ public class DB {
 	 * @param idAnnee indice de l'année souhaitée
 	 * @return une {@link Map} composé de :
 	 *         <ul>
-	 *         <li>indice en {@link String}, composé de :
-	 *         <ol>
-	 *         <li>l'indice de l'{@link Intervenant}</li>
-	 *         <li>l'indice du {@link Module}</li>
-	 *         <li>l'indice du {@link TypeCours}</li>
-	 *         </ol>
-	 *         </li>
+	 *         <li>indice en {@link Integer}</li>
 	 *         <li>{@link Intervention} correspondante</li>
 	 *         </ul>
 	 */
-	public Map<String, Intervention> getInterventions(int idAnnee) throws SQLException {
-		Map<String, Intervention> hmInterventions = new HashMap<>();
+	public Map<Integer, Intervention> getInterventions(int idAnnee) throws SQLException {
+		Map<Integer, Intervention> hmInterventions = new HashMap<>();
 		this.psSelectIntervention.setInt(1, idAnnee);
 		ResultSet rs = this.psSelectIntervention.executeQuery();
 		while (rs.next()) {
 			hmInterventions
-					.put(rs.getInt("idIntervenant") + "-" + rs.getInt("idModule") + "-" + rs.getInt("idTypeCours"),
-							new Intervention(rs.getInt("idIntervenant"), rs.getInt("idModule"),
-									rs.getInt("idTypeCours"), rs.getInt("nbSemainesIntervention"),
-									rs.getInt("nbGroupe"), rs.getInt("idAnnee")));
+					.put(rs.getInt("idIntervention"),
+							new Intervention(rs.getInt("idIntervention"), rs.getInt("idIntervenant"),
+									rs.getInt("idModule"), rs.getInt("idTypeCours"), rs.getInt("nbSemainesIntervention"),
+									rs.getInt("nbGroupe"), rs.getString("commentaire"), rs.getInt("idAnnee")));
+		}
+		return hmInterventions;
+	}
+
+	public Map<Integer, Intervention> getInterventionsByIntervenant(int idIntervenant) throws SQLException {
+		Map<Integer, Intervention> hmInterventions = new HashMap<>();
+		this.psSelectInterventionByIntervenant.setInt(1, idIntervenant);
+		ResultSet rs = this.psSelectInterventionByIntervenant.executeQuery();
+		while (rs.next()) {
+			hmInterventions
+					.put(rs.getInt("idIntervention"),
+							new Intervention(rs.getInt("idIntervention"), rs.getInt("idIntervenant"),
+									rs.getInt("idModule"), rs.getInt("idTypeCours"), rs.getInt("nbSemainesIntervention"),
+									rs.getInt("nbGroupe"), rs.getString("commentaire"), rs.getInt("idAnnee")));
+		}
+		return hmInterventions;
+	}
+
+	public Map<Integer, Intervention> getInterventionsModule(int idAnnee, int idModule) throws SQLException {
+		Map<Integer, Intervention> hmInterventions = new HashMap<>();
+		this.psSelectInterventionModule.setInt(1, idAnnee);
+		this.psSelectInterventionModule.setInt(2, idModule);
+		ResultSet rs = this.psSelectInterventionModule.executeQuery();
+		while (rs.next()) {
+			hmInterventions
+					.put(rs.getInt("idIntervention"),
+							new Intervention(rs.getInt("idIntervention"), rs.getInt("idIntervenant"),
+									rs.getInt("idModule"), rs.getInt("idTypeCours"), rs.getInt("nbSemainesIntervention"),
+									rs.getInt("nbGroupe"), rs.getString("commentaire"), rs.getInt("idAnnee")));
 		}
 		return hmInterventions;
 	}
@@ -332,12 +365,14 @@ public class DB {
 	 * @throws SQLException
 	 */
 	public void ajouterIntervention(Intervention intervention) throws SQLException {
-		this.psInsertIntervention.setInt(1, intervention.getIdIntervenant());
-		this.psInsertIntervention.setInt(2, intervention.getIdModule());
-		this.psInsertIntervention.setInt(3, intervention.getIdTypeCours());
-		this.psInsertIntervention.setInt(4, intervention.getNbSemaines());
-		this.psInsertIntervention.setInt(5, intervention.getNbGroupe());
-		this.psInsertIntervention.setInt(6, intervention.getIdAnnee());
+		this.psInsertIntervention.setInt   (1, intervention.getIdIntervention());
+		this.psInsertIntervention.setInt   (2, intervention.getIdIntervenant());
+		this.psInsertIntervention.setInt   (3, intervention.getIdModule());
+		this.psInsertIntervention.setInt   (4, intervention.getIdTypeCours());
+		this.psInsertIntervention.setInt   (5, intervention.getNbSemaines());
+		this.psInsertIntervention.setInt   (6, intervention.getNbGroupe());
+		this.psInsertIntervention.setString(7, intervention.getCommentaire());
+		this.psInsertIntervention.setInt   (8, intervention.getIdAnnee());
 		this.psInsertIntervention.executeUpdate();
 	}
 
@@ -348,12 +383,13 @@ public class DB {
 	 * @throws SQLException
 	 */
 	public void updateIntervention(Intervention intervention) throws SQLException {
-		this.psUpdateIntervention.setInt(4, intervention.getIdIntervenant());
-		this.psUpdateIntervention.setInt(5, intervention.getIdModule());
-		this.psUpdateIntervention.setInt(6, intervention.getIdTypeCours());
-		this.psUpdateIntervention.setInt(1, intervention.getNbSemaines());
-		this.psUpdateIntervention.setInt(2, intervention.getNbGroupe());
-		this.psUpdateIntervention.setInt(3, intervention.getIdAnnee());
+		this.psUpdateIntervention.setString(1, intervention.getCommentaire());
+		this.psUpdateIntervention.setInt   (2, intervention.getNbSemaines());
+		this.psUpdateIntervention.setInt   (3, intervention.getNbGroupe());
+		this.psUpdateIntervention.setInt   (4, intervention.getIdIntervenant());
+		this.psUpdateIntervention.setInt   (5, intervention.getIdModule());
+		this.psUpdateIntervention.setInt   (6, intervention.getIdIntervention());
+		this.psUpdateIntervention.setInt   (7, intervention.getIdAnnee());
 		this.psUpdateIntervention.executeUpdate();
 	}
 
@@ -364,9 +400,7 @@ public class DB {
 	 * @throws SQLException
 	 */
 	public void supprimerIntervention(Intervention intervention) throws SQLException {
-		this.psDeleteIntervention.setInt(1, intervention.getIdIntervenant());
-		this.psDeleteIntervention.setInt(2, intervention.getIdModule());
-		this.psDeleteIntervention.setInt(3, intervention.getIdTypeCours());
+		this.psDeleteIntervention.setInt(1, intervention.getIdIntervention());
 		this.psDeleteIntervention.executeUpdate();
 	}
 
@@ -388,27 +422,43 @@ public class DB {
 		ResultSet rs = this.psSelectModule.executeQuery();
 		while (rs.next()) {
 			hmModule.put(rs.getInt("idModule"),
-					new Module(rs.getInt("idModule"), rs.getString("nomModule"), rs.getString("code"), rs.getInt("idTypeModule"), idAnnee,
+					new Module(rs.getInt("idModule"), rs.getString("nomModule"), rs.getString("code"),
+							rs.getInt("idTypeModule"), idAnnee,
 							rs.getInt("idSemestre")));
+		}
+		return hmModule;
+	}
+
+	public List<Intervenant> getIntervenantParCateg(int idAnnee, int idCategorie) throws SQLException {
+		List<Intervenant> hmModule = new ArrayList<>();
+		this.psSelectIntervenantByCateg.setInt(1, idCategorie);
+		this.psSelectIntervenantByCateg.setInt(2, idAnnee);
+		ResultSet rs = this.psSelectIntervenantByCateg.executeQuery();
+		while (rs.next()) {
+			hmModule.add(new Intervenant(rs.getInt("idIntervenant"), rs.getString("prenom"), rs.getString("nom"),
+							rs.getString("email"), rs.getDouble("hMinIntervenant"), rs.getDouble("hMaxIntervenant"),
+							idAnnee, rs.getInt("idCategorie")));
 		}
 		return hmModule;
 	}
 
 	/**
 	 * méthode pour obtenir la list des modules d'un semestre
+	 * 
 	 * @param idSemestre identifiant du {@link Semestre}
-	 * @param idAnnee identifiant de l'année
+	 * @param idAnnee    identifiant de l'année
 	 * @return {@link List} de {@link Module} du {@link Semestre}
 	 * @throws SQLException
 	 */
-	public List<Module> getModuleBySemestre (int idSemestre, int idAnnee) throws SQLException {
+	public List<Module> getModuleBySemestre(int idSemestre, int idAnnee) throws SQLException {
 		List<Module> lstModules = new ArrayList<>();
 		this.psSelectModuleBySemestre.setInt(1, idSemestre);
 		this.psSelectModuleBySemestre.setInt(2, idAnnee);
 		ResultSet rs = this.psSelectModuleBySemestre.executeQuery();
 		while (rs.next()) {
-			lstModules.add(new Module(rs.getInt("idModule"), rs.getString("nomModule"), rs.getString("code"), rs.getInt("idTypeModule"), idAnnee,
-							rs.getInt("idSemestre")));
+			lstModules.add(new Module(rs.getInt("idModule"), rs.getString("nomModule"), rs.getString("code"),
+					rs.getInt("idTypeModule"), idAnnee,
+					rs.getInt("idSemestre")));
 		}
 		return lstModules;
 	}
@@ -452,7 +502,7 @@ public class DB {
 	 * @throws SQLException
 	 */
 	public void supprimerModule(int idModule) throws SQLException {
-		this.psDeleteModule.setInt(1,idModule);
+		this.psDeleteModule.setInt(1, idModule);
 		this.psDeleteModule.executeUpdate();
 	}
 
@@ -615,7 +665,7 @@ public class DB {
 		while (rs.next()) {
 			hmHeureCours.put(rs.getInt("idTypeCours") + "-" + rs.getInt("idModule"),
 					new HeureCours(rs.getInt("idTypeCours"), rs.getInt("idModule"), rs.getDouble("heure"),
-					rs.getInt("nbSemaine"),rs.getDouble("hParSemaine"),
+							rs.getInt("nbSemaine"), rs.getDouble("hParSemaine"),
 							rs.getInt("idAnnee")));
 		}
 		return hmHeureCours;
@@ -623,18 +673,20 @@ public class DB {
 
 	/**
 	 * méthode pour obtenir les {@link HeureCours} d'un {@link Module}
+	 * 
 	 * @param idModule identifiant du {@link Module}
-	 * @param idAnnee indice de l'année souhaitée
+	 * @param idAnnee  indice de l'année souhaitée
 	 * @return {@link List} des {@link HeureCours} du {@link Module}
 	 * @throws SQLException
 	 */
-	public List<HeureCours> getHeureCoursByModule( int idModule, int idAnnee ) throws SQLException {
+	public List<HeureCours> getHeureCoursByModule(int idModule, int idAnnee) throws SQLException {
 		List<HeureCours> lstHeureCours = new ArrayList<>();
 		this.psSelectHeureCoursByModule.setInt(1, idModule);
 		this.psSelectHeureCoursByModule.setInt(2, idAnnee);
 		ResultSet rs = this.psSelectHeureCoursByModule.executeQuery();
 		while (rs.next()) {
-			lstHeureCours.add(new HeureCours(rs.getInt("idTypeCours"), rs.getInt("idModule"), rs.getDouble("heure"), rs.getInt("nbSemaine"), rs.getDouble("hParSemaine"), idAnnee));
+			lstHeureCours.add(new HeureCours(rs.getInt("idTypeCours"), rs.getInt("idModule"), rs.getDouble("heure"),
+					rs.getInt("nbSemaine"), rs.getDouble("hParSemaine"), idAnnee));
 		}
 		return lstHeureCours;
 	}
@@ -689,6 +741,7 @@ public class DB {
 
 	/**
 	 * méthode pour obtenir la derniere année
+	 * 
 	 * @return la derniere année
 	 * @throws SQLException
 	 */
@@ -711,7 +764,7 @@ public class DB {
 	/**
 	 * méthode pour ajouter une année de la base de données
 	 * 
-	 * @param id identifiant de l'année à supprimer
+	 * @param id    identifiant de l'année à supprimer
 	 * @param annee {@link String} représentant l'année exemple : {@code 2022-2023}
 	 * @throws SQLException
 	 */
@@ -738,12 +791,12 @@ public class DB {
 		return hmAnnee;
 	}
 
+
 	public int getIdTypeCoursByNom(String nom) throws SQLException {
 		this.psSelectIdTypeCoursByNom.setString(1, nom);
 		ResultSet rs = this.psSelectIdTypeCoursByNom.executeQuery();
 		rs.next();
 		return rs.getInt("idTypeCours");
 	}
-
 
 }

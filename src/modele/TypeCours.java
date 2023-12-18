@@ -19,7 +19,7 @@ public class TypeCours {
 	public double getCoefficient() { return this.coefficient; }
 	
 	public void setNom(String nom)	 {this.nom = nom;}
-	public void setCoefficient(float coefficient){this.coefficient = coefficient;}
+	// TODO: public void setCoefficient(float coefficient){this.coefficient = coefficient;}
 
 	public int getId() {
 		return this.id;

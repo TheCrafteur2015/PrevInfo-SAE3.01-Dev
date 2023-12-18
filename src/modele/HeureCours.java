@@ -19,7 +19,7 @@ public class HeureCours {
 	}
 
 	public int getIdTypeCours() {
-		return idTypeCours;
+		return this.idTypeCours;
 	}
 
 	public void setIdTypeCours(int idTypeCours) {
@@ -27,7 +27,7 @@ public class HeureCours {
 	}
 
 	public int getIdModule() {
-		return idModule;
+		return this.idModule;
 	}
 
 	public void setIdModule(int idModule) {
@@ -35,7 +35,7 @@ public class HeureCours {
 	}
 
 	public double getHeure() {
-		return heure;
+		return this.heure;
 	}
 
 	public void setHeure(double heure) {
@@ -43,7 +43,7 @@ public class HeureCours {
 	}
 
 	public int getNbSemaine() {
-		return nbSemaine;
+		return this.nbSemaine;
 	}
 
 	public void setNbSemaine(int nbSemaine) {
@@ -51,24 +51,24 @@ public class HeureCours {
 	}
 
 	public int getIdAnnee() {
-		return idAnnee;
+		return this.idAnnee;
 	}
 
 	public void setIdAnnee(int idAnnee) {
 		this.idAnnee = idAnnee;
 	}
 
-	@Override
-	public String toString() {
-		return "HeureCours [idTypeCours=" + idTypeCours + ", idModule=" + idModule + ", heure=" + heure + "]";
-	}
-
 	public double gethParSemaine() {
-		return hParSemaine;
+		return this.hParSemaine;
 	}
 
 	public void sethParSemaine(double hParSemaine) {
 		this.hParSemaine = hParSemaine;
+	}
+
+	@Override
+	public String toString() {
+		return "HeureCours [idTypeCours=" + idTypeCours + ", idModule=" + idModule + ", heure=" + heure + "]";
 	}
 
 }

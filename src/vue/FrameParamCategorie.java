@@ -43,15 +43,19 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 	private Button btnSup;
 	private TableView<CategorieIHM> tableView;
 
-	public FrameParamCategorie(Controleur ctrl, AnchorPane centerPaneAccueil) {
+	private FrameIntervenant owner;
+
+	public FrameParamCategorie(Controleur ctrl, AnchorPane centerPaneAccueil, FrameIntervenant owner) {
 		this.ctrl = ctrl;
 		this.centerPaneAccueil = centerPaneAccueil;
+		this.owner = owner;
 
 		this.hmCategorie = this.ctrl.getModele().getHmCategories();
 		this.init();
 
 	}
 
+	@SuppressWarnings("deprecation")
 	public void init() {
 		Stage popupStage = new Stage();
 		popupStage.initModality(Modality.APPLICATION_MODAL);
@@ -60,7 +64,7 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 		ObservableList<CategorieIHM> olCategorie = FXCollections.observableArrayList();
 
 		for (Categorie c : this.hmCategorie.values()) {
-			Button btnSup = this.ctrl.getVue().getFrameIntervenant().getSupButton();
+			Button btnSup = ResourceManager.getSupButton();
 			btnSup.setId(c.getId() + "");
 			btnSup.addEventHandler(ActionEvent.ACTION, this);
 
@@ -177,12 +181,13 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 
 		popupStage.showAndWait();
 	}
+
 	public void maj() {
 		this.hmCategorie = this.ctrl.getModele().getHmCategories();
 		ObservableList<CategorieIHM> olCategorie = FXCollections.observableArrayList();
 
 		for (Categorie c : this.hmCategorie.values()) {
-			Button btnSup = this.ctrl.getVue().getFrameIntervenant().getSupButton();
+			Button btnSup = ResourceManager.getSupButton();
 			btnSup.setId(c.getId() + "");
 			btnSup.addEventHandler(ActionEvent.ACTION, this);
 
@@ -199,44 +204,39 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 		if (!this.tfHeureMax.getText().matches("[0-9. ]*")) {
 			this.tfHeureMax.setText(oldString);
 		}
-		if (this.nomCategorie.getText().length() > 0 && this.tfHeureMin.getText().length() > 0
-				&& this.tfHeureMax.getText().length() > 0 && this.tfRatioTp.getText().length() > 0) {
-
-			this.btnAjouter.setDisable(false);
-		} else {
-			this.btnAjouter.setDisable(true);
-		}
+		this.btnAjouter.setDisable(this.nomCategorie.getText().isEmpty() || this.tfHeureMin.getText().isEmpty()
+									|| this.tfHeureMax.getText().isEmpty() || this.tfRatioTp.getText().isEmpty());
 	}
 
 	@Override
 	public void handle(ActionEvent event) {
-		if (event.getSource() instanceof Button btn&& event.getSource() != this.btnAjouter) {
-		int id = Integer.parseInt(btn.getId());
+		if (event.getSource() instanceof Button btn && event.getSource() != this.btnAjouter) {
+			this.ctrl.getVue().popupValider();
+			if (ControleurIHM.bIsValidate) {
+				int id = Integer.parseInt(btn.getId());
 				this.ctrl.getModele().supprimerCategorie(id);
 				this.maj();
 			}
-		if (event.getSource() == this.btnAjouter) {
-			if (this.btnAjouter.getText().equals("Ajouter")) {
-				this.ctrl.getModele().ajouterCategorie(this.nomCategorie.getText(),
-						Double.parseDouble(this.tfHeureMin.getText()), Double.parseDouble(this.tfHeureMax.getText()),
-						Double.parseDouble(this.tfRatioTp.getText()));
-				((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
+			if (event.getSource() == this.btnAjouter) {
+				if (this.btnAjouter.getText().equals("Ajouter")) {
+					this.ctrl.getModele().ajouterCategorie(this.nomCategorie.getText(),
+							Double.parseDouble(this.tfHeureMin.getText()), Double.parseDouble(this.tfHeureMax.getText()),
+							Double.parseDouble(this.tfRatioTp.getText()));
+					this.maj();
+				}
+				if (this.btnAjouter.getText().equals("Modifier")) {
+					int id = Integer.parseInt(this.tableView.getSelectionModel()
+							.getSelectedItem().getSupprimer().getId());
+					Categorie c = this.ctrl.getModele().getHmCategories().get(id);
+					c.setNom(this.nomCategorie.getText());
+					c.sethMin(Double.parseDouble(this.tfHeureMin.getText()));
+					c.sethMax(Double.parseDouble(this.tfHeureMax.getText()));
+					c.setRatioTp(Double.parseDouble(this.tfRatioTp.getText()));
+					this.ctrl.getModele().updateCategorie(c);
+					this.maj();	
+					this.owner.majTableIntervenant();
+				}
 			}
-			if (this.btnAjouter.getText().equals("Modifier")) {
-				int id = Integer.parseInt(this.tableView.getSelectionModel()
-						.getSelectedItem().getSupprimer().getId());
-				Categorie c = this.ctrl.getModele().getHmCategories().get(id);
-				c.setNom(this.nomCategorie.getText());
-				c.sethMin(Double.parseDouble(this.tfHeureMin.getText()));
-				c.sethMax(Double.parseDouble(this.tfHeureMax.getText()));
-				c.setRatioTp(Double.parseDouble(this.tfRatioTp.getText()));
-				this.ctrl.getModele().updateCategorie(c);
-				((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
-			}
-			
-				
-
 		}
 	}
-
 }

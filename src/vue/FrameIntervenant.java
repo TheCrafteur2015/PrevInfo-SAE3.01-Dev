@@ -5,6 +5,7 @@ import java.util.Map;
 import controleur.Controleur;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -157,7 +158,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		for (Intervenant i : hmInter.values()) {
 			Button infoButton = getInfoButton();
 			infoButton.setId("Info-" + i.getId());
-			Button supButton = getSupButton();
+			Button supButton = ResourceManager.getSupButton();
 			supButton.setId("Sup-" + i.getId());
 
 			// infoButton.setOnAction(this);
@@ -189,22 +190,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		return infobtn;
 	}
 
-	public Button getSupButton() {
-		SVGPath supsvg = new SVGPath();
-		supsvg.setContent(
-				"M13.7766 10.1543L13.3857 21.6924M7.97767 21.6924L7.58686 10.1543M18.8458 6.03901C19.2321 6.10567 19.6161 6.17618 20.0001 6.25182M18.8458 6.03901L17.6395 23.8373C17.5902 24.5619 17.3018 25.2387 16.8319 25.7324C16.362 26.2261 15.7452 26.5002 15.1049 26.5H6.25856C5.61824 26.5002 5.00145 26.2261 4.53152 25.7324C4.0616 25.2387 3.77318 24.5619 3.72395 23.8373L2.51764 6.03901M18.8458 6.03901C17.5422 5.81532 16.2318 5.64555 14.9174 5.53005M2.51764 6.03901C2.13135 6.10439 1.74731 6.1749 1.36328 6.25054M2.51764 6.03901C3.82124 5.81532 5.13158 5.64556 6.44606 5.53005M14.9174 5.53005V4.35572C14.9174 2.84294 13.8895 1.58144 12.5567 1.534C11.307 1.48867 10.0564 1.48867 8.80673 1.534C7.47391 1.58144 6.44606 2.84422 6.44606 4.35572V5.53005M14.9174 5.53005C12.0978 5.28272 9.26562 5.28272 6.44606 5.53005");
-		supsvg.setStroke(Color.BLACK);
-		supsvg.setFill(Color.WHITE);
-		supsvg.setStrokeWidth(1.5);
-		supsvg.setStrokeLineCap(StrokeLineCap.ROUND);
-		supsvg.setStrokeLineJoin(StrokeLineJoin.ROUND);
-
-		Button supbtn = new Button();
-		supbtn.setGraphic(supsvg);
-		supbtn.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-		supbtn.getStyleClass().add("info-btn");
-		return supbtn;
-	}
+	
 
 	public void popupParamIntervenant(IntervenantIHM i) {
 		if (i == null) this.modifIntervenant = null;
@@ -349,19 +335,21 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		tableViewModules.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
 		Map<Integer, Module> hmModule = this.ctrl.getModele().getHmModules();
-		Map<String, Intervention> hmIntervention = this.ctrl.getModele().getHmInterventions();
+		Map<Integer, Intervention> hmIntervention = this.ctrl.getModele().getHmInterventions();
 		ObservableList<String> lst = FXCollections.observableArrayList();
 
 		String[] colonnes = new String[] { "Nom" };
 
 		TableColumn<String, String> tbcl = new TableColumn<>(colonnes[0]);
         // tbcl.setCellValueFactory(cellData -> cellData.getValue());
+		/*
 		tbcl.setCellValueFactory(new Callback<>() {
             @Override
             public javafx.beans.value.ObservableValue<String> call(TableColumn.CellDataFeatures<String, String> p) {
                 return javafx.beans.binding.Bindings.createObjectBinding(() -> p.getValue());
             }
-        });
+        });*/
+		tbcl.setCellValueFactory(p -> Bindings.createObjectBinding(() -> p.getValue()));
 
 		tableViewModules.getColumns().add(tbcl);
 
@@ -375,7 +363,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		tableViewModules.setItems(lst);
 
 		VBox vbox = new VBox(5);
-		vbox.setMaxSize(400, 50+lst.size()*40);
+		vbox.setMaxSize(400, 50 + lst.size() * 40);
 
 		vbox.setAlignment(Pos.CENTER);
 
@@ -383,7 +371,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		vbox.getChildren().add(tableViewModules);
 		popupLayout.getChildren().add(vbox);
 		popupLayout.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
-		Scene popupScene = new Scene(popupLayout, 400, 50+lst.size()*40);
+		Scene popupScene = new Scene(popupLayout, 400, 50 + lst.size() * 40);
 		popupStage.setScene(popupScene);
 
 		popupStage.showAndWait();
@@ -391,7 +379,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 
 	public void handle(Event event) {
 		if (event.getSource() == this.btnParamCategorie) {
-			this.frameParamCategorie = new FrameParamCategorie(this.ctrl, this.centerPaneAccueil);
+			this.frameParamCategorie = new FrameParamCategorie(this.ctrl, this.centerPaneAccueil, this);
 
 		}
 		if (event.getSource() == this.btnParamIntervenants) {
@@ -464,7 +452,7 @@ public ObservableList<String> getStylesheets()
 }
 
 	public void changed(ObservableValue<? extends String> observable, String oldStr, String newStr) {
-		final String regex = "\\d*\\.?\\d+";
+		final String regex = "([0-9]+([.][0-9]*)?|[.][0-9]+)";
 
 		if ((observable == this.tfPrenom.textProperty()|| observable == this.tfNom.textProperty())&&(!(this.tfPrenom.getText().isEmpty() || this.tfNom.getText().isEmpty()))) {
 			this.tfEmail.setText(this.tfPrenom.getText().toLowerCase() + "." + this.tfNom.getText().toLowerCase() + "@univ-lehavre.fr");

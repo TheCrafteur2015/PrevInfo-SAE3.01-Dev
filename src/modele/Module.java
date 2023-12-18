@@ -3,7 +3,7 @@ package modele;
 
 public class Module implements Comparable<Module> {
 
-	public static int NB_MODULE = 0;
+	public static int nbModule = 0;
 
 	private int id;
 	private String nom;
@@ -26,11 +26,11 @@ public class Module implements Comparable<Module> {
 		this.idTypeModule = idTypeModule;
 		this.idAnnee = idAnnee;
 		this.idSemestre = idSemestre;
-		NB_MODULE++;
+		Module.nbModule++;
 	}
 
 	public Module(String nom, String code, int idTypeModule, int idAnnee, int idSemestre) {
-		this.id = ++NB_MODULE;
+		this.id = ++Module.nbModule;
 		this.nom = nom;
 		this.code = code;
 		this.idTypeModule = idTypeModule;
@@ -40,7 +40,7 @@ public class Module implements Comparable<Module> {
 
 
 	public int getIdTypeModule() {
-		return idTypeModule;
+		return this.idTypeModule;
 	}
 
 	public void setIdTypeModule(int idTypeModule) {
@@ -48,7 +48,7 @@ public class Module implements Comparable<Module> {
 	}
 
 	public int getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(int id) {
@@ -56,7 +56,7 @@ public class Module implements Comparable<Module> {
 	}
 
 	public String getNom() {
-		return nom;
+		return this.nom;
 	}
 
 	public void setNom(String nom) {
@@ -64,7 +64,7 @@ public class Module implements Comparable<Module> {
 	}
 
 	public String getCode() {
-		return code;
+		return this.code;
 	}
 
 	public void setCode(String code) {
@@ -72,7 +72,7 @@ public class Module implements Comparable<Module> {
 	}
 
 	public int getIdSemestre() {
-		return idSemestre;
+		return this.idSemestre;
 	}
 
 	public void setIdSemestre(int idSemestre) {
@@ -80,7 +80,7 @@ public class Module implements Comparable<Module> {
 	}
 
 	public int getIdAnnee() {
-		return idAnnee;
+		return this.idAnnee;
 	}
 
 	public void setIdAnnee(int idAnnee) {
@@ -89,12 +89,11 @@ public class Module implements Comparable<Module> {
 
 	@Override
 	public String toString() {
-		return code+"_"+nom;
+		return this.code + "_" + this.nom;
 	}
 
 	@Override
-	public int compareTo(Module autre)
-	{
+	public int compareTo(Module autre) {
 		return this.code.compareTo(autre.code);
 	}
 

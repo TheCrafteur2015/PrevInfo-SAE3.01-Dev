@@ -9,8 +9,11 @@ import java.util.Map;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.controlsfx.control.Notifications;
+
 import java.io.IOException;
 import java.net.URL;
+
 
 import javafx.fxml.*;
 
@@ -19,19 +22,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 
 import javafx.scene.control.*;
-/*
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.Label;
-import javafx.scene.control.Button;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableVi.button:hover, .togglebutton:hover, .choicebox:hover {
-	-fx-cursor: hand;
-}ew;
-import javafx.scene.control.TextField;
-*/
-
+import javafx.util.Duration;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import javafx.scene.layout.*;
@@ -88,6 +80,8 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 	
 	private Button btnOui;
 	private Button btnAnnuler;
+
+	public static boolean bIsValidate = false;
 
 	public void initialize(URL url, ResourceBundle rb) {
 		this.ctrl = Controleur.getInstance(this);
@@ -193,7 +187,11 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 
 	@FXML
 	void modeDuplication() {
-		this.ctrl.getModele().setDuplication(!this.ctrl.getModele().isDuplication());		
+		this.ctrl.getModele().setDuplication(!this.ctrl.getModele().isDuplication());
+		if (this.ctrl.getModele().isDuplication())
+			this.afficherNotification("Mode Duplication", "Le mode duplication est activé", "info");
+		else
+			this.afficherNotification("Mode Duplication", "Le mode duplication est désactivé", "info");
 	}
 
 	@FXML
@@ -208,13 +206,15 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 
 	@FXML
 	void allerModules(ActionEvent event) {
-		if(this.ctrl.getModele().isDuplication()) modeDuplication();
+		if (this.ctrl.getModele().isDuplication())
+			this.modeDuplication();
 		this.frameModule = new FrameModule(this.ctrl, this.centerPaneAccueil);
 	}
 
 	@FXML
 	void allerExporter(ActionEvent event) {
-		if(this.ctrl.getModele().isDuplication()) modeDuplication();
+		if (this.ctrl.getModele().isDuplication())
+			this.modeDuplication();
 		this.frameExporter = new FrameExporter(this.ctrl, this.centerPaneAccueil);
 	}
 
@@ -229,7 +229,6 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 		this.majListAnnee();
 		this.setAnnee(this.ctrl.getModele().getHmAnnee().get(this.ctrl.getModele().getIdAnnee()));
 	}
-
 
 	public void handle(Event event) {
 
@@ -253,16 +252,27 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 				}
 				if (!isEmpty) {
 					((Stage) this.btnConfirmerMultiplicateur.getScene().getWindow()).close();
+					this.afficherNotification("Succès", "Les coefficients ont bien été modifiés", "succes");
 				}
 				else{
-					System.out.println("Un champ est libre");
+					this.afficherNotification("Erreur", "Veuillez remplir tous les champs", "erreur");
 	}
 			}
 		}
-		// TODO: if (event.getSource() )
+		if (event.getSource() == this.btnOui) {
+			
+			bIsValidate = true;
+			((Stage) this.btnOui.getScene().getWindow()).close();
+			
+		}
+		if (event.getSource() == this.btnAnnuler) {
+			bIsValidate = false;
+			((Stage) this.btnAnnuler.getScene().getWindow()).close();
+		}
+		
 	}
 	
-	public boolean popupValider()
+	public void popupValider()
 	{
 		//popoUp pour demander si il souhaite vraiment supprimer
 		Stage popupStage = new Stage();
@@ -273,7 +283,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 		popupStage.setWidth(300);
 		popupStage.setResizable(false);
 		
-		Text text = new Text("Souhaitez-vous valider ?");
+		Text text = new Text("Souhaitez-vous vraiment supprimer ?");
 		Button btnOui = new Button("Oui");
 		Button btnAnnuler = new Button("Annuler");
 
@@ -281,10 +291,31 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 		btnAnnuler.addEventHandler(ActionEvent.ACTION, this);
 		
 
-
-		return false;
-
 }
+	public void afficherNotification(String titre, String texte, String type) {
+		
+		Notifications notificationBuilder = Notifications.create()
+			.title(titre)
+			.text(texte)
+			.hideAfter(Duration.seconds(5))
+			.position(Pos.TOP_RIGHT);
+		
+		Image img = new Image(ResourceManager.INFO.toExternalForm(), 48, 48, false, false);
+		switch (type) {
+			case "erreur":
+				img = new Image(ResourceManager.DELETE.toExternalForm(), 48, 48, false, false);
+				
+				break;
+			case "succes":
+				img = new Image(ResourceManager.CHECK.toExternalForm(), 48, 48, false, false);
+				break;
+			default:
+				break;
+			
+		}
+		notificationBuilder.graphic(new ImageView(img));
+		notificationBuilder.show();
+	}
 
 	@Override
 	public void changed(ObservableValue<? extends String> observable, String oldString, String newString) {

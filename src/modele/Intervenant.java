@@ -1,7 +1,9 @@
 package modele;
 
 public class Intervenant {
-	public static int NB_INTERVENANT = 0;
+
+	public static int nbIntervenant = 0;
+
 	private int id;
 	private String prenom;
 	private String nom;
@@ -20,12 +22,12 @@ public class Intervenant {
 		this.hMax = hMax;
 		this.idAnnee = idAnnee;
 		this.idCategorie = idCategorie;
-		NB_INTERVENANT++;
+		Intervenant.nbIntervenant++;
 	}
 
 	public Intervenant(String prenom, String nom, String email, double hMin, double hMax, int idAnnee,
 			int idCategorie) {
-		this.id = ++NB_INTERVENANT;	
+		this.id = ++Intervenant.nbIntervenant;	
 		this.prenom = prenom;
 		this.nom = nom;
 		this.email = email;
@@ -36,7 +38,7 @@ public class Intervenant {
 	}
 
 	public int getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(int id) {
@@ -44,7 +46,7 @@ public class Intervenant {
 	}
 
 	public String getPrenom() {
-		return prenom;
+		return this.prenom;
 	}
 
 	public void setPrenom(String prenom) {
@@ -52,7 +54,7 @@ public class Intervenant {
 	}
 
 	public String getNom() {
-		return nom;
+		return this.nom;
 	}
 
 	public void setNom(String nom) {
@@ -60,7 +62,7 @@ public class Intervenant {
 	}
 
 	public String getEmail() {
-		return email;
+		return this.email;
 	}
 
 	public void setEmail(String email) {
@@ -68,7 +70,7 @@ public class Intervenant {
 	}
 
 	public double gethMin() {
-		return hMin;
+		return this.hMin;
 	}
 
 	public void sethMin(double hMin) {
@@ -76,7 +78,7 @@ public class Intervenant {
 	}
 
 	public double gethMax() {
-		return hMax;
+		return this.hMax;
 	}
 
 	public void sethMax(double hMax) {
@@ -84,7 +86,7 @@ public class Intervenant {
 	}
 
 	public int getIdAnnee() {
-		return idAnnee;
+		return this.idAnnee;
 	}
 
 	public void setIdAnnee(int idAnnee) {
@@ -92,7 +94,7 @@ public class Intervenant {
 	}
 
 	public int getIdCategorie() {
-		return idCategorie;
+		return this.idCategorie;
 	}
 
 	public void setIdCategorie(int idCategorie) {
@@ -101,7 +103,7 @@ public class Intervenant {
 
 	@Override
 	public String toString() {
-		return nom + " " + prenom;
+		return this.nom + " " + this.prenom;
 	}
 
 }

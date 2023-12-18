@@ -73,13 +73,14 @@ CREATE TABLE Intervenant(
 );
 
 CREATE TABLE Intervention(
+	idIntervention         SERIAL PRIMARY KEY,
 	idIntervenant          INT REFERENCES Intervenant(idIntervenant),
 	idModule               INT REFERENCES Module(idModule),
 	idTypeCours            INT REFERENCES TypeCours(idTypeCours),
 	nbSemainesIntervention INT,
 	nbGroupe               INT,
-	idAnnee                INT REFERENCES Annee(idAnnee),
-	PRIMARY KEY (idIntervenant,idModule,idTypeCours,idAnnee)
+	commentaire            TEXT,
+	idAnnee                INT REFERENCES Annee(idAnnee)
 );
 
 -- ALTER TABLE HeureCours ADD CONSTRAINT fk_HeureCours_TypeCours FOREIGN KEY (idTypeCours) REFERENCES TypeCours(idTypeCours);
