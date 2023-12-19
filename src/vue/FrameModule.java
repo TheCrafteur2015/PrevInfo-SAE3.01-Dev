@@ -49,7 +49,7 @@ public class FrameModule implements EventHandler<Event> {
 
 	private FrameIntervention frameIntervention;
 
-	private HashMap<Semestre, ArrayList<TextField>> hmTF;
+	private Map<Semestre, List<TextField>> hmTF;
 	private Map<Integer, Module> hmModule;
 	private Map<Integer, TypeCours> hmTypeCours;
 	private Map<Integer, TypeModule> hmTypeModule;
@@ -75,7 +75,7 @@ public class FrameModule implements EventHandler<Event> {
 	public FrameModule(Controleur ctrl, AnchorPane centerPaneAccueil) {
 		this.ctrl = ctrl;
 		this.centerPaneAccueil = centerPaneAccueil;
-		this.hmTF = new HashMap<Semestre, ArrayList<TextField>>();
+		this.hmTF = new HashMap<>();
 
 		this.init();
 	}
@@ -248,6 +248,7 @@ public class FrameModule implements EventHandler<Event> {
 			borderPaneTab.setTop(flowPaneTxtF);
 
 			Tab tab = new Tab("Semestre " + (cpt + 1), borderPaneTab);
+			tab.setId(semestre.getId()+"");
 			tabTab[cpt++] = tab;
 
 		}
@@ -422,8 +423,11 @@ public class FrameModule implements EventHandler<Event> {
 	}
 
 	public void nouveauModule(List<Integer> lstTypesCours, TypeModule tm) {
-		int idSemestre = tabPane.getSelectionModel().getSelectedIndex()+1;
-		this.ctrl.getModele().ajouterModule("Nom de la ressource", "R"+idSemestre+".00", tm.getId(), idSemestre);
+		int idSemestre = Integer.parseInt(tabPane.getSelectionModel().getSelectedItem().getId());
+		String code = "R"+(tabPane.getSelectionModel().getSelectedIndex()+1)+".00";
+		if (tm.getNom().equals("SAE")) code = "S"+(tabPane.getSelectionModel().getSelectedIndex()+1)+".00";
+		else if (tm.getNom().equals("stage")) code = "Stage";
+		this.ctrl.getModele().ajouterModule("Nom de la ressource", code, tm.getId(), idSemestre);
 		int idModule = Module.nbModule;
 		for (Integer i : lstTypesCours) {
 			this.ctrl.getModele().ajouterHeureCours(i, idModule, 0, 0, 0);
