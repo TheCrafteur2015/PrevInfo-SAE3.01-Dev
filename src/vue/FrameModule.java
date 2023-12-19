@@ -166,6 +166,8 @@ public class FrameModule implements EventHandler<Event> {
 			flowPaneTxtF.getChildren().add(gridPaneTmp);
 
 			this.colorPicker = new ColorPicker(Color.web(semestre.getCouleur()));
+			this.colorPicker.setId(semestre.getId()+"");
+			//this.colorPicker = new ColorPicker();
 			colorPicker.addEventHandler(ActionEvent.ACTION, this);
 			
 			flowPaneTxtF.setVgap(20);
@@ -468,8 +470,11 @@ public class FrameModule implements EventHandler<Event> {
 					}
 				}
 			}
-			else if (action.getSource() instanceof ColorPicker) {
-				System.out.println(this.colorPicker.getValue());
+			else if (action.getSource() instanceof ColorPicker cp) {
+				System.out.println("#" + cp.getValue().hashCode());
+				Semestre s = this.hmSemestres.get(Integer.parseInt(cp.getId()));
+				s.setCouleur("#" + cp.getValue().hashCode());
+				this.ctrl.getModele().updateSemestre(s);
 			}
 
 		}

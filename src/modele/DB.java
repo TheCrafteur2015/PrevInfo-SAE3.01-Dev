@@ -562,7 +562,7 @@ public class DB {
 		this.psUpdateSemestre.setInt(3, semestre.getNbGCM());
 		this.psUpdateSemestre.setInt(4, semestre.getNbSemaine());
 		this.psUpdateSemestre.setInt(6, semestre.getIdAnnee());
-		this.psUpdateSemestre.setString(4, semestre.getCouleur());
+		this.psUpdateSemestre.setString(5, semestre.getCouleur());
 		this.psUpdateSemestre.executeUpdate();
 	}
 

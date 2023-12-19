@@ -333,6 +333,7 @@ public class Modele {
 			if (!this.bEnDuplication)
 				this.ctrl.getVue().afficherNotification("Semestre modifié", "Semestre modifié avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
+			e.printStackTrace();
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible de modifier le semestre", ControleurIHM.Notification.ERREUR);
 		}
 	}
