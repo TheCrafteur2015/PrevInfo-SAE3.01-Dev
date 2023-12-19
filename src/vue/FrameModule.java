@@ -471,9 +471,11 @@ public class FrameModule implements EventHandler<Event> {
 				}
 			}
 			else if (action.getSource() instanceof ColorPicker cp) {
-				System.out.println("#" + cp.getValue().hashCode());
+				String couleur = cp.getValue()+"";
+				couleur = couleur.replace("0x", "#");
+				System.out.println(couleur);
 				Semestre s = this.hmSemestres.get(Integer.parseInt(cp.getId()));
-				s.setCouleur("#" + cp.getValue().hashCode());
+				s.setCouleur(couleur);
 				this.ctrl.getModele().updateSemestre(s);
 			}
 
