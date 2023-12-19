@@ -36,7 +36,7 @@ public class LigneModuleIHM {
 
 
 	public Integer getId() {
-		return id;
+		return this.id;
 	}
 
 
@@ -46,7 +46,7 @@ public class LigneModuleIHM {
 
 
 	public Button getInfo() {
-		return info;
+		return this.info;
 	}
 
 
@@ -58,7 +58,7 @@ public class LigneModuleIHM {
 	
 
 	public String getNom() {
-		return nom;
+		return this.nom;
 	}
 
 
@@ -68,7 +68,7 @@ public class LigneModuleIHM {
 
 
 	public String getCm() {
-		return cm;
+		return this.cm;
 	}
 
 
@@ -78,7 +78,7 @@ public class LigneModuleIHM {
 
 
 	public String getTd() {
-		return td;
+		return this.td;
 	}
 
 
@@ -88,7 +88,7 @@ public class LigneModuleIHM {
 
 
 	public String getTp() {
-		return tp;
+		return this.tp;
 	}
 
 
@@ -98,7 +98,7 @@ public class LigneModuleIHM {
 
 
 	public String getReh() {
-		return reh;
+		return this.reh;
 	}
 
 
@@ -108,7 +108,7 @@ public class LigneModuleIHM {
 
 
 	public String getHtut() {
-		return htut;
+		return this.htut;
 	}
 
 
@@ -118,7 +118,7 @@ public class LigneModuleIHM {
 
 
 	public String getSae() {
-		return sae;
+		return this.sae;
 	}
 
 
@@ -128,7 +128,7 @@ public class LigneModuleIHM {
 
 
 	public String getHp() {
-		return hp;
+		return this.hp;
 	}
 
 
@@ -138,7 +138,7 @@ public class LigneModuleIHM {
 
 
 	public Button getSupprimer() {
-		return supprimer;
+		return this.supprimer;
 	}
 
 
@@ -148,15 +148,12 @@ public class LigneModuleIHM {
 
 
 	public String getCode() {
-		return code;
+		return this.code;
 	}
 
 
 	public void setCode(String code) {
 		this.code = code;
 	}
-
-	
-
 	
 }

@@ -12,29 +12,33 @@ public class Semestre {
 	private int nbGTP;
 	private int nbGCM;
 	private int nbSemaine;
+	private String couleur;
+
 	private int idAnnee;
 
-	public Semestre(int id, int nbGTD, int nbGTP, int nbGCM, int nbSemaine, int idAnnee) {
+	public Semestre(int id, int nbGTD, int nbGTP, int nbGCM, int nbSemaine, String couleur, int idAnnee) {
 		this.id = id;
 		this.nbGTD = nbGTD;
 		this.nbGTP = nbGTP;
 		this.nbGCM = nbGCM;
 		this.nbSemaine = nbSemaine;
+		this.couleur = couleur;
 		this.idAnnee = idAnnee;
 		Semestre.nbSemestre++;
 	}
 
-	public Semestre(int nbGTD, int nbGTP, int nbGCM, int nbSemaine, int idAnnee) {
+	public Semestre(int nbGTD, int nbGTP, int nbGCM, int nbSemaine, String couleur, int idAnnee) {
 		this.id = ++Semestre.nbSemestre;
 		this.nbGTD = nbGTD;
 		this.nbGTP = nbGTP;
 		this.nbGCM = nbGCM;
 		this.nbSemaine = nbSemaine;
+		this.couleur = couleur;
 		this.idAnnee = idAnnee;
 	}
 
 	public int getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(int id) {
@@ -42,7 +46,7 @@ public class Semestre {
 	}
 
 	public int getNbGTD() {
-		return nbGTD;
+		return this.nbGTD;
 	}
 
 	public void setNbGTD(int nbGTD) {
@@ -50,7 +54,7 @@ public class Semestre {
 	}
 
 	public int getNbGTP() {
-		return nbGTP;
+		return this.nbGTP;
 	}
 
 	public void setNbGTP(int nbGTP) {
@@ -58,7 +62,7 @@ public class Semestre {
 	}
 
 	public int getNbGCM() {
-		return nbGCM;
+		return this.nbGCM;
 	}
 
 	public void setNbGCM(int nbGCM) {
@@ -66,7 +70,7 @@ public class Semestre {
 	}
 
 	public int getNbSemaine() {
-		return nbSemaine;
+		return this.nbSemaine;
 	}
 
 	public void setNbSemaine(int nbSemaine) {
@@ -74,19 +78,26 @@ public class Semestre {
 	}
 
 	public int getIdAnnee() {
-		return idAnnee;
+		return this.idAnnee;
 	}
 
 	public void setIdAnnee(int idAnnee) {
 		this.idAnnee = idAnnee;
 	}
-
+	
 	@Override
 	public String toString() {
-		return "Semestre [id=" + id + ", nbGTD=" + nbGTD + ", nbGTP=" + nbGTP + ", nbGCM=" + nbGCM + ", nbSemaine="
-				+ nbSemaine + ", idAnnee=" + idAnnee + "]";
+		String format = "Semestre [id=%1$d, nbGTD=%2$d, nbGTP=%3$d, nbGCM=%4$d, nbSemaine=%5$d, idAnnee=%6$d]";
+		return String.format(format, this.id, this.nbGTD, this.nbGTP, this.nbGCM, this.nbSemaine, this.idAnnee);
+		// TODO return "Semestre [id=" + id + ", nbGTD=" + nbGTD + ", nbGTP=" + nbGTP + ", nbGCM=" + nbGCM + ", nbSemaine=" + nbSemaine + ", idAnnee=" + idAnnee + "]";
+	}
+	
+	public String getCouleur() {
+		return this.couleur;
 	}
 
+	public void setCouleur(String couleur) {
+		this.couleur = couleur;
+	}
 	
-
 }

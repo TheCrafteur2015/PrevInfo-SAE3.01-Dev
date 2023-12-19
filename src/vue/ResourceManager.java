@@ -1,9 +1,13 @@
 package vue;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URL;
+import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.MissingResourceException;
-import java.util.HashMap;
 import java.util.Scanner;
 
 import javafx.scene.control.Button;
@@ -12,12 +16,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Field;
-
-import java.nio.file.Paths;
 
 public final class ResourceManager {
 

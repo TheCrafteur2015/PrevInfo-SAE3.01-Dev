@@ -76,7 +76,9 @@ public class DB {
 		}
 
 		try {
-			connec = DriverManager.getConnection("jdbc:postgresql://woody/ld220835", "ld220835", "USERA262");
+	
+			LireFichier lf = new LireFichier("/DB/identifiants.txt");
+			connec = DriverManager.getConnection("jdbc:postgresql://woody/ld220835", lf.getIdentifiant(), lf.getMotDePasse());
 			this.psSelectCategorie = connec.prepareStatement("SELECT * FROM Categorie WHERE idAnnee = ?");
 			this.psSelectIntervenant = connec.prepareStatement("SELECT * FROM Intervenant WHERE idAnnee = ?");
 			this.psSelectIntervention = connec.prepareStatement("SELECT * FROM Intervention WHERE idAnnee = ?");
@@ -108,7 +110,7 @@ public class DB {
 			this.psInsertIntervenant = connec.prepareStatement("INSERT INTO Intervenant VALUES (?,?,?,?,?,?,?,?)");
 			this.psInsertIntervention = connec.prepareStatement("INSERT INTO Intervention VALUES (?,?,?,?,?,?,?,?)");
 			this.psInsertModule = connec.prepareStatement("INSERT INTO Module VALUES (?,?,?,?,?,?)");
-			this.psInsertSemestre = connec.prepareStatement("INSERT INTO Semestre VALUES (?,?,?,?,?,?)");
+			this.psInsertSemestre = connec.prepareStatement("INSERT INTO Semestre VALUES (?,?,?,?,?,?,?)");
 			this.psInsertHeureCours = connec.prepareStatement("INSERT INTO HeureCours VALUES (?,?,?,?,?,?)");
 			this.psInsertAnnee = connec.prepareStatement("INSERT INTO Annee VALUES (?, ?)");
 
@@ -121,7 +123,7 @@ public class DB {
 			this.psUpdateModule = connec.prepareStatement(
 					"UPDATE Module SET nomModule = ?, code = ?, idSemestre = ?, idTypeModule = ? WHERE idAnnee = ? AND idModule = ?");
 			this.psUpdateSemestre = connec.prepareStatement(
-					"UPDATE Semestre SET nbGTD = ?, nbGTP = ?, nbGCM = ?, nbSemaine = ? WHERE idAnnee = ? AND idSemestre = ?");
+					"UPDATE Semestre SET nbGTD = ?, nbGTP = ?, nbGCM = ?, nbSemaine = ?, couleur = ? WHERE idAnnee = ? AND idSemestre = ?");
 			this.psUpdateHeureCours = connec.prepareStatement(
 					"UPDATE HeureCours SET heure = ?, nbSemaine = ?, hParSemaine = ? WHERE idTypeCours = ? AND idModule = ? AND idAnnee = ? ");
 			this.psUpdateTypeCours = connec
@@ -525,7 +527,7 @@ public class DB {
 		while (rs.next()) {
 			hmSemestre.put(rs.getInt("idSemestre"),
 					new Semestre(rs.getInt("idSemestre"), rs.getInt("nbGTD"), rs.getInt("nbGTP"), rs.getInt("nbGCM"),
-							rs.getInt("nbSemaine"), idAnnee));
+							rs.getInt("nbSemaine"), rs.getString("couleur"), idAnnee));
 		}
 		return hmSemestre;
 	}
@@ -542,7 +544,8 @@ public class DB {
 		this.psInsertSemestre.setInt(3, semestre.getNbGTP());
 		this.psInsertSemestre.setInt(4, semestre.getNbGCM());
 		this.psInsertSemestre.setInt(5, semestre.getNbSemaine());
-		this.psInsertSemestre.setInt(6, semestre.getIdAnnee());
+		this.psInsertSemestre.setString(6, semestre.getCouleur());
+		this.psInsertSemestre.setInt(7, semestre.getIdAnnee());
 		this.psInsertSemestre.executeUpdate();
 	}
 
@@ -553,12 +556,13 @@ public class DB {
 	 * @throws SQLException
 	 */
 	public void updateSemestre(Semestre semestre) throws SQLException {
-		this.psUpdateSemestre.setInt(6, semestre.getId());
+		this.psUpdateSemestre.setInt(7, semestre.getId());
 		this.psUpdateSemestre.setInt(1, semestre.getNbGTD());
 		this.psUpdateSemestre.setInt(2, semestre.getNbGTP());
 		this.psUpdateSemestre.setInt(3, semestre.getNbGCM());
 		this.psUpdateSemestre.setInt(4, semestre.getNbSemaine());
-		this.psUpdateSemestre.setInt(5, semestre.getIdAnnee());
+		this.psUpdateSemestre.setInt(6, semestre.getIdAnnee());
+		this.psUpdateSemestre.setString(4, semestre.getCouleur());
 		this.psUpdateSemestre.executeUpdate();
 	}
 

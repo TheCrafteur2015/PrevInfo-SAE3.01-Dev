@@ -34,6 +34,7 @@ CREATE TABLE Semestre (
 	nbGTP      INT,
 	nbGCM      INT,
 	nbSemaine  INT,
+	couleur    VARCHAR(7),
 	idAnnee    INT REFERENCES Annee(idAnnee)
 );
 

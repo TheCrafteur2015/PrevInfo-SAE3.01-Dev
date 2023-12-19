@@ -1,5 +1,6 @@
 package modele;
 
+import java.util.Comparator;
 
 public class Module implements Comparable<Module> {
 
@@ -95,6 +96,13 @@ public class Module implements Comparable<Module> {
 	@Override
 	public int compareTo(Module autre) {
 		return this.code.compareTo(autre.code);
+	}
+	
+	public class ModuleComparator implements Comparator<Module>{
+		@Override
+		public int compare(Module o1, Module o2) {
+			return o1.idSemestre - o2.idSemestre;
+		}
 	}
 
 }

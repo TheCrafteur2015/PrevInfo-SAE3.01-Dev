@@ -1,13 +1,11 @@
 package vue;
-import java.net.URL;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class App extends Application /* implements EventHandler<Event> */ {
+public class App extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -16,7 +14,6 @@ public class App extends Application /* implements EventHandler<Event> */ {
 
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
-
 		
 		stage.setResizable(false);
 		stage.setScene(scene);

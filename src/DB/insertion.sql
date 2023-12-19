@@ -10,13 +10,13 @@
 */
 INSERT INTO Annee (idAnnee, annee) VALUES (1, '2023-2024');
 
-INSERT INTO Semestre (idSemestre, nbGTD, nbGTP, nbGCM, nbSemaine, idAnnee) VALUES
-	( 1, 4, 8, 1, 1, 1),
-	( 2, 4, 8, 1, 1, 1),
-	( 3, 2, 4, 1, 0, 1),
-	( 4, 2, 4, 1, 0, 1),
-	( 5, 2, 4, 1, 0, 1),
-	( 6, 2, 4, 1, 0, 1);
+INSERT INTO Semestre (idSemestre, nbGTD, nbGTP, nbGCM, nbSemaine, couleur, idAnnee) VALUES
+	( 1, 4, 8, 1, 1, '#ffffff', 1),
+	( 2, 4, 8, 1, 1, '#ffffff', 1),
+	( 3, 2, 4, 1, 0, '#ffffff', 1),
+	( 4, 2, 4, 1, 0, '#ffffff', 1),
+	( 5, 2, 4, 1, 0, '#ffffff', 1),
+	( 6, 2, 4, 1, 0, '#ffffff', 1);
 
 
 INSERT INTO Categorie (idCategorie ,nomCategorie, hMaxCategorie, hMinCategorie, ratioTp, idAnnee) VALUES
@@ -237,7 +237,7 @@ INSERT INTO Intervenant (idIntervenant ,prenom, nom, email, hMinIntervenant, hMa
 	( 6, 'Laurence' , 'Nivet'     , 'laurence.nivet@univ-lehavre.fr'         , 0, 0, 1, 1),
 	( 7, 'Quentin'  , 'Griette'   , 'quentin.griette@univ-lehavre.fr'        , 0, 0, 1, 1),
 	( 8, 'Quentin'  , 'Laffeach'  , 'quentin.laffeach@univ-lehavre.fr'       , 0, 0, 1, 1),
-	( 9, 'Rodolphe' , 'Charrier'  , 'Rodolphe.Charrier@univ-lehavre.fr'      , 0, 0, 1, 1),
+	( 9, 'Rodolphe' , 'Charrier'  , 'rodolphe.charrier@univ-lehavre.fr'      , 0, 0, 1, 1),
 	(10, 'Bruno'    , 'Legrix'    , 'bruno.legrix@univ-lehavre.fr'           , 0, 0, 1, 1),
 	(11, 'Alabboud' , 'Hassan'    , 'alabboudhassan@gmail.com'               , 0, 0, 1, 1),
 	(12, 'Zahour'   , 'Abderrazak', 'zahoura@univ-lehavre.fr'                , 0, 0, 1, 1),

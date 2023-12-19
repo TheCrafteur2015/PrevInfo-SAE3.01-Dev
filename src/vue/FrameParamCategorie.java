@@ -11,7 +11,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -30,6 +29,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import modele.Categorie;
+import modele.Modele;
 
 public class FrameParamCategorie implements ChangeListener<String>, EventHandler<ActionEvent> {
 	private Controleur ctrl;
@@ -70,7 +70,7 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 
 			olCategorie.add(new CategorieIHM(c.getNom(), btnSup));
 		}
-		this.btnAjouter = new Button("Ajouter");
+		this.btnAjouter = new Button("⨁ Ajouter");
 		this.btnAjouter.setDisable(true);
 		this.btnAjouter.addEventHandler(ActionEvent.ACTION, this);
 
@@ -102,14 +102,15 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 					@Override
 					public void handle(MouseEvent event) {
 						final int index = row.getIndex();
-						if (index >= 0 && index < tableView.getItems().size()
+						double x = event.getScreenX();
+						if (index >= 0 && index < tableView.getItems().size() && (x<850 || x>890)
 								&& tableView.getSelectionModel().isSelected(index)) {
 							tableView.getSelectionModel().clearSelection();
 							nomCategorie.setText("");
 							tfHeureMin.setText("");
 							tfHeureMax.setText("");
 							tfRatioTp.setText("");
-							btnAjouter.setText("Ajouter");
+							btnAjouter.setText("⨁ Ajouter");
 							event.consume();
 						} else if (index >=0 && index < tableView.getItems().size()) {
 							int id = Integer.parseInt(tableView.getItems().get(index).getSupprimer().getId());
@@ -194,14 +195,20 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 			olCategorie.add(new CategorieIHM(c.getNom(), btnSup));
 		}
 		this.tableView.setItems(olCategorie);
+		this.tfHeureMax.setText("");
+		this.tfHeureMin.setText("");
+		this.tfRatioTp.setText("");
+		this.nomCategorie.setText("");
+		this.btnAjouter.setText("⨁ Ajouter");
+		
 	}
 
 	@Override
 	public void changed(ObservableValue<? extends String> observable, String oldString, String newString) {
-		if (!this.tfHeureMin.getText().matches("[0-9. ]*")) {
+		if (!this.tfHeureMin.getText().matches(Modele.REGEX_DOUBLE)) {
 			this.tfHeureMin.setText(oldString);
 		}
-		if (!this.tfHeureMax.getText().matches("[0-9. ]*")) {
+		if (!this.tfHeureMax.getText().matches(Modele.REGEX_DOUBLE)) {
 			this.tfHeureMax.setText(oldString);
 		}
 		this.btnAjouter.setDisable(this.nomCategorie.getText().isEmpty() || this.tfHeureMin.getText().isEmpty()
@@ -215,16 +222,22 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 			if (ControleurIHM.bIsValidate) {
 				int id = Integer.parseInt(btn.getId());
 				this.ctrl.getModele().supprimerCategorie(id);
-				this.maj();
+				
 			}
+			ControleurIHM.bIsValidate = false;
+			this.maj();
+			
+		}
 			if (event.getSource() == this.btnAjouter) {
-				if (this.btnAjouter.getText().equals("Ajouter")) {
+				if (this.btnAjouter.getText().equals("⨁ Ajouter")) {
 					this.ctrl.getModele().ajouterCategorie(this.nomCategorie.getText(),
 							Double.parseDouble(this.tfHeureMin.getText()), Double.parseDouble(this.tfHeureMax.getText()),
 							Double.parseDouble(this.tfRatioTp.getText()));
-					this.maj();
+							this.maj();
+					
 				}
 				if (this.btnAjouter.getText().equals("Modifier")) {
+					
 					int id = Integer.parseInt(this.tableView.getSelectionModel()
 							.getSelectedItem().getSupprimer().getId());
 					Categorie c = this.ctrl.getModele().getHmCategories().get(id);
@@ -233,10 +246,10 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 					c.sethMax(Double.parseDouble(this.tfHeureMax.getText()));
 					c.setRatioTp(Double.parseDouble(this.tfRatioTp.getText()));
 					this.ctrl.getModele().updateCategorie(c);
-					this.maj();	
-					this.owner.majTableIntervenant();
+					this.maj();
+					
 				}
 			}
 		}
 	}
-}
+

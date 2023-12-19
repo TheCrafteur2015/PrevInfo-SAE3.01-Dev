@@ -35,14 +35,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
-import modele.Semestre;
 import modele.HeureCours;
 import modele.Modele;
 import modele.Module;
+import modele.Semestre;
 import modele.TypeCours;
 import modele.TypeModule;
 
 public class FrameModule implements EventHandler<Event> {
+	
 	private Controleur ctrl;
 	private AnchorPane centerPaneAccueil;
 	private Map<Integer, Semestre> hmSemestres;
@@ -57,7 +58,7 @@ public class FrameModule implements EventHandler<Event> {
 
 	private TabPane tabPane;
 
-	private List<TableView> lstTableView;
+	private List<TableView<LigneModuleIHM>> lstTableView;
 	private ObservableList<LigneModuleIHM> lst;
 	private TextField txtFTD;
 	private TextField txtFTP;
@@ -77,19 +78,18 @@ public class FrameModule implements EventHandler<Event> {
 		this.centerPaneAccueil = centerPaneAccueil;
 		this.hmTF = new HashMap<>();
 
-		this.init();
+		this.init(1);
 	}
 
-	public void init() {
+	public void init(int idSelectedSemestre) {
 		this.hmHeureCours = this.ctrl.getModele().getHmHeuresCours();
 		this.centerPaneAccueil.getChildren().clear();
 		this.centerPaneAccueil.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
 		this.hmTypeModule = this.ctrl.getModele().getHmTypeModule();
 		this.lstTxtF = new ArrayList<>();
 
-		this.majTabs();
+		this.majTabs(idSelectedSemestre);
 
-	
 		FlowPane flowPane = new FlowPane();
 		this.btnAjouter = new Button("Ajouter");
 		this.btnAjouter.addEventHandler(ActionEvent.ACTION, this);
@@ -106,7 +106,7 @@ public class FrameModule implements EventHandler<Event> {
 		this.centerPaneAccueil.getChildren().addAll(tabPane, flowPane);
 	}
 
-	public void majTabs() {
+	public void majTabs(int idSelectedSemestre) {
 		this.tabPane = new TabPane();
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 
@@ -165,15 +165,14 @@ public class FrameModule implements EventHandler<Event> {
 			gridPaneTmp.add(textFieldTmp, 1, 0);
 			flowPaneTxtF.getChildren().add(gridPaneTmp);
 
-			this.colorPicker = new ColorPicker(Color.CORAL);
+			this.colorPicker = new ColorPicker(Color.web(semestre.getCouleur()));
 			colorPicker.addEventHandler(ActionEvent.ACTION, this);
 			
 			flowPaneTxtF.setVgap(20);
 			flowPaneTxtF.setHgap(20);
 			flowPaneTxtF.getChildren().add(colorPicker);
 
-			TableView<LigneModuleIHM> tbV = new TableView<LigneModuleIHM>();
-
+			TableView<LigneModuleIHM> tbV = new TableView<>();
 
 			String[] colonnes = new String[] { "id", "info", "Code", "Nom", "CM", "TD", "TP", "REH", "HTut", "SAE",
 					"HP", "supprimer" };
@@ -220,7 +219,9 @@ public class FrameModule implements EventHandler<Event> {
 					else
 						tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.065));
 					tbV.getColumns().add(tbcl);
+					
 				}
+				
 			}
 
 			tbV.setEditable(true);
@@ -228,16 +229,15 @@ public class FrameModule implements EventHandler<Event> {
 
 			List<Module> lstModule = this.ctrl.getModele().getModuleBySemestre(semestre.getId(), semestre.getIdAnnee());
 			lstModule.sort(null);
-			// System.out.println(hmModule);
 			this.hmTypeCours = this.ctrl.getModele().getHmTypeCours();
 			this.lst = FXCollections.observableArrayList();
 
 			for (Module m : lstModule) {
 				switch (this.hmTypeModule.get(m.getIdTypeModule()).getNom()) {
-					case "PPP" -> ajouterModulePPP(m);
-					case "SAE" -> ajouterModuleSAE(m);
-					case "normal" -> ajouterModuleNormale(m);
-					case "stage" -> ajouterModuleStage(m);
+					case "PPP"    -> this.ajouterModulePPP(m);
+					case "SAE"    -> this.ajouterModuleSAE(m);
+					case "normal" -> this.ajouterModuleNormale(m);
+					case "stage"  -> this.ajouterModuleStage(m);
 				}
 			}
 
@@ -276,6 +276,8 @@ public class FrameModule implements EventHandler<Event> {
 		}
 
 		this.tabPane.getTabs().addAll(tabTab);
+		this.tabPane.getSelectionModel().select(idSelectedSemestre);
+
 		AnchorPane.setTopAnchor(tabPane, 5.0);
 		AnchorPane.setRightAnchor(tabPane, 5.0);
 		AnchorPane.setBottomAnchor(tabPane, 50.0);
@@ -449,7 +451,7 @@ public class FrameModule implements EventHandler<Event> {
 							case "stage" -> lstTypesCours = List.of(5, 4, 7);
 						}
 						nouveauModule(lstTypesCours, tm);
-						this.init();
+						this.init(this.tabPane.getSelectionModel().getSelectedIndex());
 					}
 				} 	
 				else {
@@ -459,6 +461,7 @@ public class FrameModule implements EventHandler<Event> {
 						if (ControleurIHM.bIsValidate)
 						this.ctrl.getModele().supprimerModule(Integer.parseInt(textBtn[1]));
 					}
+					
 					if (textBtn[0].equals("AjouterIntervenant")) {
 						this.frameIntervention = new FrameIntervention(this.ctrl, this.centerPaneAccueil,
 								this.hmModule.get(Integer.parseInt(textBtn[1])));
@@ -470,7 +473,7 @@ public class FrameModule implements EventHandler<Event> {
 			}
 
 		}
-		this.init();
+		this.init(this.tabPane.getSelectionModel().getSelectedIndex());
 	}
 
 	

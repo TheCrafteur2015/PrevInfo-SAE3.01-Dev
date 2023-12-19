@@ -25,4 +25,5 @@ src/modele/Semestre.java
 src/modele/TypeCours.java  
 src/modele/TypeModule.java  
 src/modele/HeureCours.java
- 
+src/modele/LireFichier.java 
+src/modele/Exportation.java

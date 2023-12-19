@@ -4,6 +4,7 @@ import java.util.Map;
 
 import controleur.Controleur;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -15,10 +16,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import modele.Exportation;
 import modele.Intervenant;
 import modele.Module;
 
-public class FrameExporter implements EventHandler<Event>{
+public class FrameExporter implements EventHandler<Event> {
+	
 	private Controleur ctrl;
 	private AnchorPane centerPaneAccueil;
 	private Map<Integer, Intervenant> hmIntervenants;
@@ -30,12 +33,13 @@ public class FrameExporter implements EventHandler<Event>{
 	private Map<Integer, Module> hmModules;
 	private Button btnModule;
 	private ChoiceBox<Module> choiceBoxModule;
+	private Exportation export;
 	
 
 	public FrameExporter(Controleur ctrl, AnchorPane centerPaneAccueil) {
 		this.ctrl = ctrl;
 		this.centerPaneAccueil = centerPaneAccueil;
-		
+		this.export = new Exportation(this.ctrl.getModele());
 		this.init();
 	}
 
@@ -48,13 +52,13 @@ public class FrameExporter implements EventHandler<Event>{
 		BorderPane borderPane = new BorderPane();
 		this.hmIntervenants = this.ctrl.getModele().getHmIntervenants();
 		this.btnIntervenant = new Button("Confirmer");
+		this.btnIntervenant.addEventHandler(ActionEvent.ACTION, this);
 		this.choiceBoxIntervenant = new ChoiceBox<>();
 
 		for (Intervenant i : this.hmIntervenants.values()) {
-			this.choiceBoxIntervenant.getItems().add(i);			
+			this.choiceBoxIntervenant.getItems().add(i);
 		}
 		
-
 		GridPane gridPane1 = new GridPane();
 		gridPane1.add(new Text("Exportation par Intervenant"), 0, 0);
 		gridPane1.add(this.choiceBoxIntervenant, 0, 1);
@@ -66,6 +70,8 @@ public class FrameExporter implements EventHandler<Event>{
 
 		this.hmModules = this.ctrl.getModele().getHmModules();
 		this.btnModule = new Button("Confirmer");
+		this.btnModule.addEventHandler(ActionEvent.ACTION, this);
+		
 		this.choiceBoxModule = new ChoiceBox<>();
 
 		for (Module m : this.hmModules.values()) {
@@ -87,25 +93,33 @@ public class FrameExporter implements EventHandler<Event>{
 		gridPane3.add(gridPane1, 1, 0);
 		gridPane3.add(gridPane2, 1, 1);
 
-
-		
-
 		this.choiceBoxIntervenant.setMaxWidth(500);
 		this.choiceBoxModule.setMaxWidth(500);
-
 		
 		vbox.getChildren().addAll(borderPane);
 
 		this.centerPaneAccueil.getChildren().add(gridPane3);
 		
-		
 	}
-
-	public void handle(Event action) {
 	
+	@Override
+	public void handle(Event action) {
+		if (action instanceof ActionEvent) {
+			String annee = this.ctrl.getModele().getHmAnnee().get(this.ctrl.getModele().getIdAnnee());
+			if (action.getSource() == this.btnIntervenant) {
+				Intervenant i = this.choiceBoxIntervenant.getValue();
+				this.export.exportIntervenant(i.getId(), i.getNom() + "_" + i.getPrenom() + "_previsionnel_"+annee);
+			}
+			else if (action.getSource() == this.btnModule) {
+				Module m = this.choiceBoxModule.getValue();
+				this.export.exportModule(m.getId(),  m.getCode() + "_" + m.getNom()  + "_previsionnel_"+annee);
+			}
+		}
 	}
-
+	
+	
 	public void changed(ObservableValue<? extends String> observable, String oldStr, String newStr) {
 		
 	}
+
 }

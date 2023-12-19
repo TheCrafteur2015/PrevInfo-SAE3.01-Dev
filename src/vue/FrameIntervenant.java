@@ -1,11 +1,12 @@
 package vue;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import controleur.Controleur;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -40,7 +42,10 @@ import javafx.util.Callback;
 import modele.Categorie;
 import modele.Intervenant;
 import modele.Intervention;
+import modele.Modele;
 import modele.Module;
+import modele.Semestre;
+import modele.TypeCours;
 
 public class FrameIntervenant implements EventHandler<Event>, ChangeListener<String> {
 
@@ -93,8 +98,8 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 
 		this.tableViewIntervenant.setPrefHeight(500);
 		this.tableViewIntervenant.setPrefWidth(1100);
-		this.tableViewIntervenant.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
+	 	this.tableViewIntervenant.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		
 		this.tableViewIntervenant.setRowFactory(new Callback<TableView<IntervenantIHM>, TableRow<IntervenantIHM>>() {
 			@Override
 			public TableRow<IntervenantIHM> call(TableView<IntervenantIHM> tableView2) {
@@ -104,13 +109,16 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 					@Override
 					public void handle(MouseEvent event) {
 						final int index = row.getIndex();
-						if (index >= 0 && index < tableViewIntervenant.getItems().size()
+						double x = event.getScreenX();
+						if (index >= 0 && index < tableViewIntervenant.getItems().size() && (x<580 || x>630) && (x<1498 || x>1540)
 								&& tableViewIntervenant.getSelectionModel().isSelected(index)) {
 							tableViewIntervenant.getSelectionModel().clearSelection();
-							
+							btnParamIntervenants.setText("Ajouter un intervenant");
 							event.consume();
 						} 
-
+						else{
+							btnParamIntervenants.setText("Paramètrer un Intervenant");
+						}
 					}
 				});
 				return row;
@@ -120,7 +128,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		AnchorPane.setTopAnchor(this.tableViewIntervenant, 20.0);
 		AnchorPane.setLeftAnchor(this.tableViewIntervenant, 20.0);
 
-		this.btnParamIntervenants = new Button("Paramètrer les Intervenants");
+		this.btnParamIntervenants = new Button("Paramètrer un Intervenant");
 		this.btnParamIntervenants.setStyle("-fx-background-radius: 100");
 
 		this.btnParamIntervenants.setPrefSize(250, 40);
@@ -168,7 +176,6 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 			lst.add(new IntervenantIHM(infoButton, i.getPrenom(), i.getNom(),
 					this.ctrl.getModele().getNomCateg(i.getIdCategorie()), i.getEmail(), supButton));
 		}
-
 		this.tableViewIntervenant.setItems(lst);
 	}
 
@@ -322,61 +329,91 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		popupStage.showAndWait();
 	}
 	
-	@SuppressWarnings("deprecation")
+	
 	public void popupAfficheModule(int idIntervenant) {
+		
+		Intervenant intervenant = this.ctrl.getModele().getHmIntervenants().get(idIntervenant);
+		Categorie categorie = this.ctrl.getModele().getHmCategories().get(intervenant.getIdCategorie());
+		
 		Stage popupStage = new Stage();
 		popupStage.initModality(Modality.APPLICATION_MODAL);
-		popupStage.setTitle("Affichage des Modules");
+		popupStage.setTitle("État de l'intervenant");
 
-		TableView<String> tableViewModules;
-		tableViewModules = new TableView<>();
-		tableViewModules.setEditable(true);
+		GridPane gridPaneTotal = new GridPane();
+		gridPaneTotal.setHgap(20);
+		gridPaneTotal.setVgap(20);	
 
-		tableViewModules.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		GridPane gridPaneInfoInter = new GridPane();
+		gridPaneInfoInter.add(new Label(categorie.getNom()), 0, 0);
+		gridPaneInfoInter.add(new Label(intervenant.getNom()), 1, 0);
+		gridPaneInfoInter.add(new Label(intervenant.getPrenom()), 2, 0);
+		gridPaneInfoInter.setHgap(20);
 
+		GridPane gridPaneInfoService = new GridPane();
+		gridPaneInfoService.add(new Label("hMin : " + intervenant.gethMin()), 0, 0);
+		gridPaneInfoService.add(new Label("hMax : " + intervenant.gethMax()), 1, 0);
+		gridPaneInfoService.add(new Label("RatioTp : " + String.format("%.2f", categorie.getRatioTp())), 2, 0);
+		gridPaneInfoService.setHgap(20);
+
+		List<Double> lstHSem = new ArrayList<>();
+		Map<Integer, Semestre> hmSem = this.ctrl.getModele().getHmSemestres();
+		Map<Integer, TypeCours> hmTypeCours = this.ctrl.getModele().getHmTypeCours();
 		Map<Integer, Module> hmModule = this.ctrl.getModele().getHmModules();
 		Map<Integer, Intervention> hmIntervention = this.ctrl.getModele().getHmInterventions();
-		ObservableList<String> lst = FXCollections.observableArrayList();
+		int cptSem = 0;
+		
 
-		String[] colonnes = new String[] { "Nom" };
-
-		TableColumn<String, String> tbcl = new TableColumn<>(colonnes[0]);
-        // tbcl.setCellValueFactory(cellData -> cellData.getValue());
-		/*
-		tbcl.setCellValueFactory(new Callback<>() {
-            @Override
-            public javafx.beans.value.ObservableValue<String> call(TableColumn.CellDataFeatures<String, String> p) {
-                return javafx.beans.binding.Bindings.createObjectBinding(() -> p.getValue());
-            }
-        });*/
-		tbcl.setCellValueFactory(p -> Bindings.createObjectBinding(() -> p.getValue()));
-
-		tableViewModules.getColumns().add(tbcl);
-
-
-		for (Intervention i : hmIntervention.values()) {
-			if (i.getIdIntervenant() == idIntervenant && !lst.contains(hmModule.get(i.getIdModule()).getNom())){
-				lst.add(hmModule.get(i.getIdModule()).getNom());
+		for (Semestre s : hmSem.values()) {
+			lstHSem.add(0.0);
+			for (Intervention i : hmIntervention.values()) {
+				Module m = hmModule.get(i.getIdModule());
+				if (i.getIdIntervenant() == idIntervenant && s.getId() == m.getIdSemestre()) {
+					TypeCours tc = hmTypeCours.get(i.getIdTypeCours());
+					double nbHeure = this.ctrl.getModele().getHmHeuresCours().get(i.getIdTypeCours() + "-" + i.getIdModule()).getHeure() * tc.getCoefficient();
+					if (tc.getNom().equals("TP")) nbHeure = nbHeure * categorie.getRatioTp();
+					lstHSem.set(cptSem, lstHSem.get(cptSem) + i.getNbGroupe()*nbHeure);
+					System.out.println(i + " " + nbHeure);
+				}
 			}
+			cptSem ++;
 		}
-
-		tableViewModules.setItems(lst);
+				
+		double sTotal1 = lstHSem.get(0) + lstHSem.get(1) + lstHSem.get(2);
+		GridPane gridPaneDetailSemestre = new GridPane();
+		gridPaneDetailSemestre.add(new Label("s1 : " + String.format("%.2f", lstHSem.get(0))), 0, 0);
+		gridPaneDetailSemestre.add(new Label("s3 : " + String.format("%.2f", lstHSem.get(1))), 0, 1);
+		gridPaneDetailSemestre.add(new Label("s5 : " + String.format("%.2f", lstHSem.get(2))), 0, 2);
+		gridPaneDetailSemestre.add(new Label("sTotal : " +  String.format("%.2f", sTotal1)), 0, 3);
+		
+		double sTotal2 = lstHSem.get(3) + lstHSem.get(4) + lstHSem.get(5);
+		gridPaneDetailSemestre.add(new Label("s2 : " + String.format("%.2f", lstHSem.get(3))), 1, 0);
+		gridPaneDetailSemestre.add(new Label("s4 : " + String.format("%.2f", lstHSem.get(4))), 1, 1);
+		gridPaneDetailSemestre.add(new Label("s6 : " + String.format("%.2f", lstHSem.get(5))), 1, 2);
+		gridPaneDetailSemestre.add(new Label("sTotal : " + String.format("%.2f", sTotal2)), 1, 3);
+		gridPaneDetailSemestre.setVgap(20);
+		gridPaneDetailSemestre.setHgap(20);
+		
+		gridPaneTotal.add(gridPaneInfoInter, 0, 0);
+		gridPaneTotal.add(gridPaneInfoService, 0, 1);
+		gridPaneTotal.add(gridPaneDetailSemestre, 0, 2);
+		gridPaneTotal.add(new Label("Total : " + String.format("%.2f", (sTotal1+sTotal2))), 0, 3);
 
 		VBox vbox = new VBox(5);
-		vbox.setMaxSize(400, 50 + lst.size() * 40);
-
+		vbox.setMaxSize(400, 400);
 		vbox.setAlignment(Pos.CENTER);
+		vbox.getChildren().add(gridPaneTotal);
 
 		StackPane popupLayout = new StackPane();
-		vbox.getChildren().add(tableViewModules);
+		popupLayout.setAlignment(Pos.CENTER);
 		popupLayout.getChildren().add(vbox);
 		popupLayout.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
-		Scene popupScene = new Scene(popupLayout, 400, 50 + lst.size() * 40);
+		Scene popupScene = new Scene(popupLayout, 400, 400);
 		popupStage.setScene(popupScene);
 
 		popupStage.showAndWait();
 	}
-
+	
+	@Override
 	public void handle(Event event) {
 		if (event.getSource() == this.btnParamCategorie) {
 			this.frameParamCategorie = new FrameParamCategorie(this.ctrl, this.centerPaneAccueil, this);
@@ -424,9 +461,10 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 					this.modifIntervenant.setEmail(email);
 					this.modifIntervenant.sethMin(hMin);
 					this.modifIntervenant.sethMax(hMax);
+					this.modifIntervenant.setIdCategorie(this.choiceBoxCategorie.getValue().getId());
 					this.ctrl.getModele().updateIntervenant(this.modifIntervenant);
 				} else {
-					this.ctrl.getModele().ajouterIntervenant(prenom, nom, email, hMin, hMax, annee);
+					this.ctrl.getModele().ajouterIntervenant(prenom, nom, email, hMin, hMax, this.choiceBoxCategorie.getValue().getId());
 				}
 				
 				((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
@@ -440,29 +478,38 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 				if (textButton[0].equals("Info")) {
 					this.popupAfficheModule(Integer.parseInt(textButton[1]));
 				} else if (textButton[0].equals("Sup")) {
-					this.ctrl.getModele().supprimerIntervenant(Integer.parseInt(textButton[1]));
+					this.ctrl.getVue().popupValider();
+					if (ControleurIHM.bIsValidate){this.ctrl.getModele().supprimerIntervenant(Integer.parseInt(textButton[1]));}
+					ControleurIHM.bIsValidate = false;
 					this.majTableIntervenant();
 				}
 			}
 		}
 	}
-public ObservableList<String> getStylesheets()
-{
-	return this.centerPaneAccueil.getStylesheets();
-}
+
+	public ObservableList<String> getStylesheets() {
+		return this.centerPaneAccueil.getStylesheets();
+	}
 
 	public void changed(ObservableValue<? extends String> observable, String oldStr, String newStr) {
-		final String regex = "([0-9]+([.][0-9]*)?|[.][0-9]+)";
+		// final String regex = "([0-9]+([.][0-9]*)?|[.][0-9]+)";
+		
 
 		if ((observable == this.tfPrenom.textProperty()|| observable == this.tfNom.textProperty())&&(!(this.tfPrenom.getText().isEmpty() || this.tfNom.getText().isEmpty()))) {
+			{
 			this.tfEmail.setText(this.tfPrenom.getText().toLowerCase() + "." + this.tfNom.getText().toLowerCase() + "@univ-lehavre.fr");
+			}
+			if (!this.tfEmail.getText().matches(Modele.REGEX_EMAIL))
+			{
+				this.tfEmail.setText(this.tfEmail.getText().replaceAll("[^-a-zA-Z0-9@.]", ""));
+			}
 		} 
 		if (observable == this.tfHMin.textProperty()) {
-			if (!(this.tfHMin.getText().matches(regex))) {
+			if (!(this.tfHMin.getText().matches(Modele.REGEX_DOUBLE))) {
 				this.tfHMin.setText(oldStr);
 			}
 		} else if (observable == this.tfHMax.textProperty()) {
-			if (!(this.tfHMax.getText().matches(regex))) {
+			if (!(this.tfHMax.getText().matches(Modele.REGEX_DOUBLE))) {
 				this.tfHMax.setText(oldStr);
 			}
 		}

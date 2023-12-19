@@ -21,7 +21,7 @@ public class IntervenantIHM {
 	}
 
 	public Button getInfos() {
-		return infos;
+		return this.infos;
 	}
 
 	public void setInfos(Button infos) {
@@ -29,7 +29,7 @@ public class IntervenantIHM {
 	}
 
 	public String getPrenom() {
-		return prenom;
+		return this.prenom;
 	}
 
 	public void setPrenom(String prenom) {
@@ -37,7 +37,7 @@ public class IntervenantIHM {
 	}
 
 	public String getNom() {
-		return nom;
+		return this.nom;
 	}
 
 	public void setNom(String nom) {
@@ -45,7 +45,7 @@ public class IntervenantIHM {
 	}
 
 	public String getCategorie() {
-		return categorie;
+		return this.categorie;
 	}
 
 	public void setCategorie(String categorie) {
@@ -53,7 +53,7 @@ public class IntervenantIHM {
 	}
 
 	public String getEmail() {
-		return email;
+		return this.email;
 	}
 
 	public void setEmail(String email) {
@@ -61,7 +61,7 @@ public class IntervenantIHM {
 	}
 
 	public Button getSupprimer() {
-		return supprimer;
+		return this.supprimer;
 	}
 
 	public void setSupprimer(Button supprimer) {
