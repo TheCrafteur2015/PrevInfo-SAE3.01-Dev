@@ -37,6 +37,7 @@ public final class ResourceManager {
 	public static final URL CHECK       = ResourceManager.class.getResource("/images/check.png");
 	public static final URL DELETE      = ResourceManager.class.getResource("/images/delete.png");
 	public static final URL INFO        = ResourceManager.class.getResource("/images/information.png");
+	public static final URL ICON        = ResourceManager.class.getResource("/images/LogoNUMIT.png");
 
 	private static final Map<String, String> DATA = new HashMap<>();
 

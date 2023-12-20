@@ -3,6 +3,7 @@ package vue;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -83,20 +84,13 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 
 	public void initialize(URL url, ResourceBundle rb) {
 		this.ctrl = Controleur.getInstance(this);
-
+		
+		// System.out.println(Arrays.toString(this.centerPaneAccueil.getStylesheets()));
 		
 		this.majListAnnee();
 
 		this.setAnnee(this.ctrl.getModele().getHmAnnee().get(this.ctrl.getModele().getIdAnnee()));
 		this.choiceBoxAnnee.addEventHandler(ActionEvent.ACTION, this);
-
-		// this.imageAccueil.setImage(new Image(ResourceManager.HOUSE.toExternalForm()));
-		// this.imageAccueil.setImage(new Image(this.getClass().getResourceAsStream("/images/accueil_icone.png")));
-		// this.imageIntervenant.setImage(new Image(ResourceManager.INTERVENANT.toExternalForm()));
-		// this.imageModule.setImage(new Image(ResourceManager.MODULE.toExternalForm()));
-		// this.imageDownload.setImage(new Image(ResourceManager.DOWNLOAD.toExternalForm()));
-
-		// FXHelper.append(this.btnAccueil, new ImageView(new Image(ResourceManager.HOUSE.toExternalForm())));
 	}
 
 	@FXML

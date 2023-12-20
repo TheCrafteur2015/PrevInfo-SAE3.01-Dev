@@ -250,7 +250,6 @@ public class Modele {
 				this.ctrl.getVue().afficherNotification("Module ajouté", "Module ajouté avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible d'ajouter le module", ControleurIHM.Notification.ERREUR);
-			e.printStackTrace();
 		}
 		
 		
@@ -281,6 +280,7 @@ public class Modele {
 				this.ctrl.getVue().afficherNotification("Module modifié", "Module modifié avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible de modifier le module", ControleurIHM.Notification.ERREUR);
+			e.printStackTrace();
 		}
 	}
 

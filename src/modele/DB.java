@@ -489,13 +489,13 @@ public class DB {
 	 * @throws SQLException
 	 */
 	public void updateModule(Module module) throws SQLException {
-		this.psUpdateModule.setInt(6, module.getId());
+		this.psUpdateModule.setInt(7, module.getId());
 		this.psUpdateModule.setString(1, module.getNom());
 		this.psUpdateModule.setString(2, module.getCode());
 		this.psUpdateModule.setBoolean(3, module.isValid());
-		this.psUpdateModule.setInt(5, module.getIdAnnee());
-		this.psUpdateModule.setInt(3, module.getIdSemestre());
-		this.psUpdateModule.setInt(4, module.getIdTypeModule());
+		this.psUpdateModule.setInt(6, module.getIdAnnee());
+		this.psUpdateModule.setInt(4, module.getIdSemestre());
+		this.psUpdateModule.setInt(5, module.getIdTypeModule());
 		this.psUpdateModule.executeUpdate();
 	}
 

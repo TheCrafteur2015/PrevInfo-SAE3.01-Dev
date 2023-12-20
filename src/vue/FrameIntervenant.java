@@ -110,14 +110,8 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 				if (colonne.equals("Infos"))    tbcl.setStyle("-fx-alignment: CENTER;");
 				if (colonne.equals("Supprimer"))tbcl.setStyle("-fx-alignment: CENTER;");
 				
-				this.tableViewIntervenant.getColumns().add(tbcl);
-				//this.tableViewIntervenant.s
-				
+				this.tableViewIntervenant.getColumns().add(tbcl);				
 				this.tableViewIntervenant.getStyleClass().add("noheader");
-				
-				
-				
-				
 				
 			}
 		}
@@ -425,7 +419,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		
 		gridPaneTotal.add(gridPaneInfoInter, 0, 0);
 		gridPaneTotal.add(gridPaneDetailSemestre, 0, 1);
-		gridPaneTotal.add(new Label("Total : " + String.format("%1$.2f", (sTotal1 + sTotal2))), 0, 2);
+		gridPaneTotal.add(new Label("Total : " + String.format("%1$.2f", sTotal1 + sTotal2)), 0, 2);
 
 		VBox vbox = new VBox(5);
 		vbox.setMaxSize(400, 400);

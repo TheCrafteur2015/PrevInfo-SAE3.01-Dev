@@ -63,6 +63,8 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 	private List<RadioButton> lstrButton;
 	private ToggleGroup group;
 
+	private RadioButton rbValider;
+
 	private TextField tfNbSemaines;
 	private TextField tfNbGroupes;
 	private TextField tfCommentaire;
@@ -190,10 +192,17 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 
 		flowrButton.getChildren().add(hBox);
 
-		this.btnAjouter = new Button("⨁ Ajouter");
+		this.btnAjouter = new Button("Ajouter");
 		this.btnAjouter.addEventHandler(ActionEvent.ACTION, this);
 		this.btnAjouter.setAlignment(Pos.BASELINE_CENTER);
+		
+		//Creer radioButton valider
+		this.rbValider = new RadioButton("Valider");
+		this.rbValider.setSelected(this.module.isValid());
+		this.rbValider.addEventHandler(ActionEvent.ACTION,this);
+		
 
+		vbox.getChildren().add(rbValider);
 		vbox.getChildren().add(gridIntervenant);
 
 		if (nomTypeModule.equals("normal") || nomTypeModule.equals("PPP")) {
@@ -522,6 +531,13 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 
 	@Override
 	public void handle(ActionEvent action) {
+	
+		if (action.getSource() == this.rbValider) {
+			this.module.setValid(this.rbValider.isSelected());
+			this.ctrl.getModele().updateModule(this.module);
+			return;
+		}
+		
 		RadioButton selectedRadioButton = (RadioButton) this.group.getSelectedToggle();
 		if (action.getSource() == this.btnAjouter) {
 			Intervenant interSelected = this.chBoxIntervenants.getSelectionModel().getSelectedItem();

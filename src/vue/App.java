@@ -13,7 +13,7 @@ public class App extends Application {
 		Parent root = FXMLLoader.load(ResourceManager.ACCUEIL);
 		stage.setTitle("PrevInfo");
 		
-		stage.getIcons().add(new Image("/images/LogoNUMIT.png"));
+		stage.getIcons().add(new Image(ResourceManager.ICON.toExternalForm()));
 
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());

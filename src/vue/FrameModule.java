@@ -48,7 +48,6 @@ public class FrameModule implements EventHandler<Event> {
 	private AnchorPane centerPaneAccueil;
 	private Map<Integer, Semestre> hmSemestres;
 
-	@SuppressWarnings("unused")
 	private FrameIntervention frameIntervention;
 
 	private Map<Semestre, List<TextField>> hmTF;
@@ -188,12 +187,11 @@ public class FrameModule implements EventHandler<Event> {
 					TableColumn<LigneModuleIHM, String> tbcl = new TableColumn<>(colonne);
 					this.lstTableColumns.add(tbcl);
 					tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
-
+					tbcl.setResizable(false);
+					tbcl.setReorderable(false);
+					tbcl.setSortable(false);
 					if (!colonne.equals("id") && !colonne.equals("info") && !colonne.equals("supprimer") && !colonne.equals("validation")) {
 						tbcl.setEditable(true);
-						tbcl.setResizable(false);
-						tbcl.setReorderable(false);
-						tbcl.setSortable(false);
 						tbcl.setCellFactory(TextFieldTableCell.forTableColumn());
 						tbcl.setOnEditCommit((TableColumn.CellEditEvent<LigneModuleIHM, String> event) -> {
 							String oldValue = event.getOldValue();
@@ -210,11 +208,11 @@ public class FrameModule implements EventHandler<Event> {
 								else {
 									int idTypeCours = this.ctrl.getModele().getIdTypeCoursByNom(col);
 									HeureCours hc = this.hmHeureCours.get(idTypeCours+"-"+m.getId());
-									if (ligne.getNom().equals("nombre de semaine"))
+									if (ligne.getNom().equals("nombre de semaine") && newValue.matches(Modele.REGEX_INT))
 										hc.setNbSemaine(Integer.parseInt(newValue));
-									else if (ligne.getNom().equals("nombre d'heures totales"))
+									else if (ligne.getNom().equals("nombre d'heures totales") && newValue.matches(Modele.REGEX_DOUBLE))
 										hc.setHeure(Double.parseDouble(newValue));
-									else if (ligne.getNom().equals("nombre d'heures par semaine"))
+									else if (ligne.getNom().equals("nombre d'heures par semaine") && newValue.matches(Modele.REGEX_DOUBLE))
 										hc.sethParSemaine(Double.parseDouble(newValue));
 									this.ctrl.getModele().updateHeureCours(hc);
 								}	
@@ -328,8 +326,7 @@ public class FrameModule implements EventHandler<Event> {
 		Button supButton = ResourceManager.getSupButton();
 		supButton.setId("Sup-" + id);
 		supButton.addEventHandler(ActionEvent.ACTION, this);
-		String recapHeure = String.format("%.2f", this.frameIntervention.getTotalAffecte()) + "/" + String.format("%.2f", this.frameIntervention.getTotalPromo());
-		if (m.isValid()) recapHeure += " v";
+		String recapHeure = getRecap(m);
 		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, recapHeure,m.getCode(), m.getNom(), "", "", "", "", "", "", "",
 				supButton));
 		this.lst.add(new LigneModuleIHM(id, null,"" ,"", "nombre d'heures totales", moduleIHM.getCmHeure() + "",
@@ -361,8 +358,7 @@ public class FrameModule implements EventHandler<Event> {
 		Button supButton = ResourceManager.getSupButton();
 		supButton.setId("Sup-" + id);
 		supButton.addEventHandler(ActionEvent.ACTION, this);
-		String recapHeure = String.format("%.2f", this.frameIntervention.getTotalAffecte()) + "/" + String.format("%.2f", this.frameIntervention.getTotalPromo());
-		if (m.isValid()) recapHeure += " v";
+		String recapHeure = getRecap(m);
 		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, recapHeure, m.getCode(), m.getNom(), "", "", "", "", "", "", "",
 				supButton));
 		this.lst.add(new LigneModuleIHM(id, null, "", "", "nombre d'heures totales", "", "", "", "",
@@ -390,8 +386,7 @@ public class FrameModule implements EventHandler<Event> {
 		Button supButton = ResourceManager.getSupButton();
 		supButton.setId("Sup-" + id);
 		supButton.addEventHandler(ActionEvent.ACTION, this);
-		String recapHeure = String.format("%.2f", this.frameIntervention.getTotalAffecte()) + "/" + String.format("%.2f", this.frameIntervention.getTotalPromo());
-		if (m.isValid()) recapHeure += " v";
+		String recapHeure = getRecap(m);
 		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, recapHeure, m.getCode(), m.getNom(), "", "", "", "", "", "", "",
 				supButton));
 		this.lst.add(new LigneModuleIHM(id, null, "", "", "nombre d'heures totales", moduleIHM.getCmHeure() + "",
@@ -423,8 +418,7 @@ public class FrameModule implements EventHandler<Event> {
 		Button supButton = ResourceManager.getSupButton();
 		supButton.setId("Sup-" + id);
 		supButton.addEventHandler(ActionEvent.ACTION, this);
-		String recapHeure = String.format("%.2f", this.frameIntervention.getTotalAffecte()) + "/" + String.format("%.2f", this.frameIntervention.getTotalPromo());
-		if (m.isValid()) recapHeure += " v";
+		String recapHeure = getRecap(m);
 		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, recapHeure, m.getCode(), m.getNom(), "", "", "", "", "", "", "",
 				supButton));
 		this.lst.add(new LigneModuleIHM(id, null, "", "", "nombre d'heures totales", "", "", "",
@@ -432,7 +426,16 @@ public class FrameModule implements EventHandler<Event> {
 		this.lst.add(new LigneModuleIHM(id, null, "", "", "", "", "", "", "", "", "", "", null));
 	}
 
-	
+		
+	public String getRecap(Module m) {
+		String ret = String.format("%.2f", this.frameIntervention.getTotalAffecte()) + "/" + String.format("%.2f", this.frameIntervention.getTotalPromo());
+		try {
+			ret = (int)this.frameIntervention.getTotalAffecte() + "/" + (int)this.frameIntervention.getTotalPromo();
+		} catch(Exception e) {}
+		
+		if (m.isValid()) ret += " ✔️";
+		return ret;
+	}
 
 	public Button getAjouterIntervenantButton() {
 		SVGPath supsvg = new SVGPath();
@@ -496,11 +499,11 @@ public class FrameModule implements EventHandler<Event> {
 		}
 		else if (action.getSource() instanceof ColorPicker cp) {
 			String couleur = cp.getValue().toString().replace("0x", "#");
-			System.out.println(couleur);
 			Semestre s = this.hmSemestres.get(Integer.parseInt(cp.getId()));
 			s.setCouleur(couleur);
 			this.ctrl.getModele().updateSemestre(s);
 		}
 		this.init(this.tabPane.getSelectionModel().getSelectedIndex());
 	}
+
 }
