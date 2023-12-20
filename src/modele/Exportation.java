@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import controleur.Controleur;
+import java.util.Comparator;
 
 
 public class Exportation
@@ -20,6 +24,15 @@ public class Exportation
 	{
 		this.model = model;
 	}
+
+
+	/*----------------------------------------------------------------------------------------------------------------*/
+	/*                                                                                                                */
+	/*                                                                                                                */
+	/*                                                      HTML                                                      */
+	/*                                                                                                                */
+	/*                                                                                                                */
+	/*----------------------------------------------------------------------------------------------------------------*/
 
 	/*--------------*/
 	/* Intervenants */
@@ -50,7 +63,7 @@ public class Exportation
 		body += "			</thead>\n";
 		body += "			<tbody>\n";
 
-		HashMap<Module,ArrayList<Intervention>> modulesInter = this.model.getModulesIntervenant(idIntervenant);// obtenir tout les modules au quel l'intervenant est lié
+		Map<Module,List<Intervention>> modulesInter = this.model.getModulesIntervenant(idIntervenant);// obtenir tout les modules au quel l'intervenant est lié
 		List<Module> ensmodule = new ArrayList<Module>(modulesInter.keySet());
 
 		Collections.sort(ensmodule, new Module(0, null, null, 0, 0, 0).new ModuleComparator());
@@ -110,10 +123,11 @@ public class Exportation
 		body += "			</tfoot>\n";
 		body += "		</table>\n";
 		body += "	</body>\n";
-		ecrireFichier(nomFichier, body);
+		this.cssGenerator();
+		ecrireFichierhtml(nomFichier + ".html", this.head(nomFichier) + body + this.foot());
 	}
 
-	private String sSemestre(List<Module> ensModule, HashMap<Module,ArrayList<Intervention>> modulesInter)
+	private String sSemestre(List<Module> ensModule, Map<Module,List<Intervention>> modulesInter)
 	{
 		int cm        = 0;
 		int td        = 0;
@@ -148,8 +162,8 @@ public class Exportation
 			total = cm+td+tp+reh+sae+tutorat+hPonctuel;
 		}
 		
-		ret += "				<tr class=\"semestre" + ensModule.get(0).getIdSemestre() + " \">\n";
-		ret += "					<td> oui </td>\n";
+		ret += "				<tr class=\"semestre" + ensModule.get(0).getIdSemestre() + "\">\n";
+		ret += "					<td> Total Semestre " + ensModule.get(0).getIdSemestre() + " </td>\n";
 		ret += "					<td> "+ cm +" </td>\n";
 		ret += "					<td> "+ td +" </td>\n";
 		ret += "					<td> "+ tp +" </td>\n";
@@ -169,7 +183,7 @@ public class Exportation
 	 * @param mod {@link Module} a transformer
 	 * @return un {@link String} contenant le nom du {@link Module} et ???
 	 */
-	private String sModule(Module mod, ArrayList<Intervention> lstIntervention)
+	private String sModule(Module mod, List<Intervention> lstIntervention)
 	{
 		int cm        = 0;
 		int td        = 0;
@@ -195,7 +209,7 @@ public class Exportation
 		total = cm + td + tp + reh + sae + tutorat + hPonctuel;
 		String ret ="";
 		String tab = "					";
-		ret += "				<tr>\n"; //ret += "				<tr class=\"semestre" + mod.getIdSemestre() + " \\\">\n";
+		ret += "				<tr class=\"semestre" + mod.getIdSemestre() + " \\\">\n";
 		ret += "					<th> " + mod.getCode() + " " + mod.getNom() + " </th>\n";
 		switch (mod.getIdTypeModule()) {
 			case 1:
@@ -266,7 +280,7 @@ public class Exportation
 		}
 	}
 
-	private void exportPPP(Module mod, String nomFichier)
+	public void exportPPP(Module mod, String nomFichier)
 	{
 		String body ="";
 		body += "	<body>\n";
@@ -284,7 +298,7 @@ public class Exportation
 		body += "			</thead>\n";
 		body += "			<tbody>\n";
 
-		HashMap<Intervenant,ArrayList<Intervention>> hmModuleIntervenant = model.getIntervenantsModule(mod.getId());
+		Map<Intervenant,List<Intervention>> hmModuleIntervenant = model.getIntervenantsModule(mod.getId());
 
 		int totcm        = 0;
 		int tottd        = 0;
@@ -347,10 +361,11 @@ public class Exportation
 		body += "			</tfoot>\n";
 		body += "		</table>\n";
 		body += "	</body>\n";
-		ecrireFichier(nomFichier, body);
+		this.cssGenerator();
+		ecrireFichierhtml(nomFichier + ".html", this.head(nomFichier) + body + this.foot());
 	}
 
-	private void exportSAE(Module mod, String nomFichier)
+	public void exportSAE(Module mod, String nomFichier)
 	{
 		String body ="";
 		body += "	<body>\n";
@@ -366,7 +381,7 @@ public class Exportation
 		body += "			</thead>\n";
 		body += "			<tbody>\n";
 
-		HashMap<Intervenant,ArrayList<Intervention>> hmModuleIntervenant = model.getIntervenantsModule(mod.getId());
+		Map<Intervenant,List<Intervention>> hmModuleIntervenant = model.getIntervenantsModule(mod.getId());
 
 		int tottutorat   = 0;
 		int totsae       = 0;
@@ -416,10 +431,11 @@ public class Exportation
 		body += "			</tfoot>\n";
 		body += "		</table>\n";
 		body += "	</body>\n";
-		ecrireFichier(nomFichier, body);
+		this.cssGenerator();
+		ecrireFichierhtml(nomFichier + ".html", this.head(nomFichier) + body + this.foot());
 	}
 
-	private void exportNormal(Module mod, String nomFichier)
+	public void exportNormal(Module mod, String nomFichier)
 	{
 		String body ="";
 		body += "	<body>\n";
@@ -436,7 +452,7 @@ public class Exportation
 		body += "			</thead>\n";
 		body += "			<tbody>\n";
 
-		HashMap<Intervenant,ArrayList<Intervention>> hmModuleIntervenant = model.getIntervenantsModule(mod.getId());
+		Map<Intervenant,List<Intervention>> hmModuleIntervenant = model.getIntervenantsModule(mod.getId());
 
 		int totcm        = 0;
 		int tottd        = 0;
@@ -493,10 +509,11 @@ public class Exportation
 		body += "			</tfoot>\n";
 		body += "		</table>\n";
 		body += "	</body>\n";
-		ecrireFichier(nomFichier, body);
+		this.cssGenerator();
+		ecrireFichierhtml(nomFichier + ".html", this.head(nomFichier) + body + this.foot());
 	}
 
-	private void exportStage(Module mod, String nomFichier)
+	public void exportStage(Module mod, String nomFichier)
 	{
 		String body ="";
 		body += "	<body>\n";
@@ -512,7 +529,7 @@ public class Exportation
 		body += "			</thead>\n";
 		body += "			<tbody>\n";
 
-		HashMap<Intervenant,ArrayList<Intervention>> hmModuleIntervenant = model.getIntervenantsModule(mod.getId());
+		Map<Intervenant,List<Intervention>> hmModuleIntervenant = model.getIntervenantsModule(mod.getId());
 
 		int tottutorat   = 0;
 		int totreh       = 0;
@@ -563,9 +580,9 @@ public class Exportation
 		body += "			</tfoot>\n";
 		body += "		</table>\n";
 		body += "	</body>\n";
-		ecrireFichier(nomFichier, body);
+		this.cssGenerator();
+		ecrireFichierhtml(nomFichier + ".html", this.head(nomFichier) + body + this.foot());
 	}
-
 
 	/*-------*/
 	/* autre */
@@ -577,15 +594,11 @@ public class Exportation
 	 * @param nomFichierDestination Le nom du fichier dans lequel écrire les données.
 	 * @param body contenue du Fichier
 	 */
-	private void ecrireFichier(String nomFichierDestination, String body)
+	private void ecrireFichierhtml(String nomFichierDestination, String body)
 	{
 		try {
-			PrintWriter pw = new PrintWriter(new FileOutputStream("src/exportation-test/"+nomFichierDestination + ".html"));
-	
-			pw.println(this.head(nomFichierDestination));
+			PrintWriter pw = new PrintWriter(new FileOutputStream("src/exportation-test/"+nomFichierDestination));
 			pw.println(body);
-			pw.println(this.foot());
-	
 			pw.close();
 		}
 		catch (Exception e)
@@ -597,7 +610,18 @@ public class Exportation
 	private void cssGenerator()
 	{
 		String ret = "";
-		ecrireFichier("", ret);
+		ret += "thead {background-color: #222222;color: #ffffff;}\n";
+		ret += "tbody {background-color: #e4f0f5;}\n";
+		ret += "tfoot {background-color: #777777;color: #ffffff;}\n";
+		ret += "caption {padding: 10px;caption-side: bottom;}\n";
+		ret += "table {border-collapse: collapse;border: 2px solid rgb(255, 255, 255);letter-spacing: 1px;font-family: sans-serif;font-size: 0.8rem;}\n";
+		ret += "td,th {border: 1px solid rgb(190, 190, 190);padding: 5px 10px;}\n";
+		ret += "td {text-align: center;}\n";
+		
+		for (Semestre semestre : model.getHmSemestres().values()) {
+			ret += ".semestre"+ semestre.getId() + "{background-color: " + semestre.getCouleur() + ";}\n";
+		}
+		ecrireFichierhtml("tab.css", ret);
 	}
 
 	private String head(String titre)
@@ -620,4 +644,25 @@ public class Exportation
 		return ret;
 	}
 
+
+	/*----------------------------------------------------------------------------------------------------------------*/
+	/*                                                                                                                */
+	/*                                                                                                                */
+	/*                                                      CSV                                                       */
+	/*                                                                                                                */
+	/*                                                                                                                */
+	/*----------------------------------------------------------------------------------------------------------------*/
+
+	private void ecrireFichiercsv(String nomFichierDestination, String body)
+	{
+		try {
+			PrintWriter pw = new PrintWriter(new FileOutputStream("src/exportation-test/"+nomFichierDestination));
+			pw.println(body);
+			pw.close();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 }

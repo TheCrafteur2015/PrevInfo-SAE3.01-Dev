@@ -36,14 +36,14 @@ public class Intervention {
 		this.idAnnee = idAnnee;
 	}
 
-	public int    getIdIntervention() {return idIntervention;}
-	public int    getIdIntervenant()  {return idIntervenant;}
-	public int    getIdModule()       {return idModule;}
-	public int    getIdTypeCours()    {return idTypeCours;}
-	public int    getNbSemaines()     {return nbSemaines;}
-	public int    getNbGroupe()       {return nbGroupes;}
-	public String getCommentaire()    {return commentaire;}
-	public int    getIdAnnee()        {return idAnnee;}
+	public int    getIdIntervention() {return this.idIntervention;}
+	public int    getIdIntervenant()  {return this.idIntervenant;}
+	public int    getIdModule()       {return this.idModule;}
+	public int    getIdTypeCours()    {return this.idTypeCours;}
+	public int    getNbSemaines()     {return this.nbSemaines;}
+	public int    getNbGroupe()       {return this.nbGroupes;}
+	public String getCommentaire()    {return this.commentaire;}
+	public int    getIdAnnee()        {return this.idAnnee;}
 
 	public void setIdIntervention(int idIntervention) {this.idIntervention = idIntervention;}
 	public void setIdIntervenant (int idIntervenant)  {this.idIntervenant = idIntervenant;}
@@ -56,10 +56,8 @@ public class Intervention {
 
 	@Override
 	public String toString() {
-		return "Intervention [idIntervenant=" + idIntervenant + ", idModule=" + idModule + ", idTypeCours="
-				+ idTypeCours + ", nbSemaines=" + nbSemaines + ", nbGroupe=" + nbGroupes + ", idAnnee=" + idAnnee + "]";
+		String format = "Intervention [idIntervenant=%1$d, idModule=%2$d, idTypeCours=%3$d, nbSemaines=%4$d, nbGroupe=%5$d, idAnnee=%6$d]";
+		return String.format(format, this.idIntervenant, this.idModule, this.idTypeCours, this.nbSemaines, this.nbGroupes, this.idAnnee);
 	}
-
-	
 	
 }

@@ -89,6 +89,7 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 				TableColumn<CategorieIHM, String> tbcl = new TableColumn<>(colonne);
 				tbcl.setStyle("-fx-alignment: CENTER;");
 				tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
+				tbcl.setReorderable(false);
 				tableView.getColumns().add(tbcl);
 			}
 		}

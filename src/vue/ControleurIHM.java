@@ -84,10 +84,11 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 	public void initialize(URL url, ResourceBundle rb) {
 		this.ctrl = Controleur.getInstance(this);
 
-		this.choiceBoxAnnee.addEventHandler(ActionEvent.ACTION, this);
+		
 		this.majListAnnee();
 
 		this.setAnnee(this.ctrl.getModele().getHmAnnee().get(this.ctrl.getModele().getIdAnnee()));
+		this.choiceBoxAnnee.addEventHandler(ActionEvent.ACTION, this);
 
 		// this.imageAccueil.setImage(new Image(ResourceManager.HOUSE.toExternalForm()));
 		// this.imageAccueil.setImage(new Image(this.getClass().getResourceAsStream("/images/accueil_icone.png")));

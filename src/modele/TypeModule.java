@@ -5,14 +5,13 @@ public class TypeModule {
 	private int id;
 	private String nom;
 
-
 	public TypeModule(int id, String nom) {
 		this.id = id;
 		this.nom = nom;
 	}
 
 	public int getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(int id) {
@@ -20,7 +19,7 @@ public class TypeModule {
 	}
 
 	public String getNom() {
-		return nom;
+		return this.nom;
 	}
 
 	public void setNom(String nom) {
@@ -30,6 +29,5 @@ public class TypeModule {
 	public String toString() {
 		return this.nom;	
 	}
-
 	
 }

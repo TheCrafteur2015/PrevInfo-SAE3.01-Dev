@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.sound.sampled.AudioFileFormat.Type;
+
 import controleur.Controleur;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -45,6 +47,7 @@ import modele.TypeModule;
 
 public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListener<String> {
 
+	private Stage popupStage;
 	private Controleur ctrl;
 	private AnchorPane centerPaneAccueil;
 	private Module module;
@@ -54,13 +57,16 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 	private Map<Integer, TypeCours> hmTypeCours;
 	private Map<Integer, TypeModule> hmTypeModule;
 	private Map<Integer, Intervention> hmIntervention;
+	
+	private GridPane gridEntree;
 
-	private ArrayList<RadioButton> lstrButton;
+	private List<RadioButton> lstrButton;
 	private ToggleGroup group;
 
 	private TextField tfNbSemaines;
 	private TextField tfNbGroupes;
 	private TextField tfCommentaire;
+	private TextField tfNbHeures;
 
 	private Button btnAjouter;
 
@@ -80,11 +86,19 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 	}
 
 	public void init() {
-		Stage popupStage = new Stage();
-		popupStage.initModality(Modality.APPLICATION_MODAL);
-		popupStage.setTitle(this.module.getNom());
-
+		this.popupStage = new Stage();
+		this.popupStage.initModality(Modality.APPLICATION_MODAL);
+		this.popupStage.setTitle(this.module.getNom());
+		
+		this.maj();
+		
+		this.popupStage.setResizable(false);
+		this.popupStage.showAndWait();
+	}
+	
+	public void maj(){
 		BorderPane borderPaneCentral = new BorderPane();
+		BorderPane borderRecapEntree = new BorderPane();
 
 		/*---------------------*/
 		/*-- BorderPane left --*/
@@ -96,7 +110,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		GridPane gridIntervenant = new GridPane();
 		gridIntervenant.setAlignment(Pos.CENTER);
 
-		GridPane gridEntree = new GridPane();
+		this.gridEntree = new GridPane();
 		gridEntree.setHgap(5);
 		gridEntree.setVgap(5);
 		gridEntree.setAlignment(Pos.CENTER);
@@ -108,7 +122,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 
 		this.hmIntervenants = this.ctrl.getModele().getHmIntervenants();
 
-		this.chBoxIntervenants = new ChoiceBox<Intervenant>();
+		this.chBoxIntervenants = new ChoiceBox<>();
 		this.chBoxIntervenants.getStyleClass().add("choiceBox");
 		for (Intervenant intervenant : this.hmIntervenants.values())
 			this.chBoxIntervenants.getItems().add(intervenant);
@@ -123,7 +137,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 
 		// FlowPane de RadioButton
 		this.hmTypeCours = this.ctrl.getModele().getHmTypeCours();
-		this.lstrButton = new ArrayList<RadioButton>();
+		this.lstrButton = new ArrayList<>();
 		this.group = new ToggleGroup();
 
 		HBox hBox = new HBox();
@@ -132,9 +146,10 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		if (nomTypeModule.equals("normal") || nomTypeModule.equals("PPP")) {
 			// CM, TD, TP, Tut, REH, HP
 			for (TypeCours typeCours : this.hmTypeCours.values()) {
-				if (!typeCours.getNom().equals("SAE") && !typeCours.getNom().equals("REH")
-						&& !typeCours.getNom().equals("Tut")) {
+				if (!typeCours.getNom().equals("SAE") && !typeCours.getNom().equals("REH") && !typeCours.getNom().equals("Tut")) {
 					RadioButton rb = new RadioButton(typeCours.getNom());
+					rb.addEventHandler(ActionEvent.ACTION, this);
+					
 					rb.setToggleGroup(this.group);
 					this.lstrButton.add(rb);
 					hBox.getChildren().add(rb);
@@ -142,6 +157,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 
 				if ((typeCours.getNom().equals("Tut")) && nomTypeModule.equals("PPP")) {
 					RadioButton rb = new RadioButton(typeCours.getNom());
+					rb.addEventHandler(ActionEvent.ACTION, this);
 					rb.setToggleGroup(this.group);
 					this.lstrButton.add(rb);
 					hBox.getChildren().add(rb);
@@ -152,23 +168,21 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		if (nomTypeModule.equals("SAE") || nomTypeModule.equals("stage")) {
 			// REH, SAE, HP
 			RadioButton rb1 = new RadioButton("Tut");
-			RadioButton rb2 = new RadioButton("HP");
+			rb1.addEventHandler(ActionEvent.ACTION, this);
 			RadioButton rb3 = new RadioButton();
-
 			if (nomTypeModule.equals("SAE"))
 				rb3.setText("SAE");
 			if (nomTypeModule.equals("stage"))
 				rb3.setText("REH");
 
+			rb3.addEventHandler(ActionEvent.ACTION, this);
 			this.lstrButton.add(rb1);
-			this.lstrButton.add(rb2);
 			this.lstrButton.add(rb3);
 
 			rb1.setToggleGroup(this.group);
-			rb2.setToggleGroup(this.group);
 			rb3.setToggleGroup(this.group);
 
-			hBox.getChildren().addAll(rb1, rb2, rb3);
+			hBox.getChildren().addAll(rb1, rb3);
 		}
 
 		flowrButton.getChildren().add(hBox);
@@ -181,12 +195,13 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 
 		if (nomTypeModule.equals("normal") || nomTypeModule.equals("PPP")) {
 			// GridEntree pour le nombre de semaines et nombre de groupes
+			this.tfNbHeures = new TextField();
 			this.tfNbSemaines = new TextField();
-			this.tfNbSemaines.setPrefWidth(5*7);
+			this.tfNbSemaines.setPrefWidth(5 * 7);
 			this.tfNbSemaines.textProperty().addListener(this);
 
 			this.tfNbGroupes = new TextField();
-			this.tfNbGroupes.setPrefWidth(5*7);
+			this.tfNbGroupes.setPrefWidth(5 * 7);
 			this.tfNbGroupes.textProperty().addListener(this);
 
 			gridEntree.add(new Label("Nombre de semaines : "), 0, 0);
@@ -201,9 +216,9 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		gridCommentaire.setHgap(5);
 		gridCommentaire.add(new Label("Commentaire : "),0,0);
 		this.tfCommentaire = new TextField();
-		this.tfCommentaire.setPrefSize(30*7,20);
+		this.tfCommentaire.setPrefSize(30 * 7, 20);
 		this.tfCommentaire.setAlignment(Pos.CENTER);
-		gridCommentaire.add(this.tfCommentaire,0,1);
+		gridCommentaire.add(this.tfCommentaire, 0, 1);
 		
 		gridCommentaire.setAlignment(Pos.CENTER);
 	
@@ -211,11 +226,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		// Centrer le VBox
 		StackPane stackPane = new StackPane();
 		stackPane.getChildren().addAll(vbox);
-
-		StackPane popupLayout = new StackPane();
-
-		// Mettre le vbox à gauche
-		borderPaneCentral.setLeft(stackPane);
+		
 
 		/*---------------------*/
 		/*--BorderPane Center--*/
@@ -227,8 +238,10 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		// VBox erreurs
 		this.lblErreurGrp = new Label();
 		this.lblErreurGrp.setStyle("-fx-text-fill : red; -fx-font-weight: bold;");
-		this.lblErreurPN = new Label("PROGRAMME NATIONALE :");
+		this.lblErreurGrp.getStyleClass().add("error-label");
+		this.lblErreurPN = new Label("PROGRAMME NATIONAL :");
 		this.lblErreurPN.setStyle("-fx-text-fill : red; -fx-font-weight: bold;");
+		this.lblErreurPN.getStyleClass().add("error-label");
 
 		vboxErreur.getChildren().addAll(this.lblErreurGrp, this.lblErreurPN);
 
@@ -275,9 +288,15 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 						heureCoursReelles = heureCoursReelles * categorie.getRatioTp();
 				}
 			if (nomTypeModule.equals("normal") || nomTypeModule.equals("PPP")) {
-				olInterventionIHMs.add(new InterventionIHM(intervenant.getPrenom(), intervenant.getNom(),
+				if (typeCours.getNom().equals("HP")) {
+					olInterventionIHMs.add(new InterventionIHM(intervenant.getPrenom(), intervenant.getNom(),
+						"" + "", "" + "",
+						typeCours.getNom(), i.getNbGroupe() + "", i.getNbGroupe()*typeCours.getCoefficient() + "", i.getCommentaire(), btnSup));
+				} else {
+					olInterventionIHMs.add(new InterventionIHM(intervenant.getPrenom(), intervenant.getNom(),
 						i.getNbSemaines() + "", i.getNbGroupe() + "",
 						typeCours.getNom(), heureCours + "", heureCoursReelles + "", i.getCommentaire(), btnSup));
+				}
 			} else {
 				olInterventionIHMs.add(new InterventionIHM(intervenant.getPrenom(), intervenant.getNom(),
 						typeCours.getNom(), heureCours + "", heureCoursReelles + "", i.getCommentaire(), btnSup));
@@ -294,11 +313,11 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 				tbcl.setStyle("-fx-alignment: CENTER;");
 				tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
 				tbV.getColumns().add(tbcl);
-
+				if (colonne.equals("commentaire"))tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.2));
+				else tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.0975));
 			}
-			int column = 5;
-			if (nomTypeModule.equals("normal") || nomTypeModule.equals("PPP")) column += 2;
-			tbV.getColumns().get(column).prefWidthProperty().bind(tbV.widthProperty().multiply(0.3));
+			
+			
 		}
 
 		tbV.setItems(olInterventionIHMs);
@@ -350,8 +369,8 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 					this.lblErreurGrp.setText(this.lblErreurGrp.getText() + " TP ");
 			}
 			
+			List<HeureCours> lstHeureCours = this.ctrl.getModele().getHeureCoursByModule(module.getId(), module.getIdAnnee());
 			//Afficher message d'erreur heures
-			List<HeureCours> lstHeureCours = this.ctrl.getModele().getHeureCoursByModule(this.module.getId(),this.module.getIdAnnee());
 			for (HeureCours heureCours : lstHeureCours) {
 				TypeCours tc = this.hmTypeCours.get(heureCours.getIdTypeCours());
 				if (tc.getNom().equals("CM") && nbHeureCM != heureCours.getHeure()) {
@@ -367,62 +386,221 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 				}
 			}
 		
-		
-
 		borderLayoutErrTBV.setCenter(this.tbV);
 		borderLayoutErrTBV.setPadding(new Insets(0, 20, 20, 0));
+		
+		// Mettre le vbox à gauche
+		borderRecapEntree.setCenter(stackPane);
+
+		//Créer une tableView Recap
+		TableView<RecapInterventionIHM> tbVRecap = new TableView<>();
+		tbVRecap.setPrefHeight(100);
+		tbVRecap.setPrefWidth(150);
+		
+		
+		String[] col = new String[lstHeureCours.size() + 2];
+		col[0] = "info";
+		Map<Integer, List<String>> hmTcHc = new HashMap<>();
+		int cpt=1;
+		for (HeureCours hc : lstHeureCours) {
+			int idTc = hc.getIdTypeCours();
+			col[cpt++] = this.hmTypeCours.get(idTc).getNom();
+			if (hmTcHc.get(hc.getIdTypeCours()) == null) hmTcHc.put(idTc, new ArrayList<>());
+			double hTotal = hc.gethParSemaine()*hc.getNbSemaine();
+			hmTcHc.get(idTc).add(hTotal+"");
+			int nbGroupe = 1;
+			TypeCours tc = this.hmTypeCours.get(idTc);
+			switch (tc.getNom()) {
+				case "TD" -> nbGroupe = this.semestre.getNbGTD();
+				case "TP" -> nbGroupe = this.semestre.getNbGTP();
+				case "CM" -> nbGroupe = this.semestre.getNbGCM();
+			}
+			hmTcHc.get(idTc).add(hTotal*nbGroupe*tc.getCoefficient()+"");
+			double sommeAffecte = 0.0;
+			for (InterventionIHM i : olInterventionIHMs) {
+				if (i.getType().equals(tc.getNom())) sommeAffecte += Double.parseDouble(i.getReelles());
+			}
+			hmTcHc.get(idTc).add(sommeAffecte+"");
+			
+		}
+		col[cpt] = "somme";
+			
+		if (tbVRecap.getColumns().size() < col.length) {
+			for (String colonne : col) {
+				System.out.println(colonne);
+				TableColumn<RecapInterventionIHM, String> tbcl = new TableColumn<>(colonne);
+				tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
+				tbVRecap.getColumns().add(tbcl);
+			}	
+		}
+		
+		ObservableList<RecapInterventionIHM> olRecapInterventionIHMs = FXCollections.observableArrayList();
+		RecapInterventionIHM recap1 = new RecapInterventionIHM();
+		recap1.setInfo("Total par étudiant");
+		RecapInterventionIHM recap2 = new RecapInterventionIHM();
+		recap2.setInfo("Total promo (eqtd)");
+		RecapInterventionIHM recap3 = new RecapInterventionIHM();
+		recap3.setInfo("Total affecté (eqtd");
+		
+		for (Integer i : hmTcHc.keySet()) {
+			List<String> lStrings = hmTcHc.get(i);
+			System.out.println(lStrings);
+			switch (this.hmTypeCours.get(i).getNom()) {
+					case "TD" -> { recap1.setTd(lStrings.get(0));
+								 recap2.setTd(lStrings.get(1));
+								 recap3.setTd(lStrings.get(2)); }
+					case "TP" -> { recap1.setTp(lStrings.get(0));
+								 recap2.setTp(lStrings.get(1));
+								 recap3.setTp(lStrings.get(2)); }
+					case "CM" -> { recap1.setCm(lStrings.get(0));
+								 recap2.setCm(lStrings.get(1));
+								 recap3.setCm(lStrings.get(2)); }
+					case "REH" -> { recap1.setReh(lStrings.get(0));
+								 recap2.setReh(lStrings.get(1));
+								 recap3.setReh(lStrings.get(2)); }
+					case "SAE" -> { recap1.setSae(lStrings.get(0));
+								 recap2.setSae(lStrings.get(1));
+								 recap3.setSae(lStrings.get(2)); }
+					case "HT" -> { recap1.setHt(lStrings.get(0));
+								 recap2.setHt(lStrings.get(1));
+								 recap3.setHt(lStrings.get(2)); }
+					case "HP" -> { recap1.setHp(lStrings.get(0));
+								 recap2.setHp(lStrings.get(1));
+								 recap3.setHp(lStrings.get(2)); }			 
+
+				}
+				recap1.setSomme("0");
+				recap2.setSomme("0");
+				recap3.setSomme("0");
+
+		}
+		
+		olRecapInterventionIHMs.add(recap1);
+		olRecapInterventionIHMs.add(recap2);
+		olRecapInterventionIHMs.add(recap3);
+
+		tbVRecap.setItems(olRecapInterventionIHMs);
+		
+		borderRecapEntree.setTop(tbVRecap);
+		borderRecapEntree.setPadding(new Insets(0,10,0,0));
+		
+		borderPaneCentral.setLeft(borderRecapEntree);
 
 		borderPaneCentral.setCenter(borderLayoutErrTBV);
+		StackPane popupLayout = new StackPane();
 		popupLayout.getChildren().add(borderPaneCentral);
 		popupLayout.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
-		Scene popupScene = new Scene(popupLayout, 1000, 650);
-		popupStage.setScene(popupScene);
-
-		popupStage.setResizable(false);
-		popupStage.showAndWait();
-
+		Scene popupScene = new Scene(popupLayout, 1300, 650);
+		this.popupStage.setScene(popupScene);
 	}
 
 	@Override
 	public void handle(ActionEvent action) {
+		RadioButton selectedRadioButton = (RadioButton) this.group.getSelectedToggle();
 		if (action.getSource() == this.btnAjouter) {
 			Intervenant interSelected = this.chBoxIntervenants.getSelectionModel().getSelectedItem();
 			if (interSelected == null){
 				this.ctrl.getVue().afficherNotification("Ajouter une intervention", "Sélectionnez un intervenant", ControleurIHM.Notification.ERREUR);
 				return;
 			} 
-
-			RadioButton selectedRadioButton = (RadioButton) this.group.getSelectedToggle();
-
+			
 			if (selectedRadioButton == null) {
 				this.ctrl.getVue().afficherNotification("Ajouter une intervention", "Sélectionnez un type de module", ControleurIHM.Notification.ERREUR);
 				return;
 			}
-					
+
+			if(!selectedRadioButton.getText().equals("HP") && this.tfNbGroupes.getText().isEmpty()){
+				this.ctrl.getVue().afficherNotification("Ajouter une intervention", "Il faut rentrer un nombre de groupes", ControleurIHM.Notification.ERREUR);
+				return;
+			}
+			
+			if(!selectedRadioButton.getText().equals("HP") && this.tfNbSemaines.getText().isEmpty()){
+				this.ctrl.getVue().afficherNotification("Ajouter une intervention", "Il faut rentrer un nombre de semaines", ControleurIHM.Notification.ERREUR);
+				return;
+			}
+			
 			int idTypeCours = -1;
 			for (TypeCours typeCours : this.hmTypeCours.values()) {
 				if (typeCours.getNom().equals(selectedRadioButton.getText())) {
 					idTypeCours = typeCours.getId();
 				}
 			}
-
-			int nbSemaines = Integer.parseInt(this.tfNbSemaines.getText());
-		
 			
-			if (nbSemaines > this.semestre.getNbSemaine()) {
+			int nbSemaines = 0;
+			int nbGroupes = 0;
+			try {
+				nbSemaines = Integer.parseInt(this.tfNbSemaines.getText());
+				nbGroupes  = Integer.parseInt(this.tfNbGroupes.getText());	
+			} catch (Exception e) {}
+			
+			HeureCours hc = null;
+			TypeCours tc = null;
+			
+			for (TypeCours t : this.ctrl.getModele().getHmTypeCours().values()) {
+				if (t.getNom().equals(selectedRadioButton.getText())) tc = t;
+			}
+			if (tc != null) {
+				for (HeureCours h : this.ctrl.getModele().getHeureCoursByModule(this.module.getId(),this.module.getIdAnnee())) {
+				if (h.getIdTypeCours()==tc.getId()) hc = h;
+			}
+			}
+			
+			if (!selectedRadioButton.getText().equals("HP") && hc != null && nbSemaines > hc.getNbSemaine()) {
 				this.ctrl.getVue().afficherNotification("Ajouter une intervention","Le nombre de semaines est supérieur au nombre de semaines du semestre ("+this.semestre.getNbSemaine()+")", ControleurIHM.Notification.ERREUR);
 				return;
 			}
-
-			this.ctrl.getModele().ajouterIntervention(interSelected.getId(),this.module.getId(),idTypeCours,nbSemaines,this.tfCommentaire.getText(), Integer.parseInt(this.tfNbGroupes.getText()));
 			
+			int nbGroupeTc = 0;
+			switch (selectedRadioButton.getText()) {
+				case "TP" -> nbGroupeTc = this.semestre.getNbGTP();
+				case "TD" -> nbGroupeTc = this.semestre.getNbGTD();
+				case "CM" -> nbGroupeTc = this.semestre.getNbGCM();
+			}
+			
+			if (!selectedRadioButton.getText().equals("HP") && nbGroupes > nbGroupeTc) {
+				this.ctrl.getVue().afficherNotification("Ajouter une intervention","Le nombre de groupe est supérieur au nombre de groupe du module", ControleurIHM.Notification.ERREUR);
+				return;
+			}
+
+			
+			if (selectedRadioButton.getText().equals("HP")) {
+				if (this.tfNbHeures.getText().isEmpty()) {
+					this.ctrl.getVue().afficherNotification("Ajouter une intervention","Il faut saisir un nombre d'heures", ControleurIHM.Notification.ERREUR);
+					return;
+				}
+				this.ctrl.getModele().ajouterIntervention(interSelected.getId(),this.module.getId(),idTypeCours,0,this.tfCommentaire.getText(), Integer.parseInt(this.tfNbHeures.getText()));
+			}
+			else{
+				this.ctrl.getModele().ajouterIntervention(interSelected.getId(),this.module.getId(),idTypeCours, nbSemaines,this.tfCommentaire.getText(), Integer.parseInt(this.tfNbGroupes.getText()));
+			}
+			this.maj();
 		}
-		else if (action.getSource() instanceof Button) {
-			Button btn = (Button)action.getSource();
+		
+		if(selectedRadioButton.getText().equals("HP")) {
+			this.gridEntree.getChildren().clear();
+			this.tfNbHeures = new TextField();
+			this.tfNbHeures.textProperty().addListener(this);
+			
+			this.gridEntree.add(new Label("Nombre d'heures : "),0,0);
+			this.gridEntree.add(this.tfNbHeures,1,0);
+			return;
+		}
+		
+		if(!selectedRadioButton.getText().equals("HP")) {
+			this.gridEntree.getChildren().clear();
+			gridEntree.add(new Label("Nombre de semaines : "), 0, 0);
+			gridEntree.add(this.tfNbSemaines, 1, 0);
+			gridEntree.add(new Label("Nombre de groupes : "), 0, 1);
+			gridEntree.add(this.tfNbGroupes, 1, 1);
+			return;
+		}
+		
+		if (action.getSource() instanceof Button btn) {
 			this.ctrl.getModele().supprimerIntervention(Integer.parseInt(btn.getId()));
 		}
 		
-		this.init();
+		System.out.println("ca maj");
+		this.maj();
 	}
 
 	@Override
@@ -431,5 +609,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 			this.tfNbGroupes.setText(oldString);
 		if (!this.tfNbSemaines.getText().matches(Modele.REGEX_INT))
 			this.tfNbSemaines.setText(oldString);
+		if (!this.tfNbHeures.getText().matches(Modele.REGEX_INT))
+			this.tfNbHeures.setText(oldString);
 	}
 }

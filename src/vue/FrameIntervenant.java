@@ -61,6 +61,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 	private TextField tfHMin;
 	private TextField tfHMax;
 	private Button btnParamCategorie;
+	@SuppressWarnings("unused")
 	private FrameParamCategorie frameParamCategorie;
 
 	private ChoiceBox<Categorie> choiceBoxCategorie;
@@ -71,13 +72,13 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		this.ctrl = ctrl;
 		this.centerPaneAccueil = centerPaneAccueil;
 		this.tableViewIntervenant = new TableView<>();
+		this.tableViewIntervenant.setId("my-table");
 		this.tableViewIntervenant.setEditable(true);
 		this.modifIntervenant = null;
 
 		this.init();
 	}
 	
-	@SuppressWarnings("deprecation")
 	public void init() {
 		this.centerPaneAccueil.getChildren().clear();
 		this.centerPaneAccueil.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
@@ -85,12 +86,17 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		// Creer le tableau
 
 		String[] colonnes = new String[] { "Infos", "Prenom", "Nom", "Categorie", "Email", "Supprimer" };
-
+		
 		if (this.tableViewIntervenant.getColumns().size() < 6) {
 			for (String colonne : colonnes) {
 				TableColumn<IntervenantIHM, String> tbcl = new TableColumn<>(colonne);
 				tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
+				tbcl.setReorderable(false);
+				tbcl.prefWidthProperty().bind(this.tableViewIntervenant.widthProperty().multiply(1/6.0));
+				tbcl.setResizable(false);
+				
 				this.tableViewIntervenant.getColumns().add(tbcl);
+				
 			}
 		}
 
@@ -98,7 +104,9 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 
 		this.tableViewIntervenant.setPrefHeight(500);
 		this.tableViewIntervenant.setPrefWidth(1100);
-	 	this.tableViewIntervenant.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+	 	
+		
+		
 		
 		this.tableViewIntervenant.setRowFactory(new Callback<TableView<IntervenantIHM>, TableRow<IntervenantIHM>>() {
 			@Override
@@ -110,7 +118,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 					public void handle(MouseEvent event) {
 						final int index = row.getIndex();
 						double x = event.getScreenX();
-						if (index >= 0 && index < tableViewIntervenant.getItems().size() && (x<580 || x>630) && (x<1498 || x>1540)
+						if (index >= 0 && index < tableViewIntervenant.getItems().size() && (x<578 || x>632) && (x<1498 || x>1540)
 								&& tableViewIntervenant.getSelectionModel().isSelected(index)) {
 							tableViewIntervenant.getSelectionModel().clearSelection();
 							btnParamIntervenants.setText("Ajouter un intervenant");
@@ -176,7 +184,9 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 			lst.add(new IntervenantIHM(infoButton, i.getPrenom(), i.getNom(),
 					this.ctrl.getModele().getNomCateg(i.getIdCategorie()), i.getEmail(), supButton));
 		}
+		
 		this.tableViewIntervenant.setItems(lst);
+		
 	}
 
 	public Button getInfoButton() {
@@ -344,16 +354,15 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		gridPaneTotal.setVgap(20);	
 
 		GridPane gridPaneInfoInter = new GridPane();
-		gridPaneInfoInter.add(new Label(categorie.getNom()), 0, 0);
+		gridPaneInfoInter.add(new Label(categorie.getNom() + " : "), 0, 0);
 		gridPaneInfoInter.add(new Label(intervenant.getNom()), 1, 0);
 		gridPaneInfoInter.add(new Label(intervenant.getPrenom()), 2, 0);
-		gridPaneInfoInter.setHgap(20);
 
-		GridPane gridPaneInfoService = new GridPane();
-		gridPaneInfoService.add(new Label("hMin : " + intervenant.gethMin()), 0, 0);
-		gridPaneInfoService.add(new Label("hMax : " + intervenant.gethMax()), 1, 0);
-		gridPaneInfoService.add(new Label("RatioTp : " + String.format("%.2f", categorie.getRatioTp())), 2, 0);
-		gridPaneInfoService.setHgap(20);
+		gridPaneInfoInter.add( new Label("hMin : " + intervenant.gethMin()), 0, 1);
+		gridPaneInfoInter.add(new Label("hMax : " + intervenant.gethMax()), 1, 1);
+		gridPaneInfoInter.add(new Label("RatioTp : " + String.format("%.2f", categorie.getRatioTp())), 2, 1);
+		gridPaneInfoInter.setHgap(20);
+		gridPaneInfoInter.setVgap(20);
 
 		List<Double> lstHSem = new ArrayList<>();
 		Map<Integer, Semestre> hmSem = this.ctrl.getModele().getHmSemestres();
@@ -369,13 +378,12 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 				Module m = hmModule.get(i.getIdModule());
 				if (i.getIdIntervenant() == idIntervenant && s.getId() == m.getIdSemestre()) {
 					TypeCours tc = hmTypeCours.get(i.getIdTypeCours());
-					double nbHeure = this.ctrl.getModele().getHmHeuresCours().get(i.getIdTypeCours() + "-" + i.getIdModule()).getHeure() * tc.getCoefficient();
+					double nbHeure = this.ctrl.getModele().getHmHeuresCours().get(i.getIdTypeCours() + "-" + i.getIdModule()).gethParSemaine()*i.getNbSemaines()*tc.getCoefficient();
 					if (tc.getNom().equals("TP")) nbHeure = nbHeure * categorie.getRatioTp();
 					lstHSem.set(cptSem, lstHSem.get(cptSem) + i.getNbGroupe()*nbHeure);
-					System.out.println(i + " " + nbHeure);
 				}
 			}
-			cptSem ++;
+			cptSem++;
 		}
 				
 		double sTotal1 = lstHSem.get(0) + lstHSem.get(1) + lstHSem.get(2);
@@ -394,9 +402,8 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		gridPaneDetailSemestre.setHgap(20);
 		
 		gridPaneTotal.add(gridPaneInfoInter, 0, 0);
-		gridPaneTotal.add(gridPaneInfoService, 0, 1);
-		gridPaneTotal.add(gridPaneDetailSemestre, 0, 2);
-		gridPaneTotal.add(new Label("Total : " + String.format("%.2f", (sTotal1+sTotal2))), 0, 3);
+		gridPaneTotal.add(gridPaneDetailSemestre, 0, 1);
+		gridPaneTotal.add(new Label("Total : " + String.format("%1$.2f", (sTotal1 + sTotal2))), 0, 2);
 
 		VBox vbox = new VBox(5);
 		vbox.setMaxSize(400, 400);
@@ -412,6 +419,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 
 		popupStage.showAndWait();
 	}
+
 	
 	@Override
 	public void handle(Event event) {

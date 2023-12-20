@@ -2,6 +2,7 @@ package modele;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -537,40 +538,34 @@ public class Modele {
 		this.hmTypeModule = hmTypeModule;
 	}
 	
-		public HashMap<Module,ArrayList<Intervention>> getModulesIntervenant(int idIntervenant)
-	{
-		HashMap<Module,ArrayList<Intervention>> hmIntervenantModule = new HashMap<Module,ArrayList<Intervention>>();
+	public Map<Module, List<Intervention>> getModulesIntervenant(int idIntervenant) {
+		Map<Module, List<Intervention>> hmIntervenantModule = new HashMap<>();
 		
 		for (Intervention intervention : this.hmInterventions.values()) {
-			if (intervention.getIdIntervenant()==idIntervenant)
-			{
+			if (intervention.getIdIntervenant() == idIntervenant) {
 				Module mod = this.hmModules.get(intervention.getIdModule());
 				if (hmIntervenantModule.keySet().contains(mod)) {
 					hmIntervenantModule.get(mod).add(intervention);
 				}
-				else
-				{
-					hmIntervenantModule.put(mod,new ArrayList<Intervention>());
-					hmIntervenantModule.get(mod).add(intervention);
+				else {
+					hmIntervenantModule.put(mod, new ArrayList<>(Arrays.asList(intervention)));
+					// hmIntervenantModule.get(mod).add();
 				}
 			}
 		}
 		return hmIntervenantModule;
 	}
 
-	public HashMap<Intervenant,ArrayList<Intervention>> getIntervenantsModule(int idModule)
-	{
-		HashMap<Intervenant,ArrayList<Intervention>> hmModuleIntervenant = new HashMap<Intervenant,ArrayList<Intervention>>();
+	public Map<Intervenant, List<Intervention>> getIntervenantsModule(int idModule) {
+		Map<Intervenant, List<Intervention>> hmModuleIntervenant = new HashMap<>();
 		
 		for (Intervention intervention : this.hmInterventions.values()) {
-			if (intervention.getIdModule()==idModule)
-			{
+			if (intervention.getIdModule()==idModule) {
 				Intervenant interv = this.hmIntervenants.get(intervention.getIdIntervenant());
 				if (hmModuleIntervenant.keySet().contains(interv)) {
 					hmModuleIntervenant.get(interv).add(intervention);
 				}
-				else
-				{
+				else {
 					hmModuleIntervenant.put(interv,new ArrayList<Intervention>());
 					hmModuleIntervenant.get(interv).add(intervention);
 				}
