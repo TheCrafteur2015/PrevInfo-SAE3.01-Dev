@@ -109,7 +109,7 @@ public class DB {
 			this.psInsertCategorie = connec.prepareStatement("INSERT INTO Categorie VALUES (?,?,?,?,?,?)");
 			this.psInsertIntervenant = connec.prepareStatement("INSERT INTO Intervenant VALUES (?,?,?,?,?,?,?,?)");
 			this.psInsertIntervention = connec.prepareStatement("INSERT INTO Intervention VALUES (?,?,?,?,?,?,?,?)");
-			this.psInsertModule = connec.prepareStatement("INSERT INTO Module VALUES (?,?,?,?,?,?)");
+			this.psInsertModule = connec.prepareStatement("INSERT INTO Module VALUES (?,?,?,?,?,?,?)");
 			this.psInsertSemestre = connec.prepareStatement("INSERT INTO Semestre VALUES (?,?,?,?,?,?,?)");
 			this.psInsertHeureCours = connec.prepareStatement("INSERT INTO HeureCours VALUES (?,?,?,?,?,?)");
 			this.psInsertAnnee = connec.prepareStatement("INSERT INTO Annee VALUES (?, ?)");
@@ -121,7 +121,7 @@ public class DB {
 			this.psUpdateIntervention = connec.prepareStatement(
 					"UPDATE Intervention SET commentaire = ?, nbSemainesIntervention = ?, nbGroupe = ?, idIntervenant = ?, idModule = ? WHERE idIntervention = ? AND idAnnee = ?");
 			this.psUpdateModule = connec.prepareStatement(
-					"UPDATE Module SET nomModule = ?, code = ?, idSemestre = ?, idTypeModule = ? WHERE idAnnee = ? AND idModule = ?");
+					"UPDATE Module SET nomModule = ?, code = ?, valid=?, idSemestre = ?, idTypeModule = ? WHERE idAnnee = ? AND idModule = ?");
 			this.psUpdateSemestre = connec.prepareStatement(
 					"UPDATE Semestre SET nbGTD = ?, nbGTP = ?, nbGCM = ?, nbSemaine = ?, couleur = ? WHERE idAnnee = ? AND idSemestre = ?");
 			this.psUpdateHeureCours = connec.prepareStatement(
@@ -424,7 +424,7 @@ public class DB {
 		ResultSet rs = this.psSelectModule.executeQuery();
 		while (rs.next()) {
 			hmModule.put(rs.getInt("idModule"),
-					new Module(rs.getInt("idModule"), rs.getString("nomModule"), rs.getString("code"),
+					new Module(rs.getInt("idModule"), rs.getString("nomModule"), rs.getString("code"), rs.getBoolean("valid"),
 							rs.getInt("idTypeModule"), idAnnee,
 							rs.getInt("idSemestre")));
 		}
@@ -458,7 +458,7 @@ public class DB {
 		this.psSelectModuleBySemestre.setInt(2, idAnnee);
 		ResultSet rs = this.psSelectModuleBySemestre.executeQuery();
 		while (rs.next()) {
-			lstModules.add(new Module(rs.getInt("idModule"), rs.getString("nomModule"), rs.getString("code"),
+			lstModules.add(new Module(rs.getInt("idModule"), rs.getString("nomModule"), rs.getString("code"), rs.getBoolean("valid"),
 					rs.getInt("idTypeModule"), idAnnee,
 					rs.getInt("idSemestre")));
 		}
@@ -475,9 +475,10 @@ public class DB {
 		this.psInsertModule.setInt(1, module.getId());
 		this.psInsertModule.setString(2, module.getNom());
 		this.psInsertModule.setString(3, module.getCode());
-		this.psInsertModule.setInt(4, module.getIdTypeModule());
-		this.psInsertModule.setInt(6, module.getIdSemestre());
-		this.psInsertModule.setInt(5, module.getIdAnnee());
+		this.psInsertModule.setBoolean(4, module.isValid());
+		this.psInsertModule.setInt(5, module.getIdTypeModule());
+		this.psInsertModule.setInt(7, module.getIdSemestre());
+		this.psInsertModule.setInt(6, module.getIdAnnee());
 		this.psInsertModule.executeUpdate();
 	}
 
@@ -491,6 +492,7 @@ public class DB {
 		this.psUpdateModule.setInt(6, module.getId());
 		this.psUpdateModule.setString(1, module.getNom());
 		this.psUpdateModule.setString(2, module.getCode());
+		this.psUpdateModule.setBoolean(3, module.isValid());
 		this.psUpdateModule.setInt(5, module.getIdAnnee());
 		this.psUpdateModule.setInt(3, module.getIdSemestre());
 		this.psUpdateModule.setInt(4, module.getIdTypeModule());

@@ -94,8 +94,7 @@ public final class ResourceManager {
 	}
 
 
-	private ResourceManager() {
-	}
+	private ResourceManager() {}
 
 	public static String getData(String key) {
 		return ResourceManager.DATA.get(key);

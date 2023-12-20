@@ -87,7 +87,7 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 		if (tableView.getColumns().size() < 2) {
 			for (String colonne : colonnes) {
 				TableColumn<CategorieIHM, String> tbcl = new TableColumn<>(colonne);
-				tbcl.setStyle("-fx-alignment: CENTER;");
+				tbcl.getStyleClass().add("center");
 				tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
 				tbcl.setReorderable(false);
 				tableView.getColumns().add(tbcl);

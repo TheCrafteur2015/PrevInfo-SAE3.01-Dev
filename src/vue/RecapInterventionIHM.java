@@ -8,13 +8,13 @@ public class RecapInterventionIHM {
 	private String tp;
 	private String reh;
 	private String sae;
-	private String ht;
+	private String tut;
 	private String hp;
 	private String somme;
 	
 	public RecapInterventionIHM() {}
 
-	public RecapInterventionIHM(String info, String cm, String td, String tp, String reh, String sae, String ht,
+	public RecapInterventionIHM(String info, String cm, String td, String tp, String reh, String sae, String tut,
 			String hp, String somme) {
 		this.info = info;
 		this.cm = cm;
@@ -22,7 +22,7 @@ public class RecapInterventionIHM {
 		this.tp = tp;
 		this.reh = reh;
 		this.sae = sae;
-		this.ht = ht;
+		this.tut = tut;
 		this.hp = hp;
 		this.somme = somme;
 	}
@@ -51,14 +51,14 @@ public class RecapInterventionIHM {
 
 
 
-	public String getHt() {
-		return ht;
+	public String getTut() {
+		return tut;
 	}
 
 
 
-	public void setHt(String ht) {
-		this.ht = ht;
+	public void setTut(String tut) {
+		this.tut = tut;
 	}
 
 

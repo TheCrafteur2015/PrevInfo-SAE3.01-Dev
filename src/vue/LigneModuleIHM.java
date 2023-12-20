@@ -6,6 +6,7 @@ public class LigneModuleIHM {
 	
 	private Integer id;
 	private Button info;
+	private String validation;
 	private String code;
 	private String nom;
 	private String cm;
@@ -18,10 +19,11 @@ public class LigneModuleIHM {
 	private Button supprimer;
 
 
-	public LigneModuleIHM(Integer id, Button info, String code, String nom, String cm, String td, String tp, String reh, String htut,
+	public LigneModuleIHM(Integer id, Button info, String validation, String code, String nom, String cm, String td, String tp, String reh, String htut,
 			String sae, String hp, Button supprimer) {
 		this.id = id;
 		this.info = info;
+		this.validation = validation;
 		this.code = code;
 		this.nom = nom;
 		this.cm = cm;
@@ -154,6 +156,16 @@ public class LigneModuleIHM {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+
+	public String getValidation() {
+		return validation;
+	}
+
+
+	public void setValidation(String validation) {
+		this.validation = validation;
 	}
 	
 }

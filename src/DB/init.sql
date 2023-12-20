@@ -47,6 +47,7 @@ CREATE TABLE Module (
 	idModule   SERIAL PRIMARY KEY,
 	nomModule  VARCHAR(255),
 	code       VARCHAR(10),
+	valid      BOOLEAN,
 	idTypeModule INT REFERENCES TypeModule(idTypeModule),
 	idAnnee    INT REFERENCES Annee(idAnnee),
 	idSemestre INT REFERENCES Semestre(idSemestre)

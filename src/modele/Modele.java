@@ -241,8 +241,8 @@ public class Modele {
 		}
 	}
 
-	public void ajouterModule(String nom, String code, int idTypeModule, int idSemestre) {
-		Module m = new Module(nom, code, idTypeModule, this.idAnnee, idSemestre);
+	public void ajouterModule(String nom, String code, boolean valid, int idTypeModule, int idSemestre) {
+		Module m = new Module(nom, code, valid, idTypeModule, this.idAnnee, idSemestre);
 		try {
 			this.db.ajouterModule(m);
 			this.hmModules.put(m.getId(), m);
@@ -250,15 +250,16 @@ public class Modele {
 				this.ctrl.getVue().afficherNotification("Module ajouté", "Module ajouté avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible d'ajouter le module", ControleurIHM.Notification.ERREUR);
+			e.printStackTrace();
 		}
 		
 		
 	}
 
-	public void dupliquerModule(int id, String nom, String code, int idTypeModule, int idSemestre) {
+	public void dupliquerModule(int id, String nom, String code, boolean valid, int idTypeModule, int idSemestre) {
 		List<HeureCours> lstHeureCours = this.getHeureCoursByModule(id, this.idAnnee-1);
 		Map<Integer, Intervention> hmInter = this.getHmInterventionsModule(id);
-		Module m = new Module(nom, code, idTypeModule, this.idAnnee, idSemestre);
+		Module m = new Module(nom, code, valid, idTypeModule, this.idAnnee, idSemestre);
 		try {
 			this.db.ajouterModule(m);
 		} catch (SQLException e) {
@@ -324,7 +325,7 @@ public class Modele {
 			e.printStackTrace();
 		}
 		for (Module m : lstModuleParSemestre)
-			this.dupliquerModule(m.getId(),m.getNom(), m.getCode(), m.getIdTypeModule(), s.getId());
+			this.dupliquerModule(m.getId(),m.getNom(), m.getCode(), m.isValid(), m.getIdTypeModule(), s.getId());
 	}
 
 	public void updateSemestre(Semestre s) {

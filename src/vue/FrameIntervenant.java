@@ -75,13 +75,15 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		this.tableViewIntervenant.setId("my-table");
 		this.tableViewIntervenant.setEditable(true);
 		this.modifIntervenant = null;
+		this.centerPaneAccueil.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
+		
 
 		this.init();
 	}
 	
 	public void init() {
 		this.centerPaneAccueil.getChildren().clear();
-		this.centerPaneAccueil.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
+		
 
 		// Creer le tableau
 
@@ -92,10 +94,30 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 				TableColumn<IntervenantIHM, String> tbcl = new TableColumn<>(colonne);
 				tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
 				tbcl.setReorderable(false);
-				tbcl.prefWidthProperty().bind(this.tableViewIntervenant.widthProperty().multiply(1/6.0));
+				if (colonne.equals("Email"))
+				{
+					tbcl.prefWidthProperty().bind(this.tableViewIntervenant.widthProperty().multiply(0.23));
+				}
+				else if (colonne != "Infos" && colonne != "Supprimer")
+				{
+				tbcl.prefWidthProperty().bind(this.tableViewIntervenant.widthProperty().multiply(0.18));
+				}
+				else{
+					tbcl.prefWidthProperty().bind(this.tableViewIntervenant.widthProperty().multiply(0.1));
+				}
 				tbcl.setResizable(false);
 				
+				if (colonne.equals("Infos"))    tbcl.setStyle("-fx-alignment: CENTER;");
+				if (colonne.equals("Supprimer"))tbcl.setStyle("-fx-alignment: CENTER;");
+				
 				this.tableViewIntervenant.getColumns().add(tbcl);
+				//this.tableViewIntervenant.s
+				
+				this.tableViewIntervenant.getStyleClass().add("noheader");
+				
+				
+				
+				
 				
 			}
 		}

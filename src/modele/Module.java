@@ -9,6 +9,7 @@ public class Module implements Comparable<Module> {
 	private int id;
 	private String nom;
 	private String code;
+	private boolean valid;
 	private int idTypeModule;
 	private int idAnnee;
 	private int idSemestre;
@@ -20,20 +21,22 @@ public class Module implements Comparable<Module> {
 	 * @param idAnnee
 	 * @param idSemestre
 	 */
-	public Module(int id, String nom, String code, int idTypeModule, int idAnnee, int idSemestre) {
+	public Module(int id, String nom, String code, boolean valid, int idTypeModule, int idAnnee, int idSemestre) {
 		this.id = id;
 		this.nom = nom;
 		this.code = code;
+		this.valid = valid;
 		this.idTypeModule = idTypeModule;
 		this.idAnnee = idAnnee;
 		this.idSemestre = idSemestre;
 		Module.nbModule++;
 	}
 
-	public Module(String nom, String code, int idTypeModule, int idAnnee, int idSemestre) {
+	public Module(String nom, String code, boolean valid, int idTypeModule, int idAnnee, int idSemestre) {
 		this.id = ++Module.nbModule;
 		this.nom = nom;
 		this.code = code;
+		this.valid = valid;
 		this.idTypeModule = idTypeModule;
 		this.idAnnee = idAnnee;
 		this.idSemestre = idSemestre;
@@ -88,10 +91,21 @@ public class Module implements Comparable<Module> {
 		this.idAnnee = idAnnee;
 	}
 
+	
+
+	public boolean isValid() {
+		return valid;
+	}
+
+	public void setValid(boolean valid) {
+		this.valid = valid;
+	}
+
 	@Override
 	public String toString() {
 		return this.code + "_" + this.nom;
 	}
+
 
 	@Override
 	public int compareTo(Module autre) {

@@ -177,7 +177,12 @@
                         <Font size="18.0" />
                      </font>
                   </ToggleButton> -->
-                  <ToggleSwitch layoutX="615.0" layoutY="320.0" minHeight="16.0" mnemonicParsing="false" onMouseClicked="#modeDuplication" prefHeight="30.0" prefWidth="162.0" text="Duplication">
+                  <Label  layoutX="615.0" layoutY="320.0" minHeight="16.0" prefHeight="30.0" prefWidth="162.0" text="Duplication">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <ToggleSwitch layoutX="735.0" layoutY="320.0" minHeight="16.0" mnemonicParsing="false" onMouseClicked="#modeDuplication" prefHeight="30.0" prefWidth="30.0">
                      <font>
                         <Font size="18.0" />
                      </font>

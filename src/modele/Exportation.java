@@ -66,7 +66,7 @@ public class Exportation
 		Map<Module,List<Intervention>> modulesInter = this.model.getModulesIntervenant(idIntervenant);// obtenir tout les modules au quel l'intervenant est lié
 		List<Module> ensmodule = new ArrayList<Module>(modulesInter.keySet());
 
-		Collections.sort(ensmodule, new Module(0, null, null, 0, 0, 0).new ModuleComparator());
+		Collections.sort(ensmodule, new Module(0, null, null, false, 0, 0, 0).new ModuleComparator());
 
 		int debut = 0;
 		for (int cpt=0; cpt<ensmodule.size();cpt++)
