@@ -763,7 +763,7 @@ public class Exportation
 	private URL ecrireFichier(String nomFichierDestination, String body) {
 		try (PrintWriter pw = new PrintWriter(new FileOutputStream(nomFichierDestination))) {
 			pw.println(body);
-			return new URL(nomFichierDestination);
+			return new URL("file:" + nomFichierDestination);
 		} catch (Exception e) {
 			System.out.println(nomFichierDestination);
 			e.printStackTrace();

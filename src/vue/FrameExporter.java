@@ -123,12 +123,14 @@ public class FrameExporter implements EventHandler<Event> {
 		String annee = this.ctrl.getModele().getHmAnnee().get(this.ctrl.getModele().getIdAnnee());
 		if (action.getSource() == this.btnIntervenant) {
 			Intervenant i = this.choiceBoxIntervenant.getValue();
-			file = this.export.exportIntervenantHtml(i.getId(), i.getNom() + "_" + i.getPrenom() + "_previsionnel_" + annee, directory.toURI().toString());
+			file = this.export.exportIntervenantHtml(i.getId(), i.getNom() + "_" + i.getPrenom() + "_previsionnel_" + annee, directory.getAbsolutePath());
 		}
 		else if (action.getSource() == this.btnModule) {
 			Module m = this.choiceBoxModule.getValue();
-			file = this.export.exportModuleHTML(m.getId(),  m.getCode() + "_" + m.getNom()  + "_previsionnel_" + annee, directory.toURI().toString());
+			file = this.export.exportModuleHTML(m.getId(),  m.getCode() + "_" + m.getNom()  + "_previsionnel_" + annee, directory.getAbsolutePath());
 		}
+		
+		
 		try {
 			Desktop.getDesktop().browse(file.toURI());
 		} catch (URISyntaxException e) {

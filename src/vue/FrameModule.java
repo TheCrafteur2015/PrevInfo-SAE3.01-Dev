@@ -236,8 +236,11 @@ public class FrameModule implements EventHandler<Event> {
 
 								this.ctrl.getModele().updateModule(m);
 							}
+							
+							
 						}
-						this.tbV.refresh();
+						this.init(idSelectedSemestre);						
+
 					});
 				}
 				if (colonne.equals("id"))

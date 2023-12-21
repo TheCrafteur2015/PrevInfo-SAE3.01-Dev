@@ -57,7 +57,28 @@ public class Modele {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}
+		
+		ArrayList<Integer> al =  new ArrayList<>(this.hmCategories.keySet());
+		al.sort(null);
+		if(al.size() != 0 ) Categorie.nbCategorie = al.get(al.size()-1);
+		
+		al =  new ArrayList<>(this.hmIntervenants.keySet());
+		al.sort(null);
+		if(al.size() != 0 ) Intervenant.nbIntervenant = al.get(al.size()-1);
+		
+		al =  new ArrayList<>(this.hmInterventions.keySet());
+		al.sort(null);
+		if(al.size() != 0 ) Intervention.nbIntervention = al.get(al.size()-1);
+		
+		al =  new ArrayList<>(this.hmModules.keySet());
+		al.sort(null);
+		if(al.size() != 0 ) Module.nbModule = al.get(al.size()-1);
+		
+		al =  new ArrayList<>(this.hmSemestres.keySet());
+		al.sort(null);
+		if(al.size() != 0 ) Semestre.nbSemestre = al.get(al.size()-1);
+	} 
+		
 
 	public Integer getIdTypeCoursByNom(String nom) {
 		try {
@@ -398,7 +419,7 @@ public class Modele {
 				List<Integer> keysList = new ArrayList<>(this.hmSemestres.keySet());
 				keysList.sort(null);
 				for (Integer i : keysList) {
-					Semestre s = this.hmSemestres.get(i);
+					Semestre s = hmTmpSemestres.get(i);
 					dupliquerSemestre(this.getModuleBySemestre(s.getId(), this.idAnnee-1), s.getNbGTD(), s.getNbGTP(), s.getNbGCM(), s.getNbSemaine(), s.getCouleur());
 				}
 				for (Categorie c : hmTmpCategories.values())
