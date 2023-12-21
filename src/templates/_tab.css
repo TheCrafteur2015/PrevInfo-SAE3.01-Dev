@@ -34,6 +34,13 @@ td {
 	text-align: center;
 }
 
+header {
+	background: #34495e;
+	color: #fff;
+	padding: 20px;
+	text-align: center;
+}
+
 .semestre1 { background-color: var(--semestre-1); }
 .semestre2 { background-color: var(--semestre-2); }
 .semestre3 { background-color: var(--semestre-3); }

@@ -140,6 +140,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 		for (TypeCours tc : hmTypeCours.values()) {
 			textTmp = new Text(tc.getNom());
 			textFieldTmp = new TextField(tc.getCoefficient() + "");
+			if (isInteger(tc.getCoefficient()) != null) textFieldTmp = new TextField(isInteger(tc.getCoefficient()) + "");
 			textFieldTmp.getStyleClass().add("coeffValue");
 			textFieldTmp.setMaxWidth(7 * 7);
 			textFieldTmp.textProperty().addListener(this);
@@ -176,6 +177,11 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 		popupStage.setScene(popupScene);
 
 		popupStage.showAndWait();
+	}
+	
+	public static Integer isInteger(double d) {
+		if ((int)d+0.0 == d) return (int)d;
+		return null;
 	}
 
 	@FXML

@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.sound.sampled.AudioFileFormat.Type;
-
 import controleur.Controleur;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -278,20 +276,24 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 				this.hmIntervention.put(i.getIdIntervention(), i);
 		}
 
-		String[] colonnes = new String[10];
+		// String[] colonnes = new String[10];
 
-		if (this.nomTypeModule.equals("normal") || this.nomTypeModule.equals("PPP")) {
-			colonnes = new String[] { "Prenom", "Nom", "semaines", "groupes", "type", "heures", "reelles",
-					"commentaire", "supprimer" };
-		} else {
-			colonnes = new String[] { "Prenom", "Nom", "type", "heures", "reelles", "commentaire", "supprimer" };
-		}
-
+		// if (this.nomTypeModule.equals("normal") || this.nomTypeModule.equals("PPP")) {
+		// 	colonnes = new String[] { "Prenom", "Nom", "semaines", "groupes", "type", "heures", "reelles",
+		// 			"commentaire", "supprimer" };
+		// } else {
+		// 	colonnes = new String[] { "Prenom", "Nom", "type", "heures", "reelles", "commentaire", "supprimer" };
+		// }
+		
+		String[] colonnes = { "Prenom", "Nom", "semaines", "groupes", "type", "heures", "reelles", "commentaire", "supprimer" };
+		
+		if (!this.nomTypeModule.equals("normal") && !this.nomTypeModule.equals("PPP"))
+			colonnes[2] = colonnes[3] = null;
+		
 		for (Intervention i : this.hmIntervention.values()) {
 			Button btnSup = ResourceManager.getSupButton();
 			btnSup.setId(i.getIdIntervention() + "");
 			btnSup.addEventHandler(ActionEvent.ACTION, this);
-
 			Intervenant intervenant = this.hmIntervenants.get(i.getIdIntervenant());
 			Categorie categorie = this.ctrl.getModele().getHmCategories().get(intervenant.getIdCategorie());
 			TypeCours typeCours = this.hmTypeCours.get(i.getIdTypeCours());
@@ -331,6 +333,8 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 
 		if (tbV.getColumns().size() < colonnes.length) {
 			for (String colonne : colonnes) {
+				if (colonne == null)
+					continue;
 				TableColumn<InterventionIHM, String> tbcl = new TableColumn<>(colonne);
 				tbcl.setStyle("-fx-alignment: CENTER;");
 				tbcl.getStyleClass().add("col");
@@ -455,7 +459,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		// Créer une tableView Recap
 		TableView<RecapInterventionIHM> tbVRecap = new TableView<>();
 		tbVRecap.setEditable(false);
-		tbVRecap.setPrefHeight(100);
+		tbVRecap.setPrefHeight(103);
 		tbVRecap.setPrefWidth(150);
 
 		String[] col = new String[lstHeureCours.size() + 2];
@@ -469,11 +473,13 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 				hmTcHc.put(idTc, new ArrayList<>());
 			double hTotal = hc.gethParSemaine() * hc.getNbSemaine();
 			hmTcHc.get(idTc).add(hTotal + "");
-			int nbGroupe = this.semestre.getNbGTD();
+			int nbGroupe = 1;
 			TypeCours tc = this.hmTypeCours.get(idTc);
 			switch (tc.getNom()) {
 				case "TP" -> nbGroupe = this.semestre.getNbGTP();
 				case "CM" -> nbGroupe = this.semestre.getNbGCM();
+				case "TD" -> nbGroupe = this.semestre.getNbGTD();
+				case "HP" -> nbGroupe = this.semestre.getNbGTD(); 	
 			}
 			hmTcHc.get(idTc).add(hTotal * nbGroupe * tc.getCoefficient() + "");
 			double sommeAffecte = 0.0;
@@ -651,8 +657,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 
 			if (!selectedRadioButton.getText().equals("HP") && hc != null && nbSemaines > hc.getNbSemaine()) {
 				this.ctrl.getVue().afficherNotification("Ajouter une intervention",
-						"Le nombre de semaines est supérieur au nombre de semaines du semestre ("
-								+ this.semestre.getNbSemaine() + ")",
+						"Le nombre de semaines est supérieur au nombre de semaines du module (" + hc.getNbSemaine() + ")",
 						ControleurIHM.Notification.ERREUR);
 				return;
 			}
@@ -666,7 +671,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 
 			if (!selectedRadioButton.getText().equals("HP") && nbGroupes > nbGroupeTc) {
 				this.ctrl.getVue().afficherNotification("Ajouter une intervention",
-						"Le nombre de groupe est supérieur au nombre de groupe du module",
+						"Le nombre de groupe est supérieur au nombre de groupe du module (" + nbGroupeTc + ")",
 						ControleurIHM.Notification.ERREUR);
 				return;
 			}

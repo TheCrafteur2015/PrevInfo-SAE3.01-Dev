@@ -21,7 +21,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
-import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -457,13 +456,17 @@ public class FrameModule implements EventHandler<Event> {
 	}
 
 	public String getRecap(Module m) {
-		String ret = String.format("%.2f", this.frameIntervention.getTotalAffecte()) + "/"
-				+ String.format("%.2f", this.frameIntervention.getTotalPromo());
-		try {
-			ret = (int) this.frameIntervention.getTotalAffecte() + "/" + (int) this.frameIntervention.getTotalPromo();
-		} catch (Exception e) {
-		}
-
+		double totalAffecte = this.frameIntervention.getTotalAffecte();
+		double totalPromo = this.frameIntervention.getTotalPromo();
+		String totalA = String.format("%.2f", totalAffecte);
+		String totalP = String.format("%.2f", totalPromo);
+		
+				
+		if (ControleurIHM.isInteger(totalAffecte) != null) totalA = ControleurIHM.isInteger(totalAffecte)+"";
+		if (ControleurIHM.isInteger(totalPromo) != null) totalP = ControleurIHM.isInteger(totalPromo)+"";
+		
+		String ret = totalA + "/" + totalP;
+		
 		if (m.isValid())
 			ret += " ✔️";
 		return ret;

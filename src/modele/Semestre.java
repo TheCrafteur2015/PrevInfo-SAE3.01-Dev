@@ -89,7 +89,6 @@ public class Semestre {
 	public String toString() {
 		String format = "Semestre [id=%1$d, nbGTD=%2$d, nbGTP=%3$d, nbGCM=%4$d, nbSemaine=%5$d, idAnnee=%6$d]";
 		return String.format(format, this.id, this.nbGTD, this.nbGTP, this.nbGCM, this.nbSemaine, this.idAnnee);
-		// TODO return "Semestre [id=" + id + ", nbGTD=" + nbGTD + ", nbGTP=" + nbGTP + ", nbGCM=" + nbGCM + ", nbSemaine=" + nbSemaine + ", idAnnee=" + idAnnee + "]";
 	}
 	
 	public String getCouleur() {

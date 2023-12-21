@@ -153,13 +153,13 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		AnchorPane.setTopAnchor(this.tableViewIntervenant, 20.0);
 		AnchorPane.setLeftAnchor(this.tableViewIntervenant, 20.0);
 
-		this.btnParamIntervenants = new Button("Paramètrer un Intervenant");
+		this.btnParamIntervenants = new Button("Ajouter un Intervenant");
 		this.btnParamIntervenants.setStyle("-fx-background-radius: 100");
 
 		this.btnParamIntervenants.setPrefSize(250, 40);
 		this.btnParamIntervenants.setId("btnParamIntervenants");
 		this.btnParamIntervenants.addEventHandler(ActionEvent.ACTION, this);
-		if (this.ctrl.getModele().getHmIntervenants().size() == 0) {
+		if (this.ctrl.getModele().getHmCategories().size() == 0) {
 			this.btnParamIntervenants.setDisable(true);
 		}
 
@@ -172,9 +172,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 
 		btnParamCategorie.setPrefSize(250, 40);
 		this.btnParamCategorie.addEventHandler(ActionEvent.ACTION, this);
-		if (this.ctrl.getModele().getHmCategories().size() == 0) {
-			this.btnParamCategorie.setDisable(true);
-		}
+		
 
 		AnchorPane.setTopAnchor(btnParamCategorie, 580.0);
 		AnchorPane.setLeftAnchor(btnParamCategorie, 800.0);

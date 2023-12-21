@@ -58,27 +58,20 @@ public class Modele {
 			e.printStackTrace();
 		}
 		
-		ArrayList<Integer> al =  new ArrayList<>(this.hmCategories.keySet());
-		al.sort(null);
-		if(al.size() != 0 ) Categorie.nbCategorie = al.get(al.size()-1);
-		
-		al =  new ArrayList<>(this.hmIntervenants.keySet());
-		al.sort(null);
-		if(al.size() != 0 ) Intervenant.nbIntervenant = al.get(al.size()-1);
-		
-		al =  new ArrayList<>(this.hmInterventions.keySet());
-		al.sort(null);
-		if(al.size() != 0 ) Intervention.nbIntervention = al.get(al.size()-1);
-		
-		al =  new ArrayList<>(this.hmModules.keySet());
-		al.sort(null);
-		if(al.size() != 0 ) Module.nbModule = al.get(al.size()-1);
-		
-		al =  new ArrayList<>(this.hmSemestres.keySet());
-		al.sort(null);
-		if(al.size() != 0 ) Semestre.nbSemestre = al.get(al.size()-1);
+
+		Categorie.nbCategorie = getNbObject(this.hmCategories);
+		Intervenant.nbIntervenant = getNbObject(this.hmIntervenants);
+		Intervention.nbIntervention = getNbObject(this.hmInterventions);
+		Module.nbModule = getNbObject(this.hmModules);
+		Semestre.nbSemestre = getNbObject(this.hmSemestres);
 	} 
 		
+	public <T> int getNbObject(Map<Integer, T> hm ) {
+		ArrayList<Integer> al =  new ArrayList<>(hm.keySet());
+		al.sort(null);
+		if(al.size() != 0 ) return al.get(al.size()-1);
+		return 1;
+	}
 
 	public Integer getIdTypeCoursByNom(String nom) {
 		try {
@@ -120,10 +113,11 @@ public class Modele {
 	}
 
 	public void dupliquerCategorie(int oldId, String nom, double hMin, double hMax, double ratioTp) {
+		Categorie ancienneCateg = this.hmCategories.get(oldId);
 		List<Intervenant> lstIntervantParCateg = null;
 		Categorie c = new Categorie(nom, hMin, hMax, ratioTp, this.idAnnee);
 		try {
-			lstIntervantParCateg = this.db.getIntervenantParCateg(this.idAnnee - 1, oldId);
+			lstIntervantParCateg = this.db.getIntervenantParCateg(ancienneCateg.getIdAnnee(), oldId);
 			this.db.ajouterCategorie(c);
 			this.hmCategories.put(c.getId(), c);
 			if (!this.bEnDuplication)
@@ -193,6 +187,7 @@ public class Modele {
 		
 		for (Intervention inter : hmInter.values()) {
 			inter.setIdIntervenant(i.getId());
+			inter.setIdAnnee(this.idAnnee);
 			updateIntervention(inter);
 		}
 	}
@@ -277,7 +272,8 @@ public class Modele {
 	}
 
 	public void dupliquerModule(int id, String nom, String code, boolean valid, int idTypeModule, int idSemestre) {
-		List<HeureCours> lstHeureCours = this.getHeureCoursByModule(id, this.idAnnee-1);
+		Module ancienModule = this.hmModules.get(id);
+		List<HeureCours> lstHeureCours = this.getHeureCoursByModule(id, ancienModule.getIdAnnee());
 		Map<Integer, Intervention> hmInter = this.getHmInterventionsModule(id);
 		Module m = new Module(nom, code, valid, idTypeModule, this.idAnnee, idSemestre);
 		try {
@@ -420,7 +416,7 @@ public class Modele {
 				keysList.sort(null);
 				for (Integer i : keysList) {
 					Semestre s = hmTmpSemestres.get(i);
-					dupliquerSemestre(this.getModuleBySemestre(s.getId(), this.idAnnee-1), s.getNbGTD(), s.getNbGTP(), s.getNbGCM(), s.getNbSemaine(), s.getCouleur());
+					dupliquerSemestre(this.getModuleBySemestre(s.getId(), s.getIdAnnee()), s.getNbGTD(), s.getNbGTP(), s.getNbGCM(), s.getNbSemaine(), s.getCouleur());
 				}
 				for (Categorie c : hmTmpCategories.values())
 					this.dupliquerCategorie(c.getId(), c.getNom(), c.gethMin(), c.gethMax(), c.getRatioTp());
@@ -429,6 +425,10 @@ public class Modele {
 				this.updateAnnee(annee); 
 				for (int i = 0; i < 6; i++)
 					this.ajouterSemestre(0, 0, 0, 0, "#ffffff");
+				this.ajouterCategorie("Enseignant", 384, 576, 1);
+				this.ajouterCategorie("Contractuel", 192, 384, 1);
+				this.ajouterCategorie("Vacataire", 0, 90, 2/3);
+				this.ajouterCategorie("Enseignant-Chercheur", 192, 364, 1);
 			}
 			if (!this.bEnDuplication)
 				this.ctrl.getVue().afficherNotification("Année ajoutée", "Année ajoutée avec succès", ControleurIHM.Notification.SUCCES);

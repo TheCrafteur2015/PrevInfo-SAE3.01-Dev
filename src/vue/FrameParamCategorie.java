@@ -20,7 +20,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -70,17 +69,18 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 
 			olCategorie.add(new CategorieIHM(c.getNom(), btnSup));
 		}
-		this.btnAjouter = new Button("⨁ Ajouter");
+		this.btnAjouter = new Button("Ajouter");
 		this.btnAjouter.setDisable(true);
 		this.btnAjouter.addEventHandler(ActionEvent.ACTION, this);
 
-		BorderPane borderPane = new BorderPane();
+		GridPane gridPane = new GridPane();
 		GridPane gridPaneHeure = new GridPane();
 
 		this.tableView = new TableView<>();
-		tableView.setPrefWidth(200);
-		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-		tableView.setMaxHeight(195);
+		tableView.setPrefWidth(280);
+		// tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		tableView.setMaxHeight(180);
+		tableView.getStyleClass().add("noheader");
 
 		String[] colonnes = new String[] { "Nom", "Supprimer" };
 
@@ -90,6 +90,8 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 				tbcl.getStyleClass().add("center");
 				tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
 				tbcl.setReorderable(false);
+				if (colonne.equals("Nom")) tbcl.prefWidthProperty().bind(tableView.widthProperty().multiply(0.7));
+				else tbcl.prefWidthProperty().bind(tableView.widthProperty().multiply(0.285));
 				tableView.getColumns().add(tbcl);
 			}
 		}
@@ -111,7 +113,7 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 							tfHeureMin.setText("");
 							tfHeureMax.setText("");
 							tfRatioTp.setText("");
-							btnAjouter.setText("⨁ Ajouter");
+							btnAjouter.setText("Ajouter");
 							event.consume();
 						} else if (index >=0 && index < tableView.getItems().size()) {
 							int id = Integer.parseInt(tableView.getItems().get(index).getSupprimer().getId());
@@ -130,7 +132,7 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 		});
 		VBox vbox = new VBox(5);
 		vbox.setAlignment(Pos.CENTER);
-		vbox.setPadding(new Insets(30, 0, 30, 20));
+		vbox.setPadding(new Insets(15, 0, 15, 20));
 		vbox.setSpacing(50);
 
 		Text nomC = new Text("Nom de la catégorie");
@@ -162,23 +164,23 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 		gridPaneHeure.add(tRatioTp, 0, 2);
 		gridPaneHeure.add(this.tfRatioTp, 1, 2);
 
-		gridPaneHeure.setVgap(10);
+		gridPaneHeure.setVgap(5);
 
 		GridPane gridPaneCat = new GridPane();
 		gridPaneCat.add(nomC, 0, 0);
 		gridPaneCat.add(this.nomCategorie, 0, 1);
 
-		borderPane.setPadding(new Insets(10));
+		gridPane.setPadding(new Insets(20));
 		StackPane stackPane = new StackPane();
 
 		vbox.getChildren().addAll(gridPaneCat, gridPaneHeure, this.btnAjouter);
 		stackPane.getChildren().addAll(vbox);
-		borderPane.setLeft(tableView);
-		borderPane.setCenter(stackPane);
-		popupLayout.getChildren().add(borderPane);
+		gridPane.add(tableView, 0, 0);
+		gridPane.add(stackPane, 1, 0);
+		popupLayout.getChildren().add(gridPane);
 		popupLayout.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
 
-		Scene popupScene = new Scene(popupLayout, 500, 320);
+		Scene popupScene = new Scene(popupLayout, 500, 350);
 		popupStage.setScene(popupScene);
 
 		popupStage.showAndWait();
@@ -200,7 +202,7 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 		this.tfHeureMin.setText("");
 		this.tfRatioTp.setText("");
 		this.nomCategorie.setText("");
-		this.btnAjouter.setText("⨁ Ajouter");
+		this.btnAjouter.setText("Ajouter");
 		
 	}
 
@@ -230,7 +232,7 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 			
 		}
 			if (event.getSource() == this.btnAjouter) {
-				if (this.btnAjouter.getText().equals("⨁ Ajouter")) {
+				if (this.btnAjouter.getText().equals("Ajouter")) {
 					this.ctrl.getModele().ajouterCategorie(this.nomCategorie.getText(),
 							Double.parseDouble(this.tfHeureMin.getText()), Double.parseDouble(this.tfHeureMax.getText()),
 							Double.parseDouble(this.tfRatioTp.getText()));

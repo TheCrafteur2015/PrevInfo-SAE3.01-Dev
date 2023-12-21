@@ -2,13 +2,11 @@ package vue;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Scanner;
@@ -30,7 +28,6 @@ public final class ResourceManager {
 	public static final URL STYLESHEET_POPUP = ResourceManager.class.getResource("stylePopup.css");
 	public static final URL TAB_TEMPLATE = ResourceManager.class.getResource("/templates/_tab.css");
 	
-	// public static final String TAB_TEMPLATE_CONTENT = ResourceManager.loadFile(ResourceManager.TAB_TEMPLATE);
 	public static final String TAB_TEMPLATE_CONTENT = ResourceManager.loadFileFromSource("/templates/_tab.css");
 
 	// Fichiers SVG
@@ -63,12 +60,12 @@ public final class ResourceManager {
 		}
 		// System.out.println(ResourceManager.TAB_TEMPLATE_CONTENT);
 		try {
-			File root = new File(ResourceManager.class.getResource("").toURI());
+			//File root = new File(ResourceManager.class.getResource("").toURI());
 			// System.out.println(Arrays.toString(root.listFiles()));
 			// System.out.println(root);
 			// System.out.println(root.getParentFile());
 			// System.out.println(ResourceManager.);
-			String file = "";
+			//String file = "";
 			// Scanner sc = new Scanner(new File(ResourceManager.TAB_TEMPLATE.toURI()));
 			// while (sc.hasNextLine())
 			// 	file += sc.nextLine() + "\n";
@@ -123,7 +120,7 @@ public final class ResourceManager {
 
 	private ResourceManager() {}
 	
-	private static String loadFile(URL url) {
+	public static String loadFile(URL url) {
 		// InputStream stream = ResourceManager.class.getResourceAsStream(path);
 		// try (Scanner sc = new Scanner(url.openStream())) {
 		try (Scanner sc = new Scanner(new File(url.toURI()))) {
@@ -137,7 +134,8 @@ public final class ResourceManager {
 		}
 	}
 	
-	private static String loadFileFromSource(String path) {
+	@SuppressWarnings("deprecation")
+	public static String loadFileFromSource(String path) {
 		try {
 			URL url = ResourceManager.class.getResource(path);
 			url = new URL(url.toString().replace("bin", "src"));
@@ -152,6 +150,7 @@ public final class ResourceManager {
 		}
 	}
 	
+	@SuppressWarnings("unused")
 	private static void saveFile(String path, String content) {
 		try (PrintWriter pw = new PrintWriter(new File(path))) {
 			pw.write(content);
@@ -167,7 +166,7 @@ public final class ResourceManager {
 				return;
 			// System.out.println(new File(url.toURI()));
 			// System.out.println(url);
-			URL srcUrl = new URL(url.toString().replace("bin", "src"));
+			//URL srcUrl = new URL(url.toString().replace("bin", "src"));
 			// String content = ResourceManager.loadFile(srcUrl);
 			if (url.toString().contains("_tab.css")) {
 				// System.out.println(ResourceManager.loadFile(url));

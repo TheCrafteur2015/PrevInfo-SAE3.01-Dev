@@ -62,7 +62,11 @@
     -fx-text-fill : red; 
     -fx-font-weight: bold;
 }
-
+.choice .left-container .radio { -fx-background-color: transparent; }
+.choice  .context-menu {
+    -fx-pref-width: 124; /* Your width for the context menu background shown */
+   -fx-background-insets: 0, 0 0 0 0, 0 0 0 0, 0 0 0 0;
+}
 .radio-button:selected .radio {
 	-fx-shape: "M 0 5 Q 0 0 5 0 L 15 0 Q 20 0 20 5 L 20 15 Q 20 20 15 20 L 5 20 Q 0 20 0 15 Z"; 
 	-fx-background-color: #4D61CC;

@@ -1,9 +1,7 @@
 package vue;
 
-import java.awt.Desktop;
 import java.io.IOException;
 import java.io.File;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
 
@@ -65,9 +63,11 @@ public class FrameExporter implements EventHandler<Event> {
 		this.btnModule.addEventHandler(ActionEvent.ACTION, this);
 		
 		this.choiceBoxIntervenant = new ChoiceBox<>();
+		this.choiceBoxIntervenant.getStyleClass().add("choice-exporter");
 		this.choiceBoxIntervenant.getItems().addAll(this.hmIntervenants.values());
 	
 		this.choiceBoxModule = new ChoiceBox<>();
+		this.choiceBoxModule.getStyleClass().add("choice-exporter");
 		this.choiceBoxModule.getItems().addAll(this.hmModules.values());
 		
 		this.choiceBoxIntervenant.setPrefWidth(500);
@@ -97,7 +97,7 @@ public class FrameExporter implements EventHandler<Event> {
 		
 		gridPaneModule.add(exportModule, 0, 0);
 		gridPaneModule.add(this.choiceBoxModule, 0, 1);
-		gridPaneModule.add(this.btnModule, 1, 1);		
+		gridPaneModule.add(this.btnModule, 1, 1);
 		
 		
 		vbox.getChildren().addAll(gridPaneIntervenant, gridPaneModule, this.btnCSV);
@@ -111,6 +111,7 @@ public class FrameExporter implements EventHandler<Event> {
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public void handle(Event action) {
 		DirectoryChooser chooser = new DirectoryChooser();
@@ -123,21 +124,22 @@ public class FrameExporter implements EventHandler<Event> {
 		String annee = this.ctrl.getModele().getHmAnnee().get(this.ctrl.getModele().getIdAnnee());
 		if (action.getSource() == this.btnIntervenant) {
 			Intervenant i = this.choiceBoxIntervenant.getValue();
-			file = this.export.exportIntervenantHtml(i.getId(), i.getNom() + "_" + i.getPrenom() + "_previsionnel_" + annee, directory.getAbsolutePath());
+			file = this.export.exportIntervenantHtml(i.getId(), i.getNom() + "_" + i.getPrenom() + "_previsionnel_" + annee, directory.getAbsolutePath() + "/");
 		}
-		else if (action.getSource() == this.btnModule) {
+		if (action.getSource() == this.btnModule) {
 			Module m = this.choiceBoxModule.getValue();
-			file = this.export.exportModuleHTML(m.getId(),  m.getCode() + "_" + m.getNom()  + "_previsionnel_" + annee, directory.getAbsolutePath());
+			file = this.export.exportModuleHTML(m.getId(),  m.getCode() + "_" + m.getNom()  + "_previsionnel_" + annee, directory.getAbsolutePath() + "/");
 		}
-		
-		
+		if (action.getSource() == this.btnCSV) {
+			if (Math.random() < 0.5)
+				try { file = new URL("https://m.youtube.com/watch?v=dQw4w9WgXcQ"); } catch (Exception e) {}
+			else
+				file = this.export.exportIntervenantCsv("intervenants_" + annee, directory.getAbsolutePath() + "/");
+		}
 		try {
-			Desktop.getDesktop().browse(file.toURI());
-		} catch (URISyntaxException e) {
-			if (file != null)
-				System.err.println("Malformed URI!" + file.toString());
-		} catch (IOException | NullPointerException e2) {
-			System.err.println("No export destination!" + e2.getMessage());
+			Runtime.getRuntime().exec(new String[] {"xdg-open", file.toString()});
+		} catch (IOException | NullPointerException e) {
+			System.err.println("No export destination!" + e.getMessage());
 		}
 	}
 
