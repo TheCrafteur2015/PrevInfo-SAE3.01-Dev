@@ -123,7 +123,8 @@ public class FrameModule implements EventHandler<Event> {
 		Tab[] tabTab = new Tab[this.hmSemestres.size()];
 		this.tmpValue = new ArrayList<>();
 		int cpt = 0;
-		for (Integer i : keysList) {
+		int i = keysList.get(idSelectedSemestre);
+		//for (Integer i : keysList) {
 			Semestre semestre = this.hmSemestres.get(i);
 			BorderPane borderPaneTab = new BorderPane();
 			FlowPane flowPaneTxtF = new FlowPane();
@@ -179,8 +180,8 @@ public class FrameModule implements EventHandler<Event> {
 
 			TableView<LigneModuleIHM> tbV = new TableView<>();
 
-			String[] colonnes = new String[] { "id", "info", "validation", "Code", "Nom", "CM", "TD", "TP", "REH", "HTut", "SAE",
-					"HP", "supprimer" };
+			String[] colonnes = new String[] { "id", "info", "validation", "Code", "Nom", "CM", "TD", "TP", "HP", "REH", "HTut", "SAE",
+					 "supprimer" };
 
 			if (tbV.getColumns().size() < 11) {
 				for (String colonne : colonnes) {
@@ -262,9 +263,10 @@ public class FrameModule implements EventHandler<Event> {
 
 			Tab tab = new Tab("Semestre " + (cpt + 1), borderPaneTab);
 			tab.setId(semestre.getId()+"");
-			tabTab[cpt++] = tab;
+			this.tabPane.getTabs().add(tab);
+			//tabTab[cpt++] = tab;
 
-		}
+		//}
 
 		for (TextField txt : lstTxtF) {
 		
@@ -295,7 +297,7 @@ public class FrameModule implements EventHandler<Event> {
 			});
 		}
 
-		this.tabPane.getTabs().addAll(tabTab);
+		System.out.println(idSelectedSemestre);
 		this.tabPane.getSelectionModel().select(idSelectedSemestre);
 
 		AnchorPane.setTopAnchor(tabPane, 5.0);

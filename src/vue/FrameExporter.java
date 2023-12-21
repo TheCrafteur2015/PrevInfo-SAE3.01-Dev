@@ -47,9 +47,8 @@ public class FrameExporter implements EventHandler<Event> {
 		this.centerPaneAccueil.getChildren().clear();
 		this.centerPaneAccueil.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
 
-		VBox vbox = new VBox(5);
+		VBox vbox = new VBox();
 
-		BorderPane borderPane = new BorderPane();
 		this.hmIntervenants = this.ctrl.getModele().getHmIntervenants();
 		this.btnIntervenant = new Button("Confirmer");
 		this.btnIntervenant.addEventHandler(ActionEvent.ACTION, this);
@@ -59,13 +58,13 @@ public class FrameExporter implements EventHandler<Event> {
 			this.choiceBoxIntervenant.getItems().add(i);
 		}
 		
-		GridPane gridPane1 = new GridPane();
-		gridPane1.add(new Text("Exportation par Intervenant"), 0, 0);
-		gridPane1.add(this.choiceBoxIntervenant, 0, 1);
-		gridPane1.add(this.btnIntervenant, 1, 1);
-		gridPane1.setPadding(new Insets(10));
-		gridPane1.setVgap(10);
-		gridPane1.setHgap(20);
+		GridPane gridPaneIntervenant = new GridPane();
+		gridPaneIntervenant.add(new Text("Exportation par Intervenant"), 0, 0);
+		gridPaneIntervenant.add(this.choiceBoxIntervenant, 0, 1);
+		gridPaneIntervenant.add(this.btnIntervenant, 1, 1);
+		gridPaneIntervenant.setPadding(new Insets(10));
+		gridPaneIntervenant.setVgap(10);
+		gridPaneIntervenant.setHgap(20);
 
 
 		this.hmModules = this.ctrl.getModele().getHmModules();
@@ -86,17 +85,17 @@ public class FrameExporter implements EventHandler<Event> {
 		gridPane2.setVgap(20);
 		gridPane2.setHgap(20);
 
+		
 		GridPane gridPane3 = new GridPane();
-
 		gridPane3.setAlignment(Pos.CENTER);
 		gridPane3.add(this.choiceBoxIntervenant, 0, 0);
-		gridPane3.add(gridPane1, 1, 0);
+		gridPane3.add(gridPaneIntervenant, 1, 0);
 		gridPane3.add(gridPane2, 1, 1);
 
 		this.choiceBoxIntervenant.setMaxWidth(500);
 		this.choiceBoxModule.setMaxWidth(500);
 		
-		vbox.getChildren().addAll(borderPane);
+		//vbox.getChildren().addAll(gridPaneIntervenant, gridPaneModule);
 
 		this.centerPaneAccueil.getChildren().add(gridPane3);
 		
@@ -108,11 +107,11 @@ public class FrameExporter implements EventHandler<Event> {
 			String annee = this.ctrl.getModele().getHmAnnee().get(this.ctrl.getModele().getIdAnnee());
 			if (action.getSource() == this.btnIntervenant) {
 				Intervenant i = this.choiceBoxIntervenant.getValue();
-				this.export.exportIntervenant(i.getId(), i.getNom() + "_" + i.getPrenom() + "_previsionnel_"+annee);
+				this.export.exportIntervenantHtml(i.getId(), i.getNom() + "_" + i.getPrenom() + "_previsionnel_"+annee,"");
 			}
 			else if (action.getSource() == this.btnModule) {
 				Module m = this.choiceBoxModule.getValue();
-				this.export.exportModule(m.getId(),  m.getCode() + "_" + m.getNom()  + "_previsionnel_"+annee);
+				this.export.exportModuleHTML(m.getId(),  m.getCode() + "_" + m.getNom()  + "_previsionnel_"+annee,"");
 			}
 		}
 	}

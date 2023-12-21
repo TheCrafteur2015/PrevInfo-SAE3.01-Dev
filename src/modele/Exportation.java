@@ -2,14 +2,16 @@ package modele;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 import java.util.Map;
 
 import controleur.Controleur;
 import java.util.Comparator;
+import java.util.HashMap;
 
 
 public class Exportation
@@ -43,7 +45,7 @@ public class Exportation
 	 * @param idModule   identifiant du {@link Intervenant} à exporter
 	 * @param nomFichier nom du fichier de sortie
 	 */
-	public void exportIntervenant(int idIntervenant, String nomFichier)
+	public void exportIntervenantHtml(int idIntervenant, String nomFichier, String chemin)
 	{
 		String body ="";
 		body += "	<body>\n";
@@ -64,21 +66,21 @@ public class Exportation
 		body += "			<tbody>\n";
 
 		Map<Module,List<Intervention>> modulesInter = this.model.getModulesIntervenant(idIntervenant);// obtenir tout les modules au quel l'intervenant est lié
-		List<Module> ensmodule = new ArrayList<Module>(modulesInter.keySet());
+		List<Module> ensModule = new ArrayList<Module>(modulesInter.keySet());
 
-		Collections.sort(ensmodule, new Module(0, null, null, false, 0, 0, 0).new ModuleComparator());
+		Collections.sort(ensModule, new Module(0,"","",false,0,0,0).new ModuleComparator()); // Module qui n'existe pas car id à 0
 
 		int debut = 0;
-		for (int cpt=0; cpt<ensmodule.size();cpt++)
+		for (int cpt=0; cpt<ensModule.size();cpt++)
 		{
-			if (ensmodule.get(cpt).getIdSemestre()>ensmodule.get(debut).getIdSemestre())
+			if (ensModule.get(cpt).getIdSemestre()>ensModule.get(debut).getIdSemestre())
 			{
-				body += sSemestre(ensmodule.subList(debut, cpt), modulesInter);
+				body += sSemestreHTML(ensModule.subList(debut, cpt), modulesInter);
 				debut = cpt;
 			}
 		}
-		if (!ensmodule.isEmpty()) {
-			body += sSemestre(ensmodule.subList(debut, ensmodule.size()), modulesInter);
+		if (!ensModule.isEmpty()) {
+			body += sSemestreHTML(ensModule.subList(debut, ensModule.size()), modulesInter);
 		}
 		body += "			</tbody>\n";
 
@@ -90,7 +92,7 @@ public class Exportation
 		int tutorat   = 0;
 		int hPonctuel = 0;
 		int total     = 0;
-		for (Module module : ensmodule)
+		for (Module module : ensModule)
 		{
 			for (Intervention intervention : modulesInter.get(module))
 			{
@@ -123,11 +125,11 @@ public class Exportation
 		body += "			</tfoot>\n";
 		body += "		</table>\n";
 		body += "	</body>\n";
-		this.cssGenerator();
-		ecrireFichierhtml(nomFichier + ".html", this.head(nomFichier) + body + this.foot());
+		this.cssGenerator(chemin);
+		ecrireFichier(chemin+nomFichier + ".html", this.head(nomFichier) + body + this.foot());
 	}
 
-	private String sSemestre(List<Module> ensModule, Map<Module,List<Intervention>> modulesInter)
+	private String sSemestreHTML(List<Module> ensModule, Map<Module,List<Intervention>> modulesInter)
 	{
 		int cm        = 0;
 		int td        = 0;
@@ -141,7 +143,7 @@ public class Exportation
 		String ret = "";
 		for (Module mod : ensModule)
 		{
-			ret += sModule(mod,modulesInter.get(mod));
+			ret += sModuleHTML(mod,modulesInter.get(mod));
 		}
 
 		for (Module module : ensModule)
@@ -163,7 +165,7 @@ public class Exportation
 		}
 		
 		ret += "				<tr class=\"semestre" + ensModule.get(0).getIdSemestre() + "\">\n";
-		ret += "					<td> Total Semestre " + ensModule.get(0).getIdSemestre() + " </td>\n";
+		ret += "					<td> Total Semestre " + (((ensModule.get(0).getIdSemestre()+5) %6) +1) + " </td>\n";
 		ret += "					<td> "+ cm +" </td>\n";
 		ret += "					<td> "+ td +" </td>\n";
 		ret += "					<td> "+ tp +" </td>\n";
@@ -183,7 +185,7 @@ public class Exportation
 	 * @param mod {@link Module} a transformer
 	 * @return un {@link String} contenant le nom du {@link Module} et ???
 	 */
-	private String sModule(Module mod, List<Intervention> lstIntervention)
+	private String sModuleHTML(Module mod, List<Intervention> lstIntervention)
 	{
 		int cm        = 0;
 		int td        = 0;
@@ -269,18 +271,18 @@ public class Exportation
 	 * @param idModule   identifiant du {@link Module} à exporter
 	 * @param nomFichier nom du fichier de sortie
 	 */
-	public void exportModule(int idModule, String nomFichier)
+	public void exportModuleHTML(int idModule, String nomFichier, String chemin)
 	{
 		Module mod = this.model.getHmModules().get(idModule);
 		switch (mod.getIdTypeModule()) {
-			case 1 -> exportPPP(mod, nomFichier);
-			case 2 -> exportSAE(mod, nomFichier);
-			case 3 -> exportNormal(mod, nomFichier);
-			case 4 -> exportStage(mod, nomFichier);
+			case 1 -> exportPPPHTML(mod, nomFichier, chemin);
+			case 2 -> exportSAEHTML(mod, nomFichier, chemin);
+			case 3 -> exportNormalHTML(mod, nomFichier, chemin);
+			case 4 -> exportStageHTML(mod, nomFichier, chemin);
 		}
 	}
 
-	public void exportPPP(Module mod, String nomFichier)
+	public void exportPPPHTML(Module mod, String nomFichier, String chemin)
 	{
 		String body ="";
 		body += "	<body>\n";
@@ -361,11 +363,11 @@ public class Exportation
 		body += "			</tfoot>\n";
 		body += "		</table>\n";
 		body += "	</body>\n";
-		this.cssGenerator();
-		ecrireFichierhtml(nomFichier + ".html", this.head(nomFichier) + body + this.foot());
+		this.cssGenerator(chemin);
+		ecrireFichier(chemin + nomFichier + ".html", this.head(nomFichier) + body + this.foot());
 	}
 
-	public void exportSAE(Module mod, String nomFichier)
+	public void exportSAEHTML(Module mod, String nomFichier, String chemin)
 	{
 		String body ="";
 		body += "	<body>\n";
@@ -431,11 +433,11 @@ public class Exportation
 		body += "			</tfoot>\n";
 		body += "		</table>\n";
 		body += "	</body>\n";
-		this.cssGenerator();
-		ecrireFichierhtml(nomFichier + ".html", this.head(nomFichier) + body + this.foot());
+		this.cssGenerator(chemin);
+		ecrireFichier(chemin + nomFichier + ".html", this.head(nomFichier) + body + this.foot());
 	}
 
-	public void exportNormal(Module mod, String nomFichier)
+	public void exportNormalHTML(Module mod, String nomFichier, String chemin)
 	{
 		String body ="";
 		body += "	<body>\n";
@@ -509,11 +511,11 @@ public class Exportation
 		body += "			</tfoot>\n";
 		body += "		</table>\n";
 		body += "	</body>\n";
-		this.cssGenerator();
-		ecrireFichierhtml(nomFichier + ".html", this.head(nomFichier) + body + this.foot());
+		this.cssGenerator(chemin);
+		ecrireFichier(chemin + nomFichier + ".html", this.head(nomFichier) + body + this.foot());
 	}
 
-	public void exportStage(Module mod, String nomFichier)
+	public void exportStageHTML(Module mod, String nomFichier, String chemin)
 	{
 		String body ="";
 		body += "	<body>\n";
@@ -580,34 +582,15 @@ public class Exportation
 		body += "			</tfoot>\n";
 		body += "		</table>\n";
 		body += "	</body>\n";
-		this.cssGenerator();
-		ecrireFichierhtml(nomFichier + ".html", this.head(nomFichier) + body + this.foot());
+		this.cssGenerator(chemin);
+		ecrireFichier(chemin + nomFichier + ".html", this.head(nomFichier) + body + this.foot());
 	}
 
 	/*-------*/
 	/* autre */
 	/*-------*/
 
-	/**
-	 * Écrit des données dans un fichier spécifié en utilisant un PrintWriter.
-	 * 
-	 * @param nomFichierDestination Le nom du fichier dans lequel écrire les données.
-	 * @param body contenue du Fichier
-	 */
-	private void ecrireFichierhtml(String nomFichierDestination, String body)
-	{
-		try {
-			PrintWriter pw = new PrintWriter(new FileOutputStream("src/exportation-test/"+nomFichierDestination));
-			pw.println(body);
-			pw.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	private void cssGenerator()
+	private void cssGenerator(String chemin)
 	{
 		String ret = "";
 		ret += "thead {background-color: #222222;color: #ffffff;}\n";
@@ -621,7 +604,7 @@ public class Exportation
 		for (Semestre semestre : model.getHmSemestres().values()) {
 			ret += ".semestre"+ semestre.getId() + "{background-color: " + semestre.getCouleur() + ";}\n";
 		}
-		ecrireFichierhtml("tab.css", ret);
+		ecrireFichier(chemin + "tab.css", ret);
 	}
 
 	private String head(String titre)
@@ -652,11 +635,136 @@ public class Exportation
 	/*                                                                                                                */
 	/*                                                                                                                */
 	/*----------------------------------------------------------------------------------------------------------------*/
+	
+	/*--------------*/
+	/* Intervenants */
+	/*--------------*/
 
-	private void ecrireFichiercsv(String nomFichierDestination, String body)
+	/**
+	 * méthode pour obtenir le fichier d'exportation <a href="https://fr.wikipedia.org/wiki/Hypertext_Markup_Language"> html </a> d'un {@link Intervenant}
+	 * @param idModule   identifiant du {@link Intervenant} à exporter
+	 * @param nomFichier nom du fichier de sortie
+	 */
+	public void exportIntervenantCsv(int idIntervenant, String nomFichier, String chemin)
+	{
+		String body ="";
+		Map<Intervenant,List<Intervention>> hmIntervenants = model.getIntervenantInterventions();
+		
+		body += "nom,catégorie,s1 théorique,s1 reel,s3 théorique,s3 reel,s5 théorique,s5 reel,sTotal théorique,sTotal reel,s2 théorique,s2 reel,s4 théorique,s4 reel,s6 théorique,s6 reel,sTotal théorique,sTotal reel,minimum d'heures,total théorique,total reel, maximum d'heure\n";
+		
+		for (Intervenant interv : hmIntervenants.keySet()) {
+			body+=sSemestreCsv(interv, hmIntervenants.get(interv));
+		}
+		ecrireFichier(chemin + nomFichier + ".csv", body);
+	}
+
+	private String sSemestreCsv(Intervenant intervenant,List<Intervention> ensIntervention)
+	{
+		String ret ="";
+		ret += intervenant.getNom() + " " + intervenant.getPrenom() + ",";
+		ret += model.getHmCategories().get(intervenant.getIdCategorie()) + ",";
+		
+		double s1theorique = 0;
+		double s1reel      = 0;
+		double s2theorique = 0;
+		double s2reel      = 0;
+		double s3theorique = 0;
+		double s3reel      = 0;
+		double s4theorique = 0;
+		double s4reel      = 0;
+		double s5theorique = 0;
+		double s5reel      = 0;
+		double s6theorique = 0;
+		double s6reel      = 0;
+		
+		for (Intervention intervention : ensIntervention) {
+			double addReel      = reelIntervention(intervenant,intervention);
+			double addTheorique = theoriqueIntervention(intervenant,intervention);
+			switch (((model.getHmModules().get(intervention.getIdModule()).getIdSemestre()+5) %6) +1) { // on s'assure que le semestre est bien compris entre 1 et 6
+				case 1 : s1reel += addReel; s1theorique += addTheorique; break;
+				case 2 : s2reel += addReel; s2theorique += addTheorique; break;
+				case 3 : s3reel += addReel; s3theorique += addTheorique; break;
+				case 4 : s4reel += addReel; s4theorique += addTheorique; break;
+				case 5 : s5reel += addReel; s5theorique += addTheorique; break;
+				case 6 : s6reel += addReel; s6theorique += addTheorique; break;
+			}
+		}
+		ret += s1theorique +                                                                       ","; // s1 theorique
+		ret += s1reel      +                                                                       ","; // s1 reel
+		ret += s3theorique +                                                                       ","; // s3 theorique
+		ret += s3reel      +                                                                       ","; // s3 reel
+		ret += s5reel      +                                                                       ","; // s5 theorique
+		ret += s5theorique +                                                                       ","; // s5 reel
+		ret += s1theorique + s3theorique + s5theorique +                                           ","; // total theorique partie 1
+		ret += s1reel      + s3reel      + s5reel      +                                           ","; // total reel      partie 1
+		ret += s2reel      +                                                                       ","; // s2 theorique
+		ret += s2theorique +                                                                       ","; // s2 reel
+		ret += s4reel      +                                                                       ","; // s4 theorique
+		ret += s4theorique +                                                                       ","; // s4 reel
+		ret += s6reel      +                                                                       ","; // s6 theorique
+		ret += s6theorique +                                                                       ","; // s6 reel
+		ret += s2theorique + s4theorique + s6theorique +                                           ","; // total theorique partie 2
+		ret += s2reel      + s4reel      + s6reel      +                                           ","; // total reel      partie 2
+		ret += hMin(intervenant) +                                                                 ","; // minimum d'heure
+		ret += s1theorique + s2theorique + s3theorique + s4theorique + s5theorique + s6theorique + ","; // total theorique
+		ret += s1reel      + s2reel      + s3reel      + s4reel      + s5reel      + s6reel      + ","; // total reel
+		ret += hMax(intervenant) +                                                                 ","; // maximum d'heure
+		return ret + "\n";
+	}
+	
+	private double reelIntervention(Intervenant intervenant, Intervention intervention)
+	{
+		Categorie categ = model.getHmCategories().get(intervenant.getIdCategorie());
+		return intervention.getNbSemaines()*intervention.getNbGroupe()*categ.getRatioTp();
+	}
+
+	private double theoriqueIntervention(Intervenant intervenant, Intervention intervention)
+	{
+		return intervention.getNbSemaines()*intervention.getNbGroupe();
+	}
+	
+	private double hMin(Intervenant interv)
+	{
+		if (interv.getIdCategorie()==3)
+		{
+			return interv.gethMin();
+		}
+		else
+		{
+			return model.getHmCategories().get(interv.getIdCategorie()).gethMin();
+		}
+	}
+	
+	private double hMax(Intervenant interv)
+	{
+		if (interv.getIdCategorie()==3)
+		{
+			return interv.gethMax();
+		}
+		else
+		{
+			return model.getHmCategories().get(interv.getIdCategorie()).gethMax();
+		}
+	}
+	
+	/*----------------------------------------------------------------------------------------------------------------*/
+	/*                                                                                                                */
+	/*                                                                                                                */
+	/*                                                     autre                                                      */
+	/*                                                                                                                */
+	/*                                                                                                                */
+	/*----------------------------------------------------------------------------------------------------------------*/
+	
+	/**
+	 * Écrit des données dans un fichier spécifié en utilisant un PrintWriter.
+	 * 
+	 * @param nomFichierDestination Le nom du fichier dans lequel écrire les données.
+	 * @param body contenue du Fichier
+	 */
+	private void ecrireFichier(String nomFichierDestination, String body)
 	{
 		try {
-			PrintWriter pw = new PrintWriter(new FileOutputStream("src/exportation-test/"+nomFichierDestination));
+			PrintWriter pw = new PrintWriter(new FileOutputStream(nomFichierDestination));
 			pw.println(body);
 			pw.close();
 		}
@@ -665,4 +773,5 @@ public class Exportation
 			e.printStackTrace();
 		}
 	}
+
 }

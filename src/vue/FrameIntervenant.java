@@ -40,6 +40,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import modele.Categorie;
+import modele.HeureCours;
 import modele.Intervenant;
 import modele.Intervention;
 import modele.Modele;
@@ -103,7 +104,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 				tbcl.prefWidthProperty().bind(this.tableViewIntervenant.widthProperty().multiply(0.18));
 				}
 				else{
-					tbcl.prefWidthProperty().bind(this.tableViewIntervenant.widthProperty().multiply(0.1));
+					tbcl.prefWidthProperty().bind(this.tableViewIntervenant.widthProperty().multiply(0.1055));
 				}
 				tbcl.setResizable(false);
 				
@@ -192,10 +193,9 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 			infoButton.setId("Info-" + i.getId());
 			Button supButton = ResourceManager.getSupButton();
 			supButton.setId("Sup-" + i.getId());
-
-			// infoButton.setOnAction(this);
+			String erreurInter = getErreurInter(i);
+			//System.out.println(erreurInter);
 			infoButton.addEventHandler(ActionEvent.ACTION, this);
-			// supButton.setOnAction(this);
 			supButton.addEventHandler(ActionEvent.ACTION, this);
 			lst.add(new IntervenantIHM(infoButton, i.getPrenom(), i.getNom(),
 					this.ctrl.getModele().getNomCateg(i.getIdCategorie()), i.getEmail(), supButton));
@@ -203,6 +203,33 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		
 		this.tableViewIntervenant.setItems(lst);
 		
+	}
+
+	private String getErreurInter(Intervenant i) {
+		String ret = "";
+		double totalHeure = 0.0;
+		double totalREH = 0.0;
+		double heure = 0.0;
+		Map<Integer, Intervention> hmInter = this.ctrl.getModele().getHmInterventions();
+		Map<Integer, TypeCours> hmTypeCours = this.ctrl.getModele().getHmTypeCours();
+		Map<String, HeureCours> hmHeureCours = this.ctrl.getModele().getHmHeuresCours();
+		for (Intervention in : hmInter.values()) {
+			if (in.getIdIntervenant() == i.getId()) {
+				TypeCours tc = hmTypeCours.get(in.getIdTypeCours());
+				HeureCours hc = hmHeureCours.get(in.getIdTypeCours()+"-"+in.getIdModule());
+				heure = in.getNbGroupe()*hc.gethParSemaine()*hc.getNbSemaine();
+				if (tc.getNom().equals("Tut") || tc.getNom().equals("REH") || tc.getNom().equals("SAE") || tc.getNom().equals("HP") )
+					heure = in.getNbGroupe();
+				
+				if (!tc.getNom().equals("REH")) totalHeure += in.getNbGroupe()*heure*tc.getCoefficient();
+				else totalREH += in.getNbGroupe()*heure*tc.getCoefficient();
+			}
+		}
+		
+		if (totalHeure+totalREH<i.gethMin()) ret += "L'intervenant est en sous-service";
+		else if (totalHeure > i.gethMax()) ret += "L'intervenant est en sur-service";
+		
+		return ret;
 	}
 
 	public Button getInfoButton() {

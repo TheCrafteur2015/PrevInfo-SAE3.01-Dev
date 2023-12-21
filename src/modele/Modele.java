@@ -574,5 +574,23 @@ public class Modele {
 		}
 		return hmModuleIntervenant;
 	}
+	
+		public Map<Intervenant,List<Intervention>> getIntervenantInterventions()
+	{
+		Map<Intervenant,List<Intervention>> hmModuleIntervenant = new HashMap<Intervenant,List<Intervention>>();
+		
+		for (Intervention intervention : this.hmInterventions.values()) {
+			Intervenant interv = this.hmIntervenants.get(intervention.getIdIntervenant());
+			if (hmModuleIntervenant.keySet().contains(interv)) {
+				hmModuleIntervenant.get(interv).add(intervention);
+			}
+			else
+			{
+				hmModuleIntervenant.put(interv,new ArrayList<Intervention>());
+				hmModuleIntervenant.get(interv).add(intervention);
+			}
+		}
+		return hmModuleIntervenant;
+	}
 
 }

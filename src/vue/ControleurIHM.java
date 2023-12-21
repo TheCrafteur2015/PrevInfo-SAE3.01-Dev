@@ -3,7 +3,6 @@ package vue;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -81,6 +80,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 	private Button btnAnnuler;
 
 	public static boolean bIsValidate = false;
+	private boolean bErreur;
 
 	public void initialize(URL url, ResourceBundle rb) {
 		this.ctrl = Controleur.getInstance(this);
@@ -233,25 +233,36 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 				this.setAnnee(this.choiceBoxAnnee.getValue());
 			} else if (action.getSource() == this.btnConfirmerMultiplicateur) {
 				Double coeff;
-				boolean isEmpty = false;
+				bErreur = false;
+				List<String> alErreur = new ArrayList<>();
+				
 				for (int i = 0; i < this.alText.size(); i++) {
 					coeff = null;
-					if (this.alTextField.get(i).getText().contains("/")) {
+					if (this.alTextField.get(i).getText().contains("/") && !(this.alTextField.get(i).getText().charAt(this.alTextField.get(i).getText().length() - 1)=='/')) {
 						String[] partTxt = this.alTextField.get(i).getText().split("/");
 						coeff = Double.parseDouble(partTxt[0]) /  Double.parseDouble(partTxt[1]);
 						this.ctrl.getModele().updateTypeCoursBrut(alText.get(i).getText(), coeff);
-					} else if (!this.alTextField.get(i).getText().isEmpty()) {
+					} else if (!this.alTextField.get(i).getText().isEmpty() && !this.alTextField.get(i).getText().contains("/")) {
 						coeff = Double.parseDouble(alTextField.get(i).getText());
 						this.ctrl.getModele().updateTypeCoursBrut(alText.get(i).getText(), coeff);
 					} else {
-						isEmpty = true;
+						alErreur.add(alText.get(i).getText());
+						bErreur = true;
 					}
 				}
-				if (!isEmpty) {
+				if (!bErreur) {
 					((Stage) this.btnConfirmerMultiplicateur.getScene().getWindow()).close();
 					this.afficherNotification("Succès", "Les coefficients ont bien été modifiés", ControleurIHM.Notification.SUCCES);
 				} else {
-					this.afficherNotification("Erreur", "Veuillez remplir tous les champs", ControleurIHM.Notification.ERREUR);
+					String message = "Veuillez vérifier les champs suivants : ";
+					for (String s : alErreur) {
+						message += s + ", ";
+					}
+					message = message.substring(0, message.length() - 2);
+					
+					this.afficherNotification("Erreur", message, ControleurIHM.Notification.ERREUR);
+					
+					
 				}
 			}
 			if (event.getSource() == this.btnOui) {
@@ -297,10 +308,10 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 		this.btnAnnuler = new Button("Annuler");
 
 		btnOui.addEventHandler(ActionEvent.ACTION, this );
-		btnOui.setMinSize(80, 30);
-		btnOui.setMaxSize(80,30);
-		btnAnnuler.setMinSize(80, 30);
-		btnAnnuler.setMaxSize(80, 30);
+		btnOui.setMinSize(90, 30);
+		btnOui.setMaxSize(90,30);
+		btnAnnuler.setMinSize(90, 30);
+		btnAnnuler.setMaxSize(90, 30);
 		btnAnnuler.addEventHandler(ActionEvent.ACTION, this);
 
 		StackPane popupLayout = new StackPane();
