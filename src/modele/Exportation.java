@@ -65,8 +65,8 @@ public class Exportation
 		body += "			</thead>\n";
 		body += "			<tbody>\n";
 
-		Map<Module,List<Intervention>> modulesInter = this.model.getModulesIntervenant(idIntervenant);// obtenir tout les modules au quel l'intervenant est lié
-		List<Module> ensModule = new ArrayList<Module>(modulesInter.keySet());
+		Map<Module, List<Intervention>> modulesInter = this.model.getModulesIntervenant(idIntervenant);// obtenir tout les modules au quel l'intervenant est lié
+		List<Module> ensModule = new ArrayList<>(modulesInter.keySet());
 
 		Collections.sort(ensModule, new Module(0,"","",false,0,0,0).new ModuleComparator()); // Module qui n'existe pas car id à 0
 
@@ -590,8 +590,7 @@ public class Exportation
 	/* autre */
 	/*-------*/
 
-	private void cssGenerator(String chemin)
-	{
+	private void cssGenerator(String chemin) {
 		String ret = "";
 		ret += "thead {background-color: #222222;color: #ffffff;}\n";
 		ret += "tbody {background-color: #e4f0f5;}\n";
@@ -604,11 +603,10 @@ public class Exportation
 		for (Semestre semestre : model.getHmSemestres().values()) {
 			ret += ".semestre"+ semestre.getId() + "{background-color: " + semestre.getCouleur() + ";}\n";
 		}
-		ecrireFichier(chemin + "tab.css", ret);
+		this.ecrireFichier(chemin + "tab.css", ret);
 	}
 
-	private String head(String titre)
-	{
+	private String head(String titre) {
 		String ret = "";
 		ret += "<!DOCTYPE html>\n";
 		ret += "<html lang=\"en\">\n";
@@ -617,16 +615,16 @@ public class Exportation
 		ret += "		<title>"+ titre +"</title>\n";
 		ret += "		<link href=\"tab.css\" rel=\"stylesheet\">\n";
 		ret += "	</head>\n";
+		ret += "	<body>\n";
+		ret += "		<header>";
+		ret += "			<h1>init dev</h1>";
+		ret += "		</header>";
 		return ret;
 	}
 
-	private String foot()
-	{
-		String ret ="</html>";
-
-		return ret;
+	private String foot() {
+		return "</html>";
 	}
-
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 	/*                                                                                                                */

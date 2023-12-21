@@ -183,10 +183,6 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 		this.ctrl.getModele().setDuplication(!this.ctrl.getModele().isDuplication());
 		String message = "Le mode duplication est " + (this.ctrl.getModele().isDuplication() ? "activé" : "désactivé");
 		this.afficherNotification("Mode Duplication", message, ControleurIHM.Notification.INFO);
-		// if (this.ctrl.getModele().isDuplication())
-		// 	this.afficherNotification("Mode Duplication", "Le mode duplication est activé", ControleurIHM.Notification.INFO);
-		// else
-		// 	this.afficherNotification("Mode Duplication", "Le mode duplication est désactivé", ControleurIHM.Notification.INFO);
 	}
 
 	@FXML

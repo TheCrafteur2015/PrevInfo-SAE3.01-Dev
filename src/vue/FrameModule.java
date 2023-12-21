@@ -58,7 +58,7 @@ public class FrameModule implements EventHandler<Event> {
 
 	private TabPane tabPane;
 
-	private List<TableView<LigneModuleIHM>> lstTableView;
+	private TableView<LigneModuleIHM> tbv;
 	private ObservableList<LigneModuleIHM> lst;
 	private TextField txtFTD;
 	private TextField txtFTP;
@@ -73,6 +73,8 @@ public class FrameModule implements EventHandler<Event> {
 	private List<TextField> lstTxtF;
 	private ColorPicker colorPicker;
 	private List<String> tmpValue;
+	
+	private int idSelectedSemestre;
 
 	public FrameModule(Controleur ctrl, AnchorPane centerPaneAccueil) {
 		this.ctrl = ctrl;
@@ -83,6 +85,7 @@ public class FrameModule implements EventHandler<Event> {
 	}
 
 	public void init(int idSelectedSemestre) {
+		this.idSelectedSemestre = idSelectedSemestre;
 		this.hmHeureCours = this.ctrl.getModele().getHmHeuresCours();
 		this.centerPaneAccueil.getChildren().clear();
 		this.centerPaneAccueil.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
@@ -108,7 +111,9 @@ public class FrameModule implements EventHandler<Event> {
 	}
 
 	public void majTabs(int idSelectedSemestre) {
+		this.idSelectedSemestre = idSelectedSemestre;
 		this.tabPane = new TabPane();
+		this.tabPane.addEventHandler(Event.ANY, this);
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 
 		this.hmModule = this.ctrl.getModele().getHmModules();
@@ -117,157 +122,161 @@ public class FrameModule implements EventHandler<Event> {
 	 	List<Integer> keysList = new ArrayList<>(this.hmSemestres.keySet());
 		keysList.sort(null);
 			
-		this.lstTableView = new ArrayList<>();
+		
+		
 		this.lstTableColumns = new ArrayList<>();
 
-		Tab[] tabTab = new Tab[this.hmSemestres.size()];
-		this.tmpValue = new ArrayList<>();
-		int cpt = 0;
-		int i = keysList.get(idSelectedSemestre);
-		//for (Integer i : keysList) {
-			Semestre semestre = this.hmSemestres.get(i);
-			BorderPane borderPaneTab = new BorderPane();
-			FlowPane flowPaneTxtF = new FlowPane();
-			flowPaneTxtF.setHgap(5);
 		
-			GridPane gridPaneTmp = new GridPane();
-			TextField textFieldTmp = new TextField(semestre.getNbGTD() + "");
-			this.tmpValue.add(textFieldTmp.getText());
-			
-			textFieldTmp.setMaxWidth(5*7);
-			textFieldTmp.setId("TD-"+semestre.getId());
-			this.lstTxtF.add(textFieldTmp);
-			gridPaneTmp.add(new Label("nbGroupeTD : "), 0, 0);
-			gridPaneTmp.add(textFieldTmp, 1, 0);
-			flowPaneTxtF.getChildren().add(gridPaneTmp);
+		this.tmpValue = new ArrayList<>();
+		int i = keysList.get(idSelectedSemestre);
+		Semestre semestre = this.hmSemestres.get(i);
+		BorderPane borderPaneTab = new BorderPane();
+		FlowPane flowPaneTxtF = new FlowPane();
+		flowPaneTxtF.setHgap(5);
+	
+		GridPane gridPaneTmp = new GridPane();
+		TextField textFieldTmp = new TextField(semestre.getNbGTD() + "");
+		this.tmpValue.add(textFieldTmp.getText());
+		
+		textFieldTmp.setMaxWidth(5*7);
+		textFieldTmp.setId("TD-"+semestre.getId());
+		this.lstTxtF.add(textFieldTmp);
+		gridPaneTmp.add(new Label("nbGroupeTD : "), 0, 0);
+		gridPaneTmp.add(textFieldTmp, 1, 0);
+		flowPaneTxtF.getChildren().add(gridPaneTmp);
 
-			
-			gridPaneTmp = new GridPane();
-			textFieldTmp = new TextField(semestre.getNbGTP() + "");
-			textFieldTmp.setMaxWidth(5*7);
-			textFieldTmp.setId("TP-"+semestre.getId());
-			this.lstTxtF.add(textFieldTmp);
-			gridPaneTmp.add(new Label("nbGroupeTP : "), 0, 0);
-			gridPaneTmp.add(textFieldTmp, 1, 0);
-			flowPaneTxtF.getChildren().add(gridPaneTmp);
+		
+		gridPaneTmp = new GridPane();
+		textFieldTmp = new TextField(semestre.getNbGTP() + "");
+		textFieldTmp.setMaxWidth(5*7);
+		textFieldTmp.setId("TP-"+semestre.getId());
+		this.lstTxtF.add(textFieldTmp);
+		gridPaneTmp.add(new Label("nbGroupeTP : "), 0, 0);
+		gridPaneTmp.add(textFieldTmp, 1, 0);
+		flowPaneTxtF.getChildren().add(gridPaneTmp);
 
-			gridPaneTmp = new GridPane();
-			textFieldTmp = new TextField(semestre.getNbGCM() + "");
-			textFieldTmp.setMaxWidth(5*7);
-			textFieldTmp.setId("CM-"+semestre.getId());
-			this.lstTxtF.add(textFieldTmp);
-			gridPaneTmp.add(new Label("nbGroupeCM : "), 0, 0);
-			gridPaneTmp.add(textFieldTmp, 1, 0);
-			flowPaneTxtF.getChildren().add(gridPaneTmp);
+		gridPaneTmp = new GridPane();
+		textFieldTmp = new TextField(semestre.getNbGCM() + "");
+		textFieldTmp.setMaxWidth(5*7);
+		textFieldTmp.setId("CM-"+semestre.getId());
+		this.lstTxtF.add(textFieldTmp);
+		gridPaneTmp.add(new Label("nbGroupeCM : "), 0, 0);
+		gridPaneTmp.add(textFieldTmp, 1, 0);
+		flowPaneTxtF.getChildren().add(gridPaneTmp);
 
-			gridPaneTmp = new GridPane();
-			textFieldTmp = new TextField(semestre.getNbSemaine() + "");
-			textFieldTmp.setMaxWidth(5*7);
-			textFieldTmp.setId("Semaine-"+semestre.getId());
-			this.lstTxtF.add(textFieldTmp);
-			gridPaneTmp.add(new Label("nbSemaines : "), 0, 0);
-			gridPaneTmp.add(textFieldTmp, 1, 0);
-			flowPaneTxtF.getChildren().add(gridPaneTmp);
+		gridPaneTmp = new GridPane();
+		textFieldTmp = new TextField(semestre.getNbSemaine() + "");
+		textFieldTmp.setMaxWidth(5*7);
+		textFieldTmp.setId("Semaine-"+semestre.getId());
+		this.lstTxtF.add(textFieldTmp);
+		gridPaneTmp.add(new Label("nbSemaines : "), 0, 0);
+		gridPaneTmp.add(textFieldTmp, 1, 0);
+		flowPaneTxtF.getChildren().add(gridPaneTmp);
 
-			this.colorPicker = new ColorPicker(Color.web(semestre.getCouleur()));
-			this.colorPicker.setId(semestre.getId()+"");
-			//this.colorPicker = new ColorPicker();
-			colorPicker.addEventHandler(ActionEvent.ACTION, this);
-			
-			flowPaneTxtF.setVgap(20);
-			flowPaneTxtF.setHgap(20);
-			flowPaneTxtF.getChildren().add(colorPicker);
+		this.colorPicker = new ColorPicker(Color.web(semestre.getCouleur()));
+		this.colorPicker.setId(semestre.getId()+"");
+		//this.colorPicker = new ColorPicker();
+		colorPicker.addEventHandler(ActionEvent.ACTION, this);
+		
+		flowPaneTxtF.setVgap(20);
+		flowPaneTxtF.setHgap(20);
+		flowPaneTxtF.getChildren().add(colorPicker);
 
-			TableView<LigneModuleIHM> tbV = new TableView<>();
+		TableView<LigneModuleIHM> tbV = new TableView<>();
 
-			String[] colonnes = new String[] { "id", "info", "validation", "Code", "Nom", "CM", "TD", "TP", "HP", "REH", "HTut", "SAE",
-					 "supprimer" };
+		String[] colonnes = new String[] { "id", "info", "validation", "Code", "Nom", "CM", "TD", "TP", "HP", "REH", "HTut", "SAE",
+					"supprimer" };
 
-			if (tbV.getColumns().size() < 11) {
-				for (String colonne : colonnes) {
-					TableColumn<LigneModuleIHM, String> tbcl = new TableColumn<>(colonne);
-					this.lstTableColumns.add(tbcl);
-					tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
-					tbcl.setResizable(false);
-					tbcl.setReorderable(false);
-					tbcl.setSortable(false);
-					if (!colonne.equals("id") && !colonne.equals("info") && !colonne.equals("supprimer") && !colonne.equals("validation")) {
-						tbcl.setEditable(true);
-						tbcl.setCellFactory(TextFieldTableCell.forTableColumn());
-						tbcl.setOnEditCommit((TableColumn.CellEditEvent<LigneModuleIHM, String> event) -> {
-							String oldValue = event.getOldValue();
-							if (!oldValue.isEmpty() && !oldValue.equals("nombre d'heures totales") && !oldValue.equals("nombre de semaine") && !oldValue.equals("nombre d'heures par semaine")) {
-								LigneModuleIHM ligne = event.getTableView().getItems().get(event.getTablePosition().getRow());
-								int id = ligne.getId();
-								String col = event.getTableColumn().getText();
-								String newValue = event.getNewValue();
-								Module m = this.hmModule.get(id);
-								if (col.equals("Nom"))
-									m.setNom(newValue);
-								else if (col.equals("Code"))
-									m.setCode(newValue);
-								else {
-									int idTypeCours = this.ctrl.getModele().getIdTypeCoursByNom(col);
-									HeureCours hc = this.hmHeureCours.get(idTypeCours+"-"+m.getId());
-									if (ligne.getNom().equals("nombre de semaine") && newValue.matches(Modele.REGEX_INT))
-										hc.setNbSemaine(Integer.parseInt(newValue));
-									else if (ligne.getNom().equals("nombre d'heures totales") && newValue.matches(Modele.REGEX_DOUBLE))
-										hc.setHeure(Double.parseDouble(newValue));
-									else if (ligne.getNom().equals("nombre d'heures par semaine") && newValue.matches(Modele.REGEX_DOUBLE))
-										hc.sethParSemaine(Double.parseDouble(newValue));
-									this.ctrl.getModele().updateHeureCours(hc);
-								}	
-								this.ctrl.getModele().updateModule(m);
-							}
-						});
-					}
-
-					if (colonne.equals("id"))
-						tbcl.setVisible(false);
-					else if (colonne.equals("Nom"))
-						tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.3));
-					else if (colonne.equals("supprimer"))
-						tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.093));
-					else if (colonne.equals("validation"))
-						tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.075));
-					else
-						tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.05685));
-					tbV.getColumns().add(tbcl);
+		if (tbV.getColumns().size() < 11) {
+			for (String colonne : colonnes) {
+				TableColumn<LigneModuleIHM, String> tbcl = new TableColumn<>(colonne);
+				this.lstTableColumns.add(tbcl);
+				tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
+				tbcl.setResizable(false);
+				tbcl.setReorderable(false);
+				tbcl.setSortable(false);
+				if (!colonne.equals("id") && !colonne.equals("info") && !colonne.equals("supprimer") && !colonne.equals("validation")) {
+					tbcl.setEditable(true);
+					tbcl.setCellFactory(TextFieldTableCell.forTableColumn());
+					tbcl.setOnEditCommit((TableColumn.CellEditEvent<LigneModuleIHM, String> event) -> {
+						String oldValue = event.getOldValue();
+						if (!oldValue.isEmpty() && !oldValue.equals("nombre d'heures totales") && !oldValue.equals("nombre de semaine") && !oldValue.equals("nombre d'heures par semaine")) {
+							LigneModuleIHM ligne = event.getTableView().getItems().get(event.getTablePosition().getRow());
+							int id = ligne.getId();
+							String col = event.getTableColumn().getText();
+							String newValue = event.getNewValue();
+							Module m = this.hmModule.get(id);
+							if (col.equals("Nom"))
+								m.setNom(newValue);
+							else if (col.equals("Code"))
+								m.setCode(newValue);
+							else {
+								int idTypeCours = this.ctrl.getModele().getIdTypeCoursByNom(col);
+								HeureCours hc = this.hmHeureCours.get(idTypeCours+"-"+m.getId());
+								if (ligne.getNom().equals("nombre de semaine") && newValue.matches(Modele.REGEX_INT))
+									hc.setNbSemaine(Integer.parseInt(newValue));
+								else if (ligne.getNom().equals("nombre d'heures totales") && newValue.matches(Modele.REGEX_DOUBLE))
+									hc.setHeure(Double.parseDouble(newValue));
+								else if (ligne.getNom().equals("nombre d'heures par semaine") && newValue.matches(Modele.REGEX_DOUBLE))
+									hc.sethParSemaine(Double.parseDouble(newValue));
+								this.ctrl.getModele().updateHeureCours(hc);
+							}	
+							this.ctrl.getModele().updateModule(m);
+						}
+					});
 				}
+
+				if (colonne.equals("id"))
+					tbcl.setVisible(false);
+				else if (colonne.equals("Nom"))
+					tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.3));
+				else if (colonne.equals("supprimer"))
+					tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.093));
+				else if (colonne.equals("validation"))
+					tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.075));
+				else
+					tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.05685));
+				tbV.getColumns().add(tbcl);
 			}
+		}
 
-			tbV.setEditable(true);
-			tbV.getSelectionModel().setCellSelectionEnabled(true);
+		tbV.setEditable(true);
+		tbV.getSelectionModel().setCellSelectionEnabled(true);
 
-			List<Module> lstModule = this.ctrl.getModele().getModuleBySemestre(semestre.getId(), semestre.getIdAnnee());
-			lstModule.sort(null);
-			this.hmTypeCours = this.ctrl.getModele().getHmTypeCours();
-			this.lst = FXCollections.observableArrayList();
-			
-			for (Module m : lstModule) {
-				this.frameIntervention = new FrameIntervention(this.ctrl, this.centerPaneAccueil,
-								this.hmModule.get(m.getId()), false);
-				switch (this.hmTypeModule.get(m.getIdTypeModule()).getNom()) {
-					case "PPP"    -> this.ajouterModulePPP(m);
-					case "SAE"    -> this.ajouterModuleSAE(m);
-					case "normal" -> this.ajouterModuleNormale(m);
-					case "stage"  -> this.ajouterModuleStage(m);
-				}
+		List<Module> lstModule = this.ctrl.getModele().getModuleBySemestre(semestre.getId(), semestre.getIdAnnee());
+		lstModule.sort(null);
+		this.hmTypeCours = this.ctrl.getModele().getHmTypeCours();
+		this.lst = FXCollections.observableArrayList();
+		
+		for (Module m : lstModule) {
+			this.frameIntervention = new FrameIntervention(this.ctrl, this.centerPaneAccueil,
+							this.hmModule.get(m.getId()), false);
+			switch (this.hmTypeModule.get(m.getIdTypeModule()).getNom()) {
+				case "PPP"    -> this.ajouterModulePPP(m);
+				case "SAE"    -> this.ajouterModuleSAE(m);
+				case "normal" -> this.ajouterModuleNormale(m);
+				case "stage"  -> this.ajouterModuleStage(m);
 			}
+		}
 
-			tbV.setItems(lst);
-			lstTableView.add(tbV);
+		tbV.setItems(lst);
+		
+		
+		
 
-			borderPaneTab.setCenter(tbV);
-			borderPaneTab.setTop(flowPaneTxtF);
+		borderPaneTab.setCenter(tbV);
+		borderPaneTab.setTop(flowPaneTxtF);
 
-			Tab tab = new Tab("Semestre " + (cpt + 1), borderPaneTab);
-			tab.setId(semestre.getId()+"");
-			this.tabPane.getTabs().add(tab);
-			//tabTab[cpt++] = tab;
-
-		//}
-
+		for (int j = 0; j < 6; j++) {
+			if (j!=idSelectedSemestre) this.tabPane.getTabs().add(new Tab("Semestre " + (j+1)));
+			else {
+				Tab tab = new Tab("Semestre " + (j + 1), borderPaneTab);
+				tab.setId(semestre.getId()+"");
+				this.tabPane.getTabs().add(tab);
+			}
+		}
+		
+	
 		for (TextField txt : lstTxtF) {
 		
 			txt.textProperty().addListener(new ChangeListener<String>() {
@@ -297,7 +306,6 @@ public class FrameModule implements EventHandler<Event> {
 			});
 		}
 
-		System.out.println(idSelectedSemestre);
 		this.tabPane.getSelectionModel().select(idSelectedSemestre);
 
 		AnchorPane.setTopAnchor(tabPane, 5.0);
@@ -505,7 +513,13 @@ public class FrameModule implements EventHandler<Event> {
 			s.setCouleur(couleur);
 			this.ctrl.getModele().updateSemestre(s);
 		}
-		this.init(this.tabPane.getSelectionModel().getSelectedIndex());
+		
+		if (action.getSource() instanceof TabPane tp) {
+			if(this.idSelectedSemestre != tp.getSelectionModel().getSelectedIndex())this.init(tp.getSelectionModel().getSelectedIndex());
+		}
+		else {
+			this.init(this.tabPane.getSelectionModel().getSelectedIndex());
+		}
 	}
 
 }

@@ -1,0 +1,44 @@
+
+
+thead {
+	background-color: #222222;
+	color: #fff;
+}
+
+tbody {
+	background-color: #e4f0f5;
+}
+
+tfoot {
+	background-color: #777777;
+	color: #ffffff;
+}
+
+caption {
+	padding: 10px;
+	caption-side: bottom;
+}
+
+table {
+	border-collapse: collapse;
+	border: 2px solid rgb(255, 255, 255);
+	letter-spacing: 1px;
+	font-family: sans-serif;
+	font-size: 0.8rem;
+}
+
+td, th {
+	border: 1px solid rgb(190, 190, 190);
+	padding: 5px 10px;
+}
+
+td {
+	text-align: center;
+}
+
+.semestre1 { background-color: var(--semestre-1); }
+.semestre2 { background-color: var(--semestre-2); }
+.semestre3 { background-color: var(--semestre-3); }
+.semestre4 { background-color: var(--semestre-4); }
+.semestre5 { background-color: var(--semestre-5); }
+.semestre6 { background-color: var(--semestre-6); }

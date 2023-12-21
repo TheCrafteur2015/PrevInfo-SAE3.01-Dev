@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Scanner;
@@ -25,6 +26,8 @@ public final class ResourceManager {
 	// Fichiers CSS
 	public static final URL STYLESHEET = ResourceManager.class.getResource("style.css");
 	public static final URL STYLESHEET_POPUP = ResourceManager.class.getResource("stylePopup.css");
+	
+	// public static final String TAB_TEMPLATE = "/templates/_tab.css"
 
 	// Fichiers SVG
 	public static final URL BOOK = ResourceManager.class.getResource("book.svg");
@@ -52,6 +55,22 @@ public final class ResourceManager {
 				e.printStackTrace();
 			}
 		}
+		try {
+			File root = new File(ResourceManager.class.getResource("").toURI());
+			// System.out.println(Arrays.toString(root.listFiles()));
+			// System.out.println(root);
+			// System.out.println(root.getParentFile());
+			// System.out.println(ResourceManager.);
+			String file = "";
+			// Scanner sc = new Scanner(new File(ResourceManager.TAB_TEMPLATE.toURI()));
+			// while (sc.hasNextLine())
+			// 	file += sc.nextLine() + "\n";
+			// sc.close();
+			// System.out.println(file);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		File folder = null;
 		try {
 			folder = Paths.get(ResourceManager.class.getResource("").toURI()).toFile();
@@ -96,7 +115,19 @@ public final class ResourceManager {
 
 
 	private ResourceManager() {}
-
+	
+	private static String loadFile(String path) {
+		/*
+		InputStream stream = ResourceManager.class.getResourceAsStream(path);
+		try (Scanner sc = new Scanner(stream)) {
+			
+		}
+		
+		*/
+		
+		return null;
+	}
+	
 	public static String getData(String key) {
 		return ResourceManager.DATA.get(key);
 	}
