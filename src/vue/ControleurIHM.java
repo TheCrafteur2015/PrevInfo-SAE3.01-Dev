@@ -57,7 +57,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 
 	private Controleur ctrl;
 
-	private Button btnConfirmerIntervenant;
+	//private Button btnConfirmerIntervenant;
 
 	@FXML
 	private ImageView imageAccueil;

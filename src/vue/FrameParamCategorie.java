@@ -42,21 +42,18 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 	private Button btnSup;
 	private TableView<CategorieIHM> tableView;
 
-	private FrameIntervenant owner;
-
-	public FrameParamCategorie(Controleur ctrl, AnchorPane centerPaneAccueil, FrameIntervenant owner) {
+	public FrameParamCategorie(Controleur ctrl, AnchorPane centerPaneAccueil) {
 		this.ctrl = ctrl;
 		this.centerPaneAccueil = centerPaneAccueil;
-		this.owner = owner;
 
 		this.hmCategorie = this.ctrl.getModele().getHmCategories();
 		this.init();
 
 	}
 
-	@SuppressWarnings("deprecation")
 	public void init() {
 		Stage popupStage = new Stage();
+		popupStage.setResizable(false);
 		popupStage.initModality(Modality.APPLICATION_MODAL);
 		popupStage.setTitle("Paramétrer une catégorie");
 
@@ -77,9 +74,9 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 		GridPane gridPaneHeure = new GridPane();
 
 		this.tableView = new TableView<>();
-		tableView.setPrefWidth(280);
+		tableView.setPrefWidth(350);
 		// tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-		tableView.setMaxHeight(180);
+		tableView.setMaxHeight(178);
 		tableView.getStyleClass().add("noheader");
 
 		String[] colonnes = new String[] { "Nom", "Supprimer" };
@@ -90,8 +87,8 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 				tbcl.getStyleClass().add("center");
 				tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
 				tbcl.setReorderable(false);
-				if (colonne.equals("Nom")) tbcl.prefWidthProperty().bind(tableView.widthProperty().multiply(0.7));
-				else tbcl.prefWidthProperty().bind(tableView.widthProperty().multiply(0.285));
+				if (colonne.equals("Nom")) tbcl.prefWidthProperty().bind(tableView.widthProperty().multiply(0.8));
+				else tbcl.prefWidthProperty().bind(tableView.widthProperty().multiply(0.185));
 				tableView.getColumns().add(tbcl);
 			}
 		}
@@ -133,7 +130,7 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 		VBox vbox = new VBox(5);
 		vbox.setAlignment(Pos.CENTER);
 		vbox.setPadding(new Insets(15, 0, 15, 20));
-		vbox.setSpacing(50);
+		vbox.setSpacing(30);
 
 		Text nomC = new Text("Nom de la catégorie");
 		this.nomCategorie = new TextField();
@@ -170,7 +167,7 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 		gridPaneCat.add(nomC, 0, 0);
 		gridPaneCat.add(this.nomCategorie, 0, 1);
 
-		gridPane.setPadding(new Insets(20));
+		gridPane.setPadding(new Insets(30, 50, 30, 20));
 		StackPane stackPane = new StackPane();
 
 		vbox.getChildren().addAll(gridPaneCat, gridPaneHeure, this.btnAjouter);
@@ -180,7 +177,7 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 		popupLayout.getChildren().add(gridPane);
 		popupLayout.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
 
-		Scene popupScene = new Scene(popupLayout, 500, 350);
+		Scene popupScene = new Scene(popupLayout, 580, 300);
 		popupStage.setScene(popupScene);
 
 		popupStage.showAndWait();
@@ -225,34 +222,32 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 			if (ControleurIHM.bIsValidate) {
 				int id = Integer.parseInt(btn.getId());
 				this.ctrl.getModele().supprimerCategorie(id);
-				
 			}
 			ControleurIHM.bIsValidate = false;
 			this.maj();
-			
 		}
-			if (event.getSource() == this.btnAjouter) {
-				if (this.btnAjouter.getText().equals("Ajouter")) {
-					this.ctrl.getModele().ajouterCategorie(this.nomCategorie.getText(),
-							Double.parseDouble(this.tfHeureMin.getText()), Double.parseDouble(this.tfHeureMax.getText()),
-							Double.parseDouble(this.tfRatioTp.getText()));
-							this.maj();
-					
-				}
-				if (this.btnAjouter.getText().equals("Modifier")) {
-					
-					int id = Integer.parseInt(this.tableView.getSelectionModel()
-							.getSelectedItem().getSupprimer().getId());
-					Categorie c = this.ctrl.getModele().getHmCategories().get(id);
-					c.setNom(this.nomCategorie.getText());
-					c.sethMin(Double.parseDouble(this.tfHeureMin.getText()));
-					c.sethMax(Double.parseDouble(this.tfHeureMax.getText()));
-					c.setRatioTp(Double.parseDouble(this.tfRatioTp.getText()));
-					this.ctrl.getModele().updateCategorie(c);
-					this.maj();
-					
-				}
+		if (event.getSource() == this.btnAjouter) {
+			if (this.btnAjouter.getText().equals("Ajouter")) {
+				this.ctrl.getModele().ajouterCategorie(this.nomCategorie.getText(),
+						Double.parseDouble(this.tfHeureMin.getText()), Double.parseDouble(this.tfHeureMax.getText()),
+						Double.parseDouble(this.tfRatioTp.getText()));
+						this.maj();
+				
+			}
+			if (this.btnAjouter.getText().equals("Modifier")) {
+				
+				int id = Integer.parseInt(this.tableView.getSelectionModel()
+						.getSelectedItem().getSupprimer().getId());
+				Categorie c = this.ctrl.getModele().getHmCategories().get(id);
+				c.setNom(this.nomCategorie.getText());
+				c.sethMin(Double.parseDouble(this.tfHeureMin.getText()));
+				c.sethMax(Double.parseDouble(this.tfHeureMax.getText()));
+				c.setRatioTp(Double.parseDouble(this.tfRatioTp.getText()));
+				this.ctrl.getModele().updateCategorie(c);
+				this.maj();
+				
 			}
 		}
 	}
+}
 

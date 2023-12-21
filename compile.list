@@ -11,6 +11,7 @@ src/vue/FrameExporter.java
 src/vue/FrameIntervention.java
 src/vue/IntervenantModuleIHM.java
 src/vue/InterventionIHM.java
+src/vue/RecapIntervenantIHM.java
 src/vue/CategorieIHM.java
 src/vue/ModuleIHM.java
 src/vue/LigneModuleIHM.java

@@ -590,7 +590,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 
 	@Override
 	public void handle(ActionEvent action) {
-	
+		
 		if (action.getSource() == this.rbValider) {
 			this.module.setValid(this.rbValider.isSelected());
 			this.ctrl.getModele().updateModule(this.module);
@@ -602,29 +602,26 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		if (action.getSource() == this.btnAjouter) {
 			Intervenant interSelected = this.chBoxIntervenants.getSelectionModel().getSelectedItem();
 			if (interSelected == null) {
-				this.ctrl.getVue().afficherNotification("Ajouter une intervention", "Sélectionnez un intervenant",
-						ControleurIHM.Notification.ERREUR);
+				this.ctrl.getVue().afficherNotification("Ajouter une intervention", "Sélectionnez un intervenant", ControleurIHM.Notification.ERREUR);
 				return;
 			}
-
+			
 			if (selectedRadioButton == null) {
-				this.ctrl.getVue().afficherNotification("Ajouter une intervention", "Sélectionnez un type de module",
-						ControleurIHM.Notification.ERREUR);
+				this.ctrl.getVue().afficherNotification("Ajouter une intervention", "Sélectionnez un type de module", ControleurIHM.Notification.ERREUR);
 				return;
 			}
-
-			if ((this.nomTypeModule.equals("normal") ||this.nomTypeModule.equals("PPP")) && !selectedRadioButton.getText().equals("HP") && this.tfNbGroupes.getText().isEmpty()) {
-				this.ctrl.getVue().afficherNotification("Ajouter une intervention",
-						"Il faut rentrer un nombre de groupes", ControleurIHM.Notification.ERREUR);
+			
+			if ((this.nomTypeModule.equals("normal") || this.nomTypeModule.equals("PPP")) && !selectedRadioButton.getText().equals("HP") && this.tfNbGroupes.getText().isEmpty()) {
+				this.ctrl.getVue().afficherNotification("Ajouter une intervention", "Il faut rentrer un nombre de groupes", ControleurIHM.Notification.ERREUR);
 				return;
 			}
-
-			if ((this.nomTypeModule.equals("normal") ||this.nomTypeModule.equals("PPP")) && !selectedRadioButton.getText().equals("HP") && this.tfNbSemaines.getText().isEmpty()) {
+			
+			if ((this.nomTypeModule.equals("normal") || this.nomTypeModule.equals("PPP")) && !selectedRadioButton.getText().equals("HP") && this.tfNbSemaines.getText().isEmpty()) {
 				this.ctrl.getVue().afficherNotification("Ajouter une intervention",
 						"Il faut rentrer un nombre de semaines", ControleurIHM.Notification.ERREUR);
 				return;
 			}
-
+			
 			int idTypeCours = -1;
 			for (TypeCours typeCours : this.hmTypeCours.values()) {
 				if (typeCours.getNom().equals(selectedRadioButton.getText())) {
@@ -717,13 +714,12 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 			gridEntree.add(this.tfNbGroupes, 1, 1);
 			return;
 		}
-				
 		
-
 		if (action.getSource() instanceof Button btn) {
+			this.ctrl.getVue().popupValider();
+			if (ControleurIHM.bIsValidate)
 			this.ctrl.getModele().supprimerIntervention(Integer.parseInt(btn.getId()));
 		}
-
 		this.maj();
 	}
 

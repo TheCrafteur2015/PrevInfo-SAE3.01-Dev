@@ -1011,7 +1011,7 @@ public class Exportation {
 		String body = "";
 		Map<Intervenant, List<Intervention>> hmIntervenants = model.getIntervenantInterventions();
 
-		body += "	nom,catégorie,s1 théorique,s1 reel,s3 théorique,s3 reel,s5 théorique,s5 reel,sTotal théorique,sTotal reel,s2 théorique,s2 reel,s4 théorique,s4 reel,s6 théorique,s6 reel,sTotal théorique,sTotal reel,minimum d'heures,total théorique,total reel, maximum d'heure\n";
+		body += "nom,catégorie,s1 théorique,s1 reel,s3 théorique,s3 reel,s5 théorique,s5 reel,sTotal théorique,sTotal reel,s2 théorique,s2 reel,s4 théorique,s4 reel,s6 théorique,s6 reel,sTotal théorique,sTotal reel,minimum d'heures,total théorique,total reel, maximum d'heure\n";
 
 		for (Intervenant interv : hmIntervenants.keySet()) {
 			body += sSemestreCsv(interv, hmIntervenants.get(interv));

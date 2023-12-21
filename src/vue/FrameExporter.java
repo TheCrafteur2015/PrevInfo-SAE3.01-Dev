@@ -131,10 +131,10 @@ public class FrameExporter implements EventHandler<Event> {
 			file = this.export.exportModuleHTML(m.getId(),  m.getCode() + "_" + m.getNom()  + "_previsionnel_" + annee, directory.getAbsolutePath() + "/");
 		}
 		if (action.getSource() == this.btnCSV) {
-			if (Math.random() < 0.5)
-				try { file = new URL("https://m.youtube.com/watch?v=dQw4w9WgXcQ"); } catch (Exception e) {}
-			else
-				file = this.export.exportIntervenantCsv("intervenants_" + annee, directory.getAbsolutePath() + "/");
+			// if (Math.random() < 0.5)
+			// 	try { file = new URL("https://m.youtube.com/watch?v=dQw4w9WgXcQ"); } catch (Exception e) {}
+			// else
+			file = this.export.exportIntervenantCsv("intervenants_" + annee, directory.getAbsolutePath() + "/");
 		}
 		try {
 			Runtime.getRuntime().exec(new String[] {"xdg-open", file.toString()});
@@ -142,5 +142,4 @@ public class FrameExporter implements EventHandler<Event> {
 			System.err.println("No export destination!" + e.getMessage());
 		}
 	}
-
 }

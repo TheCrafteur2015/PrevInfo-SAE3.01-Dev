@@ -58,7 +58,6 @@ public final class ResourceManager {
 				e.printStackTrace();
 			}
 		}
-		// System.out.println(ResourceManager.TAB_TEMPLATE_CONTENT);
 		try {
 			//File root = new File(ResourceManager.class.getResource("").toURI());
 			// System.out.println(Arrays.toString(root.listFiles()));
