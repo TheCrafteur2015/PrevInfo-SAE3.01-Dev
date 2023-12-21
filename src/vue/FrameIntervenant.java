@@ -487,7 +487,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 			String nom = this.tfNom.getText();
 			String email = this.tfEmail.getText();
 			String tfHMinText = this.tfHMin.getText();
-			String tfHMaxText = this.tfHMin.getText();
+			String tfHMaxText = this.tfHMax.getText();
 
 			Categorie c = this.choiceBoxCategorie.getValue();
 
@@ -504,8 +504,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 				double hMax = Double.parseDouble(tfHMaxText);
 				int annee = this.ctrl.getModele().getIdAnnee();
 
-				// Intervenant i = new Intervenant(prenom, nom, email, hMin, hMax, annee,
-				// c.getId());
+				
 				if (this.modifIntervenant != null) {
 					this.modifIntervenant.setPrenom(prenom);
 					this.modifIntervenant.setNom(nom);

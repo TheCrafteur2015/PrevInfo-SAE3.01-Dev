@@ -1,17 +1,15 @@
 package modele;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
-import java.util.List;
-import java.util.Map;
+import java.util.Scanner;
 
-import controleur.Controleur;
-import java.util.Comparator;
-import java.util.HashMap;
+import vue.ResourceManager;
 
 
 public class Exportation
@@ -45,25 +43,24 @@ public class Exportation
 	 * @param idModule   identifiant du {@link Intervenant} à exporter
 	 * @param nomFichier nom du fichier de sortie
 	 */
-	public void exportIntervenantHtml(int idIntervenant, String nomFichier, String chemin)
+	public URL exportIntervenantHtml(int idIntervenant, String nomFichier, String chemin)
 	{
 		String body ="";
-		body += "	<body>\n";
-		body += "		<table border=\"1\">\n";
-		body += "			<thead>\n";
-		body += "				<tr>\n";
-		body += "					<th> Module           </th>\n";
-		body += "					<th> CM               </th>\n";
-		body += "					<th> TD               </th>\n";
-		body += "					<th> TP               </th>\n";
-		body += "					<th> REH              </th>\n";
-		body += "					<th> SAE              </th>\n";
-		body += "					<th> tutorat          </th>\n";
-		body += "					<th> heure ponctuelle </th>\n";
-		body += "					<th> total            </th>\n";
-		body += "				</tr>\n";
-		body += "			</thead>\n";
-		body += "			<tbody>\n";
+		body += "			<table border=\"1\">\n";
+		body += "				<thead>\n";
+		body += "					<tr>\n";
+		body += "						<th> Module           </th>\n";
+		body += "						<th> CM               </th>\n";
+		body += "						<th> TD               </th>\n";
+		body += "						<th> TP               </th>\n";
+		body += "						<th> REH              </th>\n";
+		body += "						<th> SAE              </th>\n";
+		body += "						<th> tutorat          </th>\n";
+		body += "						<th> heure ponctuelle </th>\n";
+		body += "						<th> total            </th>\n";
+		body += "					</tr>\n";
+		body += "				</thead>\n";
+		body += "				<tbody>\n";
 
 		Map<Module, List<Intervention>> modulesInter = this.model.getModulesIntervenant(idIntervenant);// obtenir tout les modules au quel l'intervenant est lié
 		List<Module> ensModule = new ArrayList<>(modulesInter.keySet());
@@ -82,7 +79,7 @@ public class Exportation
 		if (!ensModule.isEmpty()) {
 			body += sSemestreHTML(ensModule.subList(debut, ensModule.size()), modulesInter);
 		}
-		body += "			</tbody>\n";
+		body += "				</tbody>\n";
 
 		int cm        = 0;
 		int td        = 0;
@@ -110,23 +107,23 @@ public class Exportation
 			total = cm+td+tp+reh+sae+tutorat+hPonctuel;
 		}
 
-		body += "			<tfoot>\n";
-		body += "				<tr>\n";
-		body += "					<td> Total </td>\n";
-		body += "					<td> "+ cm +" </td>\n";
-		body += "					<td> "+ td +" </td>\n";
-		body += "					<td> "+ tp +" </td>\n";
-		body += "					<td> "+ reh +" </td>\n";
-		body += "					<td> "+ sae +" </td>\n";
-		body += "					<td> "+ tutorat +" </td>\n";
-		body += "					<td> "+ hPonctuel +" </td>\n";
-		body += "					<td> "+ total +" </td>\n";
-		body += "				</tr>\n";
-		body += "			</tfoot>\n";
-		body += "		</table>\n";
-		body += "	</body>\n";
+		body += "				<tfoot>\n";
+		body += "					<tr>\n";
+		body += "						<td> Total </td>\n";
+		body += "						<td> "+ cm +" </td>\n";
+		body += "						<td> "+ td +" </td>\n";
+		body += "						<td> "+ tp +" </td>\n";
+		body += "						<td> "+ reh +" </td>\n";
+		body += "						<td> "+ sae +" </td>\n";
+		body += "						<td> "+ tutorat +" </td>\n";
+		body += "						<td> "+ hPonctuel +" </td>\n";
+		body += "						<td> "+ total +" </td>\n";
+		body += "					</tr>\n";
+		body += "				</tfoot>\n";
+		body += "			</table>\n";
+		body += "		</body>\n";
 		this.cssGenerator(chemin);
-		ecrireFichier(chemin+nomFichier + ".html", this.head(nomFichier) + body + this.foot());
+		return this.ecrireFichier(chemin +nomFichier + ".html", this.head(nomFichier) + body + this.foot());
 	}
 
 	private String sSemestreHTML(List<Module> ensModule, Map<Module,List<Intervention>> modulesInter)
@@ -271,34 +268,32 @@ public class Exportation
 	 * @param idModule   identifiant du {@link Module} à exporter
 	 * @param nomFichier nom du fichier de sortie
 	 */
-	public void exportModuleHTML(int idModule, String nomFichier, String chemin)
-	{
+	public URL exportModuleHTML(int idModule, String nomFichier, String chemin) {
 		Module mod = this.model.getHmModules().get(idModule);
-		switch (mod.getIdTypeModule()) {
-			case 1 -> exportPPPHTML(mod, nomFichier, chemin);
-			case 2 -> exportSAEHTML(mod, nomFichier, chemin);
-			case 3 -> exportNormalHTML(mod, nomFichier, chemin);
-			case 4 -> exportStageHTML(mod, nomFichier, chemin);
-		}
+		return switch (mod.getIdTypeModule()) {
+			case 1  -> this.exportPPPHTML(mod, nomFichier, chemin);
+			case 2  -> this.exportSAEHTML(mod, nomFichier, chemin);
+			case 3  -> this.exportNormalHTML(mod, nomFichier, chemin);
+			case 4  -> this.exportStageHTML(mod, nomFichier, chemin);
+			default -> null;
+		};
 	}
 
-	public void exportPPPHTML(Module mod, String nomFichier, String chemin)
-	{
+	public URL exportPPPHTML(Module mod, String nomFichier, String chemin) {
 		String body ="";
-		body += "	<body>\n";
-		body += "		<table border=\"1\">\n";
-		body += "			<thead>\n";
-		body += "				<tr>\n";
-		body += "					<th> Intervenant </th>\n";
-		body += "					<td> cm          </td>\n";
-		body += "					<td> td          </td>\n";
-		body += "					<td> tp          </td>\n";
-		body += "					<td> tutorat     </td>\n";
-		body += "					<td> hPonctuel   </td>\n";
-		body += "					<td> total       </td>\n";
-		body += "				</tr>\n";
-		body += "			</thead>\n";
-		body += "			<tbody>\n";
+		body += "			<table border=\"1\">\n";
+		body += "				<thead>\n";
+		body += "					<tr>\n";
+		body += "						<th> Intervenant </th>\n";
+		body += "						<td> cm          </td>\n";
+		body += "						<td> td          </td>\n";
+		body += "						<td> tp          </td>\n";
+		body += "						<td> tutorat     </td>\n";
+		body += "						<td> hPonctuel   </td>\n";
+		body += "						<td> total       </td>\n";
+		body += "					</tr>\n";
+		body += "				</thead>\n";
+		body += "				<tbody>\n";
 
 		Map<Intervenant,List<Intervention>> hmModuleIntervenant = model.getIntervenantsModule(mod.getId());
 
@@ -337,51 +332,50 @@ public class Exportation
 				tothPonctuel += tothPonctuel;
 				tottotal     += total;
 
-				body += "				<tr>\n";
-				body += "					<th> " + intervenant.getNom() + " " + intervenant.getPrenom() + " </th>\n";
-				body += "					<td> " + cm + " </td>\n";
-				body += "					<td> " + td + " </td>\n";
-				body += "					<td> " + tp + " </td>\n";
-				body += "					<td> " + tutorat + " </td>\n";
-				body += "					<td> " + hPonctuel + " </td>\n";
-				body += "					<td> " + total + " </td>\n";
-				body += "				</tr>\n";
+				body += "					<tr>\n";
+				body += "						<th> " + intervenant.getNom() + " " + intervenant.getPrenom() + " </th>\n";
+				body += "						<td> " + cm + " </td>\n";
+				body += "						<td> " + td + " </td>\n";
+				body += "						<td> " + tp + " </td>\n";
+				body += "						<td> " + tutorat + " </td>\n";
+				body += "						<td> " + hPonctuel + " </td>\n";
+				body += "						<td> " + total + " </td>\n";
+				body += "					</tr>\n";
 			
 		}
-		body += "			</tbody>\n";
+		body += "				</tbody>\n";
 
-		body += "			<tfoot>\n";
-		body += "				<tr>\n";
-		body += "					<td> Total </td>\n";
-		body += "					<td> "+ totcm +" </td>\n";
-		body += "					<td> "+ tottd +" </td>\n";
-		body += "					<td> "+ tottp +" </td>\n";
-		body += "					<td> "+ tottutorat +" </td>\n";
-		body += "					<td> "+ tothPonctuel +" </td>\n";
-		body += "					<td> "+ tottotal +" </td>\n";
-		body += "				</tr>\n";
-		body += "			</tfoot>\n";
-		body += "		</table>\n";
-		body += "	</body>\n";
+		body += "				<tfoot>\n";
+		body += "					<tr>\n";
+		body += "						<td> Total </td>\n";
+		body += "						<td> "+ totcm +" </td>\n";
+		body += "						<td> "+ tottd +" </td>\n";
+		body += "						<td> "+ tottp +" </td>\n";
+		body += "						<td> "+ tottutorat +" </td>\n";
+		body += "						<td> "+ tothPonctuel +" </td>\n";
+		body += "						<td> "+ tottotal +" </td>\n";
+		body += "					</tr>\n";
+		body += "				</tfoot>\n";
+		body += "			</table>\n";
+		body += "		</body>\n";
 		this.cssGenerator(chemin);
-		ecrireFichier(chemin + nomFichier + ".html", this.head(nomFichier) + body + this.foot());
+		return this.ecrireFichier(chemin + nomFichier + ".html", this.head(nomFichier) + body + this.foot());
 	}
 
-	public void exportSAEHTML(Module mod, String nomFichier, String chemin)
+	public URL exportSAEHTML(Module mod, String nomFichier, String chemin)
 	{
 		String body ="";
-		body += "	<body>\n";
-		body += "		<table border=\"1\">\n";
-		body += "			<thead>\n";
-		body += "				<tr>\n";
-		body += "					<th> Intervenant </th>\n";
-		body += "					<td> tutorat     </td>\n";
-		body += "					<td> sae         </td>\n";
-		body += "					<td> hPonctuel   </td>\n";
-		body += "					<td> total       </td>\n";
-		body += "				</tr>\n";
-		body += "			</thead>\n";
-		body += "			<tbody>\n";
+		body += "			<table border=\"1\">\n";
+		body += "				<thead>\n";
+		body += "					<tr>\n";
+		body += "						<th> Intervenant </th>\n";
+		body += "						<td> tutorat     </td>\n";
+		body += "						<td> sae         </td>\n";
+		body += "						<td> hPonctuel   </td>\n";
+		body += "						<td> total       </td>\n";
+		body += "					</tr>\n";
+		body += "				</thead>\n";
+		body += "				<tbody>\n";
 
 		Map<Intervenant,List<Intervention>> hmModuleIntervenant = model.getIntervenantsModule(mod.getId());
 
@@ -411,48 +405,47 @@ public class Exportation
 				tothPonctuel += tothPonctuel;
 				tottotal     += total;
 
-				body += "				<tr>\n";
-				body += "					<th> " + intervenant.getNom() + " " + intervenant.getPrenom() + " </th>\n";
-				body += "					<td> " + tutorat + " </td>\n";
-				body += "					<td> " + sae + " </td>\n";
-				body += "					<td> " + hPonctuel + " </td>\n";
-				body += "					<td> " + total + " </td>\n";
-				body += "				</tr>\n";
+				body += "					<tr>\n";
+				body += "						<th> " + intervenant.getNom() + " " + intervenant.getPrenom() + " </th>\n";
+				body += "						<td> " + tutorat + " </td>\n";
+				body += "						<td> " + sae + " </td>\n";
+				body += "						<td> " + hPonctuel + " </td>\n";
+				body += "						<td> " + total + " </td>\n";
+				body += "					</tr>\n";
 			
 		}
-		body += "			</tbody>\n";
+		body += "				</tbody>\n";
 
-		body += "			<tfoot>\n";
-		body += "				<tr>\n";
-		body += "					<td> Total </td>\n";
-		body += "					<td> "+ tottutorat +" </td>\n";
-		body += "					<td> "+ totsae +" </td>\n";
-		body += "					<td> "+ tothPonctuel +" </td>\n";
-		body += "					<td> "+ tottotal +" </td>\n";
-		body += "				</tr>\n";
-		body += "			</tfoot>\n";
-		body += "		</table>\n";
-		body += "	</body>\n";
+		body += "				<tfoot>\n";
+		body += "					<tr>\n";
+		body += "						<td> Total </td>\n";
+		body += "						<td> "+ tottutorat +" </td>\n";
+		body += "						<td> "+ totsae +" </td>\n";
+		body += "						<td> "+ tothPonctuel +" </td>\n";
+		body += "						<td> "+ tottotal +" </td>\n";
+		body += "					</tr>\n";
+		body += "				</tfoot>\n";
+		body += "			</table>\n";
+		body += "		</body>\n";
 		this.cssGenerator(chemin);
-		ecrireFichier(chemin + nomFichier + ".html", this.head(nomFichier) + body + this.foot());
+		return this.ecrireFichier(chemin + nomFichier + ".html", this.head(nomFichier) + body + this.foot());
 	}
 
-	public void exportNormalHTML(Module mod, String nomFichier, String chemin)
+	public URL exportNormalHTML(Module mod, String nomFichier, String chemin)
 	{
 		String body ="";
-		body += "	<body>\n";
-		body += "		<table border=\"1\">\n";
-		body += "			<thead>\n";
-		body += "				<tr>\n";
-		body += "					<th> Intervenant </th>\n";
-		body += "					<td> cm          </td>\n";
-		body += "					<td> td          </td>\n";
-		body += "					<td> tp          </td>\n";
-		body += "					<td> hPonctuel   </td>\n";
-		body += "					<td> total       </td>\n";
-		body += "				</tr>\n";
-		body += "			</thead>\n";
-		body += "			<tbody>\n";
+		body += "			<table border=\"1\">\n";
+		body += "				<thead>\n";
+		body += "					<tr>\n";
+		body += "						<th> Intervenant </th>\n";
+		body += "						<td> cm          </td>\n";
+		body += "						<td> td          </td>\n";
+		body += "						<td> tp          </td>\n";
+		body += "						<td> hPonctuel   </td>\n";
+		body += "						<td> total       </td>\n";
+		body += "					</tr>\n";
+		body += "				</thead>\n";
+		body += "				<tbody>\n";
 
 		Map<Intervenant,List<Intervention>> hmModuleIntervenant = model.getIntervenantsModule(mod.getId());
 
@@ -487,49 +480,48 @@ public class Exportation
 			tothPonctuel += tothPonctuel;
 			tottotal     += total;
 
-			body += "				<tr>\n";
-			body += "					<th> " + intervenant.getNom() + " " + intervenant.getPrenom() + " </th>\n";
-			body += "					<td> " + cm + " </td>\n";
-			body += "					<td> " + td + " </td>\n";
-			body += "					<td> " + tp + " </td>\n";
-			body += "					<td> " + hPonctuel + " </td>\n";
-			body += "					<td> " + total + " </td>\n";
-			body += "				</tr>\n";
+			body += "					<tr>\n";
+			body += "						<th> " + intervenant.getNom() + " " + intervenant.getPrenom() + " </th>\n";
+			body += "						<td> " + cm + " </td>\n";
+			body += "						<td> " + td + " </td>\n";
+			body += "						<td> " + tp + " </td>\n";
+			body += "						<td> " + hPonctuel + " </td>\n";
+			body += "						<td> " + total + " </td>\n";
+			body += "					</tr>\n";
 			
 		}
-		body += "			</tbody>\n";
+		body += "				</tbody>\n";
 
-		body += "			<tfoot>\n";
-		body += "				<tr>\n";
-		body += "					<td> Total </td>\n";
-		body += "					<td> "+ totcm +" </td>\n";
-		body += "					<td> "+ tottd +" </td>\n";
-		body += "					<td> "+ tottp +" </td>\n";
-		body += "					<td> "+ tothPonctuel +" </td>\n";
-		body += "					<td> "+ tottotal +" </td>\n";
-		body += "				</tr>\n";
-		body += "			</tfoot>\n";
-		body += "		</table>\n";
-		body += "	</body>\n";
+		body += "				<tfoot>\n";
+		body += "					<tr>\n";
+		body += "						<td> Total </td>\n";
+		body += "						<td> "+ totcm +" </td>\n";
+		body += "						<td> "+ tottd +" </td>\n";
+		body += "						<td> "+ tottp +" </td>\n";
+		body += "						<td> "+ tothPonctuel +" </td>\n";
+		body += "						<td> "+ tottotal +" </td>\n";
+		body += "					</tr>\n";
+		body += "				</tfoot>\n";
+		body += "			</table>\n";
+		body += "		</body>\n";
 		this.cssGenerator(chemin);
-		ecrireFichier(chemin + nomFichier + ".html", this.head(nomFichier) + body + this.foot());
+		return this.ecrireFichier(chemin + nomFichier + ".html", this.head(nomFichier) + body + this.foot());
 	}
 
-	public void exportStageHTML(Module mod, String nomFichier, String chemin)
+	public URL exportStageHTML(Module mod, String nomFichier, String chemin)
 	{
 		String body ="";
-		body += "	<body>\n";
-		body += "		<table border=\"1\">\n";
-		body += "			<thead>\n";
-		body += "				<tr>\n";
-		body += "					<th> Intervenant </th>\n";
-		body += "					<td> tutorat     </td>\n";
-		body += "					<td> reh        </td>\n";
-		body += "					<td> hPonctuel   </td>\n";
-		body += "					<td> total       </td>\n";
-		body += "				</tr>\n";
-		body += "			</thead>\n";
-		body += "			<tbody>\n";
+		body += "			<table border=\"1\">\n";
+		body += "				<thead>\n";
+		body += "					<tr>\n";
+		body += "						<th> Intervenant </th>\n";
+		body += "						<td> tutorat     </td>\n";
+		body += "						<td> reh         </td>\n";
+		body += "						<td> hPonctuel   </td>\n";
+		body += "						<td> total       </td>\n";
+		body += "					</tr>\n";
+		body += "				</thead>\n";
+		body += "				<tbody>\n";
 
 		Map<Intervenant,List<Intervention>> hmModuleIntervenant = model.getIntervenantsModule(mod.getId());
 
@@ -560,57 +552,61 @@ public class Exportation
 					tothPonctuel += tothPonctuel;
 					tottotal     += total;
 
-					body += "				<tr>\n";
-					body += "					<th> " + intervenant.getNom() + " " + intervenant.getPrenom() + " </th>\n";
-					body += "					<td> " + tutorat + " </td>\n";
-					body += "					<td> " + reh + " </td>\n";
-					body += "					<td> " + hPonctuel + " </td>\n";
-					body += "					<td> " + total + " </td>\n";
-					body += "				</tr>\n";
+					body += "					<tr>\n";
+					body += "						<th> " + intervenant.getNom() + " " + intervenant.getPrenom() + " </th>\n";
+					body += "						<td> " + tutorat + " </td>\n";
+					body += "						<td> " + reh + " </td>\n";
+					body += "						<td> " + hPonctuel + " </td>\n";
+					body += "						<td> " + total + " </td>\n";
+					body += "					</tr>\n";
 			
 		}
-		body += "			</tbody>\n";
+		body += "				</tbody>\n";
 
-		body += "			<tfoot>\n";
-		body += "				<tr>\n";
-		body += "					<td> Total </td>\n";
-		body += "					<td> "+ tottutorat +" </td>\n";
-		body += "					<td> "+ totreh +" </td>\n";
-		body += "					<td> "+ tothPonctuel +" </td>\n";
-		body += "					<td> "+ tottotal +" </td>\n";
-		body += "				</tr>\n";
-		body += "			</tfoot>\n";
-		body += "		</table>\n";
-		body += "	</body>\n";
+		body += "				<tfoot>\n";
+		body += "					<tr>\n";
+		body += "						<td> Total </td>\n";
+		body += "						<td> "+ tottutorat +" </td>\n";
+		body += "						<td> "+ totreh +" </td>\n";
+		body += "						<td> "+ tothPonctuel +" </td>\n";
+		body += "						<td> "+ tottotal +" </td>\n";
+		body += "					</tr>\n";
+		body += "				</tfoot>\n";
+		body += "			</table>\n";
+		body += "		</body>\n";
 		this.cssGenerator(chemin);
-		ecrireFichier(chemin + nomFichier + ".html", this.head(nomFichier) + body + this.foot());
+		return this.ecrireFichier(chemin + nomFichier + ".html", this.head(nomFichier) + body + this.foot());
 	}
 
 	/*-------*/
 	/* autre */
 	/*-------*/
 
-	private void cssGenerator(String chemin) {
-		String ret = "";
-		ret += "thead {background-color: #222222;color: #ffffff;}\n";
-		ret += "tbody {background-color: #e4f0f5;}\n";
-		ret += "tfoot {background-color: #777777;color: #ffffff;}\n";
-		ret += "caption {padding: 10px;caption-side: bottom;}\n";
-		ret += "table {border-collapse: collapse;border: 2px solid rgb(255, 255, 255);letter-spacing: 1px;font-family: sans-serif;font-size: 0.8rem;}\n";
-		ret += "td,th {border: 1px solid rgb(190, 190, 190);padding: 5px 10px;}\n";
-		ret += "td {text-align: center;}\n";
+	private URL cssGenerator(String chemin) {
+		String css = ":root {\n";
+		for (Semestre semestre : model.getHmSemestres().values())
+			css += "\t--semestre-" + semestre.getId() + ": " + semestre.getCouleur() + ";\n";
+		return this.ecrireFichier(chemin + "tab.css", css + "}\n\n" + ResourceManager.TAB_TEMPLATE_CONTENT);
+		// String ret = "";
+		// ret += "thead {background-color: #222222;color: #ffffff;}\n";
+		// ret += "tbody {background-color: #e4f0f5;}\n";
+		// ret += "tfoot {background-color: #777777;color: #ffffff;}\n";
+		// ret += "caption {padding: 10px;caption-side: bottom;}\n";
+		// ret += "table {border-collapse: collapse;border: 2px solid rgb(255, 255, 255);letter-spacing: 1px;font-family: sans-serif;font-size: 0.8rem;}\n";
+		// ret += "td,th {border: 1px solid rgb(190, 190, 190);padding: 5px 10px;}\n";
+		// ret += "td {text-align: center;}\n";
 		
-		for (Semestre semestre : model.getHmSemestres().values()) {
-			ret += ".semestre"+ semestre.getId() + "{background-color: " + semestre.getCouleur() + ";}\n";
-		}
-		this.ecrireFichier(chemin + "tab.css", ret);
+		// for (Semestre semestre : model.getHmSemestres().values()) {
+		// 	ret += ".semestre"+ semestre.getId() + "{background-color: " + semestre.getCouleur() + ";}\n";
+		// }
+		// return this.ecrireFichier(chemin + "tab.css", ret);
 	}
 
 	private String head(String titre) {
 		String ret = "";
 		ret += "<!DOCTYPE html>\n";
 		ret += "<html lang=\"en\">\n";
-		ret += "	<head>";
+		ret += "	<head>\n";
 		ret += "		<meta charset=\"UTF-8\">\n";
 		ret += "		<title>"+ titre +"</title>\n";
 		ret += "		<link href=\"tab.css\" rel=\"stylesheet\">\n";
@@ -618,12 +614,17 @@ public class Exportation
 		ret += "	<body>\n";
 		ret += "		<header>";
 		ret += "			<h1>init dev</h1>";
-		ret += "		</header>";
+		ret += "		</header>\n";
+		ret += "		<main>\n";
 		return ret;
 	}
 
 	private String foot() {
-		return "</html>";
+		String ret ="";
+		ret += "		</main>\n";
+		ret += "	</body>\n";
+		ret += "</html>\n";
+		return ret;
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -643,17 +644,17 @@ public class Exportation
 	 * @param idModule   identifiant du {@link Intervenant} à exporter
 	 * @param nomFichier nom du fichier de sortie
 	 */
-	public void exportIntervenantCsv(int idIntervenant, String nomFichier, String chemin)
+	public URL exportIntervenantCsv( String nomFichier, String chemin)
 	{
 		String body ="";
 		Map<Intervenant,List<Intervention>> hmIntervenants = model.getIntervenantInterventions();
 		
-		body += "nom,catégorie,s1 théorique,s1 reel,s3 théorique,s3 reel,s5 théorique,s5 reel,sTotal théorique,sTotal reel,s2 théorique,s2 reel,s4 théorique,s4 reel,s6 théorique,s6 reel,sTotal théorique,sTotal reel,minimum d'heures,total théorique,total reel, maximum d'heure\n";
+		body += "	nom,catégorie,s1 théorique,s1 reel,s3 théorique,s3 reel,s5 théorique,s5 reel,sTotal théorique,sTotal reel,s2 théorique,s2 reel,s4 théorique,s4 reel,s6 théorique,s6 reel,sTotal théorique,sTotal reel,minimum d'heures,total théorique,total reel, maximum d'heure\n";
 		
 		for (Intervenant interv : hmIntervenants.keySet()) {
 			body+=sSemestreCsv(interv, hmIntervenants.get(interv));
 		}
-		ecrireFichier(chemin + nomFichier + ".csv", body);
+		return this.ecrireFichier(chemin + nomFichier + ".csv", body);
 	}
 
 	private String sSemestreCsv(Intervenant intervenant,List<Intervention> ensIntervention)
@@ -759,16 +760,14 @@ public class Exportation
 	 * @param nomFichierDestination Le nom du fichier dans lequel écrire les données.
 	 * @param body contenue du Fichier
 	 */
-	private void ecrireFichier(String nomFichierDestination, String body)
-	{
-		try {
-			PrintWriter pw = new PrintWriter(new FileOutputStream(nomFichierDestination));
+	private URL ecrireFichier(String nomFichierDestination, String body) {
+		try (PrintWriter pw = new PrintWriter(new FileOutputStream(nomFichierDestination))) {
 			pw.println(body);
-			pw.close();
-		}
-		catch (Exception e)
-		{
+			return new URL(nomFichierDestination);
+		} catch (Exception e) {
+			System.out.println(nomFichierDestination);
 			e.printStackTrace();
+			return null;
 		}
 	}
 

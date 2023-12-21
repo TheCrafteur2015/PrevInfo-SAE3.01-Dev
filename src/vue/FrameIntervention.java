@@ -260,6 +260,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		this.lblErreurGrp.getStyleClass().clear();
 		this.lblErreurGrp.getStyleClass().add("error-label");
 		this.lblErreurPN = new Label("PROGRAMME NATIONAL : ");
+		this.lblErreurPN.getStyleClass().clear();
 		this.lblErreurPN.getStyleClass().add("error-label");
 
 		vboxErreur.getChildren().addAll(this.lblErreurGrp, this.lblErreurPN);

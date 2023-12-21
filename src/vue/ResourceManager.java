@@ -2,6 +2,8 @@ package vue;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -26,8 +28,10 @@ public final class ResourceManager {
 	// Fichiers CSS
 	public static final URL STYLESHEET = ResourceManager.class.getResource("style.css");
 	public static final URL STYLESHEET_POPUP = ResourceManager.class.getResource("stylePopup.css");
+	public static final URL TAB_TEMPLATE = ResourceManager.class.getResource("/templates/_tab.css");
 	
-	// public static final String TAB_TEMPLATE = "/templates/_tab.css"
+	// public static final String TAB_TEMPLATE_CONTENT = ResourceManager.loadFile(ResourceManager.TAB_TEMPLATE);
+	public static final String TAB_TEMPLATE_CONTENT = ResourceManager.loadFileFromSource("/templates/_tab.css");
 
 	// Fichiers SVG
 	public static final URL BOOK = ResourceManager.class.getResource("book.svg");
@@ -50,11 +54,14 @@ public final class ResourceManager {
 				if (field.get(null) == null) {
 					String name = field.getName();
 					throw new MissingResourceException("Resource file missing: " + name, ResourceManager.class.getSimpleName(), name);
+				} else if (field.get(null) instanceof URL url) {
+					ResourceManager.updateFile(url);
 				}
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
 		}
+		// System.out.println(ResourceManager.TAB_TEMPLATE_CONTENT);
 		try {
 			File root = new File(ResourceManager.class.getResource("").toURI());
 			// System.out.println(Arrays.toString(root.listFiles()));
@@ -116,16 +123,62 @@ public final class ResourceManager {
 
 	private ResourceManager() {}
 	
-	private static String loadFile(String path) {
-		/*
-		InputStream stream = ResourceManager.class.getResourceAsStream(path);
-		try (Scanner sc = new Scanner(stream)) {
-			
+	private static String loadFile(URL url) {
+		// InputStream stream = ResourceManager.class.getResourceAsStream(path);
+		// try (Scanner sc = new Scanner(url.openStream())) {
+		try (Scanner sc = new Scanner(new File(url.toURI()))) {
+			String content = "";
+			while (sc.hasNextLine())
+				content += sc.nextLine() + "\n";
+			return content;
+		} catch (Exception e) {
+			System.err.println("Error loading file: " + e.getMessage());
+			return null;
 		}
-		
-		*/
-		
-		return null;
+	}
+	
+	private static String loadFileFromSource(String path) {
+		try {
+			URL url = ResourceManager.class.getResource(path);
+			url = new URL(url.toString().replace("bin", "src"));
+			String content = "";
+			try (Scanner sc = new Scanner(new File(url.toURI()))) {
+				while (sc.hasNextLine())
+					content += sc.nextLine() + "\n";
+			}
+			return content;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	private static void saveFile(String path, String content) {
+		try (PrintWriter pw = new PrintWriter(new File(path))) {
+			pw.write(content);
+		} catch (Exception e) {
+			System.err.println("saveFile(String,String)");
+			e.printStackTrace();
+		}
+	}
+	
+	private static void updateFile(URL url) {
+		try {
+			if (url == null)
+				return;
+			// System.out.println(new File(url.toURI()));
+			// System.out.println(url);
+			URL srcUrl = new URL(url.toString().replace("bin", "src"));
+			// String content = ResourceManager.loadFile(srcUrl);
+			if (url.toString().contains("_tab.css")) {
+				// System.out.println(ResourceManager.loadFile(url));
+			}
+			// System.out.println(content);
+			// System.out.println("-".repeat(50));
+			//ResourceManager.saveFile(new File(url.toURI()).toString());
+		} catch (Exception e) {
+			System.err.println("updateFile(URL)");
+			e.printStackTrace();
+		}
 	}
 	
 	public static String getData(String key) {

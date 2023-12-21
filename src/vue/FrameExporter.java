@@ -1,21 +1,24 @@
 package vue;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Map;
 
 import controleur.Controleur;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
+import javafx.stage.DirectoryChooser;
 import modele.Exportation;
 import modele.Intervenant;
 import modele.Module;
@@ -29,12 +32,13 @@ public class FrameExporter implements EventHandler<Event> {
 	private Button btnIntervenant;
 	private ChoiceBox<Intervenant> choiceBoxIntervenant;
 
-
 	private Map<Integer, Module> hmModules;
 	private Button btnModule;
 	private ChoiceBox<Module> choiceBoxModule;
-	private Exportation export;
 	
+	private Button btnCSV;
+	
+	private Exportation export;
 
 	public FrameExporter(Controleur ctrl, AnchorPane centerPaneAccueil) {
 		this.ctrl = ctrl;
@@ -48,77 +52,91 @@ public class FrameExporter implements EventHandler<Event> {
 		this.centerPaneAccueil.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
 
 		VBox vbox = new VBox();
+		vbox.setSpacing(30);
 
+		
 		this.hmIntervenants = this.ctrl.getModele().getHmIntervenants();
+		this.hmModules = this.ctrl.getModele().getHmModules();
+		
 		this.btnIntervenant = new Button("Confirmer");
 		this.btnIntervenant.addEventHandler(ActionEvent.ACTION, this);
-		this.choiceBoxIntervenant = new ChoiceBox<>();
-
-		for (Intervenant i : this.hmIntervenants.values()) {
-			this.choiceBoxIntervenant.getItems().add(i);
-		}
 		
-		GridPane gridPaneIntervenant = new GridPane();
-		gridPaneIntervenant.add(new Text("Exportation par Intervenant"), 0, 0);
-		gridPaneIntervenant.add(this.choiceBoxIntervenant, 0, 1);
-		gridPaneIntervenant.add(this.btnIntervenant, 1, 1);
-		gridPaneIntervenant.setPadding(new Insets(10));
-		gridPaneIntervenant.setVgap(10);
-		gridPaneIntervenant.setHgap(20);
-
-
-		this.hmModules = this.ctrl.getModele().getHmModules();
 		this.btnModule = new Button("Confirmer");
 		this.btnModule.addEventHandler(ActionEvent.ACTION, this);
 		
+		this.choiceBoxIntervenant = new ChoiceBox<>();
+		this.choiceBoxIntervenant.getItems().addAll(this.hmIntervenants.values());
+	
 		this.choiceBoxModule = new ChoiceBox<>();
-
-		for (Module m : this.hmModules.values()) {
-			this.choiceBoxModule.getItems().add(m);
-		}
-
-		GridPane gridPane2 = new GridPane();
-		gridPane2.add(new Text("Exportation par Module"), 0, 0);
-		gridPane2.add(this.choiceBoxModule, 0, 1);
-		gridPane2.add(this.btnModule, 1, 1);
-		gridPane2.setPadding(new Insets(10));
-		gridPane2.setVgap(20);
-		gridPane2.setHgap(20);
-
+		this.choiceBoxModule.getItems().addAll(this.hmModules.values());
 		
-		GridPane gridPane3 = new GridPane();
-		gridPane3.setAlignment(Pos.CENTER);
-		gridPane3.add(this.choiceBoxIntervenant, 0, 0);
-		gridPane3.add(gridPaneIntervenant, 1, 0);
-		gridPane3.add(gridPane2, 1, 1);
-
-		this.choiceBoxIntervenant.setMaxWidth(500);
-		this.choiceBoxModule.setMaxWidth(500);
+		this.choiceBoxIntervenant.setPrefWidth(500);
+		this.choiceBoxModule.setPrefWidth(500);
 		
-		//vbox.getChildren().addAll(gridPaneIntervenant, gridPaneModule);
+		this.btnCSV = new Button("Exporter tous les intervenants (CSV)");
+		this.btnCSV.addEventHandler(ActionEvent.ACTION, this);
+		
+		GridPane gridPaneIntervenant = new GridPane();
+		gridPaneIntervenant.setHgap(10);
+		gridPaneIntervenant.setVgap(5);
+		
+		Label exportInter = new Label("Exportation par Intervenant");
+		exportInter.getStyleClass().add("titreExport");
+		
+		gridPaneIntervenant.add(exportInter, 0, 0);
+		gridPaneIntervenant.add(this.choiceBoxIntervenant, 0, 1);
+		gridPaneIntervenant.add(this.btnIntervenant, 1, 1);
 
-		this.centerPaneAccueil.getChildren().add(gridPane3);
+
+		GridPane gridPaneModule = new GridPane();
+		gridPaneModule.setHgap(10);
+		gridPaneModule.setVgap(5);
+		
+		Label exportModule = new Label("Exportation par Module");
+		exportModule.getStyleClass().add("titreExport");
+		
+		gridPaneModule.add(exportModule, 0, 0);
+		gridPaneModule.add(this.choiceBoxModule, 0, 1);
+		gridPaneModule.add(this.btnModule, 1, 1);		
+		
+		
+		vbox.getChildren().addAll(gridPaneIntervenant, gridPaneModule, this.btnCSV);
+		vbox.setAlignment(Pos.CENTER);
+
+
+		AnchorPane.setTopAnchor(vbox, 200.0);
+		AnchorPane.setLeftAnchor(vbox, 200.0);
+
+		this.centerPaneAccueil.getChildren().add(vbox);
 		
 	}
 	
 	@Override
 	public void handle(Event action) {
-		if (action instanceof ActionEvent) {
-			String annee = this.ctrl.getModele().getHmAnnee().get(this.ctrl.getModele().getIdAnnee());
-			if (action.getSource() == this.btnIntervenant) {
-				Intervenant i = this.choiceBoxIntervenant.getValue();
-				this.export.exportIntervenantHtml(i.getId(), i.getNom() + "_" + i.getPrenom() + "_previsionnel_"+annee,"");
-			}
-			else if (action.getSource() == this.btnModule) {
-				Module m = this.choiceBoxModule.getValue();
-				this.export.exportModuleHTML(m.getId(),  m.getCode() + "_" + m.getNom()  + "_previsionnel_"+annee,"");
-			}
+		DirectoryChooser chooser = new DirectoryChooser();
+		chooser.setTitle("Répertoire d'exportation");
+		chooser.setInitialDirectory(new File("").getAbsoluteFile());
+		File directory = chooser.showDialog(this.centerPaneAccueil.getScene().getWindow());
+		if (directory == null)
+			return;
+		URL file = null;
+		String annee = this.ctrl.getModele().getHmAnnee().get(this.ctrl.getModele().getIdAnnee());
+		if (action.getSource() == this.btnIntervenant) {
+			Intervenant i = this.choiceBoxIntervenant.getValue();
+			file = this.export.exportIntervenantHtml(i.getId(), i.getNom() + "_" + i.getPrenom() + "_previsionnel_" + annee, directory.toURI().toString());
 		}
-	}
-	
-	
-	public void changed(ObservableValue<? extends String> observable, String oldStr, String newStr) {
-		
+		else if (action.getSource() == this.btnModule) {
+			Module m = this.choiceBoxModule.getValue();
+			file = this.export.exportModuleHTML(m.getId(),  m.getCode() + "_" + m.getNom()  + "_previsionnel_" + annee, directory.toURI().toString());
+		}
+		try {
+			Desktop.getDesktop().browse(file.toURI());
+		} catch (URISyntaxException e) {
+			if (file != null)
+				System.err.println("Malformed URI!" + file.toString());
+		} catch (IOException | NullPointerException e2) {
+			System.err.println("No export destination!" + e2.getMessage());
+		}
 	}
 
 }
