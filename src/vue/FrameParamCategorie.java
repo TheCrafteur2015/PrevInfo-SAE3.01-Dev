@@ -135,7 +135,7 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 		Text nomC = new Text("Nom de la catégorie");
 		this.nomCategorie = new TextField();
 		this.nomCategorie.textProperty().addListener(this);
-		this.nomCategorie.setMaxWidth(30 * 7);
+		this.nomCategorie.setPrefWidth(26 * 7);
 
 		Text tHeureMin = new Text("Heures minimales: ");
 		this.tfHeureMin = new TextField();
@@ -177,7 +177,7 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 		popupLayout.getChildren().add(gridPane);
 		popupLayout.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
 
-		Scene popupScene = new Scene(popupLayout, 580, 300);
+		Scene popupScene = new Scene(popupLayout, 620, 300);
 		popupStage.setScene(popupScene);
 
 		popupStage.showAndWait();

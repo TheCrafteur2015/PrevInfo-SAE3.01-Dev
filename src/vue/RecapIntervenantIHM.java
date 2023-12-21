@@ -13,6 +13,10 @@ public class RecapIntervenantIHM {
 	private String stotpair;
 	private String total;
 	
+	public RecapIntervenantIHM(String module) {
+		this.module = module;
+	}
+	
 	public RecapIntervenantIHM(String module, String s1, String s3, String s5, String stotimpair, String s2, String s4,
 			String s6, String stotpair, String total) {
 		this.module = module;

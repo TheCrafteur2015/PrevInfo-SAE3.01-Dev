@@ -11,17 +11,17 @@ import controleur.Controleur;
 import vue.ControleurIHM;
 
 public class Modele {
-
+	
 	private static final int DEBUT_ANNEE = 2022;
 	public static final String REGEX_INT = "\\d*";
 	public static final String REGEX_DOUBLE = "\\d*\\.?\\d*";                                                // ((\\d+\\.?\\d*)|(\\.\\d+))
 	public static final String REGEX_DOUBLE_FRACTION = "^(\\d*\\.?(\\d+(\\/(\\d*\\.?[1-9]+)?)?)?|)$";             // ^\\d?+(?:\\/[1-9]+|\\.?\\d*)$
 	public static final String REGEX_EMAIL = "^[^\\d\\s()<>@,;:\"\\[\\]\\|ç%&,]{1}[^\\s]{0,63}@[^\\d\\s()<>@,;:\"\\[\\]\\|ç%&,]{1,192}\\.[a-zA-Z]{2,63}$"; // ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$
-
+	
 	private DB db;
-
+	
 	private Controleur ctrl;
-
+	
 	private Map<Integer, Categorie> hmCategories;
 	private Map<Integer, Intervenant> hmIntervenants;
 	private Map<Integer, Intervention> hmInterventions;
@@ -32,16 +32,16 @@ public class Modele {
 	private Map<String, HeureCours> hmHeuresCours;
 	private Map<Integer, String> hmAnnee;
 	private int idAnnee;
-
+	
 	public boolean bEnDuplication;
 	private boolean duplication;
 	
 	public Modele(Controleur ctrl) {
 		this.ctrl = ctrl;
 		this.duplication = false;
-
+		
 		this.db = DB.getInstance();
-
+		
 		try {
 			this.hmAnnee = this.db.getAnnee();
 			this.idAnnee = this.db.getDerAnnee();
@@ -58,48 +58,51 @@ public class Modele {
 			e.printStackTrace();
 		}
 		
-
 		Categorie.nbCategorie = getNbObject(this.hmCategories);
 		Intervenant.nbIntervenant = getNbObject(this.hmIntervenants);
 		Intervention.nbIntervention = getNbObject(this.hmInterventions);
 		Module.nbModule = getNbObject(this.hmModules);
 		Semestre.nbSemestre = getNbObject(this.hmSemestres);
 	} 
-		
-	public <T> int getNbObject(Map<Integer, T> hm ) {
-		ArrayList<Integer> al =  new ArrayList<>(hm.keySet());
+	
+	public <T> int getNbObject(Map<Integer, T> hm) {
+		List<Integer> al = new ArrayList<>(hm.keySet());
 		al.sort(null);
-		if(al.size() != 0 ) return al.get(al.size()-1);
+		if(al.size() != 0 )
+			return al.get(al.size()-1);
 		return 1;
 	}
-
+	
 	public Integer getIdTypeCoursByNom(String nom) {
 		try {
 			return this.db.getIdTypeCoursByNom(nom);
 		} catch (SQLException e) {
+			// TODO: remove me
 			e.printStackTrace();
 			return null;
 		}
 	}
-
+	
 	public List<HeureCours> getHeureCoursByModule(int idModule, int idAnnee) {
 		try {
 			return this.db.getHeureCoursByModule(idModule, idAnnee);
 		} catch (SQLException e) {
+			// TODO: remove me
 			e.printStackTrace();
 			return null;
 		}
 	}
-
+	
 	public List<Module> getModuleBySemestre(int idSemestre, int idAnnee) {
 		try {
 			return this.db.getModuleBySemestre(idSemestre, idAnnee);
 		} catch (SQLException e) {
+			// TODO: remove me
 			e.printStackTrace();
 			return null;
 		}
 	}
-
+	
 	public void ajouterCategorie(String nom, double hMin, double hMax, double ratioTp) {
 		Categorie c = new Categorie(nom, hMin, hMax, ratioTp, this.idAnnee);
 		try {
@@ -111,7 +114,7 @@ public class Modele {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible d'ajouter la catégorie", ControleurIHM.Notification.ERREUR);
 		}
 	}
-
+	
 	public void dupliquerCategorie(int oldId, String nom, double hMin, double hMax, double ratioTp) {
 		Categorie ancienneCateg = this.hmCategories.get(oldId);
 		List<Intervenant> lstIntervantParCateg = null;
@@ -125,11 +128,10 @@ public class Modele {
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible d'ajouter la catégorie", ControleurIHM.Notification.ERREUR);
 		}
-		
 		for (Intervenant i : lstIntervantParCateg)
 			this.dupliquerIntervenant(i.getId(), i.getPrenom(), i.getNom(), i.getEmail(), i.gethMin(), i.gethMax(), c.getId());
 	}
-
+	
 	public void updateCategorie(Categorie c) {
 		try {
 			this.db.updateCategorie(c);
@@ -139,28 +141,24 @@ public class Modele {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible de modifier la catégorie", ControleurIHM.Notification.ERREUR);
 		}
 	}
-
+	
 	public void supprimerCategorie(int id) {
-			try {
-				this.db.supprimerCategorie(this.hmCategories.get(id));
-				this.hmCategories.remove(id);
-				if (!this.bEnDuplication)
-					this.ctrl.getVue().afficherNotification("Catégorie supprimée", "Catégorie supprimée avec succès", ControleurIHM.Notification.SUCCES);
-			} catch (SQLException e) {
-				Categorie c = this.hmCategories.get(id);
-				// String str ="Impossible de supprimer la catégorie : \n";
-				// str += c.getNom();
-				// str += " car elle est reférencée \ndans un ou plusieurs intervenant(s)";
-				// this.ctrl.getVue().afficherNotification("Erreur", str, ControleurIHM.Notification.ERREUR);
-				String msg = String.format("Impossible de supprimer la catégorie : \n%1$s car elle est reférencée \ndans un ou plusieurs intervenant(s)", c.getNom());
-				this.ctrl.getVue().afficherNotification("Erreur", msg, ControleurIHM.Notification.ERREUR);
-			}
+		try {
+			this.db.supprimerCategorie(this.hmCategories.get(id));
+			this.hmCategories.remove(id);
+			if (!this.bEnDuplication)
+				this.ctrl.getVue().afficherNotification("Catégorie supprimée", "Catégorie supprimée avec succès", ControleurIHM.Notification.SUCCES);
+		} catch (SQLException e) {
+			Categorie c = this.hmCategories.get(id);
+			String msg = String.format("Impossible de supprimer la catégorie : \n%1$s car elle est reférencée \ndans un ou plusieurs intervenant(s)", c.getNom());
+			this.ctrl.getVue().afficherNotification("Erreur", msg, ControleurIHM.Notification.ERREUR);
 		}
-
+	}
+	
 	public void ajouterIntervenant(String prenom, String nom, String email, double hMin, double hMax, int idCategorie) {
 		this.ajouterIntervenant(new Intervenant(prenom, nom, email, hMin, hMax, idAnnee, idCategorie));
 	}
-
+	
 	public void ajouterIntervenant(Intervenant i) {
 		try {
 			this.db.ajouterIntervenant(i);
@@ -171,7 +169,7 @@ public class Modele {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible d'ajouter l'intervenant", ControleurIHM.Notification.ERREUR);
 		}
 	}
-
+	
 	public void dupliquerIntervenant(int oldId, String prenom, String nom, String email, double hMin, double hMax,int idCategorie) {
 		Map<Integer, Intervention> hmInter = null;
 		Intervenant i = new Intervenant(prenom, nom, email, hMin, hMax, idAnnee, idCategorie);
@@ -184,14 +182,13 @@ public class Modele {
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible d'ajouter l'intervenant", ControleurIHM.Notification.ERREUR);
 		}
-		
 		for (Intervention inter : hmInter.values()) {
 			inter.setIdIntervenant(i.getId());
 			inter.setIdAnnee(this.idAnnee);
 			updateIntervention(inter);
 		}
 	}
-
+	
 	public void updateIntervenant(Intervenant i) {
 		try {
 			this.db.updateIntervenant(i);
@@ -203,7 +200,7 @@ public class Modele {
 		}
 		
 	}
-
+	
 	public void supprimerIntervenant(int id) {
 		try {
 			this.db.supprimerIntervenant(id);
@@ -211,14 +208,12 @@ public class Modele {
 			if (!this.bEnDuplication)
 				this.ctrl.getVue().afficherNotification("Intervenant supprimé", "Intervenant supprimé avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
-			String str ="Impossible de supprimer l'intervenant : \n";
 			Intervenant i = this.hmIntervenants.get(id);
-			str += i.getPrenom() + " " + i.getNom();
-			str += " car il est reférencé \ndans une ou plusieurs intervention(s)";	
-			this.ctrl.getVue().afficherNotification("Erreur", str, ControleurIHM.Notification.ERREUR);
+			String msg = String.format("Impossible de supprimer l'intervenant :\n%1$s %2$s car il est reférencé \ndans une ou plusieurs intervention(s)", i.getPrenom(), i.getNom());
+			this.ctrl.getVue().afficherNotification("Erreur", msg, ControleurIHM.Notification.ERREUR);
 		}
 	}
-
+	
 	public void ajouterIntervention(int idIntervenant, int idModule, int idTypeCours, int nbSemaines, String commentaire, int nbGroupe) {
 		Intervention i = new Intervention(idIntervenant, idModule, idTypeCours, nbSemaines, nbGroupe, commentaire, idAnnee);
 		try {
@@ -228,11 +223,9 @@ public class Modele {
 				this.ctrl.getVue().afficherNotification("Intervention ajoutée", "Intervention ajoutée avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible d'ajouter l'intervention", ControleurIHM.Notification.ERREUR);
-			
 		}
-	
 	}
-
+	
 	public void updateIntervention(Intervention i) {
 		try {
 			this.db.updateIntervention(i);
@@ -241,7 +234,6 @@ public class Modele {
 				this.ctrl.getVue().afficherNotification("Intervention modifiée", "Intervention modifiée avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible de modifier l'intervention", ControleurIHM.Notification.ERREUR);
-
 		}
 		
 	}
@@ -256,7 +248,7 @@ public class Modele {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible de supprimer l'intervention", ControleurIHM.Notification.ERREUR);
 		}
 	}
-
+	
 	public void ajouterModule(String nom, String code, boolean valid, int idTypeModule, int idSemestre) {
 		Module m = new Module(nom, code, valid, idTypeModule, this.idAnnee, idSemestre);
 		try {
@@ -267,10 +259,8 @@ public class Modele {
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible d'ajouter le module", ControleurIHM.Notification.ERREUR);
 		}
-		
-		
 	}
-
+	
 	public void dupliquerModule(int id, String nom, String code, boolean valid, int idTypeModule, int idSemestre) {
 		Module ancienModule = this.hmModules.get(id);
 		List<HeureCours> lstHeureCours = this.getHeureCoursByModule(id, ancienModule.getIdAnnee());
@@ -279,6 +269,7 @@ public class Modele {
 		try {
 			this.db.ajouterModule(m);
 		} catch (SQLException e) {
+			// TODO: remove me
 			e.printStackTrace();
 		}
 		this.hmModules.put(m.getId(), m);
@@ -286,9 +277,8 @@ public class Modele {
 			this.ajouterHeureCours(hc.getIdTypeCours(), m.getId(), hc.getHeure(), hc.getNbSemaine(), hc.gethParSemaine());
 		for (Intervention i : hmInter.values())
 			this.ajouterIntervention(i.getIdIntervenant(), m.getId(), i.getIdTypeCours(), i.getNbSemaines(),i.getCommentaire(), i.getNbGroupe());
-			
 	}
-
+	
 	public void updateModule(Module m) {
 		try {
 			this.db.updateModule(m);
@@ -297,10 +287,11 @@ public class Modele {
 				this.ctrl.getVue().afficherNotification("Module modifié", "Module modifié avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible de modifier le module", ControleurIHM.Notification.ERREUR);
+			// TODO: remove me
 			e.printStackTrace();
 		}
 	}
-
+	
 	public void supprimerModule(int id) {
 		if (this.getHmInterventionsModule(id).size() != 0 )
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible de supprimer le module car il\n possède une ou plusieurs intervention(s)", ControleurIHM.Notification.ERREUR);
@@ -320,7 +311,7 @@ public class Modele {
 			}
 		}
 	}
-
+	
 	public void ajouterSemestre(int nbGTD, int nbGTP, int nbGCM, int nbGAutre, String couleur) {
 		Semestre s = new Semestre(nbGTD, nbGTD, nbGCM, nbGAutre, couleur, this.idAnnee);
 		try {
@@ -332,7 +323,7 @@ public class Modele {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible d'ajouter le semestre", ControleurIHM.Notification.ERREUR);
 		}
 	}
-
+	
 	public void dupliquerSemestre(List<Module> lstModuleParSemestre, int nbGTD, int nbGTP, int nbGCM, int nbGAutre, String couleur) {
 		Semestre s = new Semestre(nbGTD, nbGTD, nbGCM, nbGAutre, couleur, this.idAnnee);
 		try {
@@ -344,7 +335,7 @@ public class Modele {
 		for (Module m : lstModuleParSemestre)
 			this.dupliquerModule(m.getId(),m.getNom(), m.getCode(), m.isValid(), m.getIdTypeModule(), s.getId());
 	}
-
+	
 	public void updateSemestre(Semestre s) {
 		try {
 			this.db.updateSemestre(s);
@@ -352,11 +343,12 @@ public class Modele {
 			if (!this.bEnDuplication)
 				this.ctrl.getVue().afficherNotification("Semestre modifié", "Semestre modifié avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
+			// TODO: remove me
 			e.printStackTrace();
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible de modifier le semestre", ControleurIHM.Notification.ERREUR);
 		}
 	}
-
+	
 	public void ajouterHeureCours(int idTypeCours, int idModule, double heure, int nbSemaine, double hParSemaine) {
 		HeureCours hc = new HeureCours(idTypeCours, idModule, heure,nbSemaine,hParSemaine, this.idAnnee);
 		try {
@@ -368,7 +360,7 @@ public class Modele {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible d'ajouter l'heure de cours", ControleurIHM.Notification.ERREUR);
 		}
 	}
-
+	
 	public void updateHeureCours(HeureCours heureCours) {
 		try {
 			this.db.updateHeureCours(heureCours);
@@ -379,7 +371,7 @@ public class Modele {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible de modifier l'heure de cours", ControleurIHM.Notification.ERREUR);
 		}
 	}
-
+	
 	public void updateTypeCours(TypeCours tc) {
 		try {
 			this.db.updateTypeCours(tc);
@@ -390,7 +382,7 @@ public class Modele {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible de modifier le type de cours", ControleurIHM.Notification.ERREUR);
 		}
 	}
-
+	
 	public void updateTypeCoursBrut(String nomTypeCours, Double newCoeff) {
 		for (TypeCours tc : hmTypeCours.values()) {
 			if (nomTypeCours.equals(tc.getNom())) {
@@ -399,7 +391,7 @@ public class Modele {
 			}
 		}
 	}
-
+	
 	public void ajouterAnnee() {
 		try {
 			int iAnnee = this.db.getDerAnnee() + 1;
@@ -416,7 +408,7 @@ public class Modele {
 				keysList.sort(null);
 				for (Integer i : keysList) {
 					Semestre s = hmTmpSemestres.get(i);
-					dupliquerSemestre(this.getModuleBySemestre(s.getId(), s.getIdAnnee()), s.getNbGTD(), s.getNbGTP(), s.getNbGCM(), s.getNbSemaine(), s.getCouleur());
+					this.dupliquerSemestre(this.getModuleBySemestre(s.getId(), s.getIdAnnee()), s.getNbGTD(), s.getNbGTP(), s.getNbGCM(), s.getNbSemaine(), s.getCouleur());
 				}
 				for (Categorie c : hmTmpCategories.values())
 					this.dupliquerCategorie(c.getId(), c.getNom(), c.gethMin(), c.gethMax(), c.getRatioTp());
@@ -437,7 +429,7 @@ public class Modele {
 		}
 		this.bEnDuplication = false;
 	}
-
+	
 	public void updateAnnee(String date) {
 		for (Integer i : this.hmAnnee.keySet())
 			if (this.hmAnnee.get(i).equals(date))
@@ -455,35 +447,35 @@ public class Modele {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible de modifier l'année", ControleurIHM.Notification.ERREUR);
 		}
 	}
-
+	
 	public boolean isDuplication() {
 		return this.duplication;
 	}
-
+	
 	public void setDuplication(boolean duplication) {
 		this.duplication = duplication;
 	}
-
+	
 	public Map<Integer, Categorie> getHmCategories() {
 		return this.hmCategories;
 	}
-
+	
 	public void setHmCategories(Map<Integer, Categorie> hmCategories) {
 		this.hmCategories = hmCategories;
 	}
-
+	
 	public Map<Integer, Intervenant> getHmIntervenants() {
 		return this.hmIntervenants;
 	}
-
+	
 	public void setHmIntervenants(Map<Integer, Intervenant> hmIntervenants) {
 		this.hmIntervenants = hmIntervenants;
 	}
-
+	
 	public Map<Integer, Intervention> getHmInterventions() {
 		return this.hmInterventions;
 	}
-
+	
 	public Map<Integer, Intervention> getHmInterventionsModule(int idModule) {
 		Map<Integer, Intervention> ret = new HashMap<>();
 		for (Integer id : this.hmInterventions.keySet())
@@ -491,51 +483,51 @@ public class Modele {
 				ret.put(id,this.hmInterventions.get(id));
 		return ret;
 	}
-
+	
 	public void setHmInterventions(Map<Integer, Intervention> hmInterventions) {
 		this.hmInterventions = hmInterventions;
 	}
-
+	
 	public Map<Integer, Module> getHmModules() {
 		return this.hmModules;
 	}
-
+	
 	public void setHmModules(Map<Integer, Module> hmModules) {
 		this.hmModules = hmModules;
 	}
-
+	
 	public Map<Integer, Semestre> getHmSemestres() {
 		return this.hmSemestres;
 	}
-
+	
 	public void setHmSemestres(Map<Integer, Semestre> hmSemestres) {
 		this.hmSemestres = hmSemestres;
 	}
-
+	
 	public Map<Integer, TypeCours> getHmTypeCours() {
 		return this.hmTypeCours;
 	}
-
+	
 	public void setHmTypeCours(Map<Integer, TypeCours> hmTypeCours) {
 		this.hmTypeCours = hmTypeCours;
 	}
-
+	
 	public Map<String, HeureCours> getHmHeuresCours() {
 		return this.hmHeuresCours;
 	}
-
+	
 	public void setHmHeuresCours(Map<String, HeureCours> hmHeuresCours) {
 		this.hmHeuresCours = hmHeuresCours;
 	}
-
+	
 	public int getIdAnnee() {
 		return this.idAnnee;
 	}
-
+	
 	public void setIdAnnee(int idAnnee) {
 		this.idAnnee = idAnnee;
 	}
-
+	
 	public String getNomCateg(int idCategorie) {
 		try {
 			return this.db.getNomCateg(idCategorie);

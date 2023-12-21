@@ -95,6 +95,8 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 
 	@FXML
 	void allerAccueil(ActionEvent event) throws IOException {
+		
+		
 		this.root = FXMLLoader.load(ResourceManager.ACCUEIL);
 		this.stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
@@ -103,8 +105,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 
 		scene.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
 
-		this.stage.setScene(this.scene);
-
+		this.stage.setScene(this.scene);	
 		stage.show();
 	}
 

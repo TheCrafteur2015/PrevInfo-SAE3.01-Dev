@@ -30,6 +30,10 @@ td, th {
 	padding: 5px 10px;
 }
 
+tbody th{
+	text-align: left;
+}
+
 td {
 	text-align: center;
 }
@@ -39,6 +43,7 @@ header {
 	color: #fff;
 	padding: 20px;
 	text-align: center;
+	font-family: sans-serif;
 }
 
 .semestre1 { background-color: var(--semestre-1); }

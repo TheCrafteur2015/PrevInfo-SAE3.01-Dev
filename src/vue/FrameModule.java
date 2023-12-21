@@ -42,47 +42,46 @@ import modele.TypeCours;
 import modele.TypeModule;
 
 public class FrameModule implements EventHandler<Event> {
-
+	
 	private Controleur ctrl;
 	private AnchorPane centerPaneAccueil;
 	private Map<Integer, Semestre> hmSemestres;
-
+	
 	private FrameIntervention frameIntervention;
-
+	
 	private Map<Semestre, List<TextField>> hmTF;
 	private Map<Integer, Module> hmModule;
 	private Map<Integer, TypeCours> hmTypeCours;
 	private Map<Integer, TypeModule> hmTypeModule;
 	private Map<String, HeureCours> hmHeureCours;
-
+	
 	private TabPane tabPane;
-
+	
 	private TableView<LigneModuleIHM> tbV;
 	private ObservableList<LigneModuleIHM> lst;
 	private TextField txtFTD;
 	private TextField txtFTP;
 	private TextField txtFCM;
 	private TextField txtFNbSemaines;
-
+	
 	private List<TableColumn<LigneModuleIHM, String>> lstTableColumns;
-
+	
 	private Button btnAjouter;
 	private ChoiceBox<TypeModule> choiceBoxTypeModule;
-
+	
 	private List<TextField> lstTxtF;
 	private ColorPicker colorPicker;
 	private List<String> tmpValue;
-
+	
 	private int idSelectedSemestre;
-
+	
 	public FrameModule(Controleur ctrl, AnchorPane centerPaneAccueil) {
 		this.ctrl = ctrl;
 		this.centerPaneAccueil = centerPaneAccueil;
 		this.hmTF = new HashMap<>();
-
 		this.init(0);
 	}
-
+	
 	public void init(int idSelectedSemestre) {
 		this.idSelectedSemestre = idSelectedSemestre;
 		this.hmHeureCours = this.ctrl.getModele().getHmHeuresCours();
@@ -90,57 +89,57 @@ public class FrameModule implements EventHandler<Event> {
 		this.centerPaneAccueil.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
 		this.hmTypeModule = this.ctrl.getModele().getHmTypeModule();
 		this.lstTxtF = new ArrayList<>();
-
+		
 		this.majTabs(idSelectedSemestre);
-
+		
 		FlowPane flowPane = new FlowPane();
 		this.btnAjouter = new Button("Ajouter");
 		this.btnAjouter.addEventHandler(ActionEvent.ACTION, this);
 		this.choiceBoxTypeModule = new ChoiceBox<>();
-		for (TypeModule tm : this.hmTypeModule.values()) {
+		for (TypeModule tm : this.hmTypeModule.values())
 			this.choiceBoxTypeModule.getItems().add(tm);
-		}
+		
 		flowPane.getChildren().addAll(this.choiceBoxTypeModule, this.btnAjouter);
 		flowPane.setHgap(15);
-
+		
 		AnchorPane.setLeftAnchor(flowPane, this.centerPaneAccueil.getWidth() / 2.0 - 80);
 		AnchorPane.setBottomAnchor(flowPane, 15.0);
-
+		
 		this.centerPaneAccueil.getChildren().addAll(tabPane, flowPane);
 	}
-
+	
 	public void majTabs(int idSelectedSemestre) {
 		this.idSelectedSemestre = idSelectedSemestre;
 		this.tabPane = new TabPane();
 		this.tabPane.addEventHandler(Event.ANY, this);
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
-
+		
 		this.hmModule = this.ctrl.getModele().getHmModules();
-
+		
 		this.hmSemestres = this.ctrl.getModele().getHmSemestres();
 		List<Integer> keysList = new ArrayList<>(this.hmSemestres.keySet());
 		keysList.sort(null);
-
+		
 		this.lstTableColumns = new ArrayList<>();
-
+		
 		this.tmpValue = new ArrayList<>();
 		int i = keysList.get(idSelectedSemestre);
 		Semestre semestre = this.hmSemestres.get(i);
 		BorderPane borderPaneTab = new BorderPane();
 		FlowPane flowPaneTxtF = new FlowPane();
 		flowPaneTxtF.setHgap(5);
-
+		
 		GridPane gridPaneTmp = new GridPane();
 		TextField textFieldTmp = new TextField(semestre.getNbGTD() + "");
 		this.tmpValue.add(textFieldTmp.getText());
-
+		
 		textFieldTmp.setMaxWidth(5 * 7);
 		textFieldTmp.setId("TD-" + semestre.getId());
 		this.lstTxtF.add(textFieldTmp);
 		gridPaneTmp.add(new Label("nbGroupeTD : "), 0, 0);
 		gridPaneTmp.add(textFieldTmp, 1, 0);
 		flowPaneTxtF.getChildren().add(gridPaneTmp);
-
+		
 		gridPaneTmp = new GridPane();
 		textFieldTmp = new TextField(semestre.getNbGTP() + "");
 		textFieldTmp.setMaxWidth(5 * 7);
@@ -149,7 +148,7 @@ public class FrameModule implements EventHandler<Event> {
 		gridPaneTmp.add(new Label("nbGroupeTP : "), 0, 0);
 		gridPaneTmp.add(textFieldTmp, 1, 0);
 		flowPaneTxtF.getChildren().add(gridPaneTmp);
-
+		
 		gridPaneTmp = new GridPane();
 		textFieldTmp = new TextField(semestre.getNbGCM() + "");
 		textFieldTmp.setMaxWidth(5 * 7);
@@ -158,7 +157,7 @@ public class FrameModule implements EventHandler<Event> {
 		gridPaneTmp.add(new Label("nbGroupeCM : "), 0, 0);
 		gridPaneTmp.add(textFieldTmp, 1, 0);
 		flowPaneTxtF.getChildren().add(gridPaneTmp);
-
+		
 		gridPaneTmp = new GridPane();
 		textFieldTmp = new TextField(semestre.getNbSemaine() + "");
 		textFieldTmp.setMaxWidth(5 * 7);
@@ -167,22 +166,19 @@ public class FrameModule implements EventHandler<Event> {
 		gridPaneTmp.add(new Label("nbSemaines : "), 0, 0);
 		gridPaneTmp.add(textFieldTmp, 1, 0);
 		flowPaneTxtF.getChildren().add(gridPaneTmp);
-
+		
 		this.colorPicker = new ColorPicker(Color.web(semestre.getCouleur()));
 		this.colorPicker.setId(semestre.getId() + "");
-		// this.colorPicker = new ColorPicker();
 		colorPicker.addEventHandler(ActionEvent.ACTION, this);
-
+		
 		flowPaneTxtF.setVgap(20);
 		flowPaneTxtF.setHgap(20);
 		flowPaneTxtF.getChildren().add(colorPicker);
-
+		
 		this.tbV = new TableView<>();
-
-		String[] colonnes = new String[] { "id", "info", "validation", "Code", "Nom", "CM", "TD", "TP", "HP", "REH",
-				"HTut", "SAE",
-				"supprimer" };
-
+		
+		String[] colonnes = { "id", "info", "validation", "Code", "Nom", "CM", "TD", "TP", "HP", "REH", "HTut", "SAE", "supprimer" };
+		
 		if (tbV.getColumns().size() < 11) {
 			for (String colonne : colonnes) {
 				TableColumn<LigneModuleIHM, String> tbcl = new TableColumn<>(colonne);
@@ -192,26 +188,26 @@ public class FrameModule implements EventHandler<Event> {
 				tbcl.setReorderable(false);
 				tbcl.setSortable(false);
 				if (!colonne.equals("id") && !colonne.equals("info") && !colonne.equals("supprimer")
-						&& !colonne.equals("validation")) {
+					&& !colonne.equals("validation")) {
 					tbcl.setEditable(true);
 					tbcl.setCellFactory(TextFieldTableCell.forTableColumn());
 					tbcl.setOnEditCommit((TableColumn.CellEditEvent<LigneModuleIHM, String> event) -> {
 						String oldValue = event.getOldValue();
 						if (!oldValue.isEmpty() && !oldValue.equals("nombre d'heures totales") &&
-								!oldValue.equals("nombre de semaine") &&
-								!oldValue.equals("nombre d'heures par semaine")) {
-
+							!oldValue.equals("nombre de semaine") &&
+							!oldValue.equals("nombre d'heures par semaine")) {
+							
 							LigneModuleIHM ligne = event.getTableView().getItems()
 									.get(event.getTablePosition().getRow());
 							int id = ligne.getId();
 							String col = event.getTableColumn().getText();
 							String newValue = event.getNewValue();
-
+							
 							// Ajoutez une vérification ici pour s'assurer que la nouvelle valeur n'est pas
 							// vide
 							if (newValue != null && !newValue.trim().isEmpty()) {
 								Module m = this.hmModule.get(id);
-
+								
 								if (col.equals("Nom"))
 									m.setNom(newValue);
 								else if (col.equals("Code"))
@@ -219,7 +215,7 @@ public class FrameModule implements EventHandler<Event> {
 								else {
 									int idTypeCours = this.ctrl.getModele().getIdTypeCoursByNom(col);
 									HeureCours hc = this.hmHeureCours.get(idTypeCours + "-" + m.getId());
-
+									
 									if (ligne.getNom().equals("nombre de semaine")
 											&& newValue.matches(Modele.REGEX_INT))
 										hc.setNbSemaine(Integer.parseInt(newValue));
@@ -229,17 +225,13 @@ public class FrameModule implements EventHandler<Event> {
 									else if (ligne.getNom().equals("nombre d'heures par semaine")
 											&& newValue.matches(Modele.REGEX_DOUBLE))
 										hc.sethParSemaine(Double.parseDouble(newValue));
-
+									
 									this.ctrl.getModele().updateHeureCours(hc);
 								}
-
 								this.ctrl.getModele().updateModule(m);
 							}
-							
-							
 						}
-						this.init(idSelectedSemestre);						
-
+						this.init(idSelectedSemestre);
 					});
 				}
 				if (colonne.equals("id"))
@@ -255,18 +247,17 @@ public class FrameModule implements EventHandler<Event> {
 				tbV.getColumns().add(tbcl);
 			}
 		}
-
+		
 		tbV.setEditable(true);
 		tbV.getSelectionModel().setCellSelectionEnabled(true);
-
+		
 		List<Module> lstModule = this.ctrl.getModele().getModuleBySemestre(semestre.getId(), semestre.getIdAnnee());
 		lstModule.sort(null);
 		this.hmTypeCours = this.ctrl.getModele().getHmTypeCours();
 		this.lst = FXCollections.observableArrayList();
-
+		
 		for (Module m : lstModule) {
-			this.frameIntervention = new FrameIntervention(this.ctrl, this.centerPaneAccueil,
-					this.hmModule.get(m.getId()), false);
+			this.frameIntervention = new FrameIntervention(this.ctrl, this.centerPaneAccueil, this.hmModule.get(m.getId()), false);
 			switch (this.hmTypeModule.get(m.getIdTypeModule()).getNom()) {
 				case "PPP" -> this.ajouterModulePPP(m);
 				case "SAE" -> this.ajouterModuleSAE(m);
@@ -274,12 +265,12 @@ public class FrameModule implements EventHandler<Event> {
 				case "stage" -> this.ajouterModuleStage(m);
 			}
 		}
-
+		
 		tbV.setItems(lst);
-
+		
 		borderPaneTab.setCenter(tbV);
 		borderPaneTab.setTop(flowPaneTxtF);
-
+		
 		for (int j = 0; j < 6; j++) {
 			if (j != idSelectedSemestre)
 				this.tabPane.getTabs().add(new Tab("Semestre " + (j + 1)));
@@ -289,13 +280,11 @@ public class FrameModule implements EventHandler<Event> {
 				this.tabPane.getTabs().add(tab);
 			}
 		}
-
+		
 		for (TextField txt : lstTxtF) {
-
 			txt.textProperty().addListener(new ChangeListener<String>() {
 				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 					int index = lstTxtF.indexOf(txt);
-
 					if (txt.textProperty() == observable) {
 						if (newValue.matches(Modele.REGEX_INT) && !tmpValue.get(index).equals(newValue)) {
 							String[] partTxt = txt.getId().split("-");
@@ -318,15 +307,15 @@ public class FrameModule implements EventHandler<Event> {
 				}
 			});
 		}
-
+		
 		this.tabPane.getSelectionModel().select(idSelectedSemestre);
-
+		
 		AnchorPane.setTopAnchor(tabPane, 5.0);
 		AnchorPane.setRightAnchor(tabPane, 5.0);
 		AnchorPane.setBottomAnchor(tabPane, 50.0);
 		AnchorPane.setLeftAnchor(tabPane, 5.0);
 	}
-
+	
 	public void ajouterModulePPP(Module m) {
 		int id = m.getId();
 		List<HeureCours> lstHeuresCours = this.ctrl.getModele().getHeureCoursByModule(id, m.getIdAnnee());
@@ -345,14 +334,12 @@ public class FrameModule implements EventHandler<Event> {
 		Button btnAjouterIntervenant = this.getAjouterIntervenantButton();
 		btnAjouterIntervenant.setId("AjouterIntervenant-" + id);
 		btnAjouterIntervenant.addEventFilter(ActionEvent.ACTION, this);
-
+		
 		Button supButton = ResourceManager.getSupButton();
 		supButton.setId("Sup-" + id);
 		supButton.addEventHandler(ActionEvent.ACTION, this);
 		String recapHeure = getRecap(m);
-		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, recapHeure, m.getCode(), m.getNom(), "", "", "", "",
-				"", "", "",
-				supButton));
+		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, recapHeure, m.getCode(), m.getNom(), "", "", "", "", "", "", "", supButton));
 		this.lst.add(new LigneModuleIHM(id, null, "", "", "nombre d'heures totales", moduleIHM.getCmHeure() + "",
 				moduleIHM.getTdHeure() + "", moduleIHM.getTpHeure() + "", "", moduleIHM.getTutHeure() + "", "",
 				moduleIHM.getHpHeure() + "", null));
@@ -363,7 +350,7 @@ public class FrameModule implements EventHandler<Event> {
 						moduleIHM.getTdHeureSemaine() + "", moduleIHM.getTpHeureSemaine() + "", "", "", "", "", null));
 		this.lst.add(new LigneModuleIHM(id, null, "", "", "", "", "", "", "", "", "", "", null));
 	}
-
+	
 	public void ajouterModuleSAE(Module m) {
 		int id = m.getId();
 		List<HeureCours> lstHeuresCours = this.ctrl.getModele().getHeureCoursByModule(id, m.getIdAnnee());
@@ -379,19 +366,17 @@ public class FrameModule implements EventHandler<Event> {
 		Button btnAjouterIntervenant = getAjouterIntervenantButton();
 		btnAjouterIntervenant.setId("AjouterIntervenant-" + id);
 		btnAjouterIntervenant.addEventFilter(ActionEvent.ACTION, this);
-
+		
 		Button supButton = ResourceManager.getSupButton();
 		supButton.setId("Sup-" + id);
 		supButton.addEventHandler(ActionEvent.ACTION, this);
 		String recapHeure = getRecap(m);
-		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, recapHeure, m.getCode(), m.getNom(), "", "", "", "",
-				"", "", "",
-				supButton));
+		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, recapHeure, m.getCode(), m.getNom(), "", "", "", "", "", "", "", supButton));
 		this.lst.add(new LigneModuleIHM(id, null, "", "", "nombre d'heures totales", "", "", "", "",
 				moduleIHM.getTutHeure() + "", moduleIHM.getSaeHeure() + "", "" + "", null));
 		this.lst.add(new LigneModuleIHM(id, null, "", "", "", "", "", "", "", "", "", "", null));
 	}
-
+	
 	public void ajouterModuleNormale(Module m) {
 		int id = m.getId();
 		List<HeureCours> lstHeuresCours = this.ctrl.getModele().getHeureCoursByModule(id, m.getIdAnnee());
@@ -413,9 +398,7 @@ public class FrameModule implements EventHandler<Event> {
 		supButton.setId("Sup-" + id);
 		supButton.addEventHandler(ActionEvent.ACTION, this);
 		String recapHeure = getRecap(m);
-		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, recapHeure, m.getCode(), m.getNom(), "", "", "", "",
-				"", "", "",
-				supButton));
+		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, recapHeure, m.getCode(), m.getNom(), "", "", "", "", "", "", "", supButton));
 		this.lst.add(new LigneModuleIHM(id, null, "", "", "nombre d'heures totales", moduleIHM.getCmHeure() + "",
 				moduleIHM.getTdHeure() + "", moduleIHM.getTpHeure() + "", "", "", "", moduleIHM.getHpHeure() + "",
 				null));
@@ -426,7 +409,7 @@ public class FrameModule implements EventHandler<Event> {
 						moduleIHM.getTdHeureSemaine() + "", moduleIHM.getTpHeureSemaine() + "", "", "", "", "", null));
 		this.lst.add(new LigneModuleIHM(id, null, "", "", "", "", "", "", "", "", "", "", null));
 	}
-
+	
 	public void ajouterModuleStage(Module m) {
 		int id = m.getId();
 		List<HeureCours> lstHeuresCours = this.ctrl.getModele().getHeureCoursByModule(id, m.getIdAnnee());
@@ -442,7 +425,7 @@ public class FrameModule implements EventHandler<Event> {
 		Button btnAjouterIntervenant = getAjouterIntervenantButton();
 		btnAjouterIntervenant.setId("AjouterIntervenant-" + id);
 		btnAjouterIntervenant.addEventFilter(ActionEvent.ACTION, this);
-
+		
 		Button supButton = ResourceManager.getSupButton();
 		supButton.setId("Sup-" + id);
 		supButton.addEventHandler(ActionEvent.ACTION, this);
@@ -454,16 +437,17 @@ public class FrameModule implements EventHandler<Event> {
 				moduleIHM.getRehHeure() + "", moduleIHM.getTutHeure() + "", "", "" + "", null));
 		this.lst.add(new LigneModuleIHM(id, null, "", "", "", "", "", "", "", "", "", "", null));
 	}
-
+	
 	public String getRecap(Module m) {
 		double totalAffecte = this.frameIntervention.getTotalAffecte();
 		double totalPromo = this.frameIntervention.getTotalPromo();
 		String totalA = String.format("%.2f", totalAffecte);
 		String totalP = String.format("%.2f", totalPromo);
 		
-				
-		if (ControleurIHM.isInteger(totalAffecte) != null) totalA = ControleurIHM.isInteger(totalAffecte)+"";
-		if (ControleurIHM.isInteger(totalPromo) != null) totalP = ControleurIHM.isInteger(totalPromo)+"";
+		if (ControleurIHM.isInteger(totalAffecte) != null)
+			totalA = ControleurIHM.isInteger(totalAffecte)+"";
+		if (ControleurIHM.isInteger(totalPromo) != null)
+			totalP = ControleurIHM.isInteger(totalPromo)+"";
 		
 		String ret = totalA + "/" + totalP;
 		
@@ -471,7 +455,7 @@ public class FrameModule implements EventHandler<Event> {
 			ret += " ✔️";
 		return ret;
 	}
-
+	
 	public Button getAjouterIntervenantButton() {
 		SVGPath supsvg = new SVGPath();
 		supsvg.setContent(
@@ -481,14 +465,14 @@ public class FrameModule implements EventHandler<Event> {
 		supsvg.setStrokeWidth(1.5);
 		supsvg.setStrokeLineCap(StrokeLineCap.ROUND);
 		supsvg.setStrokeLineJoin(StrokeLineJoin.ROUND);
-
+		
 		Button btnAjouterIntervenant = new Button();
 		btnAjouterIntervenant.setGraphic(supsvg);
 		btnAjouterIntervenant.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 		btnAjouterIntervenant.getStyleClass().add("info-btn");
 		return btnAjouterIntervenant;
 	}
-
+	
 	public void nouveauModule(List<Integer> lstTypesCours, TypeModule tm) {
 		int idSemestre = Integer.parseInt(tabPane.getSelectionModel().getSelectedItem().getId());
 		char c = tm.getNom().equals("SAE") ? 'S' : 'R';
@@ -500,7 +484,7 @@ public class FrameModule implements EventHandler<Event> {
 		for (Integer i : lstTypesCours)
 			this.ctrl.getModele().ajouterHeureCours(i, idModule, 0, 0, 0);
 	}
-
+	
 	@Override
 	public void handle(Event action) {
 		if (action.getSource() instanceof Button btn) {
@@ -509,10 +493,10 @@ public class FrameModule implements EventHandler<Event> {
 					TypeModule tm = this.choiceBoxTypeModule.getValue();
 					List<Integer> lstTypesCours = new ArrayList<>();
 					switch (tm.getNom()) {
-						case "PPP" -> lstTypesCours = List.of(1, 2, 3, 4, 7);
-						case "SAE" -> lstTypesCours = List.of(6, 4, 7);
+						case "PPP"    -> lstTypesCours = List.of(1, 2, 3, 4, 7);
+						case "SAE"    -> lstTypesCours = List.of(6, 4, 7);
 						case "normal" -> lstTypesCours = List.of(1, 2, 3, 7);
-						case "stage" -> lstTypesCours = List.of(5, 4, 7);
+						case "stage"  -> lstTypesCours = List.of(5, 4, 7);
 					}
 					this.nouveauModule(lstTypesCours, tm);
 					this.init(this.tabPane.getSelectionModel().getSelectedIndex());
@@ -524,7 +508,7 @@ public class FrameModule implements EventHandler<Event> {
 					if (ControleurIHM.bIsValidate)
 						this.ctrl.getModele().supprimerModule(Integer.parseInt(textBtn[1]));
 				}
-
+				
 				if (textBtn[0].equals("AjouterIntervenant")) {
 					this.frameIntervention = new FrameIntervention(this.ctrl, this.centerPaneAccueil,
 							this.hmModule.get(Integer.parseInt(textBtn[1])), true);
@@ -536,7 +520,7 @@ public class FrameModule implements EventHandler<Event> {
 			s.setCouleur(couleur);
 			this.ctrl.getModele().updateSemestre(s);
 		}
-
+		
 		if (action.getSource() instanceof TabPane tp) {
 			if (this.idSelectedSemestre != tp.getSelectionModel().getSelectedIndex())
 				this.init(tp.getSelectionModel().getSelectedIndex());

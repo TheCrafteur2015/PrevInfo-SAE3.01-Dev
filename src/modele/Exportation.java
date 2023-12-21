@@ -8,12 +8,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
-
-import controleur.Controleur;
 import vue.ResourceManager;
-
-import java.util.Comparator;
-import java.util.HashMap;
 
 public class Exportation {
 	private Modele model;
@@ -166,7 +161,7 @@ public class Exportation {
 
 		body += "				<tfoot>\n";
 		body += "					<tr>\n";
-		body += "						<td> Total </td>\n";
+		body += "						<th> Total </th>\n";
 		body += "						<td> " + cmReel + " </td>\n";
 		body += "						<td> " + cmTheorique + " </td>\n";
 		body += "						<td> " + tdReel + " </td>\n";
@@ -255,8 +250,7 @@ public class Exportation {
 		}
 
 		ret += "				<tr class=\"semestre" + ensModule.get(0).getIdSemestre() + "\">\n";
-		ret += "					<td> Total Semestre " + (((ensModule.get(0).getIdSemestre() + 5) % 6) + 1)
-				+ " </td>\n";
+		ret += "					<th> Total Semestre " + (((ensModule.get(0).getIdSemestre() + 5) % 6) + 1) + " </th>\n";
 		ret += "					<td> " + cmReel + " </td>\n";
 		ret += "					<td> " + cmTheorique + " </td>\n";
 		ret += "					<td> " + tdReel + " </td>\n";
@@ -570,7 +564,7 @@ public class Exportation {
 
 		body += "				<tfoot>\n";
 		body += "					<tr>\n";
-		body += "						<td> Total </td>\n";
+		body += "						<th> Total </th>\n";
 		body += "						<td> " + totcmReel + " </td>\n";
 		body += "						<td> " + totcmTheorique + " </td>\n";
 		body += "						<td> " + tottdReel + " </td>\n";
@@ -684,7 +678,7 @@ public class Exportation {
 
 		body += "				<tfoot>\n";
 		body += "					<tr>\n";
-		body += "						<td> Total </td>\n";
+		body += "						<th> Total </th>\n";
 		body += "						<td> " + tottutoratReel + " </td>\n";
 		body += "						<td> " + tottutoratTheorique + " </td>\n";
 		body += "						<td> " + totsaeReel + " </td>\n";
@@ -809,7 +803,7 @@ public class Exportation {
 
 		body += "				<tfoot>\n";
 		body += "					<tr>\n";
-		body += "						<td> Total </td>\n";
+		body += "						<th> Total </th>\n";
 		body += "						<td> " + totcmReel + " </td>\n";
 		body += "						<td> " + totcmTheorique + " </td>\n";
 		body += "						<td> " + tottdReel + " </td>\n";
@@ -920,7 +914,7 @@ public class Exportation {
 
 		body += "				<tfoot>\n";
 		body += "					<tr>\n";
-		body += "						<td> Total </td>\n";
+		body += "						<th> Total </th>\n";
 		body += "						<td> " + tottutoratReel + " </td>\n";
 		body += "						<td> " + tottutoratTheorique + " </td>\n";
 		body += "						<td> " + totrehReel + " </td>\n";
@@ -944,7 +938,8 @@ public class Exportation {
 		String css = ":root {\n";
 		int cpt=0;
 		for (Semestre semestre : model.getHmSemestres().values())
-			css += "\t--semestre-" + ++cpt + ": " + semestre.getCouleur() + ";\n";
+			css += "\t--semestre-" + semestre.getId() + "{background-color: rgba(" + Integer.parseInt(semestre.getCouleur().substring(1,3),16) + "," + Integer.parseInt(semestre.getCouleur().substring(3,5),16) + "," + Integer.parseInt(semestre.getCouleur().substring(5,7),16) + ", 0.5);}\n";
+
 		return this.ecrireFichier(chemin + "tab.css", css + "}\n\n" + ResourceManager.TAB_TEMPLATE_CONTENT);
 		/*s
 		String ret = "";
@@ -1008,14 +1003,12 @@ public class Exportation {
 	 * @param nomFichier nom du fichier de sortie
 	 */
 	public URL exportIntervenantCsv(String nomFichier, String chemin) {
-		String body = "";
 		Map<Intervenant, List<Intervention>> hmIntervenants = model.getIntervenantInterventions();
-
+		String body = "";
 		body += "nom,catégorie,s1 théorique,s1 reel,s3 théorique,s3 reel,s5 théorique,s5 reel,sTotal théorique,sTotal reel,s2 théorique,s2 reel,s4 théorique,s4 reel,s6 théorique,s6 reel,sTotal théorique,sTotal reel,minimum d'heures,total théorique,total reel, maximum d'heure\n";
-
-		for (Intervenant interv : hmIntervenants.keySet()) {
-			body += sSemestreCsv(interv, hmIntervenants.get(interv));
-		}
+		
+		for (Intervenant interv : hmIntervenants.keySet())
+			body += this.sSemestreCsv(interv, hmIntervenants.get(interv));
 		return this.ecrireFichier(chemin + nomFichier + ".csv", body);
 	}
 
@@ -1133,6 +1126,7 @@ public class Exportation {
 	 *                              données.
 	 * @param body                  contenue du Fichier
 	 */
+	 @SuppressWarnings("deprecation")
 	private URL ecrireFichier(String nomFichierDestination, String body) {
 		try (PrintWriter pw = new PrintWriter(new FileOutputStream(nomFichierDestination))) {
 			pw.println(body);
