@@ -326,6 +326,8 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 				tbcl.setStyle("-fx-alignment: CENTER;");
 				tbcl.getStyleClass().add("col");
 				tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
+				tbcl.setResizable(false);
+				tbcl.setReorderable(false);
 				tbV.getColumns().add(tbcl);
 				if (colonne.equals("commentaire"))
 					tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.2));
@@ -486,6 +488,8 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 			for (String colonne : col) {
 				TableColumn<RecapInterventionIHM, String> tbcl = new TableColumn<>(colonne);
 				tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
+				tbcl.setResizable(false);
+				tbcl.setReorderable(false);
 				if (colonne.equals("info")) tbcl.prefWidthProperty().bind(tbVRecap.widthProperty().multiply(0.35));
 				else if (colonne.equals("somme")) tbcl.prefWidthProperty().bind(tbVRecap.widthProperty().multiply(0.15));
 				else tbcl.prefWidthProperty().bind(tbVRecap.widthProperty().multiply((0.5 / (col.length - 2)) - 0.002*col.length));
@@ -578,6 +582,13 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 	
 	@Override
 	public void handle(ActionEvent action) {
+	
+		if (action.getSource() instanceof Button btn) {
+			this.ctrl.getVue().popupValider();
+			if (ControleurIHM.bIsValidate) this.ctrl.getModele().supprimerIntervention(Integer.parseInt(btn.getId()));
+			this.maj();
+		}
+		
 		if (action.getSource() == this.rbValider) {
 			this.module.setValid(this.rbValider.isSelected());
 			this.ctrl.getModele().updateModule(this.module);
@@ -696,11 +707,6 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 			return;
 		}
 		
-		if (action.getSource() instanceof Button btn) {
-			this.ctrl.getVue().popupValider();
-			if (ControleurIHM.bIsValidate)
-			this.ctrl.getModele().supprimerIntervention(Integer.parseInt(btn.getId()));
-		}
 		this.maj();
 	}
 	

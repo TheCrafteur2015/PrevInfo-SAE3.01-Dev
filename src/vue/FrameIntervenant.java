@@ -153,8 +153,6 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
     }
 });
 		
-		// this.tableViewIntervenant.add
-		
 		AnchorPane.setTopAnchor(this.tableViewIntervenant, 20.0);
 		AnchorPane.setLeftAnchor(this.tableViewIntervenant, 20.0);
 
@@ -410,7 +408,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		gridPaneInfoInter.add(new Label("hMin : " + intervenant.gethMin()), 0, 1);
 		gridPaneInfoInter.add(new Label("hMax : " + intervenant.gethMax()), 1, 1);
 		gridPaneInfoInter.add(new Label("RatioTp : " + String.format("%.2f", categorie.getRatioTp())), 2, 1);
-		gridPaneInfoInter.add(new Label(erreur), 1, 2);
+		//gridPaneInfoInter.add(new Label(erreur), 1, 2);
 		gridPaneInfoInter.setHgap(20);
 		gridPaneInfoInter.setVgap(20);
 		
@@ -535,10 +533,16 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		if (olRecap.size() == 2)
 			tbVRecap.setPrefHeight(tbVRecap.getPrefHeight() + 20);
 
-		System.out.println(tbVRecap.getPrefHeight());
-
 		gridPaneInfoInter.setAlignment(Pos.CENTER);
-		gridPaneTotal.add(gridPaneInfoInter, 0, 0);
+		GridPane gridPaneInfoErreur = new GridPane();
+		gridPaneInfoErreur.add(gridPaneInfoInter, 0, 0);
+		Label lblErreur = new Label(erreur);
+		lblErreur.setStyle("-fx-text-fill: red;");
+		lblErreur.setPadding(new Insets(10));
+		gridPaneInfoErreur.add(lblErreur, 0, 1);
+		gridPaneInfoErreur.setAlignment(Pos.CENTER);
+		
+		gridPaneTotal.add(gridPaneInfoErreur, 0, 0);
 		gridPaneTotal.add(tbVRecap, 0, 1);
 
 		VBox vbox = new VBox(5);

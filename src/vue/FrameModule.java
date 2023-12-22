@@ -102,6 +102,7 @@ public class FrameModule implements EventHandler<Event> {
 		AnchorPane.setBottomAnchor(flowPane, 15.0);
 		
 		this.centerPaneAccueil.getChildren().addAll(tabPane, flowPane);
+		
 	}
 	
 	public void majTabs(int idSelectedSemestre) {
@@ -179,6 +180,7 @@ public class FrameModule implements EventHandler<Event> {
 			for (String colonne : colonnes) {
 				TableColumn<LigneModuleIHM, String> tbcl = new TableColumn<>(colonne);
 				this.lstTableColumns.add(tbcl);
+				tbcl.getStyleClass().add("center");
 				tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
 				tbcl.setResizable(false);
 				tbcl.setReorderable(false);
