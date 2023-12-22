@@ -6,9 +6,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import controleur.Controleur;
 import vue.ControleurIHM;
+import vue.App;
 
 public class Modele {
 	
@@ -55,7 +57,8 @@ public class Modele {
 			this.hmTypeModule = this.db.getTypeModule();
 			this.hmHeuresCours = this.db.getHeureCours(this.idAnnee);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
+			App.log(Level.SEVERE, e);
 		}
 		
 		Categorie.nbCategorie = getNbObject(this.hmCategories);
@@ -78,7 +81,8 @@ public class Modele {
 			return this.db.getIdTypeCoursByNom(nom);
 		} catch (SQLException e) {
 			// TODO: remove me
-			e.printStackTrace();
+			//e.printStackTrace();
+			App.log(Level.SEVERE, e, "Modele.getIdTypeCoursByNom(String)");
 			return null;
 		}
 	}
@@ -88,7 +92,8 @@ public class Modele {
 			return this.db.getHeureCoursByModule(idModule, idAnnee);
 		} catch (SQLException e) {
 			// TODO: remove me
-			e.printStackTrace();
+			// e.printStackTrace();
+			App.log(Level.SEVERE, e, "Modele.getHeureCoursByModule(int,int)");
 			return null;
 		}
 	}
@@ -98,7 +103,8 @@ public class Modele {
 			return this.db.getModuleBySemestre(idSemestre, idAnnee);
 		} catch (SQLException e) {
 			// TODO: remove me
-			e.printStackTrace();
+			// e.printStackTrace();
+			App.log(Level.SEVERE, e, "Modele.getModuleBySemestre(int,int)");
 			return null;
 		}
 	}
@@ -112,6 +118,7 @@ public class Modele {
 				this.ctrl.getVue().afficherNotification("Catégorie ajoutée", "Catégorie ajoutée avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible d'ajouter la catégorie", ControleurIHM.Notification.ERREUR);
+			App.log(Level.WARNING, e, "Modele.ajouterCategorie(String,double,double,double)");
 		}
 	}
 	
@@ -127,6 +134,7 @@ public class Modele {
 				this.ctrl.getVue().afficherNotification("Catégorie ajoutée", "Catégorie ajoutée avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible d'ajouter la catégorie", ControleurIHM.Notification.ERREUR);
+			App.log(Level.WARNING, e, "Modele.dupliquerCategorie(int,String,double,double,double)");
 		}
 		for (Intervenant i : lstIntervantParCateg)
 			this.dupliquerIntervenant(i.getId(), i.getPrenom(), i.getNom(), i.getEmail(), i.gethMin(), i.gethMax(), c.getId());
@@ -139,6 +147,7 @@ public class Modele {
 			this.ctrl.getVue().afficherNotification("Catégorie modifiée", "Catégorie modifiée avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible de modifier la catégorie", ControleurIHM.Notification.ERREUR);
+			App.log(Level.WARNING, e, "Modele.updateCategorie(Categorie)");
 		}
 	}
 	
@@ -152,6 +161,7 @@ public class Modele {
 			Categorie c = this.hmCategories.get(id);
 			String msg = String.format("Impossible de supprimer la catégorie : \n%1$s car elle est reférencée \ndans un ou plusieurs intervenant(s)", c.getNom());
 			this.ctrl.getVue().afficherNotification("Erreur", msg, ControleurIHM.Notification.ERREUR);
+			App.log(Level.WARNING, e, "Modele.supprimerCategorie(int)");
 		}
 	}
 	
@@ -167,10 +177,11 @@ public class Modele {
 				this.ctrl.getVue().afficherNotification("Intervenant ajouté", "Intervenant ajouté avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible d'ajouter l'intervenant", ControleurIHM.Notification.ERREUR);
+			App.log(Level.WARNING, e, "Modele.ajouterIntervenant(Intervenant)");
 		}
 	}
 	
-	public void dupliquerIntervenant(int oldId, String prenom, String nom, String email, double hMin, double hMax,int idCategorie) {
+	public void dupliquerIntervenant(int oldId, String prenom, String nom, String email, double hMin, double hMax, int idCategorie) {
 		Map<Integer, Intervention> hmInter = null;
 		Intervenant i = new Intervenant(prenom, nom, email, hMin, hMax, idAnnee, idCategorie);
 		try {
@@ -181,11 +192,12 @@ public class Modele {
 				this.ctrl.getVue().afficherNotification("Intervenant ajouté", "Intervenant ajouté avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible d'ajouter l'intervenant", ControleurIHM.Notification.ERREUR);
+			App.log(Level.WARNING, e, "Modele.dupliquerIntervenant(int,String,String,String,double,double,int)");
 		}
 		for (Intervention inter : hmInter.values()) {
 			inter.setIdIntervenant(i.getId());
 			inter.setIdAnnee(this.idAnnee);
-			updateIntervention(inter);
+			this.updateIntervention(inter);
 		}
 	}
 	
@@ -197,8 +209,8 @@ public class Modele {
 				this.ctrl.getVue().afficherNotification("Intervenant modifié", "Intervenant modifié avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible de modifier l'intervenant", ControleurIHM.Notification.ERREUR);
+			App.log(Level.WARNING, e, "Modele.updateIntervenant(Intervenant)");
 		}
-		
 	}
 	
 	public void supprimerIntervenant(int id) {
@@ -211,6 +223,7 @@ public class Modele {
 			Intervenant i = this.hmIntervenants.get(id);
 			String msg = String.format("Impossible de supprimer l'intervenant :\n%1$s %2$s car il est reférencé \ndans une ou plusieurs intervention(s)", i.getPrenom(), i.getNom());
 			this.ctrl.getVue().afficherNotification("Erreur", msg, ControleurIHM.Notification.ERREUR);
+			App.log(Level.WARNING, e, "Modele.supprimerIntervenant(int)");
 		}
 	}
 	
@@ -223,6 +236,7 @@ public class Modele {
 				this.ctrl.getVue().afficherNotification("Intervention ajoutée", "Intervention ajoutée avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible d'ajouter l'intervention", ControleurIHM.Notification.ERREUR);
+			App.log(Level.WARNING, e, "Modele.ajouterIntervention(int,int,int,int,String,int)");
 		}
 	}
 	
@@ -234,8 +248,8 @@ public class Modele {
 				this.ctrl.getVue().afficherNotification("Intervention modifiée", "Intervention modifiée avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible de modifier l'intervention", ControleurIHM.Notification.ERREUR);
+			App.log(Level.WARNING, e, "Modele.updateIntervention(Intervention)");
 		}
-		
 	}
 	
 	public void supprimerIntervention(int id) {
@@ -246,6 +260,7 @@ public class Modele {
 				this.ctrl.getVue().afficherNotification("Intervention supprimée", "Intervention supprimée avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible de supprimer l'intervention", ControleurIHM.Notification.ERREUR);
+			App.log(Level.WARNING, e, "Modele.supprimerIntervention(int)");
 		}
 	}
 	
@@ -258,6 +273,7 @@ public class Modele {
 				this.ctrl.getVue().afficherNotification("Module ajouté", "Module ajouté avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible d'ajouter le module", ControleurIHM.Notification.ERREUR);
+			App.log(Level.WARNING, e, "Modele.ajouterModule(String,String,boolean,int,int)");
 		}
 	}
 	
@@ -270,7 +286,8 @@ public class Modele {
 			this.db.ajouterModule(m);
 		} catch (SQLException e) {
 			// TODO: remove me
-			e.printStackTrace();
+			// e.printStackTrace();
+			App.log(Level.WARNING, e, "Modele.dupliquerModule(int,String,String,boolean,int,int)");
 		}
 		this.hmModules.put(m.getId(), m);
 		for (HeureCours hc : lstHeureCours)
@@ -288,7 +305,8 @@ public class Modele {
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible de modifier le module", ControleurIHM.Notification.ERREUR);
 			// TODO: remove me
-			e.printStackTrace();
+			// e.printStackTrace();
+			App.log(Level.WARNING, e, "Modele.updateModule(Module)");
 		}
 	}
 	
@@ -308,6 +326,7 @@ public class Modele {
 				this.ctrl.getVue().afficherNotification("Module supprimé", "Module supprimé avec succès", ControleurIHM.Notification.SUCCES);
 			} catch (SQLException e) {
 				this.ctrl.getVue().afficherNotification("Erreur", "Impossible de supprimer le module", ControleurIHM.Notification.ERREUR);
+				App.log(Level.WARNING, e, "Modele.supprimerModule(int)");
 			}
 		}
 	}
@@ -321,6 +340,7 @@ public class Modele {
 				this.ctrl.getVue().afficherNotification("Semestre ajouté", "Semestre ajouté avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible d'ajouter le semestre", ControleurIHM.Notification.ERREUR);
+			App.log(Level.WARNING, e, "Modele.ajouterSemestre(int,int,int,int,String)");
 		}
 	}
 	
@@ -330,7 +350,9 @@ public class Modele {
 			this.db.ajouterSemestre(s);
 			this.hmSemestres.put(s.getId(), s);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			// TODO: remove me
+			// e.printStackTrace();
+			App.log(Level.WARNING, e, "Modele.dupliquerSemestre(List<Module>,int,int,int,int,String)");
 		}
 		for (Module m : lstModuleParSemestre)
 			this.dupliquerModule(m.getId(),m.getNom(), m.getCode(), m.isValid(), m.getIdTypeModule(), s.getId());
@@ -344,8 +366,9 @@ public class Modele {
 				this.ctrl.getVue().afficherNotification("Semestre modifié", "Semestre modifié avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
 			// TODO: remove me
-			e.printStackTrace();
+			// e.printStackTrace();
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible de modifier le semestre", ControleurIHM.Notification.ERREUR);
+			App.log(Level.WARNING, e, "Modele.updateSemestre(Semestre)");
 		}
 	}
 	
@@ -358,6 +381,7 @@ public class Modele {
 				this.ctrl.getVue().afficherNotification("Heure de cours ajoutée", "Heure de cours ajoutée avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible d'ajouter l'heure de cours", ControleurIHM.Notification.ERREUR);
+			App.log(Level.WARNING, e, "Modele.ajouterHeureCours(int,int,double,int,double)");
 		}
 	}
 	
@@ -369,6 +393,7 @@ public class Modele {
 				this.ctrl.getVue().afficherNotification("Heure de cours modifiée", "Heure de cours modifiée avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible de modifier l'heure de cours", ControleurIHM.Notification.ERREUR);
+			App.log(Level.WARNING, e, "Modele.updateHeureCours(HeureCours)");
 		}
 	}
 	
@@ -380,6 +405,7 @@ public class Modele {
 				this.ctrl.getVue().afficherNotification("Type de cours modifié", "Type de cours modifié avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible de modifier le type de cours", ControleurIHM.Notification.ERREUR);
+			App.log(Level.WARNING, e, "Modele.updateTypeCours(TypeCours)");
 		}
 	}
 	
@@ -426,6 +452,7 @@ public class Modele {
 				this.ctrl.getVue().afficherNotification("Année ajoutée", "Année ajoutée avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible d'ajouter l'année", ControleurIHM.Notification.ERREUR);
+			App.log(Level.WARNING, e, "Modele.ajouterAnnee()");
 		}
 		this.bEnDuplication = false;
 	}
@@ -445,6 +472,7 @@ public class Modele {
 				this.ctrl.getVue().afficherNotification("Année modifiée", "Année modifiée avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible de modifier l'année", ControleurIHM.Notification.ERREUR);
+			App.log(Level.WARNING, e, "Modele.updateAnnee(String)");
 		}
 	}
 	
@@ -532,6 +560,7 @@ public class Modele {
 		try {
 			return this.db.getNomCateg(idCategorie);
 		} catch (SQLException e) {
+			App.log(Level.WARNING, e, "Modele.getNomCateg(int)");
 			return "";
 		}
 	}
@@ -588,22 +617,19 @@ public class Modele {
 		return hmModuleIntervenant;
 	}
 	
-		public Map<Intervenant,List<Intervention>> getIntervenantInterventions()
-	{
-		Map<Intervenant,List<Intervention>> hmModuleIntervenant = new HashMap<Intervenant,List<Intervention>>();
+	public Map<Intervenant,List<Intervention>> getIntervenantInterventions() {
+		Map<Intervenant, List<Intervention>> hmModuleIntervenant = new HashMap<>();
 		
 		for (Intervention intervention : this.hmInterventions.values()) {
 			Intervenant interv = this.hmIntervenants.get(intervention.getIdIntervenant());
 			if (hmModuleIntervenant.keySet().contains(interv)) {
 				hmModuleIntervenant.get(interv).add(intervention);
-			}
-			else
-			{
+			} else {
 				hmModuleIntervenant.put(interv,new ArrayList<Intervention>());
 				hmModuleIntervenant.get(interv).add(intervention);
 			}
 		}
 		return hmModuleIntervenant;
 	}
-
+	
 }

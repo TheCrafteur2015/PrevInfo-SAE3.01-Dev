@@ -46,6 +46,20 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 	private AnchorPane centerPaneAccueil;
 	@FXML
 	private ChoiceBox<String> choiceBoxAnnee;
+	
+	@FXML
+	private Button btnExporter;
+	
+	@FXML
+	private Button btnIntervenant;
+	
+	@FXML
+	private Button btnModule;
+	
+	@FXML
+	private Button btnAccueil;
+	
+	
 	private Stage stage;
 	private Scene scene;
 	private Parent root;
@@ -94,6 +108,12 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 	
 	@FXML
 	void allerAccueil(ActionEvent event) throws IOException {
+		this.btnAccueil.getStyleClass().add("selected-btn");
+		
+		this.btnExporter.getStyleClass().remove("selected-btn");
+		this.btnIntervenant.getStyleClass().remove("selected-btn");
+		this.btnModule.getStyleClass().remove("selected-btn");
+		
 		this.root = FXMLLoader.load(ResourceManager.ACCUEIL);
 		this.stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		
@@ -190,6 +210,12 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 	
 	@FXML
 	void allerIntervenants(ActionEvent event) {
+	this.btnIntervenant.getStyleClass().add("selected-btn");
+		
+		this.btnAccueil.getStyleClass().remove("selected-btn");
+		this.btnExporter.getStyleClass().remove("selected-btn");
+		this.btnModule.getStyleClass().remove("selected-btn");
+	
 		if(this.ctrl.getModele().isDuplication()) 
 			this.modeDuplication();
 		this.frameIntervenant = new FrameIntervenant(this.ctrl, this.centerPaneAccueil);
@@ -201,6 +227,12 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 	
 	@FXML
 	void allerModules(ActionEvent event) {
+	
+		this.btnModule.getStyleClass().add("selected-btn");
+		this.btnAccueil.getStyleClass().remove("selected-btn");
+		this.btnExporter.getStyleClass().remove("selected-btn");
+		this.btnIntervenant.getStyleClass().remove("selected-btn");
+		
 		if (this.ctrl.getModele().isDuplication())
 			this.modeDuplication();
 		this.frameModule = new FrameModule(this.ctrl, this.centerPaneAccueil);
@@ -208,6 +240,13 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 	
 	@FXML
 	void allerExporter(ActionEvent event) {
+	
+	this.btnExporter.getStyleClass().add("selected-btn");
+		
+		this.btnAccueil.getStyleClass().remove("selected-btn");
+		this.btnIntervenant.getStyleClass().remove("selected-btn");
+		this.btnModule.getStyleClass().remove("selected-btn");
+		
 		if (this.ctrl.getModele().isDuplication())
 			this.modeDuplication();
 		this.frameExporter = new FrameExporter(this.ctrl, this.centerPaneAccueil);
@@ -233,7 +272,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 				this.setAnnee(this.choiceBoxAnnee.getValue());
 			} else if (action.getSource() == this.btnConfirmerMultiplicateur) {
 				Double coeff;
-				bErreur = false;
+				this.bErreur = false;
 				List<String> alErreur = new ArrayList<>();
 				
 				for (int i = 0; i < this.alText.size(); i++) {
@@ -247,28 +286,26 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 						this.ctrl.getModele().updateTypeCoursBrut(alText.get(i).getText(), coeff);
 					} else {
 						alErreur.add(alText.get(i).getText());
-						bErreur = true;
+						this.bErreur = true;
 					}
 				}
-				if (!bErreur) {
+				if (!this.bErreur) {
 					((Stage) this.btnConfirmerMultiplicateur.getScene().getWindow()).close();
 					this.afficherNotification("Succès", "Les coefficients ont bien été modifiés", ControleurIHM.Notification.SUCCES);
 				} else {
 					String message = "Veuillez vérifier les champs suivants : ";
-					for (String s : alErreur) {
+					for (String s : alErreur)
 						message += s + ", ";
-					}
 					message = message.substring(0, message.length() - 2);
-					
 					this.afficherNotification("Erreur", message, ControleurIHM.Notification.ERREUR);
 				}
 			}
 			if (event.getSource() == this.btnOui) {
-				bIsValidate = true;
+				ControleurIHM.bIsValidate = true;
 				((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
 			}
 			if (event.getSource() == this.btnAnnuler) {
-				bIsValidate = false;
+				ControleurIHM.bIsValidate = false;
 				((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
 			}
 		}

@@ -50,7 +50,6 @@ public class FrameModule implements EventHandler<Event> {
 	
 	private FrameIntervention frameIntervention;
 	
-	private Map<Semestre, List<TextField>> hmTF;
 	private Map<Integer, Module> hmModule;
 	private Map<Integer, TypeCours> hmTypeCours;
 	private Map<Integer, TypeModule> hmTypeModule;
@@ -60,10 +59,7 @@ public class FrameModule implements EventHandler<Event> {
 	
 	private TableView<LigneModuleIHM> tbV;
 	private ObservableList<LigneModuleIHM> lst;
-	private TextField txtFTD;
-	private TextField txtFTP;
-	private TextField txtFCM;
-	private TextField txtFNbSemaines;
+
 	
 	private List<TableColumn<LigneModuleIHM, String>> lstTableColumns;
 	
@@ -79,7 +75,6 @@ public class FrameModule implements EventHandler<Event> {
 	public FrameModule(Controleur ctrl, AnchorPane centerPaneAccueil) {
 		this.ctrl = ctrl;
 		this.centerPaneAccueil = centerPaneAccueil;
-		this.hmTF = new HashMap<>();
 		this.init(0);
 	}
 	
@@ -288,9 +283,8 @@ public class FrameModule implements EventHandler<Event> {
 		for (TextField txt : lstTxtF) {
 			txt.textProperty().addListener(new ChangeListener<String>() {
 				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-					int index = lstTxtF.indexOf(txt);
 					if (txt.textProperty() == observable) {
-						if (newValue.matches(Modele.REGEX_INT) && !tmpValue.get(index).equals(newValue)) {
+						if (newValue.matches(Modele.REGEX_INT)) {
 							String[] partTxt = txt.getId().split("-");
 							Semestre s = hmSemestres.get(Integer.parseInt(partTxt[1]));
 							int nb = 0;
@@ -303,7 +297,6 @@ public class FrameModule implements EventHandler<Event> {
 								case "Semaine" -> s.setNbSemaine(nb);
 							}
 							ctrl.getModele().updateSemestre(s);
-							tmpValue.set(index, newValue);
 						} else if (!newValue.matches(Modele.REGEX_INT)) {
 							txt.setText(oldValue);
 						}

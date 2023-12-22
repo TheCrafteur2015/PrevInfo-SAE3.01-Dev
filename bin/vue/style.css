@@ -11,6 +11,9 @@
 .label{
 	-fx-font-family: 'Poppins';
 }
+.selected-btn{
+	-fx-background-color: #758AFF;
+}
 
 .button:hover,
 .toggle-button:hover,
@@ -196,4 +199,9 @@
 	-fx-font-family: 'Poppins';
 	-fx-font-size: 20px;
 	-fx-font-weight: bold;
+}
+
+.erreur-row {
+    -fx-background-color: #FFCCCC;
+	-fx-border-color: #FFCCCC;
 }

@@ -20,6 +20,9 @@ import javafx.scene.shape.StrokeLineJoin;
 
 public final class ResourceManager {
 	
+	public static final String APP_NAME = "PrevInfo";
+	public static final String PWD = new File("").getAbsolutePath();
+	
 	// Fichiers FXML
 	public static final URL ACCUEIL = ResourceManager.class.getResource("Accueil.fxml");
 	
@@ -32,7 +35,7 @@ public final class ResourceManager {
 	
 	// Fichiers SVG
 	public static final URL BOOK = ResourceManager.class.getResource("book.svg");
-
+	
 	// Images
 	public static final URL HOUSE       = ResourceManager.class.getResource("/images/accueil_icone.png");
 	public static final URL INTERVENANT = ResourceManager.class.getResource("/images/prof_icon.png");
@@ -42,9 +45,9 @@ public final class ResourceManager {
 	public static final URL DELETE      = ResourceManager.class.getResource("/images/delete.png");
 	public static final URL INFO        = ResourceManager.class.getResource("/images/information.png");
 	public static final URL ICON        = ResourceManager.class.getResource("/images/LogoNUMIT.png");
-
+	
 	private static final Map<String, String> DATA = new HashMap<>();
-
+	
 	static {
 		for (Field field : ResourceManager.class.getFields()) {
 			try {
@@ -59,7 +62,13 @@ public final class ResourceManager {
 			}
 		}
 		try {
-			//File root = new File(ResourceManager.class.getResource("").toURI());
+			// System.out.println(ResourceManager.PWD);
+			// for (File f : new File(ResourceManager.PWD).getParentFile().listFiles())
+			// 	if (f.isFile())
+			// 		System.out.println(f);
+			// File root = new File(ResourceManager.class.getResource("/").toURI());
+			// for (File file : root.listFiles())
+			// 	System.out.println(file);
 			// System.out.println(Arrays.toString(root.listFiles()));
 			// System.out.println(root);
 			// System.out.println(root.getParentFile());
@@ -78,7 +87,7 @@ public final class ResourceManager {
 		try {
 			folder = Paths.get(ResourceManager.class.getResource("").toURI()).toFile();
 		} catch (Exception e) {
-
+		
 		}
 		for (File file : folder.listFiles()) {
 			if (!file.isFile())
@@ -98,7 +107,7 @@ public final class ResourceManager {
 			}
 		}
 	}
-
+	
 	public static Button getSupButton() {
 		SVGPath supsvg = new SVGPath();
 		supsvg.setContent(
@@ -108,15 +117,14 @@ public final class ResourceManager {
 		supsvg.setStrokeWidth(1.5);
 		supsvg.setStrokeLineCap(StrokeLineCap.ROUND);
 		supsvg.setStrokeLineJoin(StrokeLineJoin.ROUND);
-
+		
 		Button supbtn = new Button();
 		supbtn.setGraphic(supsvg);
 		supbtn.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 		supbtn.getStyleClass().add("info-btn");
 		return supbtn;
 	}
-
-
+	
 	private ResourceManager() {}
 	
 	public static String loadFile(URL url) {
@@ -182,5 +190,5 @@ public final class ResourceManager {
 	public static String getData(String key) {
 		return ResourceManager.DATA.get(key);
 	}
-
+	
 }
