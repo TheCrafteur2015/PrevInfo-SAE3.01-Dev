@@ -80,8 +80,6 @@ public class Modele {
 		try {
 			return this.db.getIdTypeCoursByNom(nom);
 		} catch (SQLException e) {
-			// TODO: remove me
-			//e.printStackTrace();
 			App.log(Level.SEVERE, e, "Modele.getIdTypeCoursByNom(String)");
 			return null;
 		}
@@ -91,8 +89,6 @@ public class Modele {
 		try {
 			return this.db.getHeureCoursByModule(idModule, idAnnee);
 		} catch (SQLException e) {
-			// TODO: remove me
-			// e.printStackTrace();
 			App.log(Level.SEVERE, e, "Modele.getHeureCoursByModule(int,int)");
 			return null;
 		}
@@ -102,8 +98,6 @@ public class Modele {
 		try {
 			return this.db.getModuleBySemestre(idSemestre, idAnnee);
 		} catch (SQLException e) {
-			// TODO: remove me
-			// e.printStackTrace();
 			App.log(Level.SEVERE, e, "Modele.getModuleBySemestre(int,int)");
 			return null;
 		}
@@ -285,8 +279,6 @@ public class Modele {
 		try {
 			this.db.ajouterModule(m);
 		} catch (SQLException e) {
-			// TODO: remove me
-			// e.printStackTrace();
 			App.log(Level.WARNING, e, "Modele.dupliquerModule(int,String,String,boolean,int,int)");
 		}
 		this.hmModules.put(m.getId(), m);
@@ -304,8 +296,6 @@ public class Modele {
 				this.ctrl.getVue().afficherNotification("Module modifié", "Module modifié avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible de modifier le module", ControleurIHM.Notification.ERREUR);
-			// TODO: remove me
-			// e.printStackTrace();
 			App.log(Level.WARNING, e, "Modele.updateModule(Module)");
 		}
 	}
@@ -350,8 +340,6 @@ public class Modele {
 			this.db.ajouterSemestre(s);
 			this.hmSemestres.put(s.getId(), s);
 		} catch (SQLException e) {
-			// TODO: remove me
-			// e.printStackTrace();
 			App.log(Level.WARNING, e, "Modele.dupliquerSemestre(List<Module>,int,int,int,int,String)");
 		}
 		for (Module m : lstModuleParSemestre)
@@ -365,8 +353,6 @@ public class Modele {
 			if (!this.bEnDuplication)
 				this.ctrl.getVue().afficherNotification("Semestre modifié", "Semestre modifié avec succès", ControleurIHM.Notification.SUCCES);
 		} catch (SQLException e) {
-			// TODO: remove me
-			// e.printStackTrace();
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible de modifier le semestre", ControleurIHM.Notification.ERREUR);
 			App.log(Level.WARNING, e, "Modele.updateSemestre(Semestre)");
 		}

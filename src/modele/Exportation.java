@@ -433,10 +433,10 @@ public class Exportation {
 	public URL exportModuleHTML(int idModule, String nomFichier, String chemin) {
 		Module mod = this.model.getHmModules().get(idModule);
 		return switch (mod.getIdTypeModule()) {
-			case 1  -> exportPPPHTML(mod, nomFichier, chemin);
-			case 2  -> exportSAEHTML(mod, nomFichier, chemin);
-			case 3  -> exportNormalHTML(mod, nomFichier, chemin);
-			case 4  -> exportStageHTML(mod, nomFichier, chemin);
+			case 1  -> this.exportPPPHTML(mod, nomFichier, chemin);
+			case 2  -> this.exportSAEHTML(mod, nomFichier, chemin);
+			case 3  -> this.exportNormalHTML(mod, nomFichier, chemin);
+			case 4  -> this.exportStageHTML(mod, nomFichier, chemin);
 			default -> null;
 		};
 	}

@@ -453,6 +453,8 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 				TableColumn<RecapIntervenantIHM, String> tbcl = new TableColumn<>(colonne);
 				tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
 				tbcl.setReorderable(false);
+				tbcl.setResizable(false);
+				tbcl.setSortable(false);
 
 				if (colonne.equals("Module"))
 					tbcl.prefWidthProperty().bind(tbVRecap.widthProperty().multiply(0.43));
