@@ -596,7 +596,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 				double hMin = Double.parseDouble(tfHMinText);
 				double hMax = Double.parseDouble(tfHMaxText);
 				int annee = this.ctrl.getModele().getIdAnnee();
-				
+				((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
 				if (this.modifIntervenant != null) {
 					this.modifIntervenant.setPrenom(prenom);
 					this.modifIntervenant.setNom(nom);
@@ -610,7 +610,6 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 							this.choiceBoxCategorie.getValue().getId());
 				}
 
-				((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
 				this.majTableIntervenant();
 			}
 

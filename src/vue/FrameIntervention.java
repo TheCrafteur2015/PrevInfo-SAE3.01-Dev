@@ -329,8 +329,12 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 				tbV.getColumns().add(tbcl);
 				if (colonne.equals("commentaire"))
 					tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.2));
-				else
-					tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply((0.8)/(colonnes.length-1)-0.0025));
+				else {
+					if (this.nomTypeModule.equals("normal") || this.nomTypeModule.equals("PPP"))
+						tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply((0.8)/(colonnes.length-1)-0.0025));
+					else tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply((0.8)/(colonnes.length-3)-0.0025));
+				}
+					
 			}
 		}
 		

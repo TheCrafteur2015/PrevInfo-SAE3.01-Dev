@@ -235,6 +235,7 @@ public class Modele {
 			if (!this.bEnDuplication)
 				this.ctrl.getVue().afficherNotification("Intervenant modifié", "Intervenant modifié avec succès",
 						ControleurIHM.Notification.SUCCES);
+				
 		} catch (SQLException e) {
 			this.ctrl.getVue().afficherNotification("Erreur", "Impossible de modifier l'intervenant",
 					ControleurIHM.Notification.ERREUR);
