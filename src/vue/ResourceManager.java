@@ -23,6 +23,7 @@ public final class ResourceManager {
 	
 	public static final String APP_NAME = "PrevInfo";
 	public static final String PWD = new File("").getAbsolutePath();
+	public static final String SEPARATOR = System.getProperty("file.separator");
 	
 	// Fichiers FXML
 	public static final URL ACCUEIL = ResourceManager.class.getResource("Accueil.fxml");
@@ -165,7 +166,6 @@ public final class ResourceManager {
 		try (PrintWriter pw = new PrintWriter(new File(path))) {
 			pw.write(content);
 		} catch (Exception e) {
-			System.err.println("saveFile(String,String)");
 			App.log(Level.SEVERE, e);
 		}
 	}
@@ -186,7 +186,6 @@ public final class ResourceManager {
 			// System.out.println("-".repeat(50));
 			//ResourceManager.saveFile(new File(url.toURI()).toString());
 		} catch (Exception e) {
-			System.err.println("updateFile(URL)");
 			App.log(Level.WARNING, e);
 		}
 	}

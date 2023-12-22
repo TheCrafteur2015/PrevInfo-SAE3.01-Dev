@@ -7,10 +7,10 @@
 	-fx-font-size: 16px;
 }
 
-
 .label{
 	-fx-font-family: 'Poppins';
 }
+
 .selected-btn{
 	-fx-background-color: #758AFF;
 }
@@ -26,6 +26,7 @@
 	-fx-font-family: 'Poppins', sans-serif;
 	-fx-font-size: 20px;
 }
+
 .text-field,
 .choice-box {
 	-fx-background-radius: 10;
@@ -62,22 +63,22 @@
 }
 
 .error-label{
-    -fx-text-fill : red; 
-    -fx-font-weight: bold;
+	-fx-text-fill : red; 
+	-fx-font-weight: bold;
 }
+
 .choice .left-container .radio { -fx-background-color: transparent; }
-.choice  .context-menu {
-    -fx-pref-width: 124; /* Your width for the context menu background shown */
-   -fx-background-insets: 0, 0 0 0 0, 0 0 0 0, 0 0 0 0;
+.choice .context-menu {
+	-fx-pref-width: 124; /* Your width for the context menu background shown */
+	-fx-background-insets: 0, 0 0 0 0, 0 0 0 0, 0 0 0 0;
 }
-.choice-exporter .context-menu
-{
 
-    -fx-pref-width: 500; /* Your width for the context menu background shown */
-    -fx-pref-height: 200; /* Your width for the context menu background shown */
-   -fx-background-insets: 0, 0 0 0 0, 0 0 0 0, 0 0 0 0;
-
+.choice-exporter .context-menu {
+	-fx-pref-width: 500; /* Your width for the context menu background shown */
+	-fx-pref-height: 200; /* Your height for the context menu background shown */
+	-fx-background-insets: 0, 0 0 0 0, 0 0 0 0, 0 0 0 0;
 }
+
 .radio-button:selected .radio {
 	-fx-shape: "M 0 5 Q 0 0 5 0 L 15 0 Q 20 0 20 5 L 20 15 Q 20 20 15 20 L 5 20 Q 0 20 0 15 Z"; 
 	-fx-background-color: #4D61CC;
@@ -117,6 +118,7 @@
 	-fx-padding: 2 0 2 10px;
 	-fx-alignment: CENTER-LEFT;
 }
+
 .table-view:row-selection .table-row-cell:filled:hover > .table-cell {
 	-fx-background-color: #758AFF;
 	-fx-background-insets: 0, 0 0 1 0;
@@ -202,8 +204,6 @@
 }
 
 .erreur-row  > .table-cell {
-    -fx-background-color: #FFCCCC;
+	-fx-background-color: #FFCCCC;
 	-fx-border-color: #FFCCCC;
-
 }
-

@@ -23,7 +23,8 @@ public class LireFichier {
 	private void lireFichier() {
 		InputStream ips = this.getClass().getResourceAsStream(this.nomFichier);
 		String ligne = null;
-		try (BufferedReader file = new BufferedReader(new InputStreamReader(ips))) { // ouverture de la ressource vue comme flux de donnÃ©es
+		// ouverture de la ressource vue comme flux de données
+		try (BufferedReader file = new BufferedReader(new InputStreamReader(ips))) {
 			// traitement
 			while ((ligne = file.readLine()) != null)
 				this.traiterLigne(ligne);

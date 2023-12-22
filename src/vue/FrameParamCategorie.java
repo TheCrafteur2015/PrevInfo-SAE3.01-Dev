@@ -29,6 +29,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import modele.Categorie;
 import modele.Modele;
+import vue.ControleurIHM.Notification;
 
 public class FrameParamCategorie implements ChangeListener<String>, EventHandler<ActionEvent> {
 	private Controleur ctrl;
@@ -87,8 +88,8 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 				tbcl.getStyleClass().add("center");
 				tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
 				tbcl.setReorderable(false);
-				if (colonne.equals("Nom")) tbcl.prefWidthProperty().bind(tableView.widthProperty().multiply(0.8));
-				else tbcl.prefWidthProperty().bind(tableView.widthProperty().multiply(0.185));
+				if (colonne.equals("Nom")) tbcl.prefWidthProperty().bind(tableView.widthProperty().multiply(0.775));
+				else tbcl.prefWidthProperty().bind(tableView.widthProperty().multiply(0.175));
 				tableView.getColumns().add(tbcl);
 			}
 		}
@@ -228,10 +229,16 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 		}
 		if (event.getSource() == this.btnAjouter) {
 			if (this.btnAjouter.getText().equals("Ajouter")) {
-				this.ctrl.getModele().ajouterCategorie(this.nomCategorie.getText(),
+				if (Double.parseDouble(this.tfHeureMax.getText()) < Double.parseDouble(this.tfHeureMin.getText())) {
+					this.ctrl.getVue().afficherNotification("Erreur", "l'heure minimale est supérieur à l'heure maximale", Notification.ERREUR);
+				}
+				else {
+					this.ctrl.getModele().ajouterCategorie(this.nomCategorie.getText(),
 						Double.parseDouble(this.tfHeureMin.getText()), Double.parseDouble(this.tfHeureMax.getText()),
 						Double.parseDouble(this.tfRatioTp.getText()));
-						this.maj();
+					this.maj();
+				}
+				
 				
 			}
 			if (this.btnAjouter.getText().equals("Modifier")) {

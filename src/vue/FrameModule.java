@@ -173,7 +173,7 @@ public class FrameModule implements EventHandler<Event> {
 		
 		this.tbV = new TableView<>();
 		
-		String[] colonnes = { "id", "info", "validation", "Code", "Nom", "CM", "TD", "TP", "HP", "REH", "HTut", "SAE", "supprimer" };
+		String[] colonnes = { "id", "info", "validation", "Code", "Nom", "CM", "TD", "TP", "HP", "REH", "Tut", "SAE", "supprimer" };
 		
 		if (tbV.getColumns().size() < 11) {
 			for (String colonne : colonnes) {
@@ -224,7 +224,6 @@ public class FrameModule implements EventHandler<Event> {
 									
 									this.ctrl.getModele().updateHeureCours(hc);
 								}
-								System.out.println(oldValue + " " + newValue);
 								if (oldValue != newValue) this.ctrl.getModele().updateModule(m);
 								else this.ctrl.getVue().afficherNotification("Erreur de saisie", "Cette valeur n'est pas compatible", Notification.ERREUR);
 							}
@@ -258,10 +257,10 @@ public class FrameModule implements EventHandler<Event> {
 		for (Module m : lstModule) {
 			this.frameIntervention = new FrameIntervention(this.ctrl, this.centerPaneAccueil, this.hmModule.get(m.getId()), false);
 			switch (this.hmTypeModule.get(m.getIdTypeModule()).getNom()) {
-				case "PPP" -> this.ajouterModulePPP(m);
-				case "SAE" -> this.ajouterModuleSAE(m);
+				case "PPP"    -> this.ajouterModulePPP(m);
+				case "SAE"    -> this.ajouterModuleSAE(m);
 				case "normal" -> this.ajouterModuleNormale(m);
-				case "stage" -> this.ajouterModuleStage(m);
+				case "stage"  -> this.ajouterModuleStage(m);
 			}
 		}
 		
@@ -484,6 +483,7 @@ public class FrameModule implements EventHandler<Event> {
 	
 	@Override
 	public void handle(Event action) {
+	
 		if (action.getSource() instanceof Button btn) {
 			if (btn == this.btnAjouter) {
 				if (this.choiceBoxTypeModule.getValue() != null) {

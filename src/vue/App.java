@@ -17,9 +17,13 @@ public class App extends Application {
 	
 	private static final Logger LOGGER = Logger.getLogger(ResourceManager.APP_NAME);
 	
+	// Initialisation et configuration du Logger
 	static {
 		try {
-			FileHandler fh = new FileHandler(ResourceManager.PWD + "/output.log");
+			String path = ResourceManager.PWD;
+			if (path.endsWith(ResourceManager.SEPARATOR + "bin"))
+				path = path.substring(0, path.lastIndexOf(ResourceManager.SEPARATOR + "bin"));
+			FileHandler fh = new FileHandler(path + ResourceManager.SEPARATOR + "output.log");
 			fh.setFormatter(new SimpleFormatter());
 			App.LOGGER.addHandler(fh);
 			App.LOGGER.setUseParentHandlers(true);
@@ -29,9 +33,15 @@ public class App extends Application {
 		}
 		Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
 			App.log(Level.SEVERE, e);
-			// for (StackTraceElement elt : e.getStackTrace())
-			// 	System.out.println(elt.getModuleName() + " - " + elt.getClassName());
 		});
+		App.log(Level.INFO, "Default Uncaught Exception Handler set!");
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				App.log(Level.FINER, "exit");
+			}
+		});
+		App.log(Level.INFO, "Shutdown Hook set!");
 	}
 	
 	public static void log(Level level, String message) {

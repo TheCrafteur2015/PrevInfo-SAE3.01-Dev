@@ -350,7 +350,10 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		Double nbHeureHP = 0.0;
 		for (InterventionIHM interventionIHM : olInterventionIHMs) {
 			// Compter nbGroupes
-			int nbGroupes = Integer.parseInt(interventionIHM.getGroupes());;
+			int nbGroupes = 0;
+			try {
+				nbGroupes = Integer.parseInt(interventionIHM.getGroupes().isEmpty() ? "0" : interventionIHM.getGroupes());
+			} catch (Exception e) {}
 			double heuresInter = Double.parseDouble(interventionIHM.getHeures());
 			switch (interventionIHM.getType()) {
 				case "CM"  -> {
@@ -363,7 +366,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 				}
 				case "TP"  -> {
 					nbGroupeTP += nbGroupes;
-					nbGroupeTP += heuresInter;
+					nbHeureTP += heuresInter;
 				}
 				case "Tut" -> nbHeureTut += heuresInter;
 				case "SAE" -> nbHeureSAE += heuresInter;
@@ -373,25 +376,46 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 			
 		}
 		
+		List<HeureCours> lstHeureCours = this.ctrl.getModele().getHeureCoursByModule(module.getId(),
+				module.getIdAnnee());
+		
+		HeureCours heureCoursCM = null;
+		HeureCours heureCoursTD = null;
+		HeureCours heureCoursTP = null;
+		
+		for (HeureCours heureCours : lstHeureCours) {
+			if (heureCours.getIdTypeCours() == 3/*CM*/) {
+				heureCoursCM = heureCours;
+			}
+			
+			if (heureCours.getIdTypeCours() == 2/*TP*/) {
+				heureCoursTP = heureCours;
+			}
+			
+			if (heureCours.getIdTypeCours() == 1/*TD*/) {
+				heureCoursTD = heureCours;
+			}
+		}
+		
 		// Afficher message d'erreur groupes
 		if (!this.nomTypeModule.equals("SAE") && !this.nomTypeModule.equals("stage") ) {
 			if (nbGroupeCM != this.semestre.getNbGCM() || nbGroupeTD != this.semestre.getNbGTD()
 				|| nbGroupeTP != this.semestre.getNbGTP()) {
 				this.lblErreurGrp.setText("ERREUR GROUPE :");
 				
-				if (nbGroupeCM != this.semestre.getNbGCM())
+				if (nbGroupeCM != this.semestre.getNbGCM() && heureCoursCM.getHeure() != 0)
 					this.lblErreurGrp.setText(this.lblErreurGrp.getText() + " CM ");
 				
-				if (nbGroupeTD != this.semestre.getNbGTD())
+				if (nbGroupeTD != this.semestre.getNbGTD() && heureCoursTD.getHeure() != 0)
 					this.lblErreurGrp.setText(this.lblErreurGrp.getText() + " TD ");
 				
-				if (nbGroupeTP != this.semestre.getNbGTP())
+				if (nbGroupeTP != this.semestre.getNbGTP() && heureCoursTP.getHeure() != 0)
 					this.lblErreurGrp.setText(this.lblErreurGrp.getText() + " TP ");
+					
+				if (this.lblErreurGrp.getText().equals("ERREUR GROUPE :")) this.lblErreurGrp.setText("");
 			}
 		}
 		
-		List<HeureCours> lstHeureCours = this.ctrl.getModele().getHeureCoursByModule(module.getId(),
-				module.getIdAnnee());
 		// Afficher message d'erreur heures
 		for (HeureCours heureCours : lstHeureCours) {
 			TypeCours tc = this.hmTypeCours.get(heureCours.getIdTypeCours());
@@ -592,17 +616,15 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 			try {
 				nbSemaines = Integer.parseInt(this.tfNbSemaines.getText());
 				nbGroupes = Integer.parseInt(this.tfNbGroupes.getText());
-			} catch (Exception e) {
-				App.log(Level.WARNING, e);
-			}
+			} catch (Exception e) {}
 			
 			HeureCours hc = null;
 			TypeCours tc = null;
 			
-			for (TypeCours t : this.ctrl.getModele().getHmTypeCours().values()) {
+			for (TypeCours t : this.ctrl.getModele().getHmTypeCours().values()) 
 				if (t.getNom().equals(selectedRadioButton.getText()))
 					tc = t;
-			}
+			
 			if (tc != null) {
 				for (HeureCours h : this.ctrl.getModele().getHeureCoursByModule(this.module.getId(),
 						this.module.getIdAnnee())) {

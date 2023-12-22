@@ -254,7 +254,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 	
 	@FXML
 	void parametrerCategories(ActionEvent event) {
-		// FIXME: c'est normal ça ?
+		
 	}
 	
 	@FXML

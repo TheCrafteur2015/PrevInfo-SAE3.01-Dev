@@ -13,13 +13,13 @@ public class LigneModuleIHM {
 	private String td;
 	private String tp;
 	private String reh;
-	private String htut;
+	private String tut;
 	private String sae;
 	private String hp;
 	private Button supprimer;
 
 
-	public LigneModuleIHM(Integer id, Button info, String validation, String code, String nom, String cm, String td, String tp, String reh, String htut,
+	public LigneModuleIHM(Integer id, Button info, String validation, String code, String nom, String cm, String td, String tp, String reh, String tut,
 			String sae, String hp, Button supprimer) {
 		this.id = id;
 		this.info = info;
@@ -30,7 +30,7 @@ public class LigneModuleIHM {
 		this.td = td;
 		this.tp = tp;
 		this.reh = reh;
-		this.htut = htut;
+		this.tut = tut;
 		this.sae = sae;
 		this.hp = hp;
 		this.supprimer = supprimer;
@@ -109,13 +109,13 @@ public class LigneModuleIHM {
 	}
 
 
-	public String getHtut() {
-		return this.htut;
+	public String getTut() {
+		return this.tut;
 	}
 
 
-	public void setHtut(String htut) {
-		this.htut = htut;
+	public void setTut(String tut) {
+		this.tut = tut;
 	}
 
 
