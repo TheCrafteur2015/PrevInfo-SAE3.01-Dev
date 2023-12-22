@@ -57,7 +57,6 @@ public class Modele {
 			this.hmTypeModule = this.db.getTypeModule();
 			this.hmHeuresCours = this.db.getHeureCours(this.idAnnee);
 		} catch (SQLException e) {
-			// e.printStackTrace();
 			App.log(Level.SEVERE, e);
 		}
 		

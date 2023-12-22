@@ -201,7 +201,9 @@
 	-fx-font-weight: bold;
 }
 
-.erreur-row {
+.erreur-row  > .table-cell {
     -fx-background-color: #FFCCCC;
 	-fx-border-color: #FFCCCC;
+
 }
+

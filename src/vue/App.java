@@ -29,8 +29,8 @@ public class App extends Application {
 		}
 		Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
 			App.log(Level.SEVERE, e);
-			for (StackTraceElement elt : e.getStackTrace())
-				System.out.println(elt.getModuleName() + " - " + elt.getClassName());
+			// for (StackTraceElement elt : e.getStackTrace())
+			// 	System.out.println(elt.getModuleName() + " - " + elt.getClassName());
 		});
 	}
 	

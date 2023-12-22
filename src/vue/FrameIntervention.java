@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import controleur.Controleur;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -33,6 +35,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
 import modele.Categorie;
 import modele.HeureCours;
 import modele.Intervenant;
@@ -347,94 +350,79 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		Double nbHeureHP = 0.0;
 		for (InterventionIHM interventionIHM : olInterventionIHMs) {
 			// Compter nbGroupes
-			if (interventionIHM.getType().equals("CM")) {
-				nbGroupeCM += Integer.parseInt(interventionIHM.getGroupes());
-				nbHeureCM += Double.parseDouble(interventionIHM.getHeures());
-			}
-			if (interventionIHM.getType().equals("TD")) {
-				nbGroupeTD += Integer.parseInt(interventionIHM.getGroupes());
-				nbHeureTD += Double.parseDouble(interventionIHM.getHeures());
-			}
-			if (interventionIHM.getType().equals("TP")) {
-				nbGroupeTP += Integer.parseInt(interventionIHM.getGroupes());
-				nbHeureTP += Double.parseDouble(interventionIHM.getHeures());
-			}
-			
+			int nbGroupes = Integer.parseInt(interventionIHM.getGroupes());;
 			double heuresInter = Double.parseDouble(interventionIHM.getHeures());
 			switch (interventionIHM.getType()) {
+				case "CM"  -> {
+					nbGroupeCM += nbGroupes;
+					nbHeureCM += heuresInter;
+				}
+				case "TD"  -> {
+					nbGroupeTD += nbGroupes;
+					nbHeureTD += heuresInter;
+				}
+				case "TP"  -> {
+					nbGroupeTP += nbGroupes;
+					nbGroupeTP += heuresInter;
+				}
 				case "Tut" -> nbHeureTut += heuresInter;
 				case "SAE" -> nbHeureSAE += heuresInter;
 				case "REH" -> nbHeureREH += heuresInter;
 				case "HP"  -> nbHeureHP += heuresInter;
 			}
 			
-			if (interventionIHM.getType().equals("Tut"))
-				nbHeureTut += Double.parseDouble(interventionIHM.getHeures());
-			if (interventionIHM.getType().equals("SAE"))
-				nbHeureSAE += Double.parseDouble(interventionIHM.getHeures());
-			if (interventionIHM.getType().equals("REH"))
-				nbHeureREH += Double.parseDouble(interventionIHM.getHeures());
-			if (interventionIHM.getType().equals("HP"))
-				nbHeureHP += Double.parseDouble(interventionIHM.getHeures());
 		}
 		
 		// Afficher message d'erreur groupes
 		if (!this.nomTypeModule.equals("SAE") && !this.nomTypeModule.equals("stage") ) {
 			if (nbGroupeCM != this.semestre.getNbGCM() || nbGroupeTD != this.semestre.getNbGTD()
 				|| nbGroupeTP != this.semestre.getNbGTP()) {
-			this.lblErreurGrp.setText("ERREUR GROUPE :");
-
-			if (nbGroupeCM != this.semestre.getNbGCM())
-				this.lblErreurGrp.setText(this.lblErreurGrp.getText() + " CM ");
-
-			if (nbGroupeTD != this.semestre.getNbGTD())
-				this.lblErreurGrp.setText(this.lblErreurGrp.getText() + " TD ");
-
-			if (nbGroupeTP != this.semestre.getNbGTP())
-				this.lblErreurGrp.setText(this.lblErreurGrp.getText() + " TP ");
+				this.lblErreurGrp.setText("ERREUR GROUPE :");
+				
+				if (nbGroupeCM != this.semestre.getNbGCM())
+					this.lblErreurGrp.setText(this.lblErreurGrp.getText() + " CM ");
+				
+				if (nbGroupeTD != this.semestre.getNbGTD())
+					this.lblErreurGrp.setText(this.lblErreurGrp.getText() + " TD ");
+				
+				if (nbGroupeTP != this.semestre.getNbGTP())
+					this.lblErreurGrp.setText(this.lblErreurGrp.getText() + " TP ");
 			}
 		}
 		
-
 		List<HeureCours> lstHeureCours = this.ctrl.getModele().getHeureCoursByModule(module.getId(),
 				module.getIdAnnee());
 		// Afficher message d'erreur heures
 		for (HeureCours heureCours : lstHeureCours) {
 			TypeCours tc = this.hmTypeCours.get(heureCours.getIdTypeCours());
-			if (tc.getNom().equals("CM") && nbHeureCM/this.semestre.getNbGCM() != heureCours.getHeure()) 
+			if (tc.getNom().equals("CM") && nbHeureCM / this.semestre.getNbGCM() != heureCours.getHeure()) 
 				this.lblErreurPN.setText(this.lblErreurPN.getText() + " CM ");
-
-			else if (tc.getNom().equals("TD") && nbHeureTD/this.semestre.getNbGTD() != heureCours.getHeure())
+			else if (tc.getNom().equals("TD") && nbHeureTD / this.semestre.getNbGTD() != heureCours.getHeure())
 				this.lblErreurPN.setText(this.lblErreurPN.getText() + " TD ");
-
-			else if (tc.getNom().equals("TP") && nbHeureTP/this.semestre.getNbGTP() != heureCours.getHeure())
+			else if (tc.getNom().equals("TP") && nbHeureTP / this.semestre.getNbGTP() != heureCours.getHeure())
 				this.lblErreurPN.setText(this.lblErreurPN.getText() + " TP ");
-			
 			else if (tc.getNom().equals("Tut") && nbHeureTut != heureCours.getHeure())
 				this.lblErreurPN.setText(this.lblErreurPN.getText() + " Tut ");
-			
 			else if (tc.getNom().equals("SAE") && nbHeureSAE != heureCours.getHeure())
 				this.lblErreurPN.setText(this.lblErreurPN.getText() + " SAE ");
-			
 			else if (tc.getNom().equals("REH") && nbHeureREH != heureCours.getHeure())
 				this.lblErreurPN.setText(this.lblErreurPN.getText() + " REH ");
-			
 			else if (tc.getNom().equals("HP") && nbHeureHP/this.semestre.getNbGTD() != heureCours.getHeure())
 				this.lblErreurPN.setText(this.lblErreurPN.getText() + " HP ");
 		}
-
+		
 		borderLayoutErrTBV.setCenter(this.tbV);
 		borderLayoutErrTBV.setPadding(new Insets(0, 20, 20, 0));
-
+		
 		// Mettre le vbox à gauche
 		borderRecapEntree.setCenter(stackPane);
-
+		
 		// Créer une tableView Recap
 		TableView<RecapInterventionIHM> tbVRecap = new TableView<>();
 		tbVRecap.setEditable(false);
 		tbVRecap.setPrefHeight(103);
 		tbVRecap.setPrefWidth(150);
-
+		
 		String[] col = new String[lstHeureCours.size() + 2];
 		col[0] = "info";
 		Map<Integer, List<String>> hmTcHc = new HashMap<>();
@@ -463,10 +451,9 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 					sommeAffecte += Double.parseDouble(i.getReelles());
 			}
 			hmTcHc.get(idTc).add(sommeAffecte + "");
-
 		}
 		col[cpt] = "somme";
-
+		
 		if (tbVRecap.getColumns().size() < col.length) {
 			for (String colonne : col) {
 				TableColumn<RecapInterventionIHM, String> tbcl = new TableColumn<>(colonne);
@@ -477,7 +464,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 				tbVRecap.getColumns().add(tbcl);
 			}
 		}
-
+		
 		ObservableList<RecapInterventionIHM> olRecapInterventionIHMs = FXCollections.observableArrayList();
 		RecapInterventionIHM recap1 = new RecapInterventionIHM();
 		recap1.setInfo("Total par étudiant");
@@ -529,32 +516,30 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 					recap2.setHp(lStrings.get(1));
 					recap3.setHp(lStrings.get(2));
 				}
-
 			}
 			totalPn += Double.parseDouble(lStrings.get(0));
 			this.totalPromo += Double.parseDouble(lStrings.get(1));
 			this.totalAffecte += Double.parseDouble(lStrings.get(2));
-
+			
 			recap1.setSomme(totalPn+"");
 			recap2.setSomme(this.totalPromo+"");
 			recap3.setSomme(this.totalAffecte+"");
-
-			
 		}
-
+		
 		olRecapInterventionIHMs.add(recap1);
 		olRecapInterventionIHMs.add(recap2);
 		olRecapInterventionIHMs.add(recap3);
-
+		
 		tbVRecap.setItems(olRecapInterventionIHMs);
-
+		
 		borderRecapEntree.setTop(tbVRecap);
 		borderRecapEntree.setPadding(new Insets(40, 10, 0, 10));
-
+		
 		borderPaneCentral.setLeft(borderRecapEntree);
 		
-		if (this.lblErreurPN.getText().equals("PROGRAMME NATIONAL : ")) this.lblErreurPN.setText("");
-
+		if (this.lblErreurPN.getText().equals("PROGRAMME NATIONAL : "))
+			this.lblErreurPN.setText("");
+		
 		borderPaneCentral.setCenter(borderLayoutErrTBV);
 		StackPane popupLayout = new StackPane();
 		popupLayout.getChildren().add(borderPaneCentral);
@@ -562,10 +547,9 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		Scene popupScene = new Scene(popupLayout, 1300, 650);
 		this.popupStage.setScene(popupScene);
 	}
-
+	
 	@Override
 	public void handle(ActionEvent action) {
-		
 		if (action.getSource() == this.rbValider) {
 			this.module.setValid(this.rbValider.isSelected());
 			this.ctrl.getModele().updateModule(this.module);
@@ -592,8 +576,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 			}
 			
 			if ((this.nomTypeModule.equals("normal") || this.nomTypeModule.equals("PPP")) && !selectedRadioButton.getText().equals("HP") && this.tfNbSemaines.getText().isEmpty()) {
-				this.ctrl.getVue().afficherNotification("Ajouter une intervention",
-						"Il faut rentrer un nombre de semaines", ControleurIHM.Notification.ERREUR);
+				this.ctrl.getVue().afficherNotification("Ajouter une intervention", "Il faut rentrer un nombre de semaines", ControleurIHM.Notification.ERREUR);
 				return;
 			}
 			
@@ -603,18 +586,19 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 					idTypeCours = typeCours.getId();
 				}
 			}
-
+			
 			int nbSemaines = 0;
 			int nbGroupes = 0;
 			try {
 				nbSemaines = Integer.parseInt(this.tfNbSemaines.getText());
 				nbGroupes = Integer.parseInt(this.tfNbGroupes.getText());
 			} catch (Exception e) {
+				App.log(Level.WARNING, e);
 			}
-
+			
 			HeureCours hc = null;
 			TypeCours tc = null;
-
+			
 			for (TypeCours t : this.ctrl.getModele().getHmTypeCours().values()) {
 				if (t.getNom().equals(selectedRadioButton.getText()))
 					tc = t;
@@ -626,28 +610,28 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 						hc = h;
 				}
 			}
-
+			
 			if (!selectedRadioButton.getText().equals("HP") && hc != null && nbSemaines > hc.getNbSemaine()) {
 				this.ctrl.getVue().afficherNotification("Ajouter une intervention",
 						"Le nombre de semaines est supérieur au nombre de semaines du module (" + hc.getNbSemaine() + ")",
 						ControleurIHM.Notification.ERREUR);
 				return;
 			}
-
+			
 			int nbGroupeTc = 0;
 			switch (selectedRadioButton.getText()) {
 				case "TP" -> nbGroupeTc = this.semestre.getNbGTP();
 				case "TD" -> nbGroupeTc = this.semestre.getNbGTD();
 				case "CM" -> nbGroupeTc = this.semestre.getNbGCM();
 			}
-
+			
 			if (!selectedRadioButton.getText().equals("HP") && nbGroupes > nbGroupeTc) {
 				this.ctrl.getVue().afficherNotification("Ajouter une intervention",
 						"Le nombre de groupe est supérieur au nombre de groupe du module (" + nbGroupeTc + ")",
 						ControleurIHM.Notification.ERREUR);
 				return;
 			}
-
+			
 			if (this.nomTypeModule.equals("stage") || this.nomTypeModule.equals("SAE") || selectedRadioButton.getText().equals("HP")) {
 				if (this.tfNbHeures.getText().isEmpty()) {
 					this.ctrl.getVue().afficherNotification("Ajouter une intervention",
@@ -661,27 +645,23 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 						nbSemaines, this.tfCommentaire.getText(), Integer.parseInt(this.tfNbGroupes.getText()));
 			}
 			
-			
-			
 			this.maj();
 		}
 		
-		
 		if (this.nomTypeModule.equals("SAE") || this.nomTypeModule.equals("stage") || ( selectedRadioButton != null && selectedRadioButton.getText().equals("HP"))) {
 			String txtH = "";
-			if (this.tfNbHeures != null) txtH = this.tfNbHeures.getText();
+			if (this.tfNbHeures != null)
+				txtH = this.tfNbHeures.getText();
 			this.gridEntree.getChildren().clear();
 			this.tfNbHeures = new TextField();
 			this.tfNbHeures.setPrefWidth(5 * 7);
 			this.tfNbHeures.textProperty().addListener(this);
 			this.tfNbHeures.setText(txtH);
-
+			
 			this.gridEntree.add(new Label("Nombre d'heures : "), 0, 0);
 			this.gridEntree.add(this.tfNbHeures, 1, 0);
 			return;
-		}
-
-		else if ( selectedRadioButton != null && !selectedRadioButton.getText().equals("HP")) {
+		} else if ( selectedRadioButton != null && !selectedRadioButton.getText().equals("HP")) {
 			this.gridEntree.getChildren().clear();
 			gridEntree.add(new Label("Nombre de semaines : "), 0, 0);
 			gridEntree.add(this.tfNbSemaines, 1, 0);
@@ -697,7 +677,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		}
 		this.maj();
 	}
-
+	
 	@Override
 	public void changed(ObservableValue<? extends String> observable, String oldString, String newString) {
 		if (this.nomTypeModule.equals("PPP") || this.nomTypeModule.equals("normal")) {
@@ -709,14 +689,12 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		if (!this.tfNbHeures.getText().matches(Modele.REGEX_INT))
 			this.tfNbHeures.setText(oldString);
 	}
-
+	
 	public double getTotalAffecte() {
-		return totalAffecte;
+		return this.totalAffecte;
 	}
-
+	
 	public double getTotalPromo() {
-		return totalPromo;
+		return this.totalPromo;
 	}
-	
-	
 }

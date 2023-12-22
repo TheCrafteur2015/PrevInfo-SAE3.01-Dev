@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Scanner;
+import java.util.logging.Level;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
@@ -58,7 +59,7 @@ public final class ResourceManager {
 					ResourceManager.updateFile(url);
 				}
 			} catch (IllegalArgumentException | IllegalAccessException e) {
-				e.printStackTrace();
+				App.log(Level.SEVERE, e);
 			}
 		}
 		try {
@@ -80,14 +81,14 @@ public final class ResourceManager {
 			// sc.close();
 			// System.out.println(file);
 		} catch (Exception e) {
-			e.printStackTrace();
+			App.log(Level.WARNING, e);
 		}
 		
 		File folder = null;
 		try {
 			folder = Paths.get(ResourceManager.class.getResource("").toURI()).toFile();
 		} catch (Exception e) {
-		
+			App.log(Level.WARNING, e);
 		}
 		for (File file : folder.listFiles()) {
 			if (!file.isFile())
@@ -100,7 +101,7 @@ public final class ResourceManager {
 					while (sc.hasNextLine())
 						data += sc.nextLine() + "\n";
 				} catch (IOException e) {
-					e.printStackTrace();
+					App.log(Level.WARNING, e);
 				} finally {
 					ResourceManager.DATA.put(name.substring(0, name.length() - suffix.length()).toLowerCase(), data);
 				}
@@ -137,6 +138,7 @@ public final class ResourceManager {
 			return content;
 		} catch (Exception e) {
 			System.err.println("Error loading file: " + e.getMessage());
+			App.log(Level.WARNING, e);
 			return null;
 		}
 	}
@@ -153,6 +155,7 @@ public final class ResourceManager {
 			}
 			return content;
 		} catch (Exception e) {
+			App.log(Level.WARNING, e);
 			return null;
 		}
 	}
@@ -163,10 +166,11 @@ public final class ResourceManager {
 			pw.write(content);
 		} catch (Exception e) {
 			System.err.println("saveFile(String,String)");
-			e.printStackTrace();
+			App.log(Level.SEVERE, e);
 		}
 	}
 	
+	// FIXME
 	private static void updateFile(URL url) {
 		try {
 			if (url == null)
@@ -183,7 +187,7 @@ public final class ResourceManager {
 			//ResourceManager.saveFile(new File(url.toURI()).toString());
 		} catch (Exception e) {
 			System.err.println("updateFile(URL)");
-			e.printStackTrace();
+			App.log(Level.WARNING, e);
 		}
 	}
 	

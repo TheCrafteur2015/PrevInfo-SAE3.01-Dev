@@ -388,7 +388,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		popupStage.showAndWait();
 	}
 
-	public void popupAfficheModule(int idIntervenant) {
+	public void popupAfficheModule(int idIntervenant, String erreur) {
 
 		Intervenant intervenant = this.ctrl.getModele().getHmIntervenants().get(idIntervenant);
 		Categorie categorie = this.ctrl.getModele().getHmCategories().get(intervenant.getIdCategorie());
@@ -409,6 +409,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		gridPaneInfoInter.add(new Label("hMin : " + intervenant.gethMin()), 0, 1);
 		gridPaneInfoInter.add(new Label("hMax : " + intervenant.gethMax()), 1, 1);
 		gridPaneInfoInter.add(new Label("RatioTp : " + String.format("%.2f", categorie.getRatioTp())), 2, 1);
+		gridPaneInfoInter.add(new Label(erreur), 1, 2);
 		gridPaneInfoInter.setHgap(20);
 		gridPaneInfoInter.setVgap(20);
 
@@ -539,7 +540,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		gridPaneTotal.add(tbVRecap, 0, 1);
 
 		VBox vbox = new VBox(5);
-		vbox.setMaxSize(800, tbVRecap.getPrefHeight() + 80);
+		vbox.setMaxSize(800, tbVRecap.getPrefHeight() + 130);
 		vbox.setPadding(new Insets(10));
 		vbox.setAlignment(Pos.CENTER);
 		vbox.setSpacing(30);
@@ -549,7 +550,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		popupLayout.setAlignment(Pos.CENTER);
 		popupLayout.getChildren().add(vbox);
 		popupLayout.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
-		Scene popupScene = new Scene(popupLayout, 820, tbVRecap.getPrefHeight() + 100);
+		Scene popupScene = new Scene(popupLayout, 820, tbVRecap.getPrefHeight() + 150);
 		popupStage.setScene(popupScene);
 
 		popupStage.showAndWait();
@@ -615,7 +616,8 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 			if (!(button.getId() == null)) {
 				String[] textButton = button.getId().split("-");
 				if (textButton[0].equals("Info")) {
-					this.popupAfficheModule(Integer.parseInt(textButton[1]));
+					Intervenant i = this.ctrl.getModele().getHmIntervenants().get(Integer.parseInt(textButton[1]));
+					this.popupAfficheModule(i.getId(), getErreurInter(i));
 				} else if (textButton[0].equals("Sup")) {
 					this.ctrl.getVue().popupValider();
 					if (ControleurIHM.bIsValidate) {

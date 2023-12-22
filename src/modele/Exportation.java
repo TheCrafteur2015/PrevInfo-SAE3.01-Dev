@@ -8,11 +8,15 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
+import java.util.logging.Level;
+
+import vue.App;
 import vue.ResourceManager;
 
 public class Exportation {
+	
 	private Modele model;
-
+	
 	/**
 	 * constructeur de l'exportation
 	 * 
@@ -21,7 +25,7 @@ public class Exportation {
 	public Exportation(Modele model) {
 		this.model = model;
 	}
-
+	
 	/*----------------------------------------------------------------------------------------------------------------*/
 	/*                                                                                                                */
 	/*                                                                                                                */
@@ -29,11 +33,11 @@ public class Exportation {
 	/*                                                                                                                */
 	/*                                                                                                                */
 	/*----------------------------------------------------------------------------------------------------------------*/
-
+	
 	/*--------------*/
 	/* Intervenants */
 	/*--------------*/
-
+	
 	/**
 	 * méthode pour obtenir le fichier d'exportation
 	 * <a href="https://fr.wikipedia.org/wiki/Hypertext_Markup_Language"> html </a>
@@ -78,17 +82,14 @@ public class Exportation {
 		body += "					</tr>\n";
 		body += "				</thead>\n";
 		body += "				<tbody>\n";
-
-		Map<Module, List<Intervention>> modulesInter = this.model.getModulesIntervenant(idIntervenant);// obtenir tout
-																										// les modules
-																										// au quel
-																										// l'intervenant
-																										// est lié
+		
+		// obtenir tout les modules au quel l'intervenant est lié
+		Map<Module, List<Intervention>> modulesInter = this.model.getModulesIntervenant(idIntervenant);
 		List<Module> ensModule = new ArrayList<>(modulesInter.keySet());
-
+		
 		Collections.sort(ensModule, new Module(0,"","",false,0,0,0).new ModuleComparator()); // Module qui n'existe pas
 																							// car id à 0
-
+		
 		Intervenant intervenant = this.model.getHmIntervenants().get(idIntervenant);
 		int debut = 0;
 		for (int cpt = 0; cpt < ensModule.size(); cpt++) {
@@ -97,11 +98,10 @@ public class Exportation {
 				debut = cpt;
 			}
 		}
-		if (!ensModule.isEmpty()) {
+		if (!ensModule.isEmpty())
 			body += sSemestreHTML(ensModule.subList(debut, ensModule.size()), modulesInter, intervenant);
-		}
 		body += "				</tbody>\n";
-
+		
 		double cmReel = 0;
 		double cmTheorique = 0;
 		double tdReel = 0;
@@ -118,7 +118,7 @@ public class Exportation {
 		double hPonctuelTheorique = 0;
 		double totalReel = 0;
 		double totalTheorique = 0;
-
+		
 		for (Module module : ensModule) {
 			for (Intervention intervention : modulesInter.get(module)) {
 				double addReel = reelIntervention(intervenant, intervention);
@@ -158,7 +158,7 @@ public class Exportation {
 			totalTheorique = cmTheorique + tdTheorique + tpTheorique + rehTheorique + saeTheorique + tutoratTheorique
 					+ hPonctuelTheorique;
 		}
-
+		
 		body += "				<tfoot>\n";
 		body += "					<tr>\n";
 		body += "						<th> Total </th>\n";
@@ -184,9 +184,8 @@ public class Exportation {
 		this.cssGenerator(chemin);
 		return this.ecrireFichier(chemin + nomFichier + ".html", this.head(nomFichier) + body + this.foot());
 	}
-
-	private String sSemestreHTML(List<Module> ensModule, Map<Module, List<Intervention>> modulesInter,
-			Intervenant intervenant) {
+	
+	private String sSemestreHTML(List<Module> ensModule, Map<Module, List<Intervention>> modulesInter, Intervenant intervenant) {
 		double cmReel = 0;
 		double cmTheorique = 0;
 		double tdReel = 0;
@@ -203,12 +202,11 @@ public class Exportation {
 		double hPonctuelTheorique = 0;
 		double totalReel = 0;
 		double totalTheorique = 0;
-
+		
 		String ret = "";
-		for (Module mod : ensModule) {
+		for (Module mod : ensModule)
 			ret += sModuleHTML(mod, modulesInter.get(mod), intervenant);
-		}
-
+		
 		for (Module module : ensModule) {
 			for (Intervention intervention : modulesInter.get(module)) {
 				double addReel = reelIntervention(intervenant, intervention);
@@ -248,7 +246,7 @@ public class Exportation {
 			totalTheorique = cmTheorique + tdTheorique + tpTheorique + rehTheorique + saeTheorique + tutoratTheorique
 					+ hPonctuelTheorique;
 		}
-
+		
 		ret += "				<tr class=\"semestre" + ensModule.get(0).getIdSemestre() + "\">\n";
 		ret += "					<th> Total Semestre " + (((ensModule.get(0).getIdSemestre() + 5) % 6) + 1) + " </th>\n";
 		ret += "					<td> " + cmReel + " </td>\n";
@@ -268,10 +266,9 @@ public class Exportation {
 		ret += "					<td> " + totalReel + " </td>\n";
 		ret += "					<td> " + totalTheorique + " </td>\n";
 		ret += "				</tr>\n";
-
 		return ret;
 	}
-
+	
 	/**
 	 * méthode pour avoir un {@link Module} sous forme de {@link String}
 	 * 
@@ -295,7 +292,7 @@ public class Exportation {
 		double hPonctuelTheorique = 0;
 		double totalReel = 0;
 		double totalTheorique = 0;
-
+		
 		for (Intervention intervention : lstIntervention) {
 			double addReel = reelIntervention(intervenant, intervention);
 			double addTheorique = theoriqueIntervention(intervenant, intervention);
@@ -331,10 +328,8 @@ public class Exportation {
 			}
 		}
 		totalReel = cmReel + tdReel + tpReel + rehReel + saeReel + tutoratReel + hPonctuelReel;
-		totalTheorique = cmTheorique + tdTheorique + tpTheorique + rehTheorique + saeTheorique + tutoratTheorique
-				+ hPonctuelTheorique;
-		String ret = "";
-		String tab = "					";
+		totalTheorique = cmTheorique + tdTheorique + tpTheorique + rehTheorique + saeTheorique + tutoratTheorique + hPonctuelTheorique;
+		String ret = "", tab = "\t".repeat(5);
 		ret += "				<tr class=\"semestre" + mod.getIdSemestre() + " \\\">\n";
 		ret += "					<th> " + mod.getCode() + " " + mod.getNom() + " </th>\n";
 		switch (mod.getIdTypeModule()) {
@@ -356,7 +351,6 @@ public class Exportation {
 				ret += tab + "<td> " + totalReel + " </td>\n";
 				ret += tab + "<td> " + totalTheorique + " </td>\n";
 				break;
-
 			case 2:
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
@@ -375,7 +369,6 @@ public class Exportation {
 				ret += tab + "<td> " + totalReel + " </td>\n";
 				ret += tab + "<td> " + totalTheorique + " </td>\n";
 				break;
-
 			case 3:
 				ret += tab + "<td> " + cmReel + " </td>\n";
 				ret += tab + "<td> " + cmTheorique + " </td>\n";
@@ -394,7 +387,6 @@ public class Exportation {
 				ret += tab + "<td> " + totalReel + " </td>\n";
 				ret += tab + "<td> " + totalTheorique + " </td>\n";
 				break;
-
 			case 4:
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
@@ -414,14 +406,13 @@ public class Exportation {
 				ret += tab + "<td> " + totalTheorique + " </td>\n";
 				break;
 		}
-		ret += "				</tr>\n";
-		return ret;
+		return ret + "\t".repeat(4) + "</tr\n";
 	}
-
+	
 	/*---------*/
 	/* modules */
 	/*---------*/
-
+	
 	/**
 	 * méthode pour obtenir le fichier d'exportation
 	 * <a href="https://fr.wikipedia.org/wiki/Hypertext_Markup_Language"> html </a>
@@ -440,7 +431,7 @@ public class Exportation {
 			default -> null;
 		};
 	}
-
+	
 	private URL exportPPPHTML(Module mod, String nomFichier, String chemin) {
 		String body = "";
 		body += "			<table border=\"1\">\n";
@@ -471,9 +462,9 @@ public class Exportation {
 		body += "					</tr>\n";
 		body += "				</thead>\n";
 		body += "				<tbody>\n";
-
+		
 		Map<Intervenant, List<Intervention>> hmModuleIntervenant = model.getIntervenantsModule(mod.getId());
-
+		
 		double totcmReel = 0;
 		double totcmTheorique = 0;
 		double tottdReel = 0;
@@ -486,7 +477,7 @@ public class Exportation {
 		double tothPonctuelTheorique = 0;
 		double tottotalReel = 0;
 		double tottotalTheorique = 0;
-
+		
 		for (Intervenant intervenant : hmModuleIntervenant.keySet()) {
 			double cmReel = 0;
 			double cmTheorique = 0;
@@ -500,7 +491,7 @@ public class Exportation {
 			double hPonctuelTheorique = 0;
 			double totalReel = 0;
 			double totalTheorique = 0;
-
+			
 			for (Intervention intervention : hmModuleIntervenant.get(intervenant)) {
 				double addReel = reelIntervention(intervenant, intervention);
 				double addTheorique = theoriqueIntervention(intervenant, intervention);
@@ -529,7 +520,7 @@ public class Exportation {
 			}
 			totalReel = cmReel + tdReel + tpReel + tutoratReel + hPonctuelReel;
 			totalTheorique = cmTheorique + tdTheorique + tpTheorique + tutoratTheorique + hPonctuelTheorique;
-
+			
 			totcmReel += cmReel;
 			totcmTheorique += cmTheorique;
 			tottdReel += tdReel;
@@ -542,7 +533,7 @@ public class Exportation {
 			tothPonctuelTheorique += hPonctuelTheorique;
 			tottotalReel += totalReel;
 			tottotalTheorique += totalTheorique;
-
+			
 			body += "					<tr>\n";
 			body += "						<th> " + intervenant.getNom() + " " + intervenant.getPrenom() + " </th>\n";
 			body += "						<td> " + cmReel + " </td>\n";
@@ -558,10 +549,9 @@ public class Exportation {
 			body += "						<td> " + totalReel + " </td>\n";
 			body += "						<td> " + totalTheorique + " </td>\n";
 			body += "					</tr>\n";
-
 		}
 		body += "				</tbody>\n";
-
+		
 		body += "				<tfoot>\n";
 		body += "					<tr>\n";
 		body += "						<th> Total </th>\n";
@@ -583,7 +573,7 @@ public class Exportation {
 		this.cssGenerator(chemin);
 		return this.ecrireFichier(chemin + nomFichier + ".html", this.head(nomFichier) + body + this.foot());
 	}
-
+	
 	private URL exportSAEHTML(Module mod, String nomFichier, String chemin) {
 		String body = "";
 		body += "			<table border=\"1\">\n";
@@ -609,9 +599,9 @@ public class Exportation {
 		body += "					</tr>\n";
 		body += "				</thead>\n";
 		body += "				<tbody>\n";
-
+		
 		Map<Intervenant, List<Intervention>> hmModuleIntervenant = model.getIntervenantsModule(mod.getId());
-
+		
 		double totsaeReel = 0;
 		double totsaeTheorique = 0;
 		double tottutoratReel = 0;
@@ -620,7 +610,7 @@ public class Exportation {
 		double tothPonctuelTheorique = 0;
 		double tottotalReel = 0;
 		double tottotalTheorique = 0;
-
+		
 		for (Intervenant intervenant : hmModuleIntervenant.keySet()) {
 			double saeReel = 0;
 			double saeTheorique = 0;
@@ -630,7 +620,7 @@ public class Exportation {
 			double hPonctuelTheorique = 0;
 			double totalReel = 0;
 			double totalTheorique = 0;
-
+			
 			for (Intervention intervention : hmModuleIntervenant.get(intervenant)) {
 				double addReel = reelIntervention(intervenant, intervention);
 				double addTheorique = theoriqueIntervention(intervenant, intervention);
@@ -651,7 +641,7 @@ public class Exportation {
 			}
 			totalReel = tutoratReel + hPonctuelReel + saeReel;
 			totalTheorique = tutoratTheorique + hPonctuelTheorique + saeTheorique;
-
+			
 			tottutoratReel += tutoratReel;
 			tottutoratTheorique += tutoratTheorique;
 			totsaeReel += saeReel;
@@ -660,7 +650,7 @@ public class Exportation {
 			tothPonctuelTheorique += tothPonctuelTheorique;
 			tottotalReel += totalReel;
 			tottotalTheorique += totalTheorique;
-
+			
 			body += "					<tr>\n";
 			body += "						<th> " + intervenant.getNom() + " " + intervenant.getPrenom() + " </th>\n";
 			body += "						<td> " + tutoratReel + " </td>\n";
@@ -672,10 +662,9 @@ public class Exportation {
 			body += "						<td> " + totalReel + " </td>\n";
 			body += "						<td> " + totalTheorique + " </td>\n";
 			body += "					</tr>\n";
-
 		}
 		body += "				</tbody>\n";
-
+		
 		body += "				<tfoot>\n";
 		body += "					<tr>\n";
 		body += "						<th> Total </th>\n";
@@ -693,7 +682,7 @@ public class Exportation {
 		this.cssGenerator(chemin);
 		return this.ecrireFichier(chemin + nomFichier + ".html", this.head(nomFichier) + body + this.foot());
 	}
-
+	
 	private URL exportNormalHTML(Module mod, String nomFichier, String chemin) {
 		String body = "";
 		body += "			<table border=\"1\">\n";
@@ -722,9 +711,9 @@ public class Exportation {
 		body += "					</tr>\n";
 		body += "				</thead>\n";
 		body += "				<tbody>\n";
-
+		
 		Map<Intervenant, List<Intervention>> hmModuleIntervenant = model.getIntervenantsModule(mod.getId());
-
+		
 		double totcmReel = 0;
 		double totcmTheorique = 0;
 		double tottdReel = 0;
@@ -735,7 +724,7 @@ public class Exportation {
 		double tothPonctuelTheorique = 0;
 		double tottotalReel = 0;
 		double tottotalTheorique = 0;
-
+		
 		for (Intervenant intervenant : hmModuleIntervenant.keySet()) {
 			double cmReel = 0;
 			double cmTheorique = 0;
@@ -747,7 +736,7 @@ public class Exportation {
 			double hPonctuelTheorique = 0;
 			double totalReel = 0;
 			double totalTheorique = 0;
-
+			
 			for (Intervention intervention : hmModuleIntervenant.get(intervenant)) {
 				double addReel = reelIntervention(intervenant, intervention);
 				double addTheorique = theoriqueIntervention(intervenant, intervention);
@@ -772,7 +761,7 @@ public class Exportation {
 			}
 			totalReel = cmReel + tdReel + tpReel + hPonctuelReel;
 			totalTheorique = cmTheorique + tdTheorique + tpTheorique + hPonctuelTheorique;
-
+			
 			totcmReel += cmReel;
 			totcmTheorique += cmTheorique;
 			tottdReel += tdReel;
@@ -783,7 +772,7 @@ public class Exportation {
 			tothPonctuelTheorique += hPonctuelTheorique;
 			tottotalReel += totalReel;
 			tottotalTheorique += totalTheorique;
-
+			
 			body += "					<tr>\n";
 			body += "						<th> " + intervenant.getNom() + " " + intervenant.getPrenom() + " </th>\n";
 			body += "						<td> " + cmReel + " </td>\n";
@@ -797,10 +786,9 @@ public class Exportation {
 			body += "						<td> " + totalReel + " </td>\n";
 			body += "						<td> " + totalTheorique + " </td>\n";
 			body += "					</tr>\n";
-
 		}
 		body += "				</tbody>\n";
-
+		
 		body += "				<tfoot>\n";
 		body += "					<tr>\n";
 		body += "						<th> Total </th>\n";
@@ -820,7 +808,7 @@ public class Exportation {
 		this.cssGenerator(chemin);
 		return this.ecrireFichier(chemin + nomFichier + ".html", this.head(nomFichier) + body + this.foot());
 	}
-
+	
 	private URL exportStageHTML(Module mod, String nomFichier, String chemin) {
 		String body = "";
 		body += "			<table border=\"1\">\n";
@@ -845,9 +833,9 @@ public class Exportation {
 		body += "					</tr>\n";
 		body += "				</thead>\n";
 		body += "				<tbody>\n";
-
+		
 		Map<Intervenant, List<Intervention>> hmModuleIntervenant = model.getIntervenantsModule(mod.getId());
-
+		
 		double totrehReel = 0;
 		double totrehTheorique = 0;
 		double tottutoratReel = 0;
@@ -856,7 +844,7 @@ public class Exportation {
 		double tothPonctuelTheorique = 0;
 		double tottotalReel = 0;
 		double tottotalTheorique = 0;
-
+		
 		for (Intervenant intervenant : hmModuleIntervenant.keySet()) {
 			double rehReel = 0;
 			double rehTheorique = 0;
@@ -866,28 +854,28 @@ public class Exportation {
 			double hPonctuelTheorique = 0;
 			double totalReel = 0;
 			double totalTheorique = 0;
-
+			
 			for (Intervention intervention : hmModuleIntervenant.get(intervenant)) {
 				double addReel = reelIntervention(intervenant, intervention);
 				double addTheorique = theoriqueIntervention(intervenant, intervention);
 				switch (intervention.getIdTypeCours()) {
-					case 5:
+					case 5 -> {
 						rehReel += addReel;
 						rehTheorique += addTheorique;
-						break;
-					case 4:
+					}
+					case 4 -> {
 						tutoratReel += addReel;
 						tutoratTheorique += addTheorique;
-						break;
-					case 7:
+					}
+					case 7 -> {
 						hPonctuelReel += addReel;
 						hPonctuelTheorique += addTheorique;
-						break;
+					}
 				}
 			}
 			totalReel = tutoratReel + hPonctuelReel + rehReel;
 			totalTheorique = tutoratTheorique + hPonctuelTheorique + rehTheorique;
-
+			
 			tottutoratReel += tutoratReel;
 			tottutoratTheorique += tutoratTheorique;
 			totrehReel += rehReel;
@@ -896,7 +884,7 @@ public class Exportation {
 			tothPonctuelTheorique += tothPonctuelTheorique;
 			tottotalReel += totalReel;
 			tottotalTheorique += totalTheorique;
-
+			
 			body += "					<tr>\n";
 			body += "						<th> " + intervenant.getNom() + " " + intervenant.getPrenom() + " </th>\n";
 			body += "						<td> " + tutoratReel + " </td>\n";
@@ -908,10 +896,9 @@ public class Exportation {
 			body += "						<td> " + totalReel + " </td>\n";
 			body += "						<td> " + totalTheorique + " </td>\n";
 			body += "					</tr>\n";
-
 		}
 		body += "				</tbody>\n";
-
+		
 		body += "				<tfoot>\n";
 		body += "					<tr>\n";
 		body += "						<th> Total </th>\n";
@@ -929,34 +916,22 @@ public class Exportation {
 		this.cssGenerator(chemin);
 		return this.ecrireFichier(chemin + nomFichier + ".html", this.head(nomFichier) + body + this.foot());
 	}
-
+	
 	/*-------*/
 	/* autre */
 	/*-------*/
-
+	
 	private URL cssGenerator(String chemin) {
 		String css = ":root {\n";
-		int cpt=0;
-		for (Semestre semestre : model.getHmSemestres().values())
-			css += "\t--semestre-" + semestre.getId() + "{background-color: rgba(" + Integer.parseInt(semestre.getCouleur().substring(1,3),16) + "," + Integer.parseInt(semestre.getCouleur().substring(3,5),16) + "," + Integer.parseInt(semestre.getCouleur().substring(5,7),16) + ", 0.5);}\n";
-
-		return this.ecrireFichier(chemin + "tab.css", css + "}\n\n" + ResourceManager.TAB_TEMPLATE_CONTENT);
-		/*s
-		String ret = "";
-		ret += "thead {background-color: #222222;color: #ffffff;}\n";
-		ret += "tbody {background-color: #e4f0f5;}\n";
-		ret += "tfoot {background-color: #777777;color: #ffffff;}\n";
-		ret += "caption {padding: 10px;caption-side: bottom;}\n";
-		ret += "table {border-collapse: collapse;border: 2px solid rgb(255, 255, 255);letter-spacing: 1px;font-family: sans-serif;font-size: 0.8rem;}\n";
-		ret += "td,th {border: 1px solid rgb(190, 190, 190);padding: 5px 10px;}\n";
-		ret += "td {text-align: center;}\n";
 		for (Semestre semestre : model.getHmSemestres().values()) {
-			ret += ".semestre"+ semestre.getId() + "{background-color: " + semestre.getCouleur() + ";}\n";
+			int r = Integer.parseInt(semestre.getCouleur().substring(1, 3), 16);
+			int g = Integer.parseInt(semestre.getCouleur().substring(3, 5), 16);
+			int b = Integer.parseInt(semestre.getCouleur().substring(5, 7), 16);
+			css += "\t--semestre-" + semestre.getId() + "{background-color: rgba(" + r + "," + g + "," + b + ", 0.5);}\n";
 		}
-		return this.ecrireFichier(chemin + "tab.css", ret);
-		*/
+		return this.ecrireFichier(chemin + "tab.css", css + "}\n\n" + ResourceManager.TAB_TEMPLATE_CONTENT);
 	}
-
+	
 	private String head(String titre) {
 		String ret = "";
 		ret += "<!DOCTYPE html>\n";
@@ -973,7 +948,7 @@ public class Exportation {
 		ret += "		<main>\n";
 		return ret;
 	}
-
+	
 	private String foot() {
 		String ret = "";
 		ret += "		</main>\n";
@@ -981,7 +956,7 @@ public class Exportation {
 		ret += "</html>\n";
 		return ret;
 	}
-
+	
 	/*----------------------------------------------------------------------------------------------------------------*/
 	/*                                                                                                                */
 	/*                                                                                                                */
@@ -989,11 +964,11 @@ public class Exportation {
 	/*                                                                                                                */
 	/*                                                                                                                */
 	/*----------------------------------------------------------------------------------------------------------------*/
-
+	
 	/*--------------*/
 	/* Intervenants */
 	/*--------------*/
-
+	
 	/**
 	 * méthode pour obtenir le fichier d'exportation
 	 * <a href="https://fr.wikipedia.org/wiki/Hypertext_Markup_Language"> html </a>
@@ -1011,12 +986,12 @@ public class Exportation {
 			body += this.sSemestreCsv(interv, hmIntervenants.get(interv));
 		return this.ecrireFichier(chemin + nomFichier + ".csv", body);
 	}
-
+	
 	private String sSemestreCsv(Intervenant intervenant, List<Intervention> ensIntervention) {
 		String ret = "";
 		ret += intervenant.getNom() + " " + intervenant.getPrenom() + ",";
 		ret += model.getHmCategories().get(intervenant.getIdCategorie()) + ",";
-
+		
 		double s1theorique = 0;
 		double s1reel = 0;
 		double s2theorique = 0;
@@ -1029,7 +1004,7 @@ public class Exportation {
 		double s5reel = 0;
 		double s6theorique = 0;
 		double s6reel = 0;
-
+		
 		for (Intervention intervention : ensIntervention) {
 			double addReel = reelIntervention(intervenant, intervention);
 			double addTheorique = theoriqueIntervention(intervenant, intervention);
@@ -1082,7 +1057,7 @@ public class Exportation {
 		ret += hMax(intervenant) + ","; // maximum d'heure
 		return ret + "\n";
 	}
-
+	
 	/*----------------------------------------------------------------------------------------------------------------*/
 	/*                                                                                                                */
 	/*                                                                                                                */
@@ -1090,41 +1065,40 @@ public class Exportation {
 	/*                                                                                                                */
 	/*                                                                                                                */
 	/*----------------------------------------------------------------------------------------------------------------*/
-
+	
 	private double reelIntervention(Intervenant intervenant, Intervention intervention) {
 		Categorie categ = model.getHmCategories().get(intervenant.getIdCategorie());
 		double ret = categ.getRatioTp() *  intervention.getNbGroupe();
-		if (intervention.getIdTypeCours()<4) ret = ret*intervention.getNbSemaines();
+		if (intervention.getIdTypeCours() < 4)
+			ret = ret * intervention.getNbSemaines();
 		return ret;
 	}
-
+	
 	private double theoriqueIntervention(Intervenant intervenant, Intervention intervention) {
 		double ret = intervention.getNbGroupe();
-		if (intervention.getIdTypeCours()<4) ret = ret*intervention.getNbSemaines();
+		if (intervention.getIdTypeCours() < 4)
+			ret = ret * intervention.getNbSemaines();
 		return ret;
 	}
-
+	
 	private double hMin(Intervenant interv) {
-		if (interv.getIdCategorie() == 3) {
+		if (interv.getIdCategorie() == 3)
 			return interv.gethMin();
-		} else {
-			return model.getHmCategories().get(interv.getIdCategorie()).gethMin();
-		}
+		return model.getHmCategories().get(interv.getIdCategorie()).gethMin();
 	}
-
+	
 	private double hMax(Intervenant interv) {
-		if (interv.getIdCategorie() == 3) {
+		if (interv.getIdCategorie() == 3)
 			return interv.gethMax();
-		} else {
-			return model.getHmCategories().get(interv.getIdCategorie()).gethMax();
-		}
+		return model.getHmCategories().get(interv.getIdCategorie()).gethMax();
 	}
+	
 	/**
 	 * Écrit des données dans un fichier spécifié en utilisant un PrintWriter.
 	 * 
 	 * @param nomFichierDestination Le nom du fichier dans lequel écrire les
 	 *                              données.
-	 * @param body                  contenue du Fichier
+	 * @param body contenu du Fichier
 	 */
 	 @SuppressWarnings("deprecation")
 	private URL ecrireFichier(String nomFichierDestination, String body) {
@@ -1133,9 +1107,8 @@ public class Exportation {
 			return new URL("file:" + nomFichierDestination);
 		} catch (Exception e) {
 			System.out.println(nomFichierDestination);
-			e.printStackTrace();
+			App.log(Level.SEVERE, e);
 			return null;
 		}
 	}
-
 }

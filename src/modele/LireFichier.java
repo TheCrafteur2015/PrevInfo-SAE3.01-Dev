@@ -3,6 +3,9 @@ package modele;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.logging.Level;
+
+import vue.App;
 
 public class LireFichier {
 
@@ -25,8 +28,8 @@ public class LireFichier {
 			while ((ligne = file.readLine()) != null)
 				this.traiterLigne(ligne);
 		} catch (Exception exc) {
-			System.err.println("Erreur lors de l'ouverture du ficher des identifiants: " + exc.getMessage());
-			exc.printStackTrace(System.err);
+			App.log(Level.WARNING, "Erreur lors de l'ouverture du ficher des identifiants");
+			App.log(Level.SEVERE, exc);
 		}
 		
 	}

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.File;
 import java.net.URL;
 import java.util.Map;
+import java.util.logging.Level;
 
 import controleur.Controleur;
 import javafx.event.ActionEvent;
@@ -111,7 +112,6 @@ public class FrameExporter implements EventHandler<Event> {
 		
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public void handle(Event action) {
 		DirectoryChooser chooser = new DirectoryChooser();
@@ -137,7 +137,8 @@ public class FrameExporter implements EventHandler<Event> {
 			Runtime.getRuntime().exec(new String[] {"xdg-open", file.toString()});
 			this.ctrl.getVue().afficherNotification("Exportation réussie!", "Ouverture du fichier: " + file.toString(), ControleurIHM.Notification.SUCCES);
 		} catch (IOException | NullPointerException e) {
-			System.err.println("No export destination!" + e.getMessage());
+			App.log(Level.WARNING, "No export destination!");
+			App.log(Level.SEVERE, e);
 			this.ctrl.getVue().afficherNotification("Échec de l'exportation", e.getMessage(), ControleurIHM.Notification.ERREUR);
 		}
 	}

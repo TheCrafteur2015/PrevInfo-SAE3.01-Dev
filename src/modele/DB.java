@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+
+import vue.App;
 
 /**
  * Classe de liaison à la base de données
@@ -75,7 +78,7 @@ public class DB {
 		try {
 			Class.forName("org.postgresql.Driver");
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			App.log(Level.SEVERE, e);
 		}
 		
 		try {
@@ -126,7 +129,7 @@ public class DB {
 			this.psDeleteHeureCours                = this.connec.prepareStatement("DELETE FROM HeureCours WHERE idTypeCours = ? and idModule = ?");
 			this.psDeleteTypeCours                 = this.connec.prepareStatement("DELETE FROM TypeCours WHERE idTypeCours = ?");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			App.log(Level.WARNING, e);
 		}
 	}
 	
