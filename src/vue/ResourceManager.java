@@ -19,17 +19,17 @@ import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
 
 public final class ResourceManager {
-
+	
 	// Fichiers FXML
 	public static final URL ACCUEIL = ResourceManager.class.getResource("Accueil.fxml");
-
+	
 	// Fichiers CSS
 	public static final URL STYLESHEET = ResourceManager.class.getResource("style.css");
 	public static final URL STYLESHEET_POPUP = ResourceManager.class.getResource("stylePopup.css");
 	public static final URL TAB_TEMPLATE = ResourceManager.class.getResource("/templates/_tab.css");
 	
 	public static final String TAB_TEMPLATE_CONTENT = ResourceManager.loadFileFromSource("/templates/_tab.css");
-
+	
 	// Fichiers SVG
 	public static final URL BOOK = ResourceManager.class.getResource("book.svg");
 

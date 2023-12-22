@@ -40,6 +40,7 @@ import modele.Module;
 import modele.Semestre;
 import modele.TypeCours;
 import modele.TypeModule;
+import vue.ControleurIHM.Notification;
 
 public class FrameModule implements EventHandler<Event> {
 	
@@ -228,9 +229,12 @@ public class FrameModule implements EventHandler<Event> {
 									
 									this.ctrl.getModele().updateHeureCours(hc);
 								}
-								this.ctrl.getModele().updateModule(m);
+								System.out.println(oldValue + " " + newValue);
+								if (oldValue != newValue) this.ctrl.getModele().updateModule(m);
+								else this.ctrl.getVue().afficherNotification("Erreur de saisie", "Cette valeur n'est pas compatible", Notification.ERREUR);
 							}
 						}
+						else { this.ctrl.getVue().afficherNotification("Erreur de saisie", "Impossible d'éditer cette cellule", Notification.ERREUR);}
 						this.init(idSelectedSemestre);
 					});
 				}

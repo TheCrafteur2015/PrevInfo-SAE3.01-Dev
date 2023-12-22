@@ -410,7 +410,7 @@ public class Modele {
 					Semestre s = hmTmpSemestres.get(i);
 					this.dupliquerSemestre(this.getModuleBySemestre(s.getId(), s.getIdAnnee()), s.getNbGTD(), s.getNbGTP(), s.getNbGCM(), s.getNbSemaine(), s.getCouleur());
 				}
-				for (Categorie c : hmTmpCategories.values())
+				for (Categorie c : hmTmpCategories.values()) 
 					this.dupliquerCategorie(c.getId(), c.getNom(), c.gethMin(), c.gethMax(), c.getRatioTp());
 			} 
 			else { 

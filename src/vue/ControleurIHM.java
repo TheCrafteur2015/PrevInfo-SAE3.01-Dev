@@ -40,9 +40,8 @@ import javafx.util.Duration;
 import modele.Modele;
 import modele.TypeCours;
 
-
 public class ControleurIHM implements Initializable, EventHandler<Event>, ChangeListener<String> {
-
+	
 	@FXML
 	private AnchorPane centerPaneAccueil;
 	@FXML
@@ -50,65 +49,63 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 	private Stage stage;
 	private Scene scene;
 	private Parent root;
-
+	
 	private FrameIntervenant frameIntervenant;
 	private FrameModule frameModule;
 	private FrameExporter frameExporter;
-
+	
 	private Controleur ctrl;
-
+	
 	//private Button btnConfirmerIntervenant;
-
+	
 	@FXML
 	private ImageView imageAccueil;
-
+	
 	@FXML
 	private ImageView imageIntervenant;
-
+	
 	@FXML
 	private ImageView imageModule;
-
+	
 	@FXML
 	private ImageView imageDownload;
-
+	
 	private Button btnConfirmerMultiplicateur;
-
+	
 	private List<Text> alText;
 	private List<TextField> alTextField;
 	
 	private Button btnOui;
 	private Button btnAnnuler;
-
+	
 	public static boolean bIsValidate = false;
 	private boolean bErreur;
-
+	
 	public void initialize(URL url, ResourceBundle rb) {
 		this.ctrl = Controleur.getInstance(this);
 		
 		// System.out.println(Arrays.toString(this.centerPaneAccueil.getStylesheets()));
 		
 		this.majListAnnee();
-
+		
 		this.setAnnee(this.ctrl.getModele().getHmAnnee().get(this.ctrl.getModele().getIdAnnee()));
 		this.choiceBoxAnnee.addEventHandler(ActionEvent.ACTION, this);
 	}
-
+	
 	@FXML
 	void allerAccueil(ActionEvent event) throws IOException {
-		
-		
 		this.root = FXMLLoader.load(ResourceManager.ACCUEIL);
 		this.stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
+		
 		this.scene = new Scene(this.root);
 		// Supposons que primaryStage est votre objet Stage
-
+		
 		scene.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
-
+		
 		this.stage.setScene(this.scene);	
 		stage.show();
 	}
-
+	
 	public void majListAnnee() {
 		this.choiceBoxAnnee.getItems().clear();
 		Map<Integer, String> hmAnnee = this.ctrl.getModele().getHmAnnee();
@@ -116,14 +113,13 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 			this.choiceBoxAnnee.getItems().add(s);
 		}
 	}
-
+	
 	public void setAnnee(String annee) {
 		this.choiceBoxAnnee.setValue(annee);
 	}
-
+	
 	@FXML
 	void parametrerMultiplicateurs() {
-
 		Stage popupStage = new Stage();
 		popupStage.initModality(Modality.APPLICATION_MODAL);
 		popupStage.centerOnScreen();
@@ -131,9 +127,9 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 		popupStage.setHeight(350);
 		popupStage.setWidth(300);
 		popupStage.setResizable(false);
-
+		
 		Map<Integer, TypeCours> hmTypeCours = this.ctrl.getModele().getHmTypeCours();
-
+		
 		this.alText = new ArrayList<>();
 		this.alTextField = new ArrayList<>();
 		Text textTmp;
@@ -141,18 +137,18 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 		for (TypeCours tc : hmTypeCours.values()) {
 			textTmp = new Text(tc.getNom());
 			textFieldTmp = new TextField(tc.getCoefficient() + "");
-			if (isInteger(tc.getCoefficient()) != null) textFieldTmp = new TextField(isInteger(tc.getCoefficient()) + "");
+			if (isInteger(tc.getCoefficient()) != null)
+				textFieldTmp = new TextField(isInteger(tc.getCoefficient()) + "");
 			textFieldTmp.getStyleClass().add("coeffValue");
 			textFieldTmp.setMaxWidth(7 * 7);
 			textFieldTmp.textProperty().addListener(this);
 			alText.add(textTmp);
-
 			this.alTextField.add(textFieldTmp);
 		}
-
+		
 		VBox vbox = new VBox(5);
 		vbox.setMaxSize(200, alText.size() * 50);
-
+		
 		GridPane gridPane = new GridPane();
 		gridPane.setAlignment(Pos.CENTER);
 		for (int i = 0; i < alText.size(); i++) {
@@ -162,65 +158,66 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 		gridPane.setPadding(new Insets(10));
 		gridPane.setHgap(10);
 		gridPane.setVgap(10);
-
+		
 		this.btnConfirmerMultiplicateur = new Button("Confirmer");
 		this.btnConfirmerMultiplicateur.getStyleClass().add("confirmBtn");
 		this.btnConfirmerMultiplicateur.addEventHandler(ActionEvent.ACTION, this);
 		StackPane popupLayout = new StackPane();
 		BorderPane borderPane = new BorderPane();
 		borderPane.setCenter(this.btnConfirmerMultiplicateur);
-
+		
 		vbox.getChildren().add(gridPane);
 		vbox.getChildren().add(borderPane);
 		popupLayout.getChildren().add(vbox);
 		Scene popupScene = new Scene(popupLayout, 200, alText.size() * 50);
 		popupScene.getStylesheets().add(ResourceManager.STYLESHEET_POPUP.toExternalForm());
 		popupStage.setScene(popupScene);
-
 		popupStage.showAndWait();
 	}
 	
 	public static Integer isInteger(double d) {
-		if ((int)d+0.0 == d) return (int)d;
+		if ((int) d + 0.0 == d)
+			return (int) d;
 		return null;
 	}
-
+	
 	@FXML
 	void modeDuplication() {
 		this.ctrl.getModele().setDuplication(!this.ctrl.getModele().isDuplication());
 		String message = "Le mode duplication est " + (this.ctrl.getModele().isDuplication() ? "activé" : "désactivé");
 		this.afficherNotification("Mode Duplication", message, ControleurIHM.Notification.INFO);
 	}
-
+	
 	@FXML
 	void allerIntervenants(ActionEvent event) {
-		if(this.ctrl.getModele().isDuplication()) modeDuplication();
+		if(this.ctrl.getModele().isDuplication()) 
+			this.modeDuplication();
 		this.frameIntervenant = new FrameIntervenant(this.ctrl, this.centerPaneAccueil);
 	}
-
+	
 	public FrameIntervenant getFrameIntervenant() {
 		return this.frameIntervenant;
 	}
-
+	
 	@FXML
 	void allerModules(ActionEvent event) {
 		if (this.ctrl.getModele().isDuplication())
 			this.modeDuplication();
 		this.frameModule = new FrameModule(this.ctrl, this.centerPaneAccueil);
 	}
-
+	
 	@FXML
 	void allerExporter(ActionEvent event) {
 		if (this.ctrl.getModele().isDuplication())
 			this.modeDuplication();
 		this.frameExporter = new FrameExporter(this.ctrl, this.centerPaneAccueil);
 	}
-
+	
 	@FXML
 	void parametrerCategories(ActionEvent event) {
-
+		// FIXME: c'est normal ça ?
 	}
-
+	
 	@FXML
 	void ajouterAnnee() {
 		this.ctrl.getModele().ajouterAnnee();
@@ -264,8 +261,6 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 					message = message.substring(0, message.length() - 2);
 					
 					this.afficherNotification("Erreur", message, ControleurIHM.Notification.ERREUR);
-					
-					
 				}
 			}
 			if (event.getSource() == this.btnOui) {
@@ -307,16 +302,16 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 		
 		Text text = new Text("Souhaitez-vous vraiment supprimer ?");
 		 this.btnOui = new Button("Oui");
-
+		
 		this.btnAnnuler = new Button("Annuler");
-
+		
 		btnOui.addEventHandler(ActionEvent.ACTION, this );
 		btnOui.setMinSize(90, 30);
 		btnOui.setMaxSize(90,30);
 		btnAnnuler.setMinSize(90, 30);
 		btnAnnuler.setMaxSize(90, 30);
 		btnAnnuler.addEventHandler(ActionEvent.ACTION, this);
-
+		
 		StackPane popupLayout = new StackPane();
 		
 		VBox vbox = new VBox(5);
@@ -327,23 +322,20 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 		gridPane.setPadding(new Insets(20));
 		gridPane.setAlignment(Pos.CENTER);
 		gridPane.setHgap(40);
-	
+		
 		gridPane.add(btnOui, 0, 0);
 		gridPane.add(btnAnnuler, 2, 0);
 		vbox.getChildren().add(gridPane);
-		
 		
 		popupLayout.setAlignment(Pos.CENTER);
 		popupLayout.getChildren().add(vbox);
 		Scene popupScene = new Scene(popupLayout, 300, 130);
 		popupScene.getStylesheets().add(ResourceManager.STYLESHEET_POPUP.toExternalForm());
 		popupStage.setScene(popupScene);
-
 		popupStage.showAndWait();
-
-}
+	}
+	
 	public void afficherNotification(String titre, String texte, Notification type) {
-		
 		Notifications notificationBuilder = Notifications.create()
 			.title(titre)
 			.text(texte)
@@ -367,18 +359,14 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 		ERREUR,
 		INFO;
 	}
-
+	
 	@Override
 	public void changed(ObservableValue<? extends String> observable, String oldString, String newString) {
-
 		for (TextField text : alTextField) {
 			if (observable == text.textProperty()) {
-				if (!(text.getText().matches(Modele.REGEX_DOUBLE_FRACTION)))
+				if (!text.getText().matches(Modele.REGEX_DOUBLE_FRACTION))
 					text.setText(oldString);
 			}
-			
 		}
-
 	}
-
 }

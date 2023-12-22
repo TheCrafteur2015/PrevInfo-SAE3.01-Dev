@@ -22,8 +22,8 @@ CREATE TABLE TypeCours (
 CREATE TABLE Categorie (
 	idCategorie   SERIAL PRIMARY KEY,
 	nomCategorie  VARCHAR(255),
-	hMaxCategorie FLOAT,
 	hMinCategorie FLOAT,
+	hMaxCategorie FLOAT,
 	ratioTp       FLOAT,
 	idAnnee       INT REFERENCES Annee(idAnnee)
 );

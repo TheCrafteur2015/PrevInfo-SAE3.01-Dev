@@ -427,25 +427,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 			}
 			cptSem++;
 		}
-		
-		double sTotal1 = lstHSem.get(0) + lstHSem.get(1) + lstHSem.get(2);
-		GridPane gridPaneDetailSemestre = new GridPane();
-		gridPaneDetailSemestre.add(new Label(String.format("s1 : %.2f", lstHSem.get(0))), 0, 0);
-		gridPaneDetailSemestre.add(new Label(String.format("s3 : %.2f", lstHSem.get(1))), 0, 1);
-		gridPaneDetailSemestre.add(new Label(String.format("s5 : %.2f", lstHSem.get(2))), 0, 2);
-		gridPaneDetailSemestre.add(new Label(String.format("sTotal : %.2f", sTotal1)), 0, 3);
-		
-		double sTotal2 = lstHSem.get(3) + lstHSem.get(4) + lstHSem.get(5);
-		gridPaneDetailSemestre.add(new Label(String.format("s2 : %.2f", lstHSem.get(3))), 1, 0);
-		gridPaneDetailSemestre.add(new Label(String.format("s4 : %.2f", lstHSem.get(4))), 1, 1);
-		gridPaneDetailSemestre.add(new Label(String.format("s6 : %.2f", lstHSem.get(5))), 1, 2);
-		gridPaneDetailSemestre.add(new Label(String.format("sTotal : %.2f", sTotal2)), 1, 3);
-		gridPaneDetailSemestre.setVgap(20);
-		gridPaneDetailSemestre.setHgap(20);
-		
-		gridPaneTotal.add(gridPaneInfoInter, 0, 0);
-		gridPaneTotal.add(gridPaneDetailSemestre, 0, 1);
-		gridPaneTotal.add(new Label(String.format("Total : %1$.2f", sTotal1 + sTotal2)), 0, 2);
+
 		ArrayList<Double> lstParSem = new ArrayList<>(); 
 		for (int i = 0; i < 6; i++) {
 			lstParSem.add(0.0);
@@ -453,15 +435,20 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		String[] colonnes = { "Module", "s1", "s3", "s5", "sTotImpair", "s2", "s4", "s6", "sTotPair", "Total" };
 		
 		TableView<RecapIntervenantIHM> tbVRecap = new TableView<>();
-		tbVRecap.setPrefHeight(400);
-		tbVRecap.setPrefWidth(600);
-		
+		tbVRecap.setPrefWidth(800);
+
 		if (tbVRecap.getColumns().size() < colonnes.length) {
 			for (String colonne : colonnes) {
 				TableColumn<RecapIntervenantIHM, String> tbcl = new TableColumn<>(colonne);
 				tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
 				tbcl.setReorderable(false);
-				tbVRecap.getColumns().add(tbcl);
+				
+				if (colonne.equals("Module")) tbcl.prefWidthProperty().bind(tbVRecap.widthProperty().multiply(0.43));
+				else if (colonne.equals("sTotImpair")) tbcl.prefWidthProperty().bind(tbVRecap.widthProperty().multiply(0.1));
+				else if (colonne.equals("sTotPair")) tbcl.prefWidthProperty().bind(tbVRecap.widthProperty().multiply(0.075));
+				else tbcl.prefWidthProperty().bind(tbVRecap.widthProperty().multiply(0.325/6));
+				
+				tbVRecap.getColumns().add(tbcl); 
 			}
 		}
 		
@@ -471,7 +458,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		
 		for (Module m : hmHSem.keySet()) {
 			double heure = hmHSem.get(m);
-			RecapIntervenantIHM rIhm = new RecapIntervenantIHM(m.getCode()+""+m.getNom());
+			RecapIntervenantIHM rIhm = new RecapIntervenantIHM(m.getCode()+"_"+m.getNom());
 			switch (m.getIdSemestre()-premierSemestre) {
 				case 0 -> {rIhm.setS1(heure+""); rIhm.setStotimpair(heure+""); lstParSem.set(0, lstParSem.get(0)+heure); }
 				case 1 -> {rIhm.setS2(heure+""); rIhm.setStotpair(heure+"");   lstParSem.set(1, lstParSem.get(1)+heure); }
@@ -494,18 +481,28 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		 lstParSem.get(1)+"", lstParSem.get(3)+"", lstParSem.get(5)+"", totalPair+"", (totalImpair+totalPair)+"" ));
 		
 		tbVRecap.setItems(olRecap);
+		tbVRecap.setPrefHeight(41*olRecap.size());
+		if (olRecap.size() == 1)tbVRecap.setPrefHeight(80);
+		if (olRecap.size() == 2) tbVRecap.setPrefHeight(tbVRecap.getPrefHeight() + 20);
+	
+		System.out.println(tbVRecap.getPrefHeight());
+
+		gridPaneInfoInter.setAlignment(Pos.CENTER);
+		gridPaneTotal.add(gridPaneInfoInter, 0, 0);
+		gridPaneTotal.add(tbVRecap, 0, 1);
 		
 		VBox vbox = new VBox(5);
-		vbox.setMaxSize(800, 400);
+		vbox.setMaxSize(800, tbVRecap.getPrefHeight()+80);
+		vbox.setPadding(new Insets(10));
 		vbox.setAlignment(Pos.CENTER);
 		vbox.setSpacing(30);
-		vbox.getChildren().addAll(gridPaneTotal, tbVRecap);
+		vbox.getChildren().addAll(gridPaneTotal);
 		
 		StackPane popupLayout = new StackPane();
 		popupLayout.setAlignment(Pos.CENTER);
 		popupLayout.getChildren().add(vbox);
 		popupLayout.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
-		Scene popupScene = new Scene(popupLayout, 800, 400);
+		Scene popupScene = new Scene(popupLayout, 820, tbVRecap.getPrefHeight()+100);
 		popupStage.setScene(popupScene);
 		
 		popupStage.showAndWait();

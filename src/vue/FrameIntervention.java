@@ -471,10 +471,12 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 			col[cpt++] = this.hmTypeCours.get(idTc).getNom();
 			if (hmTcHc.get(hc.getIdTypeCours()) == null)
 				hmTcHc.put(idTc, new ArrayList<>());
-			double hTotal = hc.gethParSemaine() * hc.getNbSemaine();
+			double hTotal = 0.0;
+			TypeCours tc = this.hmTypeCours.get(idTc);
+			if (tc.getNom().equals("TP") || tc.getNom().equals("TD")  || tc.getNom().equals("CM")) hTotal = hc.gethParSemaine() * hc.getNbSemaine();
+			else hTotal = hc.getHeure();
 			hmTcHc.get(idTc).add(hTotal + "");
 			int nbGroupe = 1;
-			TypeCours tc = this.hmTypeCours.get(idTc);
 			switch (tc.getNom()) {
 				case "TP" -> nbGroupe = this.semestre.getNbGTP();
 				case "CM" -> nbGroupe = this.semestre.getNbGCM();

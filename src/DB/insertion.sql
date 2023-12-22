@@ -19,11 +19,11 @@ INSERT INTO Semestre (idSemestre, nbGTD, nbGTP, nbGCM, nbSemaine, couleur, idAnn
 	( 6, 2, 4, 1, 0, '#ffffff', 1);
 
 
-INSERT INTO Categorie (idCategorie ,nomCategorie, hMaxCategorie, hMinCategorie, ratioTp, idAnnee) VALUES
-	( 1, 'Enseignant'   , 576, 384, 1,    1),
-	( 2, 'Contractuel' , 384, 192, 1,    1),
-	( 3, 'Vacataire'   ,   0,   0, 0.66, 1),
-	( 4, 'Enseignant-Chercheur'   , 364, 192, 1,    1)
+INSERT INTO Categorie (idCategorie ,nomCategorie, hMinCategorie, hMaxCategorie, ratioTp, idAnnee) VALUES
+	( 1, 'Enseignant'   , 384, 576, 1,    1),
+	( 2, 'Contractuel' , 192, 384, 1,    1),
+	( 3, 'Vacataire'   ,   0,   90, 0.66, 1),
+	( 4, 'Enseignant-Chercheur'   , 192, 364, 1,    1)	
 	;
 
 INSERT INTO TypeModule (idTypeModule, nomTypeModule) VALUES
