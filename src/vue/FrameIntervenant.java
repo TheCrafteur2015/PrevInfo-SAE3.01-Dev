@@ -125,11 +125,13 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 			protected void updateItem(IntervenantIHM item, boolean empty) {
 				super.updateItem(item, empty);
 				this.getStyleClass().remove("erreur-row");
+				this.getStyleClass().remove("normal-row");
 				if (item != null && item.getErreurInter() != null && !item.getErreurInter().isEmpty()) {
 					this.getStyleClass().add("erreur-row");
 				} else {
 					this.getStyleClass().add("normal-row");
 				}
+				
 			}
 			
 			{

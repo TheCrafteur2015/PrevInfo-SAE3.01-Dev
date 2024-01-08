@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import vue.App;
-import vue.ResourceManager;
 
 public class Exportation {
 	
@@ -24,6 +23,17 @@ public class Exportation {
 	 */
 	public Exportation(Modele model) {
 		this.model = model;
+	}
+	
+	private static double round(double d) {
+		double rounded = Math.ceil(d * 10.0) / 10.0;
+		double decimal = rounded - ((int) rounded);
+		if (decimal == 0.0)
+			return rounded;
+		decimal = Math.ceil(decimal * 10.0) / 10.0;
+		if (decimal <= 0.5)
+			rounded -= 0.1;
+		return Math.ceil(rounded * 10.0) / 10.0;
 	}
 	
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -165,22 +175,22 @@ public class Exportation {
 		body += "				<tfoot>\n";
 		body += "					<tr>\n";
 		body += "						<th> Total </th>\n";
-		body += "						<td> " + cmReel + " </td>\n";
-		body += "						<td> " + cmTheorique + " </td>\n";
-		body += "						<td> " + tdReel + " </td>\n";
-		body += "						<td> " + tdTheorique + " </td>\n";
-		body += "						<td> " + tpReel + " </td>\n";
-		body += "						<td> " + tpTheorique + " </td>\n";
-		body += "						<td> " + rehReel + " </td>\n";
-		body += "						<td> " + rehTheorique + " </td>\n";
-		body += "						<td> " + saeReel + " </td>\n";
-		body += "						<td> " + saeTheorique + " </td>\n";
-		body += "						<td> " + tutoratReel + " </td>\n";
-		body += "						<td> " + tutoratTheorique + " </td>\n";
-		body += "						<td> " + hPonctuelReel + " </td>\n";
-		body += "						<td> " + hPonctuelTheorique + " </td>\n";
-		body += "						<td> " + totalReel + " </td>\n";
-		body += "						<td> " + totalTheorique + " </td>\n";
+		body += "						<td> " + round(cmReel) + " </td>\n";
+		body += "						<td> " + round(cmTheorique) + " </td>\n";
+		body += "						<td> " + round(tdReel) + " </td>\n";
+		body += "						<td> " + round(tdTheorique) + " </td>\n";
+		body += "						<td> " + round(tpReel) + " </td>\n";
+		body += "						<td> " + round(tpTheorique) + " </td>\n";
+		body += "						<td> " + round(rehReel) + " </td>\n";
+		body += "						<td> " + round(rehTheorique) + " </td>\n";
+		body += "						<td> " + round(saeReel) + " </td>\n";
+		body += "						<td> " + round(saeTheorique) + " </td>\n";
+		body += "						<td> " + round(tutoratReel) + " </td>\n";
+		body += "						<td> " + round(tutoratTheorique) + " </td>\n";
+		body += "						<td> " + round(hPonctuelReel) + " </td>\n";
+		body += "						<td> " + round(hPonctuelTheorique) + " </td>\n";
+		body += "						<td> " + round(totalReel) + " </td>\n";
+		body += "						<td> " + round(totalTheorique) + " </td>\n";
 		body += "					</tr>\n";
 		body += "				</tfoot>\n";
 		body += "			</table>\n";
@@ -252,22 +262,22 @@ public class Exportation {
 		
 		ret += "				<tr class=\"semestre" + ensModule.get(0).getIdSemestre() + "\">\n";
 		ret += "					<th> Total Semestre " + (((ensModule.get(0).getIdSemestre() + 5) % 6) + 1) + " </th>\n";
-		ret += "					<td> " + cmReel + " </td>\n";
-		ret += "					<td> " + cmTheorique + " </td>\n";
-		ret += "					<td> " + tdReel + " </td>\n";
-		ret += "					<td> " + tdTheorique + " </td>\n";
-		ret += "					<td> " + tpReel + " </td>\n";
-		ret += "					<td> " + tpTheorique + " </td>\n";
-		ret += "					<td> " + rehReel + " </td>\n";
-		ret += "					<td> " + rehTheorique + " </td>\n";
-		ret += "					<td> " + saeReel + " </td>\n";
-		ret += "					<td> " + saeTheorique + " </td>\n";
-		ret += "					<td> " + tutoratReel + " </td>\n";
-		ret += "					<td> " + tutoratTheorique + " </td>\n";
-		ret += "					<td> " + hPonctuelReel + " </td>\n";
-		ret += "					<td> " + hPonctuelTheorique + " </td>\n";
-		ret += "					<td> " + totalReel + " </td>\n";
-		ret += "					<td> " + totalTheorique + " </td>\n";
+		ret += "					<td> " + round(cmReel) + " </td>\n";
+		ret += "					<td> " + round(cmTheorique) + " </td>\n";
+		ret += "					<td> " + round(tdReel) + " </td>\n";
+		ret += "					<td> " + round(tdTheorique) + " </td>\n";
+		ret += "					<td> " + round(tpReel) + " </td>\n";
+		ret += "					<td> " + round(tpTheorique) + " </td>\n";
+		ret += "					<td> " + round(rehReel) + " </td>\n";
+		ret += "					<td> " + round(rehTheorique) + " </td>\n";
+		ret += "					<td> " + round(saeReel) + " </td>\n";
+		ret += "					<td> " + round(saeTheorique) + " </td>\n";
+		ret += "					<td> " + round(tutoratReel) + " </td>\n";
+		ret += "					<td> " + round(tutoratTheorique) + " </td>\n";
+		ret += "					<td> " + round(hPonctuelReel) + " </td>\n";
+		ret += "					<td> " + round(hPonctuelTheorique) + " </td>\n";
+		ret += "					<td> " + round(totalReel) + " </td>\n";
+		ret += "					<td> " + round(totalTheorique) + " </td>\n";
 		ret += "				</tr>\n";
 		return ret;
 	}
@@ -337,22 +347,22 @@ public class Exportation {
 		ret += "					<th> " + mod.getCode() + " " + mod.getNom() + " </th>\n";
 		switch (mod.getIdTypeModule()) {
 			case 1:
-				ret += tab + "<td> " + cmReel + " </td>\n";
-				ret += tab + "<td> " + cmTheorique + " </td>\n";
-				ret += tab + "<td> " + tdReel + " </td>\n";
-				ret += tab + "<td> " + tdTheorique + " </td>\n";
-				ret += tab + "<td> " + tpReel + " </td>\n";
-				ret += tab + "<td> " + tpTheorique + " </td>\n";
+				ret += tab + "<td> " + round(cmReel) + " </td>\n";
+				ret += tab + "<td> " + round(cmTheorique) + " </td>\n";
+				ret += tab + "<td> " + round(tdReel) + " </td>\n";
+				ret += tab + "<td> " + round(tdTheorique) + " </td>\n";
+				ret += tab + "<td> " + round(tpReel) + " </td>\n";
+				ret += tab + "<td> " + round(tpTheorique) + " </td>\n";
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
-				ret += tab + "<td> " + tutoratReel + " </td>\n";
-				ret += tab + "<td> " + tutoratTheorique + " </td>\n";
-				ret += tab + "<td> " + hPonctuelReel + " </td>\n";
-				ret += tab + "<td> " + hPonctuelTheorique + " </td>\n";
-				ret += tab + "<td> " + totalReel + " </td>\n";
-				ret += tab + "<td> " + totalTheorique + " </td>\n";
+				ret += tab + "<td> " + round(tutoratReel) + " </td>\n";
+				ret += tab + "<td> " + round(tutoratTheorique) + " </td>\n";
+				ret += tab + "<td> " + round(hPonctuelReel) + " </td>\n";
+				ret += tab + "<td> " + round(hPonctuelTheorique) + " </td>\n";
+				ret += tab + "<td> " + round(totalReel) + " </td>\n";
+				ret += tab + "<td> " + round(totalTheorique) + " </td>\n";
 				break;
 			case 2:
 				ret += tab + "<td>  </td>\n";
@@ -363,32 +373,32 @@ public class Exportation {
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
-				ret += tab + "<td> " + saeReel + " </td>\n";
-				ret += tab + "<td> " + saeTheorique + " </td>\n";
-				ret += tab + "<td> " + tutoratReel + " </td>\n";
-				ret += tab + "<td> " + tutoratTheorique + " </td>\n";
-				ret += tab + "<td> " + hPonctuelReel + " </td>\n";
-				ret += tab + "<td> " + hPonctuelTheorique + " </td>\n";
-				ret += tab + "<td> " + totalReel + " </td>\n";
-				ret += tab + "<td> " + totalTheorique + " </td>\n";
+				ret += tab + "<td> " + round(saeReel) + " </td>\n";
+				ret += tab + "<td> " + round(saeTheorique) + " </td>\n";
+				ret += tab + "<td> " + round(tutoratReel) + " </td>\n";
+				ret += tab + "<td> " + round(tutoratTheorique) + " </td>\n";
+				ret += tab + "<td> " + round(hPonctuelReel) + " </td>\n";
+				ret += tab + "<td> " + round(hPonctuelTheorique) + " </td>\n";
+				ret += tab + "<td> " + round(totalReel) + " </td>\n";
+				ret += tab + "<td> " + round(totalTheorique) + " </td>\n";
 				break;
 			case 3:
-				ret += tab + "<td> " + cmReel + " </td>\n";
-				ret += tab + "<td> " + cmTheorique + " </td>\n";
-				ret += tab + "<td> " + tdReel + " </td>\n";
-				ret += tab + "<td> " + tdTheorique + " </td>\n";
-				ret += tab + "<td> " + tpReel + " </td>\n";
-				ret += tab + "<td> " + tpTheorique + " </td>\n";
+				ret += tab + "<td> " + round(cmReel) + " </td>\n";
+				ret += tab + "<td> " + round(cmTheorique) + " </td>\n";
+				ret += tab + "<td> " + round(tdReel) + " </td>\n";
+				ret += tab + "<td> " + round(tdTheorique) + " </td>\n";
+				ret += tab + "<td> " + round(tpReel) + " </td>\n";
+				ret += tab + "<td> " + round(tpTheorique) + " </td>\n";
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
-				ret += tab + "<td> " + hPonctuelReel + " </td>\n";
-				ret += tab + "<td> " + hPonctuelTheorique + " </td>\n";
-				ret += tab + "<td> " + totalReel + " </td>\n";
-				ret += tab + "<td> " + totalTheorique + " </td>\n";
+				ret += tab + "<td> " + round(hPonctuelReel) + " </td>\n";
+				ret += tab + "<td> " + round(hPonctuelTheorique) + " </td>\n";
+				ret += tab + "<td> " + round(totalReel) + " </td>\n";
+				ret += tab + "<td> " + round(totalTheorique) + " </td>\n";
 				break;
 			case 4:
 				ret += tab + "<td>  </td>\n";
@@ -397,16 +407,16 @@ public class Exportation {
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
-				ret += tab + "<td> " + rehReel + " </td>\n";
-				ret += tab + "<td> " + rehTheorique + " </td>\n";
+				ret += tab + "<td> " + round(rehReel) + " </td>\n";
+				ret += tab + "<td> " + round(rehTheorique) + " </td>\n";
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
-				ret += tab + "<td> " + tutoratReel + " </td>\n";
-				ret += tab + "<td> " + tutoratTheorique + " </td>\n";
-				ret += tab + "<td> " + hPonctuelReel + " </td>\n";
-				ret += tab + "<td> " + hPonctuelTheorique + " </td>\n";
-				ret += tab + "<td> " + totalReel + " </td>\n";
-				ret += tab + "<td> " + totalTheorique + " </td>\n";
+				ret += tab + "<td> " + round(tutoratReel) + " </td>\n";
+				ret += tab + "<td> " + round(tutoratTheorique) + " </td>\n";
+				ret += tab + "<td> " + round(hPonctuelReel) + " </td>\n";
+				ret += tab + "<td> " + round(hPonctuelTheorique) + " </td>\n";
+				ret += tab + "<td> " + round(totalReel) + " </td>\n";
+				ret += tab + "<td> " + round(totalTheorique) + " </td>\n";
 				break;
 		}
 		return ret + "\t".repeat(4) + "</tr\n";
@@ -544,18 +554,18 @@ public class Exportation {
 			
 			body += "					<tr>\n";
 			body += "						<th> " + intervenant.getNom() + " " + intervenant.getPrenom() + " </th>\n";
-			body += "						<td> " + cmReel + " </td>\n";
-			body += "						<td> " + cmTheorique + " </td>\n";
-			body += "						<td> " + tdReel + " </td>\n";
-			body += "						<td> " + tdTheorique + " </td>\n";
-			body += "						<td> " + tpReel + " </td>\n";
-			body += "						<td> " + tpTheorique + " </td>\n";
-			body += "						<td> " + tutoratReel + " </td>\n";
-			body += "						<td> " + tutoratTheorique + " </td>\n";
-			body += "						<td> " + hPonctuelReel + " </td>\n";
-			body += "						<td> " + hPonctuelTheorique + " </td>\n";
-			body += "						<td> " + totalReel + " </td>\n";
-			body += "						<td> " + totalTheorique + " </td>\n";
+			body += "						<td> " + round(cmReel) + " </td>\n";
+			body += "						<td> " + round(cmTheorique) + " </td>\n";
+			body += "						<td> " + round(tdReel) + " </td>\n";
+			body += "						<td> " + round(tdTheorique) + " </td>\n";
+			body += "						<td> " + round(tpReel) + " </td>\n";
+			body += "						<td> " + round(tpTheorique) + " </td>\n";
+			body += "						<td> " + round(tutoratReel) + " </td>\n";
+			body += "						<td> " + round(tutoratTheorique) + " </td>\n";
+			body += "						<td> " + round(hPonctuelReel) + " </td>\n";
+			body += "						<td> " + round(hPonctuelTheorique) + " </td>\n";
+			body += "						<td> " + round(totalReel) + " </td>\n";
+			body += "						<td> " + round(totalTheorique) + " </td>\n";
 			body += "					</tr>\n";
 		}
 		body += "				</tbody>\n";
@@ -563,18 +573,18 @@ public class Exportation {
 		body += "				<tfoot>\n";
 		body += "					<tr>\n";
 		body += "						<th> Total </th>\n";
-		body += "						<td> " + totcmReel + " </td>\n";
-		body += "						<td> " + totcmTheorique + " </td>\n";
-		body += "						<td> " + tottdReel + " </td>\n";
-		body += "						<td> " + tottdTheorique + " </td>\n";
-		body += "						<td> " + tottpReel + " </td>\n";
-		body += "						<td> " + tottpTheorique + " </td>\n";
-		body += "						<td> " + tottutoratReel + " </td>\n";
-		body += "						<td> " + tottutoratTheorique + " </td>\n";
-		body += "						<td> " + tothPonctuelReel + " </td>\n";
-		body += "						<td> " + tothPonctuelTheorique + " </td>\n";
-		body += "						<td> " + tottotalReel + " </td>\n";
-		body += "						<td> " + tottotalTheorique + " </td>\n";
+		body += "						<td> " + round(totcmReel) + " </td>\n";
+		body += "						<td> " + round(totcmTheorique) + " </td>\n";
+		body += "						<td> " + round(tottdReel) + " </td>\n";
+		body += "						<td> " + round(tottdTheorique) + " </td>\n";
+		body += "						<td> " + round(tottpReel) + " </td>\n";
+		body += "						<td> " + round(tottpTheorique) + " </td>\n";
+		body += "						<td> " + round(tottutoratReel) + " </td>\n";
+		body += "						<td> " + round(tottutoratTheorique) + " </td>\n";
+		body += "						<td> " + round(tothPonctuelReel) + " </td>\n";
+		body += "						<td> " + round(tothPonctuelTheorique) + " </td>\n";
+		body += "						<td> " + round(tottotalReel) + " </td>\n";
+		body += "						<td> " + round(tottotalTheorique) + " </td>\n";
 		body += "					</tr>\n";
 		body += "				</tfoot>\n";
 		body += "			</table>\n";
@@ -666,14 +676,14 @@ public class Exportation {
 			
 			body += "					<tr>\n";
 			body += "						<th> " + intervenant.getNom() + " " + intervenant.getPrenom() + " </th>\n";
-			body += "						<td> " + tutoratReel + " </td>\n";
-			body += "						<td> " + tutoratTheorique + " </td>\n";
-			body += "						<td> " + saeReel + " </td>\n";
-			body += "						<td> " + saeTheorique + " </td>\n";
-			body += "						<td> " + hPonctuelReel + " </td>\n";
-			body += "						<td> " + hPonctuelTheorique + " </td>\n";
-			body += "						<td> " + totalReel + " </td>\n";
-			body += "						<td> " + totalTheorique + " </td>\n";
+			body += "						<td> " + round(tutoratReel) + " </td>\n";
+			body += "						<td> " + round(tutoratTheorique) + " </td>\n";
+			body += "						<td> " + round(saeReel) + " </td>\n";
+			body += "						<td> " + round(saeTheorique) + " </td>\n";
+			body += "						<td> " + round(hPonctuelReel) + " </td>\n";
+			body += "						<td> " + round(hPonctuelTheorique) + " </td>\n";
+			body += "						<td> " + round(totalReel) + " </td>\n";
+			body += "						<td> " + round(totalTheorique) + " </td>\n";
 			body += "					</tr>\n";
 		}
 		body += "				</tbody>\n";
@@ -681,14 +691,14 @@ public class Exportation {
 		body += "				<tfoot>\n";
 		body += "					<tr>\n";
 		body += "						<th> Total </th>\n";
-		body += "						<td> " + tottutoratReel + " </td>\n";
-		body += "						<td> " + tottutoratTheorique + " </td>\n";
-		body += "						<td> " + totsaeReel + " </td>\n";
-		body += "						<td> " + totsaeTheorique + " </td>\n";
-		body += "						<td> " + tothPonctuelReel + " </td>\n";
-		body += "						<td> " + tothPonctuelTheorique + " </td>\n";
-		body += "						<td> " + tottotalReel + " </td>\n";
-		body += "						<td> " + tottotalTheorique + " </td>\n";
+		body += "						<td> " + round(tottutoratReel) + " </td>\n";
+		body += "						<td> " + round(tottutoratTheorique) + " </td>\n";
+		body += "						<td> " + round(totsaeReel) + " </td>\n";
+		body += "						<td> " + round(totsaeTheorique) + " </td>\n";
+		body += "						<td> " + round(tothPonctuelReel) + " </td>\n";
+		body += "						<td> " + round(tothPonctuelTheorique) + " </td>\n";
+		body += "						<td> " + round(tottotalReel) + " </td>\n";
+		body += "						<td> " + round(tottotalTheorique) + " </td>\n";
 		body += "					</tr>\n";
 		body += "				</tfoot>\n";
 		body += "			</table>\n";
@@ -793,16 +803,16 @@ public class Exportation {
 			
 			body += "					<tr>\n";
 			body += "						<th> " + intervenant.getNom() + " " + intervenant.getPrenom() + " </th>\n";
-			body += "						<td> " + cmReel + " </td>\n";
-			body += "						<td> " + cmTheorique + " </td>\n";
-			body += "						<td> " + tdReel + " </td>\n";
-			body += "						<td> " + tdTheorique + " </td>\n";
-			body += "						<td> " + tpReel + " </td>\n";
-			body += "						<td> " + tpTheorique + " </td>\n";
-			body += "						<td> " + hPonctuelReel + " </td>\n";
-			body += "						<td> " + hPonctuelTheorique + " </td>\n";
-			body += "						<td> " + totalReel + " </td>\n";
-			body += "						<td> " + totalTheorique + " </td>\n";
+			body += "						<td> " + round(cmReel) + " </td>\n";
+			body += "						<td> " + round(cmTheorique) + " </td>\n";
+			body += "						<td> " + round(tdReel) + " </td>\n";
+			body += "						<td> " + round(tdTheorique) + " </td>\n";
+			body += "						<td> " + round(tpReel) + " </td>\n";
+			body += "						<td> " + round(tpTheorique) + " </td>\n";
+			body += "						<td> " + round(hPonctuelReel) + " </td>\n";
+			body += "						<td> " + round(hPonctuelTheorique) + " </td>\n";
+			body += "						<td> " + round(totalReel) + " </td>\n";
+			body += "						<td> " + round(totalTheorique) + " </td>\n";
 			body += "					</tr>\n";
 		}
 		body += "				</tbody>\n";
@@ -810,16 +820,16 @@ public class Exportation {
 		body += "				<tfoot>\n";
 		body += "					<tr>\n";
 		body += "						<th> Total </th>\n";
-		body += "						<td> " + totcmReel + " </td>\n";
-		body += "						<td> " + totcmTheorique + " </td>\n";
-		body += "						<td> " + tottdReel + " </td>\n";
-		body += "						<td> " + tottdTheorique + " </td>\n";
-		body += "						<td> " + tottpReel + " </td>\n";
-		body += "						<td> " + tottpTheorique + " </td>\n";
-		body += "						<td> " + tothPonctuelReel + " </td>\n";
-		body += "						<td> " + tothPonctuelTheorique + " </td>\n";
-		body += "						<td> " + tottotalReel + " </td>\n";
-		body += "						<td> " + tottotalTheorique + " </td>\n";
+		body += "						<td> " + round(totcmReel) + " </td>\n";
+		body += "						<td> " + round(totcmTheorique) + " </td>\n";
+		body += "						<td> " + round(tottdReel) + " </td>\n";
+		body += "						<td> " + round(tottdTheorique) + " </td>\n";
+		body += "						<td> " + round(tottpReel) + " </td>\n";
+		body += "						<td> " + round(tottpTheorique) + " </td>\n";
+		body += "						<td> " + round(tothPonctuelReel) + " </td>\n";
+		body += "						<td> " + round(tothPonctuelTheorique) + " </td>\n";
+		body += "						<td> " + round(tottotalReel) + " </td>\n";
+		body += "						<td> " + round(tottotalTheorique) + " </td>\n";
 		body += "					</tr>\n";
 		body += "				</tfoot>\n";
 		body += "			</table>\n";
@@ -910,14 +920,14 @@ public class Exportation {
 			
 			body += "					<tr>\n";
 			body += "						<th> " + intervenant.getNom() + " " + intervenant.getPrenom() + " </th>\n";
-			body += "						<td> " + tutoratReel + " </td>\n";
-			body += "						<td> " + tutoratTheorique + " </td>\n";
-			body += "						<td> " + rehReel + " </td>\n";
-			body += "						<td> " + rehTheorique + " </td>\n";
-			body += "						<td> " + hPonctuelReel + " </td>\n";
-			body += "						<td> " + hPonctuelTheorique + " </td>\n";
-			body += "						<td> " + totalReel + " </td>\n";
-			body += "						<td> " + totalTheorique + " </td>\n";
+			body += "						<td> " + round(tutoratReel) + " </td>\n";
+			body += "						<td> " + round(tutoratTheorique) + " </td>\n";
+			body += "						<td> " + round(rehReel) + " </td>\n";
+			body += "						<td> " + round(rehTheorique) + " </td>\n";
+			body += "						<td> " + round(hPonctuelReel) + " </td>\n";
+			body += "						<td> " + round(hPonctuelTheorique) + " </td>\n";
+			body += "						<td> " + round(totalReel) + " </td>\n";
+			body += "						<td> " + round(totalTheorique) + " </td>\n";
 			body += "					</tr>\n";
 		}
 		body += "				</tbody>\n";
@@ -925,14 +935,14 @@ public class Exportation {
 		body += "				<tfoot>\n";
 		body += "					<tr>\n";
 		body += "						<th> Total </th>\n";
-		body += "						<td> " + tottutoratReel + " </td>\n";
-		body += "						<td> " + tottutoratTheorique + " </td>\n";
-		body += "						<td> " + totrehReel + " </td>\n";
-		body += "						<td> " + totrehTheorique + " </td>\n";
-		body += "						<td> " + tothPonctuelReel + " </td>\n";
-		body += "						<td> " + tothPonctuelTheorique + " </td>\n";
-		body += "						<td> " + tottotalReel + " </td>\n";
-		body += "						<td> " + tottotalTheorique + " </td>\n";
+		body += "						<td> " + round(tottutoratReel) + " </td>\n";
+		body += "						<td> " + round(tottutoratTheorique) + " </td>\n";
+		body += "						<td> " + round(totrehReel) + " </td>\n";
+		body += "						<td> " + round(totrehTheorique) + " </td>\n";
+		body += "						<td> " + round(tothPonctuelReel) + " </td>\n";
+		body += "						<td> " + round(tothPonctuelTheorique) + " </td>\n";
+		body += "						<td> " + round(tottotalReel) + " </td>\n";
+		body += "						<td> " + round(tottotalTheorique) + " </td>\n";
 		body += "					</tr>\n";
 		body += "				</tfoot>\n";
 		body += "			</table>\n";
@@ -1059,25 +1069,25 @@ public class Exportation {
 					break;
 			}
 		}
-		ret += s1theorique + ","; // s1 theorique
-		ret += s1reel + ","; // s1 reel
-		ret += s3theorique + ","; // s3 theorique
-		ret += s3reel + ","; // s3 reel
-		ret += s5reel + ","; // s5 theorique
-		ret += s5theorique + ","; // s5 reel
-		ret += s1theorique + s3theorique + s5theorique + ","; // total theorique partie 1
-		ret += s1reel + s3reel + s5reel + ","; // total reel partie 1
-		ret += s2reel + ","; // s2 theorique
-		ret += s2theorique + ","; // s2 reel
-		ret += s4reel + ","; // s4 theorique
-		ret += s4theorique + ","; // s4 reel
-		ret += s6reel + ","; // s6 theorique
-		ret += s6theorique + ","; // s6 reel
-		ret += s2theorique + s4theorique + s6theorique + ","; // total theorique partie 2
-		ret += s2reel + s4reel + s6reel + ","; // total reel partie 2
+		ret += round(s1theorique) + ","; // s1 theorique
+		ret += round(s1reel) + ","; // s1 reel
+		ret += round(s3theorique) + ","; // s3 theorique
+		ret += round(s3reel) + ","; // s3 reel
+		ret += round(s5reel) + ","; // s5 theorique
+		ret += round(s5theorique) + ","; // s5 reel
+		ret += round(s1theorique + s3theorique + s5theorique) + ","; // total theorique partie 1
+		ret += round(s1reel + s3reel + s5reel) + ","; // total reel partie 1
+		ret += round(s2reel) + ","; // s2 theorique
+		ret += round(s2theorique) + ","; // s2 reel
+		ret += round(s4reel) + ","; // s4 theorique
+		ret += round(s4theorique) + ","; // s4 reel
+		ret += round(s6reel) + ","; // s6 theorique
+		ret += round(s6theorique) + ","; // s6 reel
+		ret += round(s2theorique + s4theorique + s6theorique) + ","; // total theorique partie 2
+		ret += round(s2reel + s4reel + s6reel) + ","; // total reel partie 2
 		ret += hMin(intervenant) + ","; // minimum d'heure
-		ret += s1theorique + s2theorique + s3theorique + s4theorique + s5theorique + s6theorique + ","; // total theorique
-		ret += s1reel + s2reel + s3reel + s4reel + s5reel + s6reel + ","; // total reel
+		ret += round(s1theorique + s2theorique + s3theorique + s4theorique + s5theorique + s6theorique) + ","; // total theorique
+		ret += round(s1reel + s2reel + s3reel + s4reel + s5reel + s6reel) + ","; // total reel
 		ret += hMax(intervenant) + ","; // maximum d'heure
 		return ret + "\n";
 	}
