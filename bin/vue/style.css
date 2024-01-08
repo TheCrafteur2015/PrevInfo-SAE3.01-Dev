@@ -289,7 +289,7 @@
 
 
 .tbV-module .table-row-cell {
-	-fx-background-color: white;
+	-fx-background-color: #ECE8E8
 }
 
 .tbV-module .table-cell {
@@ -299,9 +299,10 @@
 }
  
 .tbV-module .table-column {
-	-fx-border-color: transparent;
+	-fx-border-color:  transparent;
 }
- .table-view .column-header
+
+.table-view .column-header
 {
    -fx-border-color: transparent  transparent  transparent  transparent;
    -fx-border-width : 0 0 0 0;

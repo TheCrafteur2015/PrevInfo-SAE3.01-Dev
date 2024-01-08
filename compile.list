@@ -16,6 +16,7 @@ src/vue/CategorieIHM.java
 src/vue/ModuleIHM.java
 src/vue/LigneModuleIHM.java
 src/vue/RecapInterventionIHM.java
+src/vue/AlternatingColorTableView.java
 src/controleur/Controleur.java
 src/modele/DB.java
 src/modele/Categorie.java  

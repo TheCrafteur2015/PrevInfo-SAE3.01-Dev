@@ -61,7 +61,7 @@ public class FrameModule implements EventHandler<Event> {
 
 	private TabPane tabPane;
 
-	private TableView<LigneModuleIHM> tbV;
+	private AlternatingColorTableView<LigneModuleIHM> tbV;
 
 	private ObservableList<LigneModuleIHM> lst;
 
@@ -71,7 +71,7 @@ public class FrameModule implements EventHandler<Event> {
 
 	private ChoiceBox<TypeModule> choiceBoxTypeModule;
 
-	private ColorPicker colorPicker;
+	static ColorPicker colorPicker;
 
 	private List<TextField> lstTxtF;
 	private List<String> tmpValue;
@@ -179,7 +179,7 @@ public class FrameModule implements EventHandler<Event> {
 		flowPaneTxtF.setHgap(20);
 		flowPaneTxtF.getChildren().add(colorPicker);
 
-		this.tbV = new TableView<>();
+		this.tbV = new AlternatingColorTableView<>();
 
 		String[] colonnes = { "id", "info", "validation", "Code", "Nom", "CM", "TD", "TP", "HP", "REH", "Tut", "SAE",
 				"supprimer" };
@@ -290,20 +290,6 @@ public class FrameModule implements EventHandler<Event> {
 		}
 		this.tbV.getStyleClass().add("tbV-module");
 
-		this.tbV.setRowFactory(tv -> {
-    TableRow<LigneModuleIHM> row = new TableRow<>();
-
-    row.indexProperty().addListener((obs, oldIndex, newIndex) -> {
-        int columnIndex = 0;
-        for (TableColumn<LigneModuleIHM, ?> col : this.tbV.getColumns()) {
-            col.setStyle(""); // Réinitialise les styles existants
-            col.setStyle("-fx-background-color: " + (columnIndex % 2 == 0 ? couleurClair : couleurSombre) + ";");
-            columnIndex++;
-        }
-    });
-
-    return row;
-});
 
 		this.tbV.setEditable(true);
 		this.tbV.getSelectionModel().setCellSelectionEnabled(true);
