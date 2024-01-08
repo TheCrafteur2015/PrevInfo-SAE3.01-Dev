@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -20,6 +21,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -179,7 +181,6 @@ public class FrameModule implements EventHandler<Event> {
 
 		this.tbV = new TableView<>();
 
-
 		String[] colonnes = { "id", "info", "validation", "Code", "Nom", "CM", "TD", "TP", "HP", "REH", "Tut", "SAE",
 				"supprimer" };
 		int cptColonne = 0;
@@ -200,6 +201,22 @@ public class FrameModule implements EventHandler<Event> {
 				tbcl.setReorderable(false);
 				tbcl.setSortable(false);
 
+				/*
+				 * if (cptColonne % 2 == 0) {
+				 * tbcl.setStyle(tbcl.getStyle() + ";" + "-fx-background-color:" +
+				 * couleurClair);
+				 * } else {
+				 * tbcl.setStyle(tbcl.getStyle() + ";" + "-fx-background-color:" +
+				 * couleurSombre);
+				 * }
+				 * 
+				 * if (colonne.equals("supprimer")) {
+				 * tbcl.setStyle(tbcl.getStyle() + ";" + "-fx-alignment:CENTER" + ";" +
+				 * "-fx-padding: 2 0 2 0px;");
+				 * }
+				 */
+
+				cptColonne++;
 				if (!colonne.equals("id") && !colonne.equals("info") && !colonne.equals("supprimer")
 						&& !colonne.equals("validation")) {
 					tbcl.setEditable(true);
@@ -268,21 +285,25 @@ public class FrameModule implements EventHandler<Event> {
 				else
 					tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.05685));
 
-
-				if (cptColonne % 2 == 0) {
-					tbcl.setStyle("-fx-background-color:" + couleurClair);
-				} else {
-					tbcl.setStyle("-fx-background-color:" + couleurSombre);
-				}
-
-				if (colonne.equals("supprimer")) tbcl.setStyle("-fx-background-color:" + couleurClair +";" +"-fx-alignment:CENTER" + ";" + "-fx-padding: 2 0 2 0px;");
-				cptColonne++;
-
 				tbV.getColumns().add(tbcl);
 			}
 		}
 		this.tbV.getStyleClass().add("tbV-module");
 
+		this.tbV.setRowFactory(tv -> {
+    TableRow<LigneModuleIHM> row = new TableRow<>();
+
+    row.indexProperty().addListener((obs, oldIndex, newIndex) -> {
+        int columnIndex = 0;
+        for (TableColumn<LigneModuleIHM, ?> col : this.tbV.getColumns()) {
+            col.setStyle(""); // Réinitialise les styles existants
+            col.setStyle("-fx-background-color: " + (columnIndex % 2 == 0 ? couleurClair : couleurSombre) + ";");
+            columnIndex++;
+        }
+    });
+
+    return row;
+});
 
 		this.tbV.setEditable(true);
 		this.tbV.getSelectionModel().setCellSelectionEnabled(true);

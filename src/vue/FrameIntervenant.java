@@ -446,6 +446,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		
 		TableView<RecapIntervenantIHM> tbVRecap = new TableView<>();
 		tbVRecap.setPrefWidth(1000);
+		tbVRecap.getStyleClass().add("tbV-module");
 		
 		if (tbVRecap.getColumns().size() < colonnes.length) {
 			for (String colonne : colonnes) {

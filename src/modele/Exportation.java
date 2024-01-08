@@ -956,9 +956,9 @@ public class Exportation {
 	
 	private URL cssGenerator(String chemin) {
 		String ret = "";
-		ret += "thead {background-color: #222222;color: #ffffff;}\n";
+		ret += "thead {background-color: #4D61CC;color: #ffffff;}\n";
 		ret += "tbody {background-color: #e4f0f5;}\n";
-		ret += "tfoot {background-color: #777777;color: #ffffff;}\n";
+		ret += "tfoot {background-color: #758AFF;color: #ffffff;}\n";
 		ret += "caption {padding: 10px;caption-side: bottom;}\n";
 		ret += "table {margin:auto;border-collapse: collapse;border: 2px solid rgb(255, 255, 255);letter-spacing: 1px;font-family: sans-serif;font-size: 0.8rem;}\n";
 		ret += "td,th {border: 1px solid rgb(190, 190, 190);padding: 5px 10px;}\n";

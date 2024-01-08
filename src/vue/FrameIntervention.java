@@ -322,6 +322,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		
 		this.tbV = new TableView<>();
 		// this.tbV.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		this.tbV.getStyleClass().add("tbV-module");
 		
 		if (tbV.getColumns().size() < colonnes.length) {
 			for (String colonne : colonnes) {
@@ -582,17 +583,17 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 	
 	@Override
 	public void handle(ActionEvent action) {
-		if (action.getSource() instanceof Button btn && btn.getId().contains("Sup")) {
-			this.ctrl.getVue().popupValider();
-			if (ControleurIHM.bIsValidate)
-				this.ctrl.getModele().supprimerIntervention(Integer.parseInt(btn.getId()));
-			this.maj();
-		}
-		
 		if (action.getSource() == this.rbValider) {
 			this.module.setValid(this.rbValider.isSelected());
 			this.ctrl.getModele().updateModule(this.module);
 			return;
+		}
+		
+		if (action.getSource() instanceof Button btn) {
+			this.ctrl.getVue().popupValider();
+			if (ControleurIHM.bIsValidate)
+				this.ctrl.getModele().supprimerIntervention(Integer.parseInt(btn.getId()));
+			this.maj();
 		}
 		
 		RadioButton selectedRadioButton = (RadioButton) this.group.getSelectedToggle();
