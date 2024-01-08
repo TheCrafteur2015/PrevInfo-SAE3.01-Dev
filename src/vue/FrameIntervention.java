@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-
-import controleur.Controleur;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -36,6 +33,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import controleur.Controleur;
 import modele.Categorie;
 import modele.HeureCours;
 import modele.Intervenant;
@@ -49,10 +47,15 @@ import modele.TypeModule;
 public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListener<String> {
 	
 	private Stage popupStage;
+	
 	private Controleur ctrl;
+	
 	private AnchorPane centerPaneAccueil;
+	
 	private Module module;
+	
 	private Semestre semestre;
+	
 	private String nomTypeModule;
 	
 	private Map<Integer, Intervenant> hmIntervenants;
@@ -115,6 +118,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		VBox vbox = new VBox();
 		vbox.setSpacing(30);
 		vbox.setAlignment(Pos.CENTER);
+		
 		GridPane gridIntervenant = new GridPane();
 		gridIntervenant.setAlignment(Pos.CENTER);
 		
@@ -196,14 +200,12 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		this.btnAjouter = new Button("Ajouter");
 		this.btnAjouter.addEventHandler(ActionEvent.ACTION, this);
 		this.btnAjouter.setAlignment(Pos.BASELINE_CENTER);
+		this.btnAjouter.setId("Ajouter");
 		
-		//Creer radioButton valider
+		// Creer radioButton valider
 		this.rbValider = new RadioButton("Valider");
 		this.rbValider.setSelected(this.module.isValid());
-		this.rbValider.addEventHandler(ActionEvent.ACTION,this);
-		
-		vbox.getChildren().add(rbValider);
-		vbox.getChildren().add(gridIntervenant);
+		this.rbValider.addEventHandler(ActionEvent.ACTION, this);
 		
 		if (this.nomTypeModule.equals("normal") || this.nomTypeModule.equals("PPP")) {
 			// GridEntree pour le nombre de semaines et nombre de groupes
@@ -227,18 +229,20 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 			this.gridEntree.add(new Label("Nombre d'heures : "), 0, 0);
 			this.gridEntree.add(this.tfNbHeures, 1, 0);
 		}
-		vbox.getChildren().add(gridEntree);
+		
 		GridPane gridCommentaire = new GridPane();
 		gridCommentaire.setHgap(5);
-		gridCommentaire.add(new Label("Commentaire : "), 0, 0);
+		gridCommentaire.setAlignment(Pos.CENTER);
+		
 		this.tfCommentaire = new TextField();
 		this.tfCommentaire.setPrefSize(30 * 7, 20);
 		this.tfCommentaire.setAlignment(Pos.CENTER);
+		
+		gridCommentaire.add(new Label("Commentaire : "), 0, 0);
 		gridCommentaire.add(this.tfCommentaire, 0, 1);
 		
-		gridCommentaire.setAlignment(Pos.CENTER);
+		vbox.getChildren().addAll(rbValider, gridIntervenant, gridEntree, gridCommentaire, flowrButton, this.btnAjouter);
 		
-		vbox.getChildren().addAll(gridCommentaire, flowrButton, this.btnAjouter);
 		// Centrer le VBox
 		StackPane stackPane = new StackPane();
 		stackPane.getChildren().addAll(vbox);
@@ -266,12 +270,11 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		ObservableList<InterventionIHM> olInterventionIHMs = FXCollections.observableArrayList();
 		Map<Integer, Intervention> hmInterventionTmp = this.ctrl.getModele().getHmInterventions();
 		// Map<Integer, Intervention> hmInterventionTmp =
-		// this.ctrl.getModele().getHmInterventionsModule( idModule);
+		// this.ctrl.getModele().getHmInterventionsModule(idModule);
 		this.hmIntervention = new HashMap<>();
-		for (Intervention i : hmInterventionTmp.values()) {
+		for (Intervention i : hmInterventionTmp.values())
 			if (i.getIdModule() == module.getId())
 				this.hmIntervention.put(i.getIdIntervention(), i);
-		}
 		
 		String[] colonnes = { "Prenom", "Nom", "semaines", "groupes", "type", "heures", "reelles", "commentaire", "supprimer" };
 		
@@ -298,6 +301,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 					if (typeCours.getNom().equals("TP"))
 						heureCoursReelles = heureCoursReelles * categorie.getRatioTp();
 				}
+			
 			if (this.nomTypeModule.equals("normal") || this.nomTypeModule.equals("PPP")) {
 				if (typeCours.getNom().equals("HP")) {
 					olInterventionIHMs.add(new InterventionIHM(intervenant.getPrenom(), intervenant.getNom(),
@@ -311,7 +315,8 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 				}
 			} else {
 				olInterventionIHMs.add(new InterventionIHM(intervenant.getPrenom(), intervenant.getNom(),
-						typeCours.getNom(), i.getNbGroupe() + "",  i.getNbGroupe() * typeCours.getCoefficient() + "" + "", i.getCommentaire(), btnSup));
+						typeCours.getNom(), i.getNbGroupe() + "",
+						i.getNbGroupe() * typeCours.getCoefficient() + "" + "", i.getCommentaire(), btnSup));
 			}
 		}
 		
@@ -333,10 +338,10 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 					tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.2));
 				else {
 					if (this.nomTypeModule.equals("normal") || this.nomTypeModule.equals("PPP"))
-						tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply((0.8)/(colonnes.length-1)-0.0025));
-					else tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply((0.8)/(colonnes.length-3)-0.0025));
+						tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.8 / (colonnes.length - 1) - 0.0025));
+					else
+						tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.8 / (colonnes.length - 3) - 0.0025));
 				}
-					
 			}
 		}
 		
@@ -354,78 +359,69 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		Double nbHeureSAE = 0.0;
 		Double nbHeureREH = 0.0;
 		Double nbHeureHP = 0.0;
+		
 		for (InterventionIHM interventionIHM : olInterventionIHMs) {
 			// Compter nbGroupes
 			int nbGroupes = 0;
 			try {
-				nbGroupes = Integer.parseInt(interventionIHM.getGroupes().isEmpty() ? "0" : interventionIHM.getGroupes());
+				nbGroupes = Integer
+						.parseInt(interventionIHM.getGroupes().isEmpty() ? "0" : interventionIHM.getGroupes());
 			} catch (Exception e) {}
 			double heuresInter = Double.parseDouble(interventionIHM.getHeures());
 			switch (interventionIHM.getType()) {
-				case "CM"  -> {
+				case "CM" -> {
 					nbGroupeCM += nbGroupes;
 					nbHeureCM += heuresInter;
 				}
-				case "TD"  -> {
+				case "TD" -> {
 					nbGroupeTD += nbGroupes;
 					nbHeureTD += heuresInter;
 				}
-				case "TP"  -> {
+				case "TP" -> {
 					nbGroupeTP += nbGroupes;
 					nbHeureTP += heuresInter;
 				}
 				case "Tut" -> nbHeureTut += heuresInter;
 				case "SAE" -> nbHeureSAE += heuresInter;
 				case "REH" -> nbHeureREH += heuresInter;
-				case "HP"  -> nbHeureHP += heuresInter;
+				case "HP" -> nbHeureHP += heuresInter;
 			}
-			
 		}
 		
-		List<HeureCours> lstHeureCours = this.ctrl.getModele().getHeureCoursByModule(module.getId(),
-				module.getIdAnnee());
+		List<HeureCours> lstHeureCours = this.ctrl.getModele().getHeureCoursByModule(module.getId(), module.getIdAnnee());
 		
 		HeureCours heureCoursCM = null;
 		HeureCours heureCoursTD = null;
 		HeureCours heureCoursTP = null;
 		
 		for (HeureCours heureCours : lstHeureCours) {
-			if (heureCours.getIdTypeCours() == 3/*CM*/) {
-				heureCoursCM = heureCours;
-			}
-			
-			if (heureCours.getIdTypeCours() == 2/*TP*/) {
-				heureCoursTP = heureCours;
-			}
-			
-			if (heureCours.getIdTypeCours() == 1/*TD*/) {
-				heureCoursTD = heureCours;
+			switch (heureCours.getIdTypeCours()) {
+				case 1 -> heureCoursTD = heureCours; /* TD */
+				case 2 -> heureCoursTP = heureCours; /* TP */
+				case 3 -> heureCoursCM = heureCours; /* CM */
 			}
 		}
 		
 		// Afficher message d'erreur groupes
-		if (!this.nomTypeModule.equals("SAE") && !this.nomTypeModule.equals("stage") ) {
+		if (!this.nomTypeModule.equals("SAE") && !this.nomTypeModule.equals("stage")) {
 			if (nbGroupeCM != this.semestre.getNbGCM() || nbGroupeTD != this.semestre.getNbGTD()
-				|| nbGroupeTP != this.semestre.getNbGTP()) {
+					|| nbGroupeTP != this.semestre.getNbGTP()) {
 				this.lblErreurGrp.setText("ERREUR GROUPE :");
-				
 				if (nbGroupeCM != this.semestre.getNbGCM() && heureCoursCM.getHeure() != 0)
 					this.lblErreurGrp.setText(this.lblErreurGrp.getText() + " CM ");
-				
 				if (nbGroupeTD != this.semestre.getNbGTD() && heureCoursTD.getHeure() != 0)
 					this.lblErreurGrp.setText(this.lblErreurGrp.getText() + " TD ");
-				
 				if (nbGroupeTP != this.semestre.getNbGTP() && heureCoursTP.getHeure() != 0)
 					this.lblErreurGrp.setText(this.lblErreurGrp.getText() + " TP ");
-					
-				if (this.lblErreurGrp.getText().equals("ERREUR GROUPE :")) this.lblErreurGrp.setText("");
+				if (this.lblErreurGrp.getText().equals("ERREUR GROUPE :"))
+					this.lblErreurGrp.setText("");
 			}
 		}
 		
 		// Afficher message d'erreur heures
 		for (HeureCours heureCours : lstHeureCours) {
 			TypeCours tc = this.hmTypeCours.get(heureCours.getIdTypeCours());
-			if (tc.getNom().equals("CM") && nbHeureCM / this.semestre.getNbGCM() != heureCours.getHeure()) 
+			if (tc.getNom().equals("CM") && nbHeureCM / this.semestre.getNbGCM() != heureCours.getHeure())
 				this.lblErreurPN.setText(this.lblErreurPN.getText() + " CM ");
 			else if (tc.getNom().equals("TD") && nbHeureTD / this.semestre.getNbGTD() != heureCours.getHeure())
 				this.lblErreurPN.setText(this.lblErreurPN.getText() + " TD ");
@@ -437,7 +433,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 				this.lblErreurPN.setText(this.lblErreurPN.getText() + " SAE ");
 			else if (tc.getNom().equals("REH") && nbHeureREH != heureCours.getHeure())
 				this.lblErreurPN.setText(this.lblErreurPN.getText() + " REH ");
-			else if (tc.getNom().equals("HP") && nbHeureHP/this.semestre.getNbGTD() != heureCours.getHeure())
+			else if (tc.getNom().equals("HP") && nbHeureHP / this.semestre.getNbGTD() != heureCours.getHeure())
 				this.lblErreurPN.setText(this.lblErreurPN.getText() + " HP ");
 		}
 		
@@ -464,15 +460,17 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 				hmTcHc.put(idTc, new ArrayList<>());
 			double hTotal = 0.0;
 			TypeCours tc = this.hmTypeCours.get(idTc);
-			if (tc.getNom().equals("TP") || tc.getNom().equals("TD")  || tc.getNom().equals("CM")) hTotal = hc.gethParSemaine() * hc.getNbSemaine();
-			else hTotal = hc.getHeure();
+			if (tc.getNom().equals("TP") || tc.getNom().equals("TD") || tc.getNom().equals("CM"))
+				hTotal = hc.gethParSemaine() * hc.getNbSemaine();
+			else
+				hTotal = hc.getHeure();
 			hmTcHc.get(idTc).add(hTotal + "");
 			int nbGroupe = 1;
 			switch (tc.getNom()) {
 				case "TP" -> nbGroupe = this.semestre.getNbGTP();
 				case "CM" -> nbGroupe = this.semestre.getNbGCM();
 				case "TD" -> nbGroupe = this.semestre.getNbGTD();
-				case "HP" -> nbGroupe = this.semestre.getNbGTD(); 	
+				case "HP" -> nbGroupe = this.semestre.getNbGTD();
 			}
 			hmTcHc.get(idTc).add(hTotal * nbGroupe * tc.getCoefficient() + "");
 			double sommeAffecte = 0.0;
@@ -490,9 +488,13 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 				tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
 				tbcl.setResizable(false);
 				tbcl.setReorderable(false);
-				if (colonne.equals("info")) tbcl.prefWidthProperty().bind(tbVRecap.widthProperty().multiply(0.35));
-				else if (colonne.equals("somme")) tbcl.prefWidthProperty().bind(tbVRecap.widthProperty().multiply(0.15));
-				else tbcl.prefWidthProperty().bind(tbVRecap.widthProperty().multiply((0.5 / (col.length - 2)) - 0.002*col.length));
+				if (colonne.equals("info"))
+					tbcl.prefWidthProperty().bind(tbVRecap.widthProperty().multiply(0.35));
+				else if (colonne.equals("somme"))
+					tbcl.prefWidthProperty().bind(tbVRecap.widthProperty().multiply(0.15));
+				else
+					tbcl.prefWidthProperty()
+							.bind(tbVRecap.widthProperty().multiply((0.5 / (col.length - 2)) - 0.002 * col.length));
 				tbVRecap.getColumns().add(tbcl);
 			}
 		}
@@ -508,7 +510,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		this.totalAffecte = 0.0;
 		this.totalPromo = 0.0;
 		double totalPn = 0.0;
-			
+		
 		for (Integer i : hmTcHc.keySet()) {
 			List<String> lStrings = hmTcHc.get(i);
 			
@@ -553,14 +555,12 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 			this.totalPromo += Double.parseDouble(lStrings.get(1));
 			this.totalAffecte += Double.parseDouble(lStrings.get(2));
 			
-			recap1.setSomme(totalPn+"");
-			recap2.setSomme(this.totalPromo+"");
-			recap3.setSomme(this.totalAffecte+"");
+			recap1.setSomme(totalPn + "");
+			recap2.setSomme(this.totalPromo + "");
+			recap3.setSomme(this.totalAffecte + "");
 		}
 		
-		olRecapInterventionIHMs.add(recap1);
-		olRecapInterventionIHMs.add(recap2);
-		olRecapInterventionIHMs.add(recap3);
+		olRecapInterventionIHMs.addAll(recap1, recap2, recap3);
 		
 		tbVRecap.setItems(olRecapInterventionIHMs);
 		
@@ -582,10 +582,10 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 	
 	@Override
 	public void handle(ActionEvent action) {
-	
-		if (action.getSource() instanceof Button btn) {
+		if (action.getSource() instanceof Button btn && btn.getId().contains("Sup")) {
 			this.ctrl.getVue().popupValider();
-			if (ControleurIHM.bIsValidate) this.ctrl.getModele().supprimerIntervention(Integer.parseInt(btn.getId()));
+			if (ControleurIHM.bIsValidate)
+				this.ctrl.getModele().supprimerIntervention(Integer.parseInt(btn.getId()));
 			this.maj();
 		}
 		
@@ -600,22 +600,28 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		if (action.getSource() == this.btnAjouter) {
 			Intervenant interSelected = this.chBoxIntervenants.getSelectionModel().getSelectedItem();
 			if (interSelected == null) {
-				this.ctrl.getVue().afficherNotification("Ajouter une intervention", "Sélectionnez un intervenant", ControleurIHM.Notification.ERREUR);
+				this.ctrl.getVue().afficherNotification("Ajouter une intervention", "Sélectionnez un intervenant",
+						ControleurIHM.Notification.ERREUR);
 				return;
 			}
 			
 			if (selectedRadioButton == null) {
-				this.ctrl.getVue().afficherNotification("Ajouter une intervention", "Sélectionnez un type de module", ControleurIHM.Notification.ERREUR);
+				this.ctrl.getVue().afficherNotification("Ajouter une intervention", "Sélectionnez un type de module",
+						ControleurIHM.Notification.ERREUR);
 				return;
 			}
 			
-			if ((this.nomTypeModule.equals("normal") || this.nomTypeModule.equals("PPP")) && !selectedRadioButton.getText().equals("HP") && this.tfNbGroupes.getText().isEmpty()) {
-				this.ctrl.getVue().afficherNotification("Ajouter une intervention", "Il faut rentrer un nombre de groupes", ControleurIHM.Notification.ERREUR);
+			if ((this.nomTypeModule.equals("normal") || this.nomTypeModule.equals("PPP"))
+					&& !selectedRadioButton.getText().equals("HP") && this.tfNbGroupes.getText().isEmpty()) {
+				this.ctrl.getVue().afficherNotification("Ajouter une intervention",
+						"Il faut saisir un nombre de groupes", ControleurIHM.Notification.ERREUR);
 				return;
 			}
 			
-			if ((this.nomTypeModule.equals("normal") || this.nomTypeModule.equals("PPP")) && !selectedRadioButton.getText().equals("HP") && this.tfNbSemaines.getText().isEmpty()) {
-				this.ctrl.getVue().afficherNotification("Ajouter une intervention", "Il faut rentrer un nombre de semaines", ControleurIHM.Notification.ERREUR);
+			if ((this.nomTypeModule.equals("normal") || this.nomTypeModule.equals("PPP"))
+					&& !selectedRadioButton.getText().equals("HP") && this.tfNbSemaines.getText().isEmpty()) {
+				this.ctrl.getVue().afficherNotification("Ajouter une intervention",
+						"Il faut saisir un nombre de semaines", ControleurIHM.Notification.ERREUR);
 				return;
 			}
 			
@@ -631,12 +637,13 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 			try {
 				nbSemaines = Integer.parseInt(this.tfNbSemaines.getText());
 				nbGroupes = Integer.parseInt(this.tfNbGroupes.getText());
-			} catch (Exception e) {}
+			} catch (Exception e) {
+			}
 			
 			HeureCours hc = null;
 			TypeCours tc = null;
 			
-			for (TypeCours t : this.ctrl.getModele().getHmTypeCours().values()) 
+			for (TypeCours t : this.ctrl.getModele().getHmTypeCours().values())
 				if (t.getNom().equals(selectedRadioButton.getText()))
 					tc = t;
 			
@@ -650,7 +657,8 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 			
 			if (!selectedRadioButton.getText().equals("HP") && hc != null && nbSemaines > hc.getNbSemaine()) {
 				this.ctrl.getVue().afficherNotification("Ajouter une intervention",
-						"Le nombre de semaines est supérieur au nombre de semaines du module (" + hc.getNbSemaine() + ")",
+						"Le nombre de semaines est supérieur au nombre de semaines du module (" + hc.getNbSemaine()
+								+ ")",
 						ControleurIHM.Notification.ERREUR);
 				return;
 			}
@@ -669,7 +677,8 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 				return;
 			}
 			
-			if (this.nomTypeModule.equals("stage") || this.nomTypeModule.equals("SAE") || selectedRadioButton.getText().equals("HP")) {
+			if (this.nomTypeModule.equals("stage") || this.nomTypeModule.equals("SAE")
+					|| selectedRadioButton.getText().equals("HP")) {
 				if (this.tfNbHeures.getText().isEmpty()) {
 					this.ctrl.getVue().afficherNotification("Ajouter une intervention",
 							"Il faut saisir un nombre d'heures", ControleurIHM.Notification.ERREUR);
@@ -681,11 +690,11 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 				this.ctrl.getModele().ajouterIntervention(interSelected.getId(), this.module.getId(), idTypeCours,
 						nbSemaines, this.tfCommentaire.getText(), Integer.parseInt(this.tfNbGroupes.getText()));
 			}
-			
 			this.maj();
 		}
 		
-		if (this.nomTypeModule.equals("SAE") || this.nomTypeModule.equals("stage") || ( selectedRadioButton != null && selectedRadioButton.getText().equals("HP"))) {
+		if (this.nomTypeModule.equals("SAE") || this.nomTypeModule.equals("stage")
+				|| (selectedRadioButton != null && selectedRadioButton.getText().equals("HP"))) {
 			String txtH = "";
 			if (this.tfNbHeures != null)
 				txtH = this.tfNbHeures.getText();
@@ -698,7 +707,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 			this.gridEntree.add(new Label("Nombre d'heures : "), 0, 0);
 			this.gridEntree.add(this.tfNbHeures, 1, 0);
 			return;
-		} else if ( selectedRadioButton != null && !selectedRadioButton.getText().equals("HP")) {
+		} else if (selectedRadioButton != null && !selectedRadioButton.getText().equals("HP")) {
 			this.gridEntree.getChildren().clear();
 			gridEntree.add(new Label("Nombre de semaines : "), 0, 0);
 			gridEntree.add(this.tfNbSemaines, 1, 0);
@@ -706,7 +715,6 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 			gridEntree.add(this.tfNbGroupes, 1, 1);
 			return;
 		}
-		
 		this.maj();
 	}
 	
@@ -729,4 +737,5 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 	public double getTotalPromo() {
 		return this.totalPromo;
 	}
+	
 }

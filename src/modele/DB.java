@@ -113,7 +113,7 @@ public class DB {
 			this.psInsertHeureCours                = this.connec.prepareStatement("INSERT INTO HeureCours VALUES (?,?,?,?,?,?)");
 			this.psInsertAnnee                     = this.connec.prepareStatement("INSERT INTO Annee VALUES (?, ?)");
 			
-			this.psUpdateCategorie                 = this.connec.prepareStatement("UPDATE Categorie SET nomCategorie = ?, hMaxCategorie = ?, hMinCategorie = ?, ratioTp = ? WHERE idAnnee = ? AND idCategorie = ?");
+			this.psUpdateCategorie                 = this.connec.prepareStatement("UPDATE Categorie SET nomCategorie = ?, hMinCategorie = ?, hMaxCategorie = ?, ratioTp = ? WHERE idAnnee = ? AND idCategorie = ?");
 			this.psUpdateIntervenant               = this.connec.prepareStatement("UPDATE Intervenant SET prenom = ?, nom = ?, email = ?, hMinIntervenant = ?, hMaxIntervenant = ?, idCategorie = ? WHERE idAnnee = ? AND idIntervenant = ?");
 			this.psUpdateIntervention              = this.connec.prepareStatement("UPDATE Intervention SET commentaire = ?, nbSemainesIntervention = ?, nbGroupe = ?, idIntervenant = ?, idModule = ? WHERE idIntervention = ? AND idAnnee = ?");
 			this.psUpdateModule                    = this.connec.prepareStatement("UPDATE Module SET nomModule = ?, code = ?, valid=?, idSemestre = ?, idTypeModule = ? WHERE idAnnee = ? AND idModule = ?");

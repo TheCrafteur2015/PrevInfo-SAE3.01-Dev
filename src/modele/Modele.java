@@ -63,23 +63,23 @@ public class Modele {
 		try {
 			Categorie.nbCategorie = getNbObject(this.hmCategories);
 			for (int i = 0; getNbObject(this.db.getCategories(this.idAnnee - i)) == -1; i++)
-				Categorie.nbCategorie = getNbObject(this.db.getCategories(this.idAnnee - i));
+				Categorie.nbCategorie = getNbObject(this.db.getCategories(this.idAnnee - i))+1;
 
 			Intervenant.nbIntervenant = getNbObject(this.hmIntervenants);
 			for (int i = 0; getNbObject(this.db.getIntervenants(this.idAnnee - i)) == -1; i++)
-				Intervenant.nbIntervenant = getNbObject(this.db.getIntervenants(this.idAnnee - i));
+				Intervenant.nbIntervenant = getNbObject(this.db.getIntervenants(this.idAnnee - i))+1;
 
 			Intervention.nbIntervention = getNbObject(this.hmInterventions);
 			for (int i = 0; getNbObject(this.db.getInterventions(this.idAnnee - i)) == -1; i++)
-				Intervention.nbIntervention = getNbObject(this.db.getInterventions(this.idAnnee - i));
+				Intervention.nbIntervention = getNbObject(this.db.getInterventions(this.idAnnee - i))+1;
 
 			Module.nbModule = getNbObject(this.hmModules);
 			for (int i = 0; getNbObject(this.db.getModules(this.idAnnee - i)) == -1; i++)
-				Module.nbModule = getNbObject(this.db.getModules(this.idAnnee - i));
+				Module.nbModule = getNbObject(this.db.getModules(this.idAnnee - i))+1;
 
 			Semestre.nbSemestre = getNbObject(this.hmSemestres);
 			for (int i = 0; getNbObject(this.db.getSemestres(this.idAnnee - i)) == -1; i++)
-				Semestre.nbSemestre = getNbObject(this.db.getSemestres(this.idAnnee - i));
+				Semestre.nbSemestre = getNbObject(this.db.getSemestres(this.idAnnee - i))+1;
 
 		} catch (SQLException e) {
 			e.printStackTrace();

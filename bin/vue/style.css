@@ -208,3 +208,10 @@
 	-fx-border-color: #FFCCCC;
 	
 }
+
+
+.normal-row > .table-cell {
+	-fx-background-color: #ECE8E8;
+	-fx-border-color: #ECE8E8;
+	
+}

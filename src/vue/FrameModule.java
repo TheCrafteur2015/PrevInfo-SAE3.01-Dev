@@ -1,11 +1,9 @@
 package vue;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import controleur.Controleur;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -34,6 +32,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
+
+import controleur.Controleur;
 import modele.HeureCours;
 import modele.Modele;
 import modele.Module;
@@ -45,7 +45,9 @@ import vue.ControleurIHM.Notification;
 public class FrameModule implements EventHandler<Event> {
 	
 	private Controleur ctrl;
+	
 	private AnchorPane centerPaneAccueil;
+	
 	private Map<Integer, Semestre> hmSemestres;
 	
 	private FrameIntervention frameIntervention;
@@ -58,16 +60,18 @@ public class FrameModule implements EventHandler<Event> {
 	private TabPane tabPane;
 	
 	private TableView<LigneModuleIHM> tbV;
+	
 	private ObservableList<LigneModuleIHM> lst;
-
 	
 	private List<TableColumn<LigneModuleIHM, String>> lstTableColumns;
 	
 	private Button btnAjouter;
+	
 	private ChoiceBox<TypeModule> choiceBoxTypeModule;
 	
-	private List<TextField> lstTxtF;
 	private ColorPicker colorPicker;
+	
+	private List<TextField> lstTxtF;
 	private List<String> tmpValue;
 	
 	private int idSelectedSemestre;
@@ -92,6 +96,7 @@ public class FrameModule implements EventHandler<Event> {
 		this.btnAjouter = new Button("Ajouter");
 		this.btnAjouter.addEventHandler(ActionEvent.ACTION, this);
 		this.choiceBoxTypeModule = new ChoiceBox<>();
+		
 		for (TypeModule tm : this.hmTypeModule.values())
 			this.choiceBoxTypeModule.getItems().add(tm);
 		
@@ -102,7 +107,6 @@ public class FrameModule implements EventHandler<Event> {
 		AnchorPane.setBottomAnchor(flowPane, 15.0);
 		
 		this.centerPaneAccueil.getChildren().addAll(tabPane, flowPane);
-		
 	}
 	
 	public void majTabs(int idSelectedSemestre) {
@@ -195,14 +199,12 @@ public class FrameModule implements EventHandler<Event> {
 							!oldValue.equals("nombre de semaine") &&
 							!oldValue.equals("nombre d'heures par semaine")) {
 							
-							LigneModuleIHM ligne = event.getTableView().getItems()
-									.get(event.getTablePosition().getRow());
+							LigneModuleIHM ligne = event.getTableView().getItems().get(event.getTablePosition().getRow());
 							int id = ligne.getId();
 							String col = event.getTableColumn().getText();
 							String newValue = event.getNewValue();
 							
-							// Ajoutez une vérification ici pour s'assurer que la nouvelle valeur n'est pas
-							// vide
+							// Ajoutez une vérification ici pour s'assurer que la nouvelle valeur n'est pas vide
 							if (newValue != null && !newValue.trim().isEmpty()) {
 								Module m = this.hmModule.get(id);
 								
@@ -237,11 +239,15 @@ public class FrameModule implements EventHandler<Event> {
 				if (colonne.equals("id"))
 					tbcl.setVisible(false);
 				else if (colonne.equals("Nom"))
-					tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.3));
-				else if (colonne.equals("supprimer"))
+					tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.28));
+				else if (colonne.equals("supprimer")) {
 					tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.093));
-				else if (colonne.equals("validation"))
-					tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.075));
+					tbcl.setStyle("-fx-alignment: center;");
+				} else if (colonne.equals("info")) {
+					tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.05685));
+					tbcl.setStyle("-fx-alignment: center;");
+				} else if (colonne.equals("validation"))
+					tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.095));
 				else
 					tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.05685));
 				tbV.getColumns().add(tbcl);
@@ -305,6 +311,30 @@ public class FrameModule implements EventHandler<Event> {
 				}
 			});
 		}
+		
+		/*
+		
+		for (TextField txt : lstTxtF) {
+			txt.textProperty().addListener((observable, oldValue, newValue) -> {
+				if (newValue.matches(Modele.REGEX_INT)) {
+					String[] partTxt = txt.getId().split("-");
+					Semestre s = hmSemestres.get(Integer.parseInt(partTxt[1]));
+					int nb = 0;
+					if (!txt.getText().isEmpty())
+						nb = Integer.parseInt(txt.getText());
+					switch (partTxt[0]) {
+						case "TD" -> s.setNbGTD(nb);
+						case "TP" -> s.setNbGTP(nb);
+						case "CM" -> s.setNbGCM(nb);
+						case "Semaine" -> s.setNbSemaine(nb);
+					}
+					ctrl.getModele().updateSemestre(s);
+				} else if (!newValue.matches(Modele.REGEX_INT)) {
+					txt.setText(oldValue);
+				}
+			});
+		}
+		*/
 		
 		this.tabPane.getSelectionModel().select(idSelectedSemestre);
 		

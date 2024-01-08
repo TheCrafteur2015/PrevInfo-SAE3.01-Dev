@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import controleur.Controleur;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -39,7 +38,8 @@ import javafx.scene.shape.StrokeLineJoin;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
+
+import controleur.Controleur;
 import modele.Categorie;
 import modele.HeureCours;
 import modele.Intervenant;
@@ -48,28 +48,34 @@ import modele.Modele;
 import modele.Module;
 import modele.Semestre;
 import modele.TypeCours;
+import vue.ControleurIHM.Notification;
 
 public class FrameIntervenant implements EventHandler<Event>, ChangeListener<String> {
-
+	
 	private Controleur ctrl;
+	
 	private AnchorPane centerPaneAccueil;
+	
 	private TableView<IntervenantIHM> tableViewIntervenant;
+	
 	private Button btnParamIntervenants;
 	private Button btnConfirmerIntervenant;
-
+	
 	private TextField tfPrenom;
 	private TextField tfNom;
 	private TextField tfEmail;
 	private TextField tfHMin;
 	private TextField tfHMax;
+	
 	private Button btnParamCategorie;
+	
 	@SuppressWarnings("unused")
 	private FrameParamCategorie frameParamCategorie;
-
+	
 	private ChoiceBox<Categorie> choiceBoxCategorie;
-
+	
 	private Intervenant modifIntervenant;
-
+	
 	public FrameIntervenant(Controleur ctrl, AnchorPane centerPaneAccueil) {
 		this.ctrl = ctrl;
 		this.centerPaneAccueil = centerPaneAccueil;
@@ -78,10 +84,9 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		this.tableViewIntervenant.setEditable(true);
 		this.modifIntervenant = null;
 		this.centerPaneAccueil.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
-
 		this.init();
 	}
-
+	
 	public void init() {
 		this.centerPaneAccueil.getChildren().clear();
 		
@@ -101,87 +106,77 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 					tbcl.prefWidthProperty().bind(this.tableViewIntervenant.widthProperty().multiply(0.1055));
 				}
 				tbcl.setResizable(false);
-
+				
 				if (colonne.equals("Infos"))
 					tbcl.setStyle("-fx-alignment: CENTER;");
 				if (colonne.equals("Supprimer"))
 					tbcl.setStyle("-fx-alignment: CENTER;");
-
+				
 				this.tableViewIntervenant.getColumns().add(tbcl);
 				this.tableViewIntervenant.getStyleClass().add("noheader");
-
 			}
 		}
-
+		
 		this.tableViewIntervenant.setPrefHeight(520);
 		this.tableViewIntervenant.setPrefWidth(1100);
-
+		
 		this.tableViewIntervenant.setRowFactory(tv -> new TableRow<IntervenantIHM>() {
-    @Override
-    protected void updateItem(IntervenantIHM item, boolean empty) {
-        super.updateItem(item, empty);
-
-        if (item == null || item.getErreurInter() == null || item.getErreurInter().isEmpty()) {
-            setStyle("");
-        } else {
-            setStyle("-fx-background-color: #FFCCCC;");
-            getStyleClass().add("erreur-row");
-        }
-    }
-
-   
-
-    {
-        addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
+			@Override
+			protected void updateItem(IntervenantIHM item, boolean empty) {
+				super.updateItem(item, empty);
+				this.getStyleClass().remove("erreur-row");
+				if (item != null && item.getErreurInter() != null && !item.getErreurInter().isEmpty()) {
+					this.getStyleClass().add("erreur-row");
+				} else {
+					this.getStyleClass().add("normal-row");
+				}
+			}
 			
-                final int index = getIndex();
-                double x = event.getScreenX();
-                if (index >= 0 && index < tableViewIntervenant.getItems().size() && (x < 578 || x > 632)
-				&& (x < 1498 || x > 1540)&& tableViewIntervenant.getSelectionModel().isSelected(index)) {
-                     tableViewIntervenant.getSelectionModel().clearSelection();
-                    btnParamIntervenants.setText("Ajouter un intervenant");
-                    event.consume();
-                } else {
-					
-                    btnParamIntervenants.setText("Paramètrer un Intervenant");
-					
-                }
-            }
-        });
-    }
-});
+			{
+				this.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent event) {
+						final int index = getIndex();
+						final FrameIntervenant frame = FrameIntervenant.this;
+						double x = event.getScreenX();
+						if (index >= 0 && index < frame.tableViewIntervenant.getItems().size() && (x < 578 || x > 632)
+								&& (x < 1498 || x > 1560)
+								&& frame.tableViewIntervenant.getSelectionModel().isSelected(index)) {
+							frame.tableViewIntervenant.getSelectionModel().clearSelection();
+							frame.btnParamIntervenants.setText("Ajouter un intervenant");
+							event.consume();
+						} else if ((x < 578 || x > 632) && (x < 1498 || x > 1560)) {
+							frame.btnParamIntervenants.setText("Paramètrer un Intervenant");
+						}
+					}
+				});
+			}
+		});
 		
 		AnchorPane.setTopAnchor(this.tableViewIntervenant, 20.0);
 		AnchorPane.setLeftAnchor(this.tableViewIntervenant, 20.0);
-
+		
 		this.btnParamIntervenants = new Button("Ajouter un Intervenant");
 		this.btnParamIntervenants.setStyle("-fx-background-radius: 100");
-
+		
 		this.btnParamIntervenants.setPrefSize(250, 40);
 		this.btnParamIntervenants.setId("btnParamIntervenants");
 		this.btnParamIntervenants.addEventHandler(ActionEvent.ACTION, this);
-		if (this.ctrl.getModele().getHmCategories().size() == 0) {
+		if (this.ctrl.getModele().getHmCategories().size() == 0)
 			this.btnParamIntervenants.setDisable(true);
-		}
-
+		
 		AnchorPane.setTopAnchor(this.btnParamIntervenants, 570.0);
 		AnchorPane.setLeftAnchor(this.btnParamIntervenants, (this.centerPaneAccueil.getWidth() / 2) + 50);
-
-		this.btnParamCategorie = new Button("Ajouter une catégorie");
-
-		btnParamCategorie.setStyle("-fx-background-radius: 100");
-
-		btnParamCategorie.setPrefSize(250, 40);
+		
+		this.btnParamCategorie = new Button("Paramétrer les catégories");
+		this.btnParamCategorie.setStyle("-fx-background-radius: 100");
+		this.btnParamCategorie.setPrefSize(250, 40);
 		this.btnParamCategorie.addEventHandler(ActionEvent.ACTION, this);
-
-		AnchorPane.setTopAnchor(btnParamCategorie, 570.0);
-		AnchorPane.setLeftAnchor(btnParamCategorie, (this.centerPaneAccueil.getWidth() / 2) - 300);
-
-		this.centerPaneAccueil.getChildren().add(this.tableViewIntervenant);
-		this.centerPaneAccueil.getChildren().add(btnParamIntervenants);
-		this.centerPaneAccueil.getChildren().add(btnParamCategorie);
+		
+		AnchorPane.setTopAnchor(this.btnParamCategorie, 570.0);
+		AnchorPane.setLeftAnchor(this.btnParamCategorie, (this.centerPaneAccueil.getWidth() / 2) - 300);
+		
+		this.centerPaneAccueil.getChildren().addAll(this.tableViewIntervenant, this.btnParamIntervenants, this.btnParamCategorie);
 		
 		this.majTableIntervenant();
 	}
@@ -189,9 +184,9 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 	public void majTableIntervenant() {
 		Map<Integer, Intervenant> hmInter = this.ctrl.getModele().getHmIntervenants();
 		ObservableList<IntervenantIHM> lst = FXCollections.observableArrayList();
-
+		
 		for (Intervenant i : hmInter.values()) {
-			Button infoButton = getInfoButton();
+			Button infoButton = this.getInfoButton();
 			infoButton.setId("Info-" + i.getId());
 			Button supButton = ResourceManager.getSupButton();
 			supButton.setId("Sup-" + i.getId());
@@ -199,15 +194,12 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 			infoButton.addEventHandler(ActionEvent.ACTION, this);
 			supButton.addEventHandler(ActionEvent.ACTION, this);
 			lst.add(new IntervenantIHM(infoButton, i.getPrenom(), i.getNom(),
-					this.ctrl.getModele().getNomCateg(i.getIdCategorie()), i.getEmail(), supButton, erreurInter));
+				this.ctrl.getModele().getNomCateg(i.getIdCategorie()), i.getEmail(), supButton, erreurInter));
 		}
-		
-		
-		
 		this.tableViewIntervenant.setItems(lst);
 		this.tableViewIntervenant.refresh();
 	}
-
+	
 	private String getErreurInter(Intervenant i) {
 		String ret = "";
 		double totalHeure = 0.0;
@@ -224,22 +216,21 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 				if (tc.getNom().equals("Tut") || tc.getNom().equals("REH") || tc.getNom().equals("SAE")
 						|| tc.getNom().equals("HP"))
 					heure = in.getNbGroupe();
-
 				if (!tc.getNom().equals("REH"))
 					totalHeure += in.getNbGroupe() * heure * tc.getCoefficient();
 				else
 					totalREH += in.getNbGroupe() * heure * tc.getCoefficient();
 			}
 		}
-
+		
 		if (totalHeure + totalREH < i.gethMin())
 			ret += "L'intervenant est en sous-service";
 		else if (totalHeure > i.gethMax())
 			ret += "L'intervenant est en sur-service";
-
+		
 		return ret;
 	}
-
+	
 	public Button getInfoButton() {
 		SVGPath infosvg = new SVGPath();
 		// infosvg.setContent(ResourceManager.getData("book"));
@@ -250,18 +241,19 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		infosvg.setStrokeWidth(1.5);
 		infosvg.setStrokeLineCap(StrokeLineCap.ROUND);
 		infosvg.setStrokeLineJoin(StrokeLineJoin.ROUND);
-
+		
 		Button infobtn = new Button();
 		infobtn.setGraphic(infosvg);
 		infobtn.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 		infobtn.getStyleClass().add("info-btn");
 		return infobtn;
 	}
-
+	
 	public void popupParamIntervenant(IntervenantIHM i) {
+		this.btnParamIntervenants.setText("Ajouter un intervenant");
 		if (i == null)
 			this.modifIntervenant = null;
-
+		
 		Stage popupStage = new Stage();
 		popupStage.initModality(Modality.APPLICATION_MODAL);
 		popupStage.setTitle("Ajouter un Intervenant");
@@ -269,33 +261,32 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		popupStage.setHeight(450);
 		popupStage.setWidth(300);
 		popupStage.setResizable(false);
-
+		
 		Text pnom = new Text("Prénom  ");
 		this.tfPrenom = new TextField();
 		this.tfPrenom.setMaxWidth(30 * 7);
 		this.tfPrenom.textProperty().addListener(this);
 		this.tfPrenom.getStyleClass().add("textField");
-
+		
 		Text nom = new Text("Nom  ");
 		this.tfNom = new TextField();
 		this.tfNom.setMaxWidth(30 * 7);
 		this.tfNom.textProperty().addListener(this);
 		this.tfNom.getStyleClass().add("textField");
-
+		
 		Text email = new Text("Email  ");
 		this.tfEmail = new TextField();
 		this.tfEmail.setMaxWidth(30 * 7);
 		this.tfEmail.textProperty().addListener(this);
 		this.tfEmail.getStyleClass().add("textField");
-
+		
 		Text categorie = new Text("Catégorie ");
 		this.choiceBoxCategorie = new ChoiceBox<>();
 		choiceBoxCategorie.setMaxWidth(30 * 7);
-
+		
 		Map<Integer, Categorie> hmCategorie = this.ctrl.getModele().getHmCategories();
-		for (Categorie c : hmCategorie.values()) {
+		for (Categorie c : hmCategorie.values())
 			choiceBoxCategorie.getItems().add(c);
-		}
 		
 		this.choiceBoxCategorie.addEventHandler(ActionEvent.ACTION, this);
 		
@@ -317,6 +308,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 			this.tfHMin.setText("" + c.gethMin());
 			this.tfHMax.setText("" + c.gethMax());
 		}
+		
 		this.btnConfirmerIntervenant = new Button("Ajouter");
 		this.btnConfirmerIntervenant.getStyleClass().add("confirmBtn");
 		this.btnConfirmerIntervenant.addEventHandler(ActionEvent.ACTION, this);
@@ -324,12 +316,13 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		
 		VBox vbox = new VBox(5);
 		vbox.setMaxSize(200, 400);
+		vbox.setAlignment(Pos.CENTER);
 		
 		BorderPane borderPane = new BorderPane();
 		borderPane.setTop(pnom);
 		borderPane.setCenter(this.tfPrenom);
 		borderPane.setPadding(new Insets(10));
-
+		
 		BorderPane borderPane2 = new BorderPane();
 		borderPane2.setTop(nom);
 		borderPane2.setCenter(this.tfNom);
@@ -355,8 +348,6 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		
 		BorderPane borderPane5 = new BorderPane();
 		borderPane5.setCenter(this.btnConfirmerIntervenant);
-		
-		vbox.setAlignment(Pos.CENTER);
 		
 		if (i != null) {
 			popupStage.setTitle("Paramétrer un Intervenant");
@@ -408,7 +399,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		gridPaneInfoInter.add(new Label("hMin : " + intervenant.gethMin()), 0, 1);
 		gridPaneInfoInter.add(new Label("hMax : " + intervenant.gethMax()), 1, 1);
 		gridPaneInfoInter.add(new Label("RatioTp : " + String.format("%.2f", categorie.getRatioTp())), 2, 1);
-		//gridPaneInfoInter.add(new Label(erreur), 1, 2);
+		// gridPaneInfoInter.add(new Label(erreur), 1, 2);
 		gridPaneInfoInter.setHgap(20);
 		gridPaneInfoInter.setVgap(20);
 		
@@ -428,15 +419,19 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 				if (i.getIdIntervenant() == idIntervenant && s.getId() == m.getIdSemestre()) {
 					TypeCours tc = hmTypeCours.get(i.getIdTypeCours());
 					double nbHeure = 0.0;
-					HeureCours hc = this.ctrl.getModele().getHmHeuresCours().get(i.getIdTypeCours() + "-" + i.getIdModule());
-					if (tc.getNom().equals("TD") || tc.getNom().equals("TP") || tc.getNom().equals("CM")) 
+					HeureCours hc = this.ctrl.getModele().getHmHeuresCours()
+							.get(i.getIdTypeCours() + "-" + i.getIdModule());
+					if (tc.getNom().equals("TD") || tc.getNom().equals("TP") || tc.getNom().equals("CM"))
 						nbHeure = hc.gethParSemaine() * hc.getNbSemaine() * i.getNbGroupe();
-					else nbHeure = i.getNbGroupe();
-					nbHeure = nbHeure* tc.getCoefficient();
+					else
+						nbHeure = i.getNbGroupe();
+					nbHeure = nbHeure * tc.getCoefficient();
 					if (tc.getNom().equals("TP"))
 						nbHeure = nbHeure * categorie.getRatioTp();
-					if (hmHSem.get(m) == null ) hmHSem.put(m, nbHeure);
-					else hmHSem.put(m, hmHSem.get(m)+nbHeure);
+					if (hmHSem.get(m) == null)
+						hmHSem.put(m, nbHeure);
+					else
+						hmHSem.put(m, hmHSem.get(m) + nbHeure);
 				}
 			}
 			cptSem++;
@@ -448,7 +443,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		String[] colonnes = { "Module", "s1", "s3", "s5", "sTotImpair", "s2", "s4", "s6", "sTotPair", "Total" };
 		
 		TableView<RecapIntervenantIHM> tbVRecap = new TableView<>();
-		tbVRecap.setPrefWidth(800);
+		tbVRecap.setPrefWidth(1000);
 		
 		if (tbVRecap.getColumns().size() < colonnes.length) {
 			for (String colonne : colonnes) {
@@ -459,53 +454,56 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 				tbcl.setSortable(false);
 				
 				if (colonne.equals("Module"))
-					tbcl.prefWidthProperty().bind(tbVRecap.widthProperty().multiply(0.43));
+					tbcl.prefWidthProperty().bind(tbVRecap.widthProperty().multiply(0.32));
 				else if (colonne.equals("sTotImpair"))
 					tbcl.prefWidthProperty().bind(tbVRecap.widthProperty().multiply(0.1));
 				else if (colonne.equals("sTotPair"))
 					tbcl.prefWidthProperty().bind(tbVRecap.widthProperty().multiply(0.075));
 				else
-					tbcl.prefWidthProperty().bind(tbVRecap.widthProperty().multiply(0.325 / 6));
+					tbcl.prefWidthProperty().bind(tbVRecap.widthProperty().multiply(0.415 / 6));
 				tbVRecap.getColumns().add(tbcl);
 			}
 		}
 		
 		ObservableList<RecapIntervenantIHM> olRecap = FXCollections.observableArrayList();
 		
-		int premierSemestre = new ArrayList<>(hmSem.keySet()).get(0);
+		List<Integer> alHmSem = new ArrayList<>(hmSem.keySet());
+		alHmSem.sort(null);
+		int premierSemestre = alHmSem.get(0);
 		
 		for (Module m : hmHSem.keySet()) {
 			double heure = hmHSem.get(m);
+			String heureFormat = String.format("%.2f", heure).replace(",", ".");
 			RecapIntervenantIHM rIhm = new RecapIntervenantIHM(m.getCode() + "_" + m.getNom());
 			switch (m.getIdSemestre() - premierSemestre) {
 				case 0 -> {
-					rIhm.setS1(heure + "");
-					rIhm.setStotimpair(heure + "");
+					rIhm.setS1(heureFormat + "");
+					rIhm.setStotimpair(heureFormat + "");
 					lstParSem.set(0, lstParSem.get(0) + heure);
 				}
 				case 1 -> {
-					rIhm.setS2(heure + "");
-					rIhm.setStotpair(heure + "");
+					rIhm.setS2(heureFormat + "");
+					rIhm.setStotpair(heureFormat + "");
 					lstParSem.set(1, lstParSem.get(1) + heure);
 				}
 				case 2 -> {
-					rIhm.setS3(heure + "");
-					rIhm.setStotimpair(heure + "");
+					rIhm.setS3(heureFormat + "");
+					rIhm.setStotimpair(heureFormat + "");
 					lstParSem.set(2, lstParSem.get(2) + heure);
 				}
 				case 3 -> {
-					rIhm.setS4(heure + "");
-					rIhm.setStotpair(heure + "");
+					rIhm.setS4(heureFormat + "");
+					rIhm.setStotpair(heureFormat + "");
 					lstParSem.set(3, lstParSem.get(3) + heure);
 				}
 				case 4 -> {
-					rIhm.setS5(heure + "");
-					rIhm.setStotimpair(heure + "");
+					rIhm.setS5(heureFormat + "");
+					rIhm.setStotimpair(heureFormat + "");
 					lstParSem.set(4, lstParSem.get(4) + heure);
 				}
 				case 5 -> {
-					rIhm.setS6(heure + "");
-					rIhm.setStotpair(heure + "");
+					rIhm.setS6(heureFormat + "");
+					rIhm.setStotpair(heureFormat + "");
 					lstParSem.set(5, lstParSem.get(5) + heure);
 				}
 			}
@@ -514,25 +512,25 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 				total = Double.parseDouble(rIhm.getStotimpair());
 			if (rIhm.getStotpair() != null)
 				total = Double.parseDouble(rIhm.getStotpair());
-
-			rIhm.setTotal(total + "");
+			
+			rIhm.setTotal(String.format("%.2f", total) + "");
 			olRecap.add(rIhm);
 		}
-
+		
 		double totalImpair = lstParSem.get(0) + lstParSem.get(2) + lstParSem.get(4);
 		double totalPair = lstParSem.get(1) + lstParSem.get(3) + lstParSem.get(5);
-		olRecap.add(new RecapIntervenantIHM("Total", lstParSem.get(0) + "", lstParSem.get(2) + "",
-				lstParSem.get(4) + "", totalImpair + "",
-				lstParSem.get(1) + "", lstParSem.get(3) + "", lstParSem.get(5) + "", totalPair + "",
-				(totalImpair + totalPair) + ""));
-
+		olRecap.add(new RecapIntervenantIHM("Total", String.format("%.2f", lstParSem.get(0)) + "", String.format("%.2f", lstParSem.get(2)) + "",
+				String.format("%.2f", lstParSem.get(4)) + "", String.format("%.2f", totalImpair) + "",
+				String.format("%.2f", lstParSem.get(1)) + "", String.format("%.2f", lstParSem.get(3)) + "",String.format("%.2f", lstParSem.get(5)) + "", String.format("%.2f", totalPair) + "",
+				String.format("%.2f", (totalImpair+totalPair)) + ""));
+		
 		tbVRecap.setItems(olRecap);
 		tbVRecap.setPrefHeight(41 * olRecap.size());
 		if (olRecap.size() == 1)
 			tbVRecap.setPrefHeight(80);
 		if (olRecap.size() == 2)
 			tbVRecap.setPrefHeight(tbVRecap.getPrefHeight() + 20);
-
+		
 		gridPaneInfoInter.setAlignment(Pos.CENTER);
 		GridPane gridPaneInfoErreur = new GridPane();
 		gridPaneInfoErreur.add(gridPaneInfoInter, 0, 0);
@@ -544,41 +542,42 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		
 		gridPaneTotal.add(gridPaneInfoErreur, 0, 0);
 		gridPaneTotal.add(tbVRecap, 0, 1);
-
+		
 		VBox vbox = new VBox(5);
 		vbox.setMaxSize(800, tbVRecap.getPrefHeight() + 130);
 		vbox.setPadding(new Insets(10));
 		vbox.setAlignment(Pos.CENTER);
 		vbox.setSpacing(30);
 		vbox.getChildren().addAll(gridPaneTotal);
-
+		
 		StackPane popupLayout = new StackPane();
 		popupLayout.setAlignment(Pos.CENTER);
 		popupLayout.getChildren().add(vbox);
 		popupLayout.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
 		Scene popupScene = new Scene(popupLayout, 820, tbVRecap.getPrefHeight() + 150);
 		popupStage.setScene(popupScene);
-
+		popupStage.setResizable(false);
 		popupStage.showAndWait();
 	}
-
+	
 	@Override
 	public void handle(Event event) {
 		if (event.getSource() == this.btnParamCategorie)
 			this.frameParamCategorie = new FrameParamCategorie(this.ctrl, this.centerPaneAccueil);
-
+		
 		if (event.getSource() == this.btnParamIntervenants) {
 			if (this.tableViewIntervenant.getSelectionModel().getSelectedItems().size() != 0)
 				this.popupParamIntervenant(this.tableViewIntervenant.getSelectionModel().getSelectedItems().get(0));
 			else
 				this.popupParamIntervenant(null);
 		}
+		
 		if (event.getSource() == this.choiceBoxCategorie) {
 			Categorie c = this.choiceBoxCategorie.getValue();
 			this.tfHMin.setText("" + c.gethMin());
 			this.tfHMax.setText("" + c.gethMax());
 		}
-
+		
 		if (event.getSource() == this.btnConfirmerIntervenant) {
 			String prenom = this.tfPrenom.getText();
 			String nom = this.tfNom.getText();
@@ -600,6 +599,16 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 				double hMin = Double.parseDouble(tfHMinText);
 				double hMax = Double.parseDouble(tfHMaxText);
 				int annee = this.ctrl.getModele().getIdAnnee();
+				if (hMin > hMax) {
+					this.ctrl.getVue().afficherNotification("Erreur", "Les heures minimales doivent être inférieures aux heures maximales", Notification.ERREUR );
+					return;
+				} else if (hMax < hMin) {
+						this.ctrl.getVue().afficherNotification("Erreur", "Les heures maximales doivent être supérieures aux heures minimales", Notification.ERREUR );
+						return;
+					} else if (hMax > c.gethMax()) {
+					this.ctrl.getVue().afficherNotification("Erreur", "Les heures maximales doivent être inférieures\naux heures maximales de la catégorie !", Notification.ERREUR );
+					return;
+				}
 				((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
 				if (this.modifIntervenant != null) {
 					this.modifIntervenant.setPrenom(prenom);
@@ -610,35 +619,33 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 					this.modifIntervenant.setIdCategorie(this.choiceBoxCategorie.getValue().getId());
 					this.ctrl.getModele().updateIntervenant(this.modifIntervenant);
 				} else {
-					this.ctrl.getModele().ajouterIntervenant(prenom, nom, email, hMin, hMax,
-							this.choiceBoxCategorie.getValue().getId());
+					this.ctrl.getModele().ajouterIntervenant(prenom, nom, email, hMin, hMax, this.choiceBoxCategorie.getValue().getId());
 				}
-
 				this.majTableIntervenant();
 			}
-
+		
 		} else if (event.getSource() instanceof Button button) {
-			if (!(button.getId() == null)) {
+			if (button.getId() != null) {
 				String[] textButton = button.getId().split("-");
 				if (textButton[0].equals("Info")) {
 					Intervenant i = this.ctrl.getModele().getHmIntervenants().get(Integer.parseInt(textButton[1]));
 					this.popupAfficheModule(i.getId(), getErreurInter(i));
 				} else if (textButton[0].equals("Sup")) {
+					btnParamIntervenants.setText("Ajouter un intervenant");
 					this.ctrl.getVue().popupValider();
-					if (ControleurIHM.bIsValidate) {
+					if (ControleurIHM.bIsValidate)
 						this.ctrl.getModele().supprimerIntervenant(Integer.parseInt(textButton[1]));
-					}
 					ControleurIHM.bIsValidate = false;
 					this.majTableIntervenant();
 				}
 			}
 		}
 	}
-
+	
 	public ObservableList<String> getStylesheets() {
 		return this.centerPaneAccueil.getStylesheets();
 	}
-
+	
 	public void changed(ObservableValue<? extends String> observable, String oldStr, String newStr) {
 		if ((observable == this.tfPrenom.textProperty() || observable == this.tfNom.textProperty())
 				&& (!(this.tfPrenom.getText().isEmpty() || this.tfNom.getText().isEmpty()))) {

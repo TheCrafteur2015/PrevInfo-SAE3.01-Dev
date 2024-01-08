@@ -48,6 +48,9 @@ public class Exportation {
 	 */
 	public URL exportIntervenantHtml(int idIntervenant, String nomFichier, String chemin) {
 		String body = "";
+		body += "		<header>\n";
+		body += "			<h1>" + nomFichier + "</h1>\n";
+		body += "		</header>\n";
 		body += "			<table border=\"1\">\n";
 		body += "				<thead>\n";
 		body += "					<tr>\n";
@@ -330,7 +333,7 @@ public class Exportation {
 		totalReel = cmReel + tdReel + tpReel + rehReel + saeReel + tutoratReel + hPonctuelReel;
 		totalTheorique = cmTheorique + tdTheorique + tpTheorique + rehTheorique + saeTheorique + tutoratTheorique + hPonctuelTheorique;
 		String ret = "", tab = "\t".repeat(5);
-		ret += "				<tr class=\"semestre" + mod.getIdSemestre() + " \\\">\n";
+		ret += "				<tr class=\"semestre" + mod.getIdSemestre() + " \">\n";
 		ret += "					<th> " + mod.getCode() + " " + mod.getNom() + " </th>\n";
 		switch (mod.getIdTypeModule()) {
 			case 1:
@@ -434,6 +437,11 @@ public class Exportation {
 	
 	private URL exportPPPHTML(Module mod, String nomFichier, String chemin) {
 		String body = "";
+		body += "	<body>\n";
+		body += "		<header class=\"semestre"+ mod.getIdSemestre() +"\" >\n";
+		body += "			<h1>" + nomFichier + "</h1>\n";
+		body += "		</header>\n";
+		body += "		<main>\n";
 		body += "			<table border=\"1\">\n";
 		body += "				<thead>\n";
 		body += "					<tr>\n";
@@ -576,6 +584,11 @@ public class Exportation {
 	
 	private URL exportSAEHTML(Module mod, String nomFichier, String chemin) {
 		String body = "";
+		body += "	<body>\n";
+		body += "		<header class=\"semestre"+ mod.getIdSemestre() +"\" >\n";
+		body += "			<h1>" + nomFichier + "</h1>\n";
+		body += "		</header>\n";
+		body += "		<main>\n";
 		body += "			<table border=\"1\">\n";
 		body += "				<thead>\n";
 		body += "					<tr>\n";
@@ -685,6 +698,11 @@ public class Exportation {
 	
 	private URL exportNormalHTML(Module mod, String nomFichier, String chemin) {
 		String body = "";
+		body += "	<body>\n";
+		body += "		<header class=\"semestre"+ mod.getIdSemestre() +"\" >\n";
+		body += "			<h1>" + nomFichier + "</h1>\n";
+		body += "		</header>\n";
+		body += "		<main>\n";
 		body += "			<table border=\"1\">\n";
 		body += "				<thead>\n";
 		body += "					<tr>\n";
@@ -811,6 +829,11 @@ public class Exportation {
 	
 	private URL exportStageHTML(Module mod, String nomFichier, String chemin) {
 		String body = "";
+		body += "	<body>\n";
+		body += "		<header class=\"semestre"+ mod.getIdSemestre() +"\" >\n";
+		body += "			<h1>" + nomFichier + "</h1>\n";
+		body += "		</header>\n";
+		body += "		<main>\n";
 		body += "			<table border=\"1\">\n";
 		body += "				<thead>\n";
 		body += "					<tr>\n";
@@ -922,14 +945,20 @@ public class Exportation {
 	/*-------*/
 	
 	private URL cssGenerator(String chemin) {
-		String css = ":root {\n";
+		String ret = "";
+		ret += "thead {background-color: #222222;color: #ffffff;}\n";
+		ret += "tbody {background-color: #e4f0f5;}\n";
+		ret += "tfoot {background-color: #777777;color: #ffffff;}\n";
+		ret += "caption {padding: 10px;caption-side: bottom;}\n";
+		ret += "table {margin:auto;border-collapse: collapse;border: 2px solid rgb(255, 255, 255);letter-spacing: 1px;font-family: sans-serif;font-size: 0.8rem;}\n";
+		ret += "td,th {border: 1px solid rgb(190, 190, 190);padding: 5px 10px;}\n";
+		ret += "td {text-align: center;}\n";
+		ret += "tbody th{text-align: left;}\n";
+		ret += "header {background: #bcb7e7;color: #000000;padding: 20px;text-align: center;}";
 		for (Semestre semestre : model.getHmSemestres().values()) {
-			int r = Integer.parseInt(semestre.getCouleur().substring(1, 3), 16);
-			int g = Integer.parseInt(semestre.getCouleur().substring(3, 5), 16);
-			int b = Integer.parseInt(semestre.getCouleur().substring(5, 7), 16);
-			css += "\t--semestre-" + semestre.getId() + "{background-color: rgba(" + r + "," + g + "," + b + ", 0.5);}\n";
+			ret += ".semestre"+ semestre.getId() + "{background-color: rgba(" + Integer.parseInt(semestre.getCouleur().substring(1,3),16) + "," + Integer.parseInt(semestre.getCouleur().substring(3,5),16) + "," + Integer.parseInt(semestre.getCouleur().substring(5,7),16) + ", 0.5);}\n";
 		}
-		return this.ecrireFichier(chemin + "tab.css", css + "}\n\n" + ResourceManager.TAB_TEMPLATE_CONTENT);
+		return this.ecrireFichier(chemin + "tab.css", ret);
 	}
 	
 	private String head(String titre) {
@@ -941,11 +970,6 @@ public class Exportation {
 		ret += "		<title>" + titre + "</title>\n";
 		ret += "		<link href=\"tab.css\" rel=\"stylesheet\">\n";
 		ret += "	</head>\n";
-		ret += "	<body>\n";
-		ret += "		<header>\n";
-		ret += "			<h1>" + titre + "</h1>\n";
-		ret += "		</header>\n";
-		ret += "		<main>\n";
 		return ret;
 	}
 	

@@ -9,7 +9,6 @@ import java.util.ResourceBundle;
 
 import org.controlsfx.control.Notifications;
 
-import controleur.Controleur;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -37,6 +36,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import controleur.Controleur;
 import modele.Modele;
 import modele.TypeCours;
 
@@ -129,9 +130,8 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 	public void majListAnnee() {
 		this.choiceBoxAnnee.getItems().clear();
 		Map<Integer, String> hmAnnee = this.ctrl.getModele().getHmAnnee();
-		for (String s : hmAnnee.values()) {
+		for (String s : hmAnnee.values())
 			this.choiceBoxAnnee.getItems().add(s);
-		}
 	}
 	
 	public void setAnnee(String annee) {
