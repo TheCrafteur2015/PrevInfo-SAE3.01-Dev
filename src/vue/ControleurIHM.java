@@ -95,9 +95,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 	
 	public void initialize(URL url, ResourceBundle rb) {
 		this.ctrl = Controleur.getInstance(this);
-		
-		// System.out.println(Arrays.toString(this.centerPaneAccueil.getStylesheets()));
-		
+				
 		this.majListAnnee();
 		
 		this.setAnnee(this.ctrl.getModele().getHmAnnee().get(this.ctrl.getModele().getIdAnnee()));
@@ -231,10 +229,6 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 	void allerModules(ActionEvent event) {
 		
 		this.btnModule.getStyleClass().add("selected-btn");
-		System.out.println(this.btnModule.getStyleClass());
-		System.out.println(this.btnAccueil.getStyleClass());
-		System.out.println(this.btnExporter.getStyleClass());
-		System.out.println(this.btnIntervenant.getStyleClass());
 		this.btnAccueil.getStyleClass().clear();
 		this.btnAccueil.getStyleClass().addAll("button", "btn-accueil");
 		

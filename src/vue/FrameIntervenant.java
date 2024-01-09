@@ -211,7 +211,6 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		Map<Integer, TypeCours> hmTypeCours = this.ctrl.getModele().getHmTypeCours();
 		Map<String, HeureCours> hmHeureCours = this.ctrl.getModele().getHmHeuresCours();
 		for (Intervention in : hmInter.values()) {
-			System.out.println(in);
 			if (in.getIdIntervenant() == i.getId()) {
 				TypeCours tc = hmTypeCours.get(in.getIdTypeCours());
 				HeureCours hc = hmHeureCours.get(in.getIdTypeCours() + "-" + in.getIdModule());
@@ -311,7 +310,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 			this.tfHMin.setText("" + c.gethMin());
 			this.tfHMax.setText("" + c.gethMax());
 		}
-		
+				
 		this.btnConfirmerIntervenant = new Button("Ajouter");
 		this.btnConfirmerIntervenant.getStyleClass().add("confirmBtn");
 		this.btnConfirmerIntervenant.addEventHandler(ActionEvent.ACTION, this);
@@ -349,6 +348,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		gridPane1.setPadding(new Insets(10));
 		gridPane1.setVgap(10);
 		
+
 		BorderPane borderPane5 = new BorderPane();
 		borderPane5.setCenter(this.btnConfirmerIntervenant);
 		
@@ -363,12 +363,14 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 			this.tfEmail.setText(inter.getEmail());
 			this.tfHMin.setText(inter.gethMin() + "");
 			this.tfHMax.setText(inter.gethMax() + "");
+			/*
 			for (Categorie c : hmCategorie.values()) {
 				if (inter.getIdCategorie() == c.getId()) {
 					this.choiceBoxCategorie.setValue(c);
 					break;
 				}
 			}
+			*/
 		}
 		
 		StackPane popupLayout = new StackPane();
@@ -589,15 +591,9 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 			
 			Categorie c = this.choiceBoxCategorie.getValue();
 			
-			if (prenom.isEmpty() || nom.isEmpty()
-					|| this.tfHMin.getText().isEmpty()
-					|| this.tfHMax.getText().isEmpty() || c == null) {
-				System.out.println("Veuillez remplir tous les champs");
-				System.out.println("Prenom : " + prenom);
-				System.out.println("Nom : " + nom);
-				System.out.println("HMax : " + this.tfHMax.getText());
-				System.out.println("Categorie : " + c);
-			} else {
+			if (!prenom.isEmpty() && !nom.isEmpty()
+					&& !this.tfHMin.getText().isEmpty()
+					&& !this.tfHMax.getText().isEmpty() && c != null) {
 				double hMin = Double.parseDouble(tfHMinText);
 				double hMax = Double.parseDouble(tfHMaxText);
 				if (hMin > hMax) {

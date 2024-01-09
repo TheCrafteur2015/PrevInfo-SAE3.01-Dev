@@ -180,7 +180,6 @@ public class FrameModule implements EventHandler<Event> {
 		flowPaneTxtF.getChildren().add(colorPicker);
 
 		this.tbV = new AlternatingColorTableView<>(lig);
-
 		String[] colonnes = { "id", "info", "validation", "Code", "Nom", "CM", "TD", "TP", "HP", "REH", "Tut", "SAE",
 				"supprimer" };
 
@@ -202,8 +201,7 @@ public class FrameModule implements EventHandler<Event> {
 					tbcl.setEditable(true);
 					tbcl.setCellFactory(TextFieldTableCell.forTableColumn());
 					tbcl.setOnEditCommit((TableColumn.CellEditEvent<LigneModuleIHM, String> event) -> {
-						ScrollBar verticalBar = (ScrollBar) this.tbV.lookupAll(".scroll-bar:vertical");
-						System.out.println(verticalBar.valueProperty().get()); 
+						ScrollBar verticalBar = (ScrollBar) this.tbV.lookup(".scroll-bar:vertical");
 						String oldValue = event.getOldValue();
 						if (!oldValue.isEmpty() && !oldValue.equals("nombre d'heures totales") &&
 								!oldValue.equals("nombre de semaine") &&
@@ -231,8 +229,7 @@ public class FrameModule implements EventHandler<Event> {
 												if (Integer.parseInt(newValue) <= semestre.getNbSemaine()) hc.setNbSemaine(Integer.parseInt(newValue));
 												else {
 													this.ctrl.getVue().afficherNotification("Erreur saisie", "Le nombre de semaine du module dépasse \n celui du semestre", Notification.ERREUR);
-													this.init(idSelectedSemestre, event.getTablePosition().getRow());
-								
+													this.init(idSelectedSemestre, (int)(verticalBar.valueProperty().get()*80));
 													return;
 												} 
 											}
@@ -256,7 +253,7 @@ public class FrameModule implements EventHandler<Event> {
 							this.ctrl.getVue().afficherNotification("Erreur de saisie",
 									"Impossible d'éditer cette cellule", Notification.ERREUR);
 						}
-						this.init(idSelectedSemestre, event.getTablePosition().getRow());
+						this.init(idSelectedSemestre, (int)(verticalBar.valueProperty().get()*80));
 					});
 
 				}

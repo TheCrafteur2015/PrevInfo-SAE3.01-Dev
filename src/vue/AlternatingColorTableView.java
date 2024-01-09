@@ -24,6 +24,7 @@ public class AlternatingColorTableView<T> extends TableView<T> {
         itemsProperty().addListener((observable, oldValue, newValue) -> {
             resetColumnStyles();
         });
+        
         this.scrollTo(ligne);
     }
 
