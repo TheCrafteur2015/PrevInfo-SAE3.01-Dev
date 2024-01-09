@@ -207,15 +207,18 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 	
 	@Override
 	public void changed(ObservableValue<? extends String> observable, String oldString, String newString) {
-		if (!this.tfHeureMin.getText().matches(Modele.REGEX_DOUBLE)) {
+		if (!this.tfHeureMin.getText().matches(Modele.REGEX_DOUBLE) || this.tfHeureMin.getText().length() > 7) {
 			this.tfHeureMin.setText(oldString);
 		}
-		if (!this.tfHeureMax.getText().matches(Modele.REGEX_DOUBLE)) {
+		if (!this.tfHeureMax.getText().matches(Modele.REGEX_DOUBLE)|| this.tfHeureMax.getText().length() > 7) {
 			this.tfHeureMax.setText(oldString);
 		}
-		if (!this.tfRatioTp.getText().matches(Modele.REGEX_DOUBLE_FRACTION)) {
+		if (!this.tfRatioTp.getText().matches(Modele.REGEX_DOUBLE_FRACTION) || this.tfRatioTp.getText().length() > 7) {
 			this.tfRatioTp.setText(oldString);
 		}
+		if ( this.nomCategorie.getText().length() > 20) 
+			this.nomCategorie.setText(oldString);
+		
 		this.btnAjouter.setDisable(this.nomCategorie.getText().isEmpty() || this.tfHeureMin.getText().isEmpty()
 				|| this.tfHeureMax.getText().isEmpty() || this.tfRatioTp.getText().isEmpty());
 	}

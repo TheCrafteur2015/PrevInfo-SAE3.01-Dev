@@ -128,6 +128,7 @@ public class FrameModule implements EventHandler<Event> {
 		int i = keysList.get(idSelectedSemestre);
 		Semestre semestre = this.hmSemestres.get(i);
 		BorderPane borderPaneTab = new BorderPane();
+		BorderPane borderPaneHaut = new BorderPane();
 		FlowPane flowPaneTxtF = new FlowPane();
 		flowPaneTxtF.setHgap(5);
 
@@ -173,11 +174,14 @@ public class FrameModule implements EventHandler<Event> {
 		colorPicker.setId(semestre.getId() + "");
 		colorPicker.addEventHandler(ActionEvent.ACTION, this);
 		colorPicker.getStyleClass().add(ColorPicker.STYLE_CLASS_BUTTON);
-		colorPicker.setPadding(new Insets(0, 0, 0, 480));
+		// colorPicker.setPadding(new Insets(0, 0, 0, 480));
 
 		flowPaneTxtF.setVgap(20);
 		flowPaneTxtF.setHgap(20);
-		flowPaneTxtF.getChildren().add(colorPicker);
+		// flowPaneTxtF.getChildren().add(colorPicker);
+		
+		borderPaneHaut.setCenter(flowPaneTxtF);
+		borderPaneHaut.setRight(colorPicker);
 
 		this.tbV = new AlternatingColorTableView<>(lig);
 		String[] colonnes = { "id", "info", "validation", "Code", "Nom", "CM", "TD", "TP", "HP", "REH", "Tut", "SAE",
@@ -189,7 +193,6 @@ public class FrameModule implements EventHandler<Event> {
 			for (String colonne : colonnes) {
 				TableColumn<LigneModuleIHM, String> tbcl = new TableColumn<>(colonne);
 				this.lstTableColumns.add(tbcl);
-				// tbcl.getStyleClass().add("center");
 				tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
 				tbcl.setResizable(false);
 				tbcl.setReorderable(false);
@@ -297,7 +300,7 @@ public class FrameModule implements EventHandler<Event> {
 		tbV.setItems(lst);
 
 		borderPaneTab.setCenter(tbV);
-		borderPaneTab.setTop(flowPaneTxtF);
+		borderPaneTab.setTop(borderPaneHaut);
 		borderPaneTab.setPadding(new Insets(5, 0, 0, 0));
 
 		for (int j = 0; j < 6; j++) {
@@ -314,7 +317,7 @@ public class FrameModule implements EventHandler<Event> {
 			txt.textProperty().addListener(new ChangeListener<String>() {
 				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 					if (txt.textProperty() == observable) {
-						if (newValue.matches(Modele.REGEX_INT)) {
+						if (newValue.matches(Modele.REGEX_INT) && newValue.length() < 3) {
 							String[] partTxt = txt.getId().split("-");
 							Semestre s = hmSemestres.get(Integer.parseInt(partTxt[1]));
 							int nb = 0;
@@ -327,7 +330,7 @@ public class FrameModule implements EventHandler<Event> {
 								case "Semaine" -> s.setNbSemaine(nb);
 							}
 							ctrl.getModele().updateSemestre(s);
-						} else if (!newValue.matches(Modele.REGEX_INT)) {
+						} else  {
 							txt.setText(oldValue);
 						}
 					}

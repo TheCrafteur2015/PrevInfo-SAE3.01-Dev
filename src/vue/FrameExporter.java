@@ -74,6 +74,7 @@ public class FrameExporter implements EventHandler<Event> {
 		this.choiceBoxIntervenant.setPrefWidth(500);
 		this.choiceBoxModule.setPrefWidth(500);
 		
+				
 		this.btnCSV = new Button("Exporter tous les intervenants (CSV)");
 		this.btnCSV.addEventHandler(ActionEvent.ACTION, this);
 		

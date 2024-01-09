@@ -679,6 +679,8 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		return this.centerPaneAccueil.getStylesheets();
 	}
 	
+	
+	
 	public void changed(ObservableValue<? extends String> observable, String oldStr, String newStr) {
 		if ((observable == this.tfPrenom.textProperty() || observable == this.tfNom.textProperty())
 				&& (!(this.tfPrenom.getText().isEmpty() || this.tfNom.getText().isEmpty()))) {
@@ -687,11 +689,29 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 			if (!this.tfEmail.getText().matches(Modele.REGEX_EMAIL))
 				this.tfEmail.setText(this.tfEmail.getText().replaceAll("[^-a-zA-Z0-9@.]", ""));
 		}
+		if ((observable == this.tfPrenom.textProperty()))
+		{
+			if (this.tfPrenom.getText().length() > 20)
+				this.tfPrenom.setText(oldStr);
+		}
+		else if ((observable == this.tfNom.textProperty()))
+		{
+			if (this.tfNom.getText().length() > 20)
+				this.tfNom.setText(oldStr);
+		}
+		else if ((observable == this.tfEmail.textProperty()))
+		{
+			if (this.tfEmail.getText().length() > 50)
+				this.tfEmail.setText(oldStr);
+		}
+		
 		if (observable == this.tfHMin.textProperty()) {
-			if (!(this.tfHMin.getText().matches(Modele.REGEX_DOUBLE)))
+			if (!(this.tfHMin.getText().matches(Modele.REGEX_DOUBLE)) || this.tfHMin.getText().length() > 7 )
 				this.tfHMin.setText(oldStr);
-		} else if (observable == this.tfHMax.textProperty()) {
-			if (!(this.tfHMax.getText().matches(Modele.REGEX_DOUBLE)))
+		} 
+		
+		 if (observable == this.tfHMax.textProperty()) {
+			if (!(this.tfHMax.getText().matches(Modele.REGEX_DOUBLE))|| this.tfHMax.getText().length() > 7)
 				this.tfHMax.setText(oldStr);
 		}
 		if (this.tfPrenom.getText().isEmpty() || this.tfNom.getText().isEmpty()

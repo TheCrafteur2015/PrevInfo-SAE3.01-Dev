@@ -411,7 +411,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 	public void changed(ObservableValue<? extends String> observable, String oldString, String newString) {
 		for (TextField text : alTextField) {
 			if (observable == text.textProperty()) {
-				if (!text.getText().matches(Modele.REGEX_DOUBLE_FRACTION))
+				if (!text.getText().matches(Modele.REGEX_DOUBLE_FRACTION) || text.getText().length() > 7)
 					text.setText(oldString);
 			}
 		}

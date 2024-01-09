@@ -233,6 +233,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 
 		this.tfCommentaire = new TextField();
 		this.tfCommentaire.setPrefSize(30 * 7, 20);
+		this.tfCommentaire.textProperty().addListener(this);
 		this.tfCommentaire.setAlignment(Pos.CENTER);
 
 		gridCommentaire.add(new Label("Commentaire : "), 0, 0);
@@ -736,13 +737,21 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 
 	@Override
 	public void changed(ObservableValue<? extends String> observable, String oldString, String newString) {
+		if (observable == this.tfCommentaire.textProperty())
+		{
+		
+			if (this.tfCommentaire.getText().length() > 25)
+				this.tfCommentaire.setText(oldString);
+			return;
+		}
+		
 		if (this.nomTypeModule.equals("PPP") || this.nomTypeModule.equals("Ressource")) {
-			if (!this.tfNbGroupes.getText().matches(Modele.REGEX_INT))
+			if (!this.tfNbGroupes.getText().matches(Modele.REGEX_INT) || this.tfNbGroupes.getText().length() > 3)
 				this.tfNbGroupes.setText(oldString);
-			if (!this.tfNbSemaines.getText().matches(Modele.REGEX_INT))
+			if (!this.tfNbSemaines.getText().matches(Modele.REGEX_INT) || this.tfNbSemaines.getText().length() > 3)
 				this.tfNbSemaines.setText(oldString);
 		}
-		if (!this.tfNbHeures.getText().matches(Modele.REGEX_INT))
+		if (!this.tfNbHeures.getText().matches(Modele.REGEX_INT) || this.tfNbHeures.getText().length() > 3)
 			this.tfNbHeures.setText(oldString);
 	}
 

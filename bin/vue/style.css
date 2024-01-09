@@ -284,7 +284,7 @@
 
 
 .tbV-module .table-row-cell {
-	-fx-background-color: #ECE8E8;
+	-fx-background-color: rgb(236, 232, 232);
 }
 
 .tbV-module .table-cell {
