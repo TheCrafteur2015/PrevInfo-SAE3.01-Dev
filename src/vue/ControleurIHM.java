@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 
 import org.controlsfx.control.Notifications;
 
+import controleur.Controleur;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -36,8 +37,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
-import controleur.Controleur;
 import modele.Modele;
 import modele.TypeCours;
 
@@ -210,9 +209,14 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 	void allerIntervenants(ActionEvent event) {
 	this.btnIntervenant.getStyleClass().add("selected-btn");
 		
-		this.btnAccueil.getStyleClass().remove("selected-btn");
-		this.btnExporter.getStyleClass().remove("selected-btn");
-		this.btnModule.getStyleClass().remove("selected-btn");
+		this.btnAccueil.getStyleClass().clear();
+		this.btnAccueil.getStyleClass().addAll("button", "btn-accueil");
+		
+		this.btnExporter.getStyleClass().clear();
+		this.btnExporter.getStyleClass().addAll("button", "btn-accueil");
+		
+		this.btnModule.getStyleClass().clear();
+		this.btnModule.getStyleClass().addAll("button", "btn-accueil");
 	
 		if(this.ctrl.getModele().isDuplication()) 
 			this.modeDuplication();
@@ -225,11 +229,20 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 	
 	@FXML
 	void allerModules(ActionEvent event) {
-	
+		
 		this.btnModule.getStyleClass().add("selected-btn");
-		this.btnAccueil.getStyleClass().remove("selected-btn");
-		this.btnExporter.getStyleClass().remove("selected-btn");
-		this.btnIntervenant.getStyleClass().remove("selected-btn");
+		System.out.println(this.btnModule.getStyleClass());
+		System.out.println(this.btnAccueil.getStyleClass());
+		System.out.println(this.btnExporter.getStyleClass());
+		System.out.println(this.btnIntervenant.getStyleClass());
+		this.btnAccueil.getStyleClass().clear();
+		this.btnAccueil.getStyleClass().addAll("button", "btn-accueil");
+		
+		this.btnExporter.getStyleClass().clear();
+		this.btnExporter.getStyleClass().addAll("button", "btn-accueil");
+		
+		this.btnIntervenant.getStyleClass().clear();
+		this.btnIntervenant.getStyleClass().addAll("button", "btn-accueil");
 		
 		if (this.ctrl.getModele().isDuplication())
 			this.modeDuplication();
@@ -241,9 +254,14 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 	
 	this.btnExporter.getStyleClass().add("selected-btn");
 		
-		this.btnAccueil.getStyleClass().remove("selected-btn");
-		this.btnIntervenant.getStyleClass().remove("selected-btn");
-		this.btnModule.getStyleClass().remove("selected-btn");
+		this.btnAccueil.getStyleClass().clear();
+		this.btnAccueil.getStyleClass().addAll("button", "btn-accueil");
+		
+		this.btnIntervenant.getStyleClass().clear();
+		this.btnIntervenant.getStyleClass().addAll("button", "btn-accueil");
+		
+		this.btnModule.getStyleClass().clear();
+		this.btnModule.getStyleClass().addAll("button", "btn-accueil");
 		
 		if (this.ctrl.getModele().isDuplication())
 			this.modeDuplication();

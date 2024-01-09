@@ -73,15 +73,12 @@
 
 .choice .context-menu {
 	-fx-pref-width: 124;
-	/* Your width for the context menu background shown */
 	-fx-background-insets: 0, 0 0 0 0, 0 0 0 0, 0 0 0 0;
 }
 
 .choice-exporter .context-menu {
 	-fx-pref-width: 500;
-	/* Your width for the context menu background shown */
 	-fx-pref-height: 200;
-	/* Your height for the context menu background shown */
 	-fx-background-insets: 0, 0 0 0 0, 0 0 0 0, 0 0 0 0;
 }
 
@@ -100,7 +97,6 @@
 
 .radio-button:selected .radio {
 	-fx-border-color: #4D61CC;
-	/* Border color for selected state */
 }
 
 .radio-button:selected .radio>.dot {
@@ -257,7 +253,6 @@
 	-fx-text-fill: white;
 }
 
-/* style.css */
 
 .color-picker {
     -fx-display-caret: false;
@@ -289,7 +284,7 @@
 
 
 .tbV-module .table-row-cell {
-	-fx-background-color: #ECE8E8
+	-fx-background-color: #ECE8E8;
 }
 
 .tbV-module .table-cell {

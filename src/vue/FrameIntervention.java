@@ -341,10 +341,10 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 				else {
 					if (this.nomTypeModule.equals("normal") || this.nomTypeModule.equals("PPP"))
 						tbcl.prefWidthProperty()
-								.bind(tbV.widthProperty().multiply(0.8 / (colonnes.length - 1) - 0.0025));
+								.bind(tbV.widthProperty().multiply(0.79 / (colonnes.length - 1) - 0.0025));
 					else
 						tbcl.prefWidthProperty()
-								.bind(tbV.widthProperty().multiply(0.8 / (colonnes.length - 3) - 0.0025));
+								.bind(tbV.widthProperty().multiply(0.79 / (colonnes.length - 3) - 0.0025));
 				}
 			}
 		}
@@ -567,9 +567,9 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 			this.totalPromo += Double.parseDouble(lStrings.get(1));
 			this.totalAffecte += Double.parseDouble(lStrings.get(2));
 
-			recap1.setSomme(totalPn + "");
-			recap2.setSomme(this.totalPromo + "");
-			recap3.setSomme(this.totalAffecte + "");
+			recap1.setSomme(String.format("%.2f", totalPn));
+			recap2.setSomme(String.format("%.2f", this.totalPromo));
+			recap3.setSomme(String.format("%.2f", this.totalAffecte));
 		}
 
 		olRecapInterventionIHMs.addAll(recap1, recap2, recap3);

@@ -211,6 +211,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		Map<Integer, TypeCours> hmTypeCours = this.ctrl.getModele().getHmTypeCours();
 		Map<String, HeureCours> hmHeureCours = this.ctrl.getModele().getHmHeuresCours();
 		for (Intervention in : hmInter.values()) {
+			System.out.println(in);
 			if (in.getIdIntervenant() == i.getId()) {
 				TypeCours tc = hmTypeCours.get(in.getIdTypeCours());
 				HeureCours hc = hmHeureCours.get(in.getIdTypeCours() + "-" + in.getIdModule());

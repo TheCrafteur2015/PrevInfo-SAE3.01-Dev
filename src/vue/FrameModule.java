@@ -17,6 +17,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
@@ -79,10 +80,10 @@ public class FrameModule implements EventHandler<Event> {
 	public FrameModule(Controleur ctrl, AnchorPane centerPaneAccueil) {
 		this.ctrl = ctrl;
 		this.centerPaneAccueil = centerPaneAccueil;
-		this.init(0);
+		this.init(0, 0);
 	}
 
-	public void init(int idSelectedSemestre) {
+	public void init(int idSelectedSemestre, int ligne) {
 		this.idSelectedSemestre = idSelectedSemestre;
 		this.hmHeureCours = this.ctrl.getModele().getHmHeuresCours();
 		this.centerPaneAccueil.getChildren().clear();
@@ -90,7 +91,7 @@ public class FrameModule implements EventHandler<Event> {
 		this.hmTypeModule = this.ctrl.getModele().getHmTypeModule();
 		this.lstTxtF = new ArrayList<>();
 
-		this.majTabs(idSelectedSemestre);
+		this.majTabs(idSelectedSemestre, ligne);
 
 		FlowPane flowPane = new FlowPane();
 		this.btnAjouter = new Button("Ajouter");
@@ -109,7 +110,7 @@ public class FrameModule implements EventHandler<Event> {
 		this.centerPaneAccueil.getChildren().addAll(tabPane, flowPane);
 	}
 
-	public void majTabs(int idSelectedSemestre) {
+	public void majTabs(int idSelectedSemestre, int lig) {
 		this.idSelectedSemestre = idSelectedSemestre;
 		this.tabPane = new TabPane();
 		this.tabPane.addEventHandler(Event.ANY, this);
@@ -178,7 +179,7 @@ public class FrameModule implements EventHandler<Event> {
 		flowPaneTxtF.setHgap(20);
 		flowPaneTxtF.getChildren().add(colorPicker);
 
-		this.tbV = new AlternatingColorTableView<>();
+		this.tbV = new AlternatingColorTableView<>(lig);
 
 		String[] colonnes = { "id", "info", "validation", "Code", "Nom", "CM", "TD", "TP", "HP", "REH", "Tut", "SAE",
 				"supprimer" };
@@ -189,7 +190,7 @@ public class FrameModule implements EventHandler<Event> {
 			for (String colonne : colonnes) {
 				TableColumn<LigneModuleIHM, String> tbcl = new TableColumn<>(colonne);
 				this.lstTableColumns.add(tbcl);
-				tbcl.getStyleClass().add("center");
+				//tbcl.getStyleClass().add("center");
 				tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
 				tbcl.setResizable(false);
 				tbcl.setReorderable(false);
@@ -201,6 +202,8 @@ public class FrameModule implements EventHandler<Event> {
 					tbcl.setEditable(true);
 					tbcl.setCellFactory(TextFieldTableCell.forTableColumn());
 					tbcl.setOnEditCommit((TableColumn.CellEditEvent<LigneModuleIHM, String> event) -> {
+						ScrollBar verticalBar = (ScrollBar) this.tbV.lookupAll(".scroll-bar:vertical");
+						System.out.println(verticalBar.valueProperty().get()); 
 						String oldValue = event.getOldValue();
 						if (!oldValue.isEmpty() && !oldValue.equals("nombre d'heures totales") &&
 								!oldValue.equals("nombre de semaine") &&
@@ -212,8 +215,6 @@ public class FrameModule implements EventHandler<Event> {
 							String col = event.getTableColumn().getText();
 							String newValue = event.getNewValue();
 
-							// Ajoutez une vérification ici pour s'assurer que la nouvelle valeur n'est pas
-							// vide
 							if (newValue != null && !newValue.trim().isEmpty()) {
 								Module m = this.hmModule.get(id);
 
@@ -226,8 +227,16 @@ public class FrameModule implements EventHandler<Event> {
 									HeureCours hc = this.hmHeureCours.get(idTypeCours + "-" + m.getId());
 
 									if (ligne.getNom().equals("nombre de semaine")
-											&& newValue.matches(Modele.REGEX_INT))
-										hc.setNbSemaine(Integer.parseInt(newValue));
+											&& newValue.matches(Modele.REGEX_INT)) {
+												if (Integer.parseInt(newValue) <= semestre.getNbSemaine()) hc.setNbSemaine(Integer.parseInt(newValue));
+												else {
+													this.ctrl.getVue().afficherNotification("Erreur saisie", "Le nombre de semaine du module dépasse \n celui du semestre", Notification.ERREUR);
+													this.init(idSelectedSemestre, event.getTablePosition().getRow());
+								
+													return;
+												} 
+											}
+										
 									else if (ligne.getNom().equals("nombre d'heures totales")
 											&& newValue.matches(Modele.REGEX_DOUBLE))
 										hc.setHeure(Double.parseDouble(newValue));
@@ -247,7 +256,7 @@ public class FrameModule implements EventHandler<Event> {
 							this.ctrl.getVue().afficherNotification("Erreur de saisie",
 									"Impossible d'éditer cette cellule", Notification.ERREUR);
 						}
-						this.init(idSelectedSemestre);
+						this.init(idSelectedSemestre, event.getTablePosition().getRow());
 					});
 
 				}
@@ -283,8 +292,8 @@ public class FrameModule implements EventHandler<Event> {
 			switch (this.hmTypeModule.get(m.getIdTypeModule()).getNom()) {
 				case "PPP" -> this.ajouterModulePPP(m);
 				case "SAE" -> this.ajouterModuleSAE(m);
-				case "normal" -> this.ajouterModuleNormale(m);
-				case "stage" -> this.ajouterModuleStage(m);
+				case "Ressource" -> this.ajouterModuleNormale(m);
+				case "Stage" -> this.ajouterModuleStage(m);
 			}
 		}
 
@@ -329,30 +338,6 @@ public class FrameModule implements EventHandler<Event> {
 				}
 			});
 		}
-
-		/*
-		 * 
-		 * for (TextField txt : lstTxtF) {
-		 * txt.textProperty().addListener((observable, oldValue, newValue) -> {
-		 * if (newValue.matches(Modele.REGEX_INT)) {
-		 * String[] partTxt = txt.getId().split("-");
-		 * Semestre s = hmSemestres.get(Integer.parseInt(partTxt[1]));
-		 * int nb = 0;
-		 * if (!txt.getText().isEmpty())
-		 * nb = Integer.parseInt(txt.getText());
-		 * switch (partTxt[0]) {
-		 * case "TD" -> s.setNbGTD(nb);
-		 * case "TP" -> s.setNbGTP(nb);
-		 * case "CM" -> s.setNbGCM(nb);
-		 * case "Semaine" -> s.setNbSemaine(nb);
-		 * }
-		 * ctrl.getModele().updateSemestre(s);
-		 * } else if (!newValue.matches(Modele.REGEX_INT)) {
-		 * txt.setText(oldValue);
-		 * }
-		 * });
-		 * }
-		 */
 
 		this.tabPane.getSelectionModel().select(idSelectedSemestre);
 
@@ -526,7 +511,7 @@ public class FrameModule implements EventHandler<Event> {
 		int idSemestre = Integer.parseInt(tabPane.getSelectionModel().getSelectedItem().getId());
 		char c = tm.getNom().equals("SAE") ? 'S' : 'R';
 		String code = c + "" + (tabPane.getSelectionModel().getSelectedIndex() + 1) + ".00";
-		if (tm.getNom().equals("stage"))
+		if (tm.getNom().equals("Stage"))
 			code = "Stage";
 		this.ctrl.getModele().ajouterModule("Nom de la ressource", code, false, tm.getId(), idSemestre);
 		int idModule = Module.nbModule;
@@ -545,11 +530,11 @@ public class FrameModule implements EventHandler<Event> {
 					switch (tm.getNom()) {
 						case "PPP" -> lstTypesCours = List.of(1, 2, 3, 4, 7);
 						case "SAE" -> lstTypesCours = List.of(6, 4, 7);
-						case "normal" -> lstTypesCours = List.of(1, 2, 3, 7);
-						case "stage" -> lstTypesCours = List.of(5, 4, 7);
+						case "Ressource" -> lstTypesCours = List.of(1, 2, 3, 7);
+						case "Stage" -> lstTypesCours = List.of(5, 4, 7);
 					}
 					this.nouveauModule(lstTypesCours, tm);
-					this.init(this.tabPane.getSelectionModel().getSelectedIndex());
+					this.init(this.tabPane.getSelectionModel().getSelectedIndex(), 0);
 				}
 			} else {
 				String[] textBtn = btn.getId().split("-");
@@ -573,9 +558,9 @@ public class FrameModule implements EventHandler<Event> {
 
 		if (action.getSource() instanceof TabPane tp) {
 			if (this.idSelectedSemestre != tp.getSelectionModel().getSelectedIndex())
-				this.init(tp.getSelectionModel().getSelectedIndex());
+				this.init(tp.getSelectionModel().getSelectedIndex(), 0);
 		} else {
-			this.init(this.tabPane.getSelectionModel().getSelectedIndex());
+			this.init(this.tabPane.getSelectionModel().getSelectedIndex(), 0);
 		}
 	}
 }
