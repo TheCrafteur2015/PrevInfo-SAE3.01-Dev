@@ -93,8 +93,6 @@ public class DB {
 			this.psSelectModuleBySemestre          = this.connec.prepareStatement("SELECT * FROM Module WHERE idSemestre = ? AND idAnnee = ?");
 			this.psSelectTypeCours                 = this.connec.prepareStatement("SELECT * FROM TypeCours");
 			this.psSelectHeureCours                = this.connec.prepareStatement("SELECT * FROM HeureCours JOIN Module USING(idModule) WHERE Module.idAnnee = ? ");
-			// this.psSelectDerAnnee                  = this.connec.prepareStatement("SELECT * FROM Annee LIMIT 1");
-			// this.psSelectDerAnnee.setFetchDirection(ResultSet.TYPE_SCROLL_SENSITIVE);
 			this.psSelectDerAnnee                  = this.connec.prepareStatement("SELECT * FROM annee ORDER BY idannee DESC LIMIT 1;");
 			this.psSelectNomCateg                  = this.connec.prepareStatement("SELECT nomCategorie FROM Categorie WHERE idCategorie = ?");
 			this.psSelectAnnee                     = this.connec.prepareStatement("SELECT * FROM Annee");

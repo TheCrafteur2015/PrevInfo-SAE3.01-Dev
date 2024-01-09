@@ -291,11 +291,14 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 			double heureCours = 0;
 			double heureCoursReelles = 0;
 			double hParSemaine = 1;
+			int nbSemaine = 1;
 			for (HeureCours hCours : this.ctrl.getModele().getHeureCoursByModule(i.getIdModule(), i.getIdAnnee()))
 				if (hCours.getIdTypeCours() == typeCours.getId()) {
 					if (hCours.gethParSemaine() != 0)
 						hParSemaine = hCours.gethParSemaine();
-					heureCours = hParSemaine * i.getNbSemaines() * i.getNbGroupe();
+					if (hCours.getNbSemaine() != 0) 
+						nbSemaine = hCours.getNbSemaine();
+					heureCours = hParSemaine * nbSemaine * i.getNbGroupe();
 					heureCoursReelles = heureCours * typeCours.getCoefficient();
 					if (typeCours.getNom().equals("TP"))
 						heureCoursReelles = heureCoursReelles * categorie.getRatioTp();

@@ -80,6 +80,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		this.ctrl = ctrl;
 		this.centerPaneAccueil = centerPaneAccueil;
 		this.tableViewIntervenant = new TableView<>();
+		this.tableViewIntervenant.setPlaceholder(new Label("Aucun intervenant dans la table !"));
 		this.tableViewIntervenant.setId("my-table");
 		this.tableViewIntervenant.setEditable(true);
 		this.modifIntervenant = null;
@@ -202,6 +203,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		this.tableViewIntervenant.refresh();
 	}
 	
+	/*/
 	private String getErreurInter(Intervenant i) {
 		String ret = "";
 		double totalHeure = 0.0;
@@ -218,6 +220,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 				if (tc.getNom().equals("Tut") || tc.getNom().equals("REH") || tc.getNom().equals("SAE")
 						|| tc.getNom().equals("HP"))
 					heure = in.getNbGroupe();
+					
 				if (!tc.getNom().equals("REH"))
 					totalHeure += in.getNbGroupe() * heure * tc.getCoefficient();
 				else
@@ -225,6 +228,39 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 			}
 		}
 		
+		if (totalHeure + totalREH < i.gethMin())
+			ret += "L'intervenant est en sous-service";
+		else if (totalHeure > i.gethMax())
+			ret += "L'intervenant est en sur-service";
+		
+		return ret;
+	}
+	*/
+	
+	private String getErreurInter(Intervenant i) {
+		String ret = "";
+		double totalHeure = 0.0;
+		double totalREH = 0.0;
+		double heure = 0.0;
+		Map<Integer, Intervention> hmInter = this.ctrl.getModele().getHmInterventions();
+		Map<Integer, TypeCours> hmTypeCours = this.ctrl.getModele().getHmTypeCours();
+		Map<String, HeureCours> hmHeureCours = this.ctrl.getModele().getHmHeuresCours();
+		for (Intervention in : hmInter.values()) {
+			if (in.getIdIntervenant() == i.getId()) {
+				TypeCours tc = hmTypeCours.get(in.getIdTypeCours());
+				HeureCours hc = hmHeureCours.get(in.getIdTypeCours() + "-" + in.getIdModule());
+				heure = in.getNbGroupe() * hc.gethParSemaine() * hc.getNbSemaine();
+				if (tc.getNom().equals("Tut") || tc.getNom().equals("REH") || tc.getNom().equals("SAE")
+						|| tc.getNom().equals("HP"))
+					heure = in.getNbGroupe();
+					
+				if (!tc.getNom().equals("REH"))
+					totalHeure += heure * tc.getCoefficient();
+				else
+					totalREH += heure * tc.getCoefficient();
+			}
+		}
+		totalHeure = Double.parseDouble(String.format("%.2f", totalHeure).replace(",", "."));
 		if (totalHeure + totalREH < i.gethMin())
 			ret += "L'intervenant est en sous-service";
 		else if (totalHeure > i.gethMax())

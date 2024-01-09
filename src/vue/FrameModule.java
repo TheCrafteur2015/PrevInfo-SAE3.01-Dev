@@ -189,12 +189,11 @@ public class FrameModule implements EventHandler<Event> {
 			for (String colonne : colonnes) {
 				TableColumn<LigneModuleIHM, String> tbcl = new TableColumn<>(colonne);
 				this.lstTableColumns.add(tbcl);
-				//tbcl.getStyleClass().add("center");
+				// tbcl.getStyleClass().add("center");
 				tbcl.setCellValueFactory(new PropertyValueFactory<>(colonne.toLowerCase()));
 				tbcl.setResizable(false);
 				tbcl.setReorderable(false);
 				tbcl.setSortable(false);
-
 
 				if (!colonne.equals("id") && !colonne.equals("info") && !colonne.equals("supprimer")
 						&& !colonne.equals("validation")) {
@@ -203,7 +202,7 @@ public class FrameModule implements EventHandler<Event> {
 					tbcl.setOnEditCommit((TableColumn.CellEditEvent<LigneModuleIHM, String> event) -> {
 						ScrollBar verticalBar = (ScrollBar) this.tbV.lookup(".scroll-bar:vertical");
 						String oldValue = event.getOldValue();
-						if (!oldValue.isEmpty() && !oldValue.equals("nombre d'heures totales") &&
+						if (!oldValue.isEmpty() && !oldValue.equals("nombre d'heures PN local") &&
 								!oldValue.equals("nombre de semaine") &&
 								!oldValue.equals("nombre d'heures par semaine")) {
 
@@ -226,15 +225,17 @@ public class FrameModule implements EventHandler<Event> {
 
 									if (ligne.getNom().equals("nombre de semaine")
 											&& newValue.matches(Modele.REGEX_INT)) {
-												if (Integer.parseInt(newValue) <= semestre.getNbSemaine()) hc.setNbSemaine(Integer.parseInt(newValue));
-												else {
-													this.ctrl.getVue().afficherNotification("Erreur saisie", "Le nombre de semaine du module dépasse \n celui du semestre", Notification.ERREUR);
-													this.init(idSelectedSemestre, (int)(verticalBar.valueProperty().get()*80));
-													return;
-												} 
-											}
-										
-									else if (ligne.getNom().equals("nombre d'heures totales")
+										if (Integer.parseInt(newValue) <= semestre.getNbSemaine())
+											hc.setNbSemaine(Integer.parseInt(newValue));
+										else {
+											this.ctrl.getVue().afficherNotification("Erreur saisie",
+													"Le nombre de semaine du module dépasse \n celui du semestre",
+													Notification.ERREUR);
+											this.init(idSelectedSemestre,
+													(int) (verticalBar.valueProperty().get() * 80));
+											return;
+										}
+									} else if (ligne.getNom().equals("nombre d'heures PN local")
 											&& newValue.matches(Modele.REGEX_DOUBLE))
 										hc.setHeure(Double.parseDouble(newValue));
 									else if (ligne.getNom().equals("nombre d'heures par semaine")
@@ -253,7 +254,7 @@ public class FrameModule implements EventHandler<Event> {
 							this.ctrl.getVue().afficherNotification("Erreur de saisie",
 									"Impossible d'éditer cette cellule", Notification.ERREUR);
 						}
-						this.init(idSelectedSemestre, (int)(verticalBar.valueProperty().get()*80));
+						this.init(idSelectedSemestre, (int) (verticalBar.valueProperty().get() * 80));
 					});
 
 				}
@@ -270,10 +271,9 @@ public class FrameModule implements EventHandler<Event> {
 				else
 					tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.05685));
 				tbV.getColumns().add(tbcl);
-				
+
 			}
 		}
-
 
 		this.tbV.setEditable(true);
 		this.tbV.getSelectionModel().setCellSelectionEnabled(true);
@@ -298,8 +298,7 @@ public class FrameModule implements EventHandler<Event> {
 
 		borderPaneTab.setCenter(tbV);
 		borderPaneTab.setTop(flowPaneTxtF);
-		borderPaneTab.setPadding(new Insets(5,0,0,0));
-		
+		borderPaneTab.setPadding(new Insets(5, 0, 0, 0));
 
 		for (int j = 0; j < 6; j++) {
 			if (j != idSelectedSemestre)
@@ -369,7 +368,7 @@ public class FrameModule implements EventHandler<Event> {
 		String recapHeure = getRecap(m);
 		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, recapHeure, m.getCode(), m.getNom(), "", "", "", "",
 				"", "", "", supButton));
-		this.lst.add(new LigneModuleIHM(id, null, "", "", "nombre d'heures totales", moduleIHM.getCmHeure() + "",
+		this.lst.add(new LigneModuleIHM(id, null, "", "", "nombre d'heures PN local", moduleIHM.getCmHeure() + "",
 				moduleIHM.getTdHeure() + "", moduleIHM.getTpHeure() + "", "", moduleIHM.getTutHeure() + "", "",
 				moduleIHM.getHpHeure() + "", null));
 		this.lst.add(new LigneModuleIHM(id, null, "", "", "nombre de semaine", moduleIHM.getCmSemaine() + "",
@@ -402,7 +401,7 @@ public class FrameModule implements EventHandler<Event> {
 		String recapHeure = getRecap(m);
 		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, recapHeure, m.getCode(), m.getNom(), "", "", "", "",
 				"", "", "", supButton));
-		this.lst.add(new LigneModuleIHM(id, null, "", "", "nombre d'heures totales", "", "", "", "",
+		this.lst.add(new LigneModuleIHM(id, null, "", "", "nombre d'heures PN local", "", "", "", "",
 				moduleIHM.getTutHeure() + "", moduleIHM.getSaeHeure() + "", "" + "", null));
 		this.lst.add(new LigneModuleIHM(id, null, "", "", "", "", "", "", "", "", "", "", null));
 	}
@@ -430,7 +429,7 @@ public class FrameModule implements EventHandler<Event> {
 		String recapHeure = getRecap(m);
 		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, recapHeure, m.getCode(), m.getNom(), "", "", "", "",
 				"", "", "", supButton));
-		this.lst.add(new LigneModuleIHM(id, null, "", "", "nombre d'heures totales", moduleIHM.getCmHeure() + "",
+		this.lst.add(new LigneModuleIHM(id, null, "", "", "nombre d'heures PN local", moduleIHM.getCmHeure() + "",
 				moduleIHM.getTdHeure() + "", moduleIHM.getTpHeure() + "", "", "", "", moduleIHM.getHpHeure() + "",
 				null));
 		this.lst.add(new LigneModuleIHM(id, null, "", "", "nombre de semaine", moduleIHM.getCmSemaine() + "",
@@ -464,7 +463,7 @@ public class FrameModule implements EventHandler<Event> {
 		this.lst.add(new LigneModuleIHM(id, btnAjouterIntervenant, recapHeure, m.getCode(), m.getNom(), "", "", "", "",
 				"", "", "",
 				supButton));
-		this.lst.add(new LigneModuleIHM(id, null, "", "", "nombre d'heures totales", "", "", "",
+		this.lst.add(new LigneModuleIHM(id, null, "", "", "nombre d'heures PN local", "", "", "",
 				moduleIHM.getRehHeure() + "", moduleIHM.getTutHeure() + "", "", "" + "", null));
 		this.lst.add(new LigneModuleIHM(id, null, "", "", "", "", "", "", "", "", "", "", null));
 	}
