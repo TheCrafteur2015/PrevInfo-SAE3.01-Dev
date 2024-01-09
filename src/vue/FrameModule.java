@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -12,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
@@ -21,8 +21,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -170,10 +168,11 @@ public class FrameModule implements EventHandler<Event> {
 		gridPaneTmp.add(textFieldTmp, 1, 0);
 		flowPaneTxtF.getChildren().add(gridPaneTmp);
 
-		this.colorPicker = new ColorPicker(Color.web(semestre.getCouleur()));
-		this.colorPicker.setId(semestre.getId() + "");
-		this.colorPicker.addEventHandler(ActionEvent.ACTION, this);
-		this.colorPicker.getStyleClass().add(ColorPicker.STYLE_CLASS_BUTTON);
+		colorPicker = new ColorPicker(Color.web(semestre.getCouleur()));
+		colorPicker.setId(semestre.getId() + "");
+		colorPicker.addEventHandler(ActionEvent.ACTION, this);
+		colorPicker.getStyleClass().add(ColorPicker.STYLE_CLASS_BUTTON);
+		colorPicker.setPadding(new Insets(0, 0, 0, 480));
 
 		flowPaneTxtF.setVgap(20);
 		flowPaneTxtF.setHgap(20);
@@ -183,13 +182,7 @@ public class FrameModule implements EventHandler<Event> {
 
 		String[] colonnes = { "id", "info", "validation", "Code", "Nom", "CM", "TD", "TP", "HP", "REH", "Tut", "SAE",
 				"supprimer" };
-		int cptColonne = 0;
 
-		Color couleurPick = this.colorPicker.getValue();
-		String couleurClair = new Color(couleurPick.getRed(), couleurPick.getGreen(), couleurPick.getBlue(), 0.4)
-				.toString().replace("0x", "#");
-		String couleurSombre = new Color(couleurPick.getRed(), couleurPick.getGreen(), couleurPick.getBlue(), 0.2)
-				.toString().replace("0x", "#");
 		this.tbV.getStyleClass().add("tbV-module");
 
 		if (tbV.getColumns().size() < 11) {
@@ -201,22 +194,8 @@ public class FrameModule implements EventHandler<Event> {
 				tbcl.setResizable(false);
 				tbcl.setReorderable(false);
 				tbcl.setSortable(false);
-				/*
-				 * if (cptColonne % 2 == 0) {
-				 * tbcl.setStyle(tbcl.getStyle() + ";" + "-fx-background-color:" +
-				 * couleurClair);
-				 * } else {
-				 * tbcl.setStyle(tbcl.getStyle() + ";" + "-fx-background-color:" +
-				 * couleurSombre);
-				 * }
-				 * 
-				 * if (colonne.equals("supprimer")) {
-				 * tbcl.setStyle(tbcl.getStyle() + ";" + "-fx-alignment:CENTER" + ";" +
-				 * "-fx-padding: 2 0 2 0px;");
-				 * }
-				 */
 
-				cptColonne++;
+
 				if (!colonne.equals("id") && !colonne.equals("info") && !colonne.equals("supprimer")
 						&& !colonne.equals("validation")) {
 					tbcl.setEditable(true);
@@ -313,6 +292,8 @@ public class FrameModule implements EventHandler<Event> {
 
 		borderPaneTab.setCenter(tbV);
 		borderPaneTab.setTop(flowPaneTxtF);
+		borderPaneTab.setPadding(new Insets(5,0,0,0));
+		
 
 		for (int j = 0; j < 6; j++) {
 			if (j != idSelectedSemestre)

@@ -36,7 +36,6 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 	
 	private Controleur ctrl;
 	
-	private AnchorPane centerPaneAccueil;
 	
 	private TextField nomCategorie;
 	private TextField tfHeureMin;
@@ -46,13 +45,11 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 	private Map<Integer, Categorie> hmCategorie;
 	
 	private Button btnAjouter;
-	private Button btnSup;
 	
 	private TableView<CategorieIHM> tableView;
 	
 	public FrameParamCategorie(Controleur ctrl, AnchorPane centerPaneAccueil) {
 		this.ctrl = ctrl;
-		this.centerPaneAccueil = centerPaneAccueil;
 		this.hmCategorie = this.ctrl.getModele().getHmCategories();
 		this.init();
 	}

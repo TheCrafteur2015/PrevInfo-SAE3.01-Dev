@@ -24,7 +24,7 @@ INSERT INTO Semestre (idSemestre, nbGTD, nbGTP, nbGCM, nbSemaine, couleur, idAnn
 INSERT INTO Categorie (idCategorie ,nomCategorie, hMinCategorie, hMaxCategorie, ratioTp, idAnnee) VALUES
 	(1, 'Enseignant',           384,  576,    1,    1),
 	(2, 'Contractuel',          192,  384,    1,    1),
-	(3, 'Vacataire',              0,   90, 0.66,    1),
+	(3, 'Vacataire',              0,   90, 0.67,    1),
 	(4, 'Enseignant-Chercheur', 192,  364,    1,    1);
 
 INSERT INTO TypeModule (idTypeModule, nomTypeModule) VALUES
@@ -125,13 +125,13 @@ INSERT INTO Module (idModule, code ,nomModule, valid, idSemestre,idAnnee, idType
 	(89, 'S6.01', 'Évolution d’une application existante',                         FALSE, 6, 1, 2);
 
 INSERT INTO TypeCours (idTypeCours ,nomCours, coefficient) VALUES
-	(1, 'TD',  1),
-	(2, 'TP',  1),
-	(3, 'CM',  1),
-	(4, 'Tut', 1),
-	(5, 'REH', 1),
-	(6, 'SAE', 1),
-	(7, 'HP',  1);
+	(1, 'TD',  1   ),
+	(2, 'TP',  0.67),
+	(3, 'CM',  1.5 ),
+	(4, 'Tut', 1   ),
+	(5, 'REH', 1   ),
+	(6, 'SAE', 1   ),
+	(7, 'HP',  1   );
 
 INSERT INTO HeureCours (idTypeCours,idModule,heure,nbSemaine,hParSemaine, idAnnee) VALUES
 	(3,  1, 6, 0, 0, 1), (1,  1, 65, 0, 0, 1), (2,  1, 28, 0, 0, 1), (7,  1, 0, 0, 0, 1),
@@ -225,36 +225,37 @@ INSERT INTO HeureCours (idTypeCours,idModule,heure,nbSemaine,hParSemaine, idAnne
 	(4, 89, 0, 0, 0, 1), (6, 89,  0, 0, 0, 1);
 
 INSERT INTO Intervenant (idIntervenant ,prenom, nom, email, hMinIntervenant, hMaxIntervenant, idAnnee,  idCategorie) VALUES
-	( 1, 'Philippe',  'Le Pivert',  'philippe.le-pivert@univ-lehavre.fr',      0, 0, 1, 1),
-	( 2, 'Hadhoum',   'Boukachour', 'hadhoum.boukachour@univ-lehavre.fr',      0, 0, 1, 1),
-	( 3, 'Frédéric',  'Serin',      'frederic.serin@univ-lehavre.fr',          0, 0, 1, 1),
-	( 4, 'Hugues',    'Duflo',      'hugues.duflo@univ-lehavre.fr',            0, 0, 1, 1),
-	( 5, 'Jaouad',    'Boukachour', 'jaouad.boukachour@univ-lehavre.fr',       0, 0, 1, 1),
-	( 6, 'Laurence',  'Nivet',      'laurence.nivet@univ-lehavre.fr',          0, 0, 1, 1),
-	( 7, 'Quentin',   'Griette',    'quentin.griette@univ-lehavre.fr',         0, 0, 1, 1),
-	( 8, 'Quentin',   'Laffeach',   'quentin.laffeach@univ-lehavre.fr',        0, 0, 1, 1),
-	( 9, 'Rodolphe',  'Charrier',   'rodolphe.charrier@univ-lehavre.fr',       0, 0, 1, 1),
-	(10, 'Bruno',     'Legrix',     'bruno.legrix@univ-lehavre.fr',            0, 0, 1, 1),
-	(11, 'Alabboud',  'Hassan',     'alabboudhassan@gmail.com',                0, 0, 1, 1),
-	(12, 'Zahour',    'Abderrazak', 'zahoura@univ-lehavre.fr',                 0, 0, 1, 1),
-	(13, 'Jean',      'Foubert',    'jean.foubert@univ-lehavre.fr',            0, 0, 1, 1),
-	(14, 'Frederic',  'Guinand',    'frederic.guinand@univ-lehavre.fr',        0, 0, 1, 1),
-	(15, 'Tiphaine',  'Dubocage',   'dubocage.iut@gmail.com',                  0, 0, 1, 1),
-	(16, 'Thomas',    'Colignon',   'colignon.iut@gmail.com',                  0, 0, 1, 1),
-	(17, 'Steeve',    'Pytel',      'steeve.pytel@ac-normandie.fr',            0, 0, 1, 1),
-	(18, 'Dalila',    'Boudebous',  'dalila.boudebous@univ-lehavre.fr',        0, 0, 1, 1),
-	(19, 'Bruno',     'Sadeg',      'bruno.sadeg@univ-lehavre.fr',             0, 0, 1, 1),
-	(20, 'Pascal',    'Rembert',    'rembertp@univ-lehavre.fr',                0, 0, 1, 1),
-	(21, 'Sébastien', 'Bertin',     'sebastien.d.bertin@gmail.com',            0, 0, 1, 1),
-	(22, 'Isabelle',  'Delarue',    'isabelle.delarue2@orange.fr',             0, 0, 1, 1),
-	(23, 'Benjamin',  'Boquet',     'boquet.iut@gmail.com',                    0, 0, 1, 1),
-	(24, 'Jan-Luis',  'Jiménéz',    'juan-luis.jimenez@univ-lehavre.fr',       0, 0, 1, 1),
-	(25, 'Jean-Yves', 'Colin',      'jean-yves.colin@univ-lehavre.fr',         0, 0, 1, 1),
-	(26, 'Emmanuel',  'Keith',      'emmanuel.keith@ac-rouen.fr',              0, 0, 1, 1),
-	(27, 'Mouhaned',  'Gaied',      'mouhaned.gaied@univ-lehavre.fr',          0, 0, 1, 1),
-	(28, 'Salim',     'Khraimeche', 'salimkhr@gmail.com',                      0, 0, 1, 1),
-	(29, 'Florian',   'Perroud',    'perroud.iut@gmail.com',                   0, 0, 1, 1),
-	(30, 'Claude',    'Duvallet',   'claude.duvallet@guinand@univ-lehavre.fr', 0, 0, 1, 1);
+	( 1, 'Philippe',  'Le Pivert',  'philippe.le-pivert@univ-lehavre.fr',      384, 576, 1, 1),
+	( 2, 'Hadhoum',   'Boukachour', 'hadhoum.boukachour@univ-lehavre.fr',      384, 576, 1, 1),
+	( 3, 'Frédéric',  'Serin',      'frederic.serin@univ-lehavre.fr',          384, 576, 1, 1),
+	( 4, 'Hugues',    'Duflo',      'hugues.duflo@univ-lehavre.fr',            384, 576, 1, 1),
+	( 5, 'Jaouad',    'Boukachour', 'jaouad.boukachour@univ-lehavre.fr',       192, 364, 1, 4),
+	( 6, 'Laurence',  'Nivet',      'laurence.nivet@univ-lehavre.fr',          384, 576, 1, 1),
+	( 7, 'Quentin',   'Griette',    'quentin.griette@univ-lehavre.fr',         192, 364, 1, 4),
+	( 8, 'Quentin',   'Laffeach',   'quentin.laffeach@univ-lehavre.fr',        384, 576, 1, 1),
+	( 9, 'Rodolphe',  'Charrier',   'rodolphe.charrier@univ-lehavre.fr',       192, 364, 1, 4),
+	(10, 'Bruno',     'Legrix',     'bruno.legrix@univ-lehavre.fr',            384, 576, 1, 1),
+	(11, 'Alabboud',  'Hassan',     'alabboudhassan@gmail.com',                192, 364, 1, 4),
+	(12, 'Zahour',    'Abderrazak', 'zahoura@univ-lehavre.fr',                 384, 576, 1, 1),
+	(13, 'Jean',      'Foubert',    'jean.foubert@univ-lehavre.fr',            192, 384, 1, 2),
+	(14, 'Frederic',  'Guinand',    'frederic.guinand@univ-lehavre.fr',        192, 364, 1, 4),
+	(15, 'Tiphaine',  'Dubocage',   'dubocage.iut@gmail.com',                  0  , 90 , 1, 3),
+	(16, 'Thomas',    'Colignon',   'colignon.iut@gmail.com',                  0  , 90 , 1, 3),
+	(17, 'Steeve',    'Pytel',      'steeve.pytel@ac-normandie.fr',            0  , 90 , 1, 3),
+	(18, 'Dalila',    'Boudebous',  'dalila.boudebous@univ-lehavre.fr',        384, 576, 1, 1),
+	(19, 'Bruno',     'Sadeg',      'bruno.sadeg@univ-lehavre.fr',             384, 576, 1, 1),
+	(20, 'Pascal',    'Rembert',    'rembertp@univ-lehavre.fr',                192, 384, 1, 2),
+	(21, 'Sébastien', 'Bertin',     'sebastien.d.bertin@gmail.com',            0  , 90 , 1, 3),
+	(22, 'Isabelle',  'Delarue',    'isabelle.delarue2@orange.fr',             384, 576, 1, 1),
+	(23, 'Benjamin',  'Boquet',     'boquet.iut@gmail.com',                    0  , 90 , 1, 3),
+	(24, 'Jan-Luis',  'Jiménéz',    'juan-luis.jimenez@univ-lehavre.fr',       192, 364, 1, 4),
+	(25, 'Jean-Yves', 'Colin',      'jean-yves.colin@univ-lehavre.fr',         192, 364, 1, 4),
+	(26, 'Emmanuel',  'Keith',      'emmanuel.keith@ac-rouen.fr',              0  , 90 , 1, 3),
+	(27, 'Mouhaned',  'Gaied',      'mouhaned.gaied@univ-lehavre.fr',          384, 576, 1, 1),
+	(28, 'Salim',     'Khraimeche', 'salimkhr@gmail.com',                      0  , 90 , 1, 3),
+	(29, 'Florian',   'Perroud',    'perroud.iut@gmail.com',                   0  , 90 , 1, 3),
+	(30, 'Claude',    'Duvallet',   'claude.duvallet@guinand@univ-lehavre.fr', 384, 576, 1, 1);
+	
 
 INSERT INTO Intervention (idIntervenant,idTypeCours, idModule,  nbSemainesIntervention, nbGroupe, commentaire, idAnnee) VALUES
 	( 1, 3,  1,  6,  1, '3 cm d 1h30', 1),

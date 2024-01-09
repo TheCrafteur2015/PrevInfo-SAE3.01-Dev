@@ -302,6 +302,10 @@
 	-fx-border-color:  transparent;
 }
 
+.tbV-module .table-view .column-header {
+	-fx-alignment:BASELINE-LEFT;
+}
+
 .table-view .column-header
 {
    -fx-border-color: transparent  transparent  transparent  transparent;

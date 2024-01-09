@@ -412,7 +412,6 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		Map<Integer, Intervention> hmIntervention = this.ctrl.getModele().getHmInterventions();
 		
 		Map<Module, Double> hmHSem = new HashMap<>();
-		int cptSem = 0;
 		
 		for (Semestre s : hmSem.values()) {
 			lstHSem.add(0.0);
@@ -436,7 +435,6 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 						hmHSem.put(m, hmHSem.get(m) + nbHeure);
 				}
 			}
-			cptSem++;
 		}
 		
 		List<Double> lstParSem = new ArrayList<>();
@@ -601,7 +599,6 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 			} else {
 				double hMin = Double.parseDouble(tfHMinText);
 				double hMax = Double.parseDouble(tfHMaxText);
-				int annee = this.ctrl.getModele().getIdAnnee();
 				if (hMin > hMax) {
 					this.ctrl.getVue().afficherNotification("Erreur", "Les heures minimales doivent être inférieures aux heures maximales", Notification.ERREUR );
 					return;
