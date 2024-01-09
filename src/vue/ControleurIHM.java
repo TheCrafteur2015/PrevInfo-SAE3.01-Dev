@@ -40,7 +40,7 @@ import javafx.util.Duration;
 import modele.Modele;
 import modele.TypeCours;
 
-public class ControleurIHM implements Initializable, EventHandler<Event>, ChangeListener<String> {
+public class ControleurIHM implements Initializable, EventHandler<Event> {
 	
 	@FXML
 	private AnchorPane centerPaneAccueil;
@@ -82,16 +82,11 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 	@FXML
 	private ImageView imageDownload;
 	
-	private Button btnConfirmerMultiplicateur;
-	
-	private List<Text> alText;
-	private List<TextField> alTextField;
-	
+		
 	private Button btnOui;
 	private Button btnAnnuler;
 	
 	public static boolean bIsValidate = false;
-	private boolean bErreur;
 	
 	public void initialize(URL url, ResourceBundle rb) {
 		this.ctrl = Controleur.getInstance(this);
@@ -135,59 +130,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 	
 	@FXML
 	void parametrerMultiplicateurs() {
-		Stage popupStage = new Stage();
-		popupStage.initModality(Modality.APPLICATION_MODAL);
-		popupStage.centerOnScreen();
-		popupStage.setTitle("Modification des multiplicateurs");
-		popupStage.setHeight(350);
-		popupStage.setWidth(300);
-		popupStage.setResizable(false);
-		
-		Map<Integer, TypeCours> hmTypeCours = this.ctrl.getModele().getHmTypeCours();
-		
-		this.alText = new ArrayList<>();
-		this.alTextField = new ArrayList<>();
-		Text textTmp;
-		TextField textFieldTmp;
-		for (TypeCours tc : hmTypeCours.values()) {
-			textTmp = new Text(tc.getNom());
-			textFieldTmp = new TextField(tc.getCoefficient() + "");
-			if (isInteger(tc.getCoefficient()) != null)
-				textFieldTmp = new TextField(isInteger(tc.getCoefficient()) + "");
-			textFieldTmp.getStyleClass().add("coeffValue");
-			textFieldTmp.setMaxWidth(7 * 7);
-			textFieldTmp.textProperty().addListener(this);
-			alText.add(textTmp);
-			this.alTextField.add(textFieldTmp);
-		}
-		
-		VBox vbox = new VBox(5);
-		vbox.setMaxSize(200, alText.size() * 50);
-		
-		GridPane gridPane = new GridPane();
-		gridPane.setAlignment(Pos.CENTER);
-		for (int i = 0; i < alText.size(); i++) {
-			gridPane.add(alText.get(i), 0, i);
-			gridPane.add(alTextField.get(i), 1, i);
-		}
-		gridPane.setPadding(new Insets(10));
-		gridPane.setHgap(10);
-		gridPane.setVgap(10);
-		
-		this.btnConfirmerMultiplicateur = new Button("Confirmer");
-		this.btnConfirmerMultiplicateur.getStyleClass().add("confirmBtn");
-		this.btnConfirmerMultiplicateur.addEventHandler(ActionEvent.ACTION, this);
-		StackPane popupLayout = new StackPane();
-		BorderPane borderPane = new BorderPane();
-		borderPane.setCenter(this.btnConfirmerMultiplicateur);
-		
-		vbox.getChildren().add(gridPane);
-		vbox.getChildren().add(borderPane);
-		popupLayout.getChildren().add(vbox);
-		Scene popupScene = new Scene(popupLayout, 200, alText.size() * 50);
-		popupScene.getStylesheets().add(ResourceManager.STYLESHEET_POPUP.toExternalForm());
-		popupStage.setScene(popupScene);
-		popupStage.showAndWait();
+		new FrameMultiplicateur(this.ctrl);
 	}
 	
 	public static Integer isInteger(double d) {
@@ -280,36 +223,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 			if (action.getSource() == this.choiceBoxAnnee) {
 				this.ctrl.getModele().updateAnnee(this.choiceBoxAnnee.getValue());
 				this.setAnnee(this.choiceBoxAnnee.getValue());
-			} else if (action.getSource() == this.btnConfirmerMultiplicateur) {
-				Double coeff;
-				this.bErreur = false;
-				List<String> alErreur = new ArrayList<>();
-				
-				for (int i = 0; i < this.alText.size(); i++) {
-					coeff = null;
-					if (this.alTextField.get(i).getText().contains("/") && !(this.alTextField.get(i).getText().charAt(this.alTextField.get(i).getText().length() - 1)=='/')) {
-						String[] partTxt = this.alTextField.get(i).getText().split("/");
-						coeff = Double.parseDouble(partTxt[0]) /  Double.parseDouble(partTxt[1]);
-						this.ctrl.getModele().updateTypeCoursBrut(alText.get(i).getText(), coeff);
-					} else if (!this.alTextField.get(i).getText().isEmpty() && !this.alTextField.get(i).getText().contains("/")) {
-						coeff = Double.parseDouble(alTextField.get(i).getText());
-						this.ctrl.getModele().updateTypeCoursBrut(alText.get(i).getText(), coeff);
-					} else {
-						alErreur.add(alText.get(i).getText());
-						this.bErreur = true;
-					}
-				}
-				if (!this.bErreur) {
-					((Stage) this.btnConfirmerMultiplicateur.getScene().getWindow()).close();
-					this.afficherNotification("Succès", "Les coefficients ont bien été modifiés", ControleurIHM.Notification.SUCCES);
-				} else {
-					String message = "Veuillez vérifier les champs suivants : ";
-					for (String s : alErreur)
-						message += s + ", ";
-					message = message.substring(0, message.length() - 2);
-					this.afficherNotification("Erreur", message, ControleurIHM.Notification.ERREUR);
-				}
-			}
+			} 
 			if (event.getSource() == this.btnOui) {
 				ControleurIHM.bIsValidate = true;
 				((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
@@ -407,13 +321,5 @@ public class ControleurIHM implements Initializable, EventHandler<Event>, Change
 		INFO;
 	}
 	
-	@Override
-	public void changed(ObservableValue<? extends String> observable, String oldString, String newString) {
-		for (TextField text : alTextField) {
-			if (observable == text.textProperty()) {
-				if (!text.getText().matches(Modele.REGEX_DOUBLE_FRACTION) || text.getText().length() > 7)
-					text.setText(oldString);
-			}
-		}
-	}
+
 }

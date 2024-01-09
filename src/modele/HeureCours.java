@@ -70,5 +70,9 @@ public class HeureCours {
 	public String toString() {
 		return "HeureCours [idTypeCours=" + idTypeCours + ", idModule=" + idModule + ", heure=" + heure + "]";
 	}
+	
+	public boolean memHeure(Intervention interv) {
+		return this.idModule == interv.getIdModule() && this.idTypeCours == interv.getIdTypeCours();
+	}
 
 }

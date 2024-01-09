@@ -1,4 +1,4 @@
-package vue;
+package vue.modeleIHM;
 
 import modele.HeureCours;
 import modele.Module;

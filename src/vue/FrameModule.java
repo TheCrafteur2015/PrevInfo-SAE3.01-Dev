@@ -42,6 +42,8 @@ import modele.Semestre;
 import modele.TypeCours;
 import modele.TypeModule;
 import vue.ControleurIHM.Notification;
+import vue.modeleIHM.LigneModuleIHM;
+import vue.modeleIHM.ModuleIHM;
 
 public class FrameModule implements EventHandler<Event> {
 

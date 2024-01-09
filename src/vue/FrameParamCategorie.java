@@ -31,6 +31,7 @@ import controleur.Controleur;
 import modele.Categorie;
 import modele.Modele;
 import vue.ControleurIHM.Notification;
+import vue.modeleIHM.CategorieIHM;
 
 public class FrameParamCategorie implements ChangeListener<String>, EventHandler<ActionEvent> {
 	

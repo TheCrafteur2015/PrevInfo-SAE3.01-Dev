@@ -1,4 +1,4 @@
-package vue;
+package vue.modeleIHM;
 
 import javafx.scene.control.Button;
 

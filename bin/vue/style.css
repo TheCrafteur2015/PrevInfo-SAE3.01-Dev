@@ -76,9 +76,15 @@
 	-fx-background-insets: 0, 0 0 0 0, 0 0 0 0, 0 0 0 0;
 }
 
-.choice-exporter .context-menu {
-	-fx-pref-width: 500;
-	-fx-pref-height: 200;
+.choice-exporter  .context-menu {
+	-fx-pref-width: 500px;
+	-fx-pref-height : 460px;
+	-fx-background-insets: 0, 0 0 0 0, 0 0 0 0, 0 0 0 0;
+}
+.choice-intervention  .context-menu {
+	-fx-pref-width: 150px;
+	-fx-pref-height : 300px;
+	
 	-fx-background-insets: 0, 0 0 0 0, 0 0 0 0, 0 0 0 0;
 }
 
@@ -284,7 +290,7 @@
 
 
 .tbV-module .table-row-cell {
-	-fx-background-color: rgb(236, 232, 232);
+	-fx-background-color: #ECE8E8;
 }
 
 .tbV-module .table-cell {

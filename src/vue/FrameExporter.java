@@ -52,7 +52,7 @@ public class FrameExporter implements EventHandler<Event> {
 
 		VBox vbox = new VBox();
 		vbox.setSpacing(30);
-
+		
 		
 		this.hmIntervenants = this.ctrl.getModele().getHmIntervenants();
 		this.hmModules = this.ctrl.getModele().getHmModules();
@@ -104,7 +104,16 @@ public class FrameExporter implements EventHandler<Event> {
 		
 		vbox.getChildren().addAll(gridPaneIntervenant, gridPaneModule, this.btnCSV);
 		vbox.setAlignment(Pos.CENTER);
-
+		
+		if (this.hmIntervenants.size() == 0 ) {
+			this.choiceBoxIntervenant.setDisable(true);
+			this.btnCSV.setDisable(true);
+			this.btnIntervenant.setDisable(true);
+		} 
+		if (this.hmModules.size() == 0 ) {
+			this.choiceBoxModule.setDisable(true);
+			this.btnModule.setDisable(true);
+		} 
 
 		AnchorPane.setTopAnchor(vbox, 200.0);
 		AnchorPane.setLeftAnchor(vbox, 200.0);

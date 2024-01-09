@@ -1,4 +1,4 @@
-package vue;
+package vue.modeleIHM;
 
 public class RecapInterventionIHM {
 	

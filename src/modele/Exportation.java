@@ -10,7 +10,9 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Level;
 
+import controleur.Controleur;
 import vue.App;
+import java.util.Comparator;
 
 public class Exportation {
 	
@@ -175,22 +177,22 @@ public class Exportation {
 		body += "				<tfoot>\n";
 		body += "					<tr>\n";
 		body += "						<th> Total </th>\n";
-		body += "						<td> " + round(cmReel) + " </td>\n";
-		body += "						<td> " + round(cmTheorique) + " </td>\n";
-		body += "						<td> " + round(tdReel) + " </td>\n";
-		body += "						<td> " + round(tdTheorique) + " </td>\n";
-		body += "						<td> " + round(tpReel) + " </td>\n";
-		body += "						<td> " + round(tpTheorique) + " </td>\n";
-		body += "						<td> " + round(rehReel) + " </td>\n";
-		body += "						<td> " + round(rehTheorique) + " </td>\n";
-		body += "						<td> " + round(saeReel) + " </td>\n";
-		body += "						<td> " + round(saeTheorique) + " </td>\n";
-		body += "						<td> " + round(tutoratReel) + " </td>\n";
-		body += "						<td> " + round(tutoratTheorique) + " </td>\n";
-		body += "						<td> " + round(hPonctuelReel) + " </td>\n";
-		body += "						<td> " + round(hPonctuelTheorique) + " </td>\n";
-		body += "						<td> " + round(totalReel) + " </td>\n";
-		body += "						<td> " + round(totalTheorique) + " </td>\n";
+		body += "						<td> " + Math.round(cmReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(cmTheorique*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tdReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tdTheorique*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tpReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tpTheorique*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(rehReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(rehTheorique*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(saeReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(saeTheorique*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tutoratReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tutoratTheorique*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(hPonctuelReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(hPonctuelTheorique*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(totalReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(totalTheorique*100.0)/100.0 + " </td>\n";
 		body += "					</tr>\n";
 		body += "				</tfoot>\n";
 		body += "			</table>\n";
@@ -262,22 +264,22 @@ public class Exportation {
 		
 		ret += "				<tr class=\"semestre" + ensModule.get(0).getIdSemestre() + "\">\n";
 		ret += "					<th> Total Semestre " + (((ensModule.get(0).getIdSemestre() + 5) % 6) + 1) + " </th>\n";
-		ret += "					<td> " + round(cmReel) + " </td>\n";
-		ret += "					<td> " + round(cmTheorique) + " </td>\n";
-		ret += "					<td> " + round(tdReel) + " </td>\n";
-		ret += "					<td> " + round(tdTheorique) + " </td>\n";
-		ret += "					<td> " + round(tpReel) + " </td>\n";
-		ret += "					<td> " + round(tpTheorique) + " </td>\n";
-		ret += "					<td> " + round(rehReel) + " </td>\n";
-		ret += "					<td> " + round(rehTheorique) + " </td>\n";
-		ret += "					<td> " + round(saeReel) + " </td>\n";
-		ret += "					<td> " + round(saeTheorique) + " </td>\n";
-		ret += "					<td> " + round(tutoratReel) + " </td>\n";
-		ret += "					<td> " + round(tutoratTheorique) + " </td>\n";
-		ret += "					<td> " + round(hPonctuelReel) + " </td>\n";
-		ret += "					<td> " + round(hPonctuelTheorique) + " </td>\n";
-		ret += "					<td> " + round(totalReel) + " </td>\n";
-		ret += "					<td> " + round(totalTheorique) + " </td>\n";
+		ret += "					<td> " + Math.round(cmReel*100.0)/100.0 + " </td>\n";
+		ret += "					<td> " + Math.round(cmTheorique*100.0)/100.0 + " </td>\n";
+		ret += "					<td> " + Math.round(tdReel*100.0)/100.0 + " </td>\n";
+		ret += "					<td> " + Math.round(tdTheorique*100.0)/100.0 + " </td>\n";
+		ret += "					<td> " + Math.round(tpReel*100.0)/100.0 + " </td>\n";
+		ret += "					<td> " + Math.round(tpTheorique*100.0)/100.0 + " </td>\n";
+		ret += "					<td> " + Math.round(rehReel*100.0)/100.0 + " </td>\n";
+		ret += "					<td> " + Math.round(rehTheorique*100.0)/100.0 + " </td>\n";
+		ret += "					<td> " + Math.round(saeReel*100.0)/100.0 + " </td>\n";
+		ret += "					<td> " + Math.round(saeTheorique*100.0)/100.0 + " </td>\n";
+		ret += "					<td> " + Math.round(tutoratReel*100.0)/100.0 + " </td>\n";
+		ret += "					<td> " + Math.round(tutoratTheorique*100.0)/100.0 + " </td>\n";
+		ret += "					<td> " + Math.round(hPonctuelReel*100.0)/100.0 + " </td>\n";
+		ret += "					<td> " + Math.round(hPonctuelTheorique*100.0)/100.0 + " </td>\n";
+		ret += "					<td> " + Math.round(totalReel*100.0)/100.0 + " </td>\n";
+		ret += "					<td> " + Math.round(totalTheorique*100.0)/100.0 + " </td>\n";
 		ret += "				</tr>\n";
 		return ret;
 	}
@@ -344,25 +346,25 @@ public class Exportation {
 		totalTheorique = cmTheorique + tdTheorique + tpTheorique + rehTheorique + saeTheorique + tutoratTheorique + hPonctuelTheorique;
 		String ret = "", tab = "\t".repeat(5);
 		ret += "				<tr class=\"semestre" + mod.getIdSemestre() + " \">\n";
-		ret += "					<th> " + mod.getCode() + " " + mod.getNom() + " </th>\n";
+		ret += "					<th> " + mod.getCode()+ " " + mod.getNom() + " </th>\n";
 		switch (mod.getIdTypeModule()) {
 			case 1:
-				ret += tab + "<td> " + round(cmReel) + " </td>\n";
-				ret += tab + "<td> " + round(cmTheorique) + " </td>\n";
-				ret += tab + "<td> " + round(tdReel) + " </td>\n";
-				ret += tab + "<td> " + round(tdTheorique) + " </td>\n";
-				ret += tab + "<td> " + round(tpReel) + " </td>\n";
-				ret += tab + "<td> " + round(tpTheorique) + " </td>\n";
+				ret += tab + "<td> " + Math.round(cmReel*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(cmTheorique*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(tdReel*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(tdTheorique*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(tpReel*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(tpTheorique*100.0)/100.0 + " </td>\n";
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
-				ret += tab + "<td> " + round(tutoratReel) + " </td>\n";
-				ret += tab + "<td> " + round(tutoratTheorique) + " </td>\n";
-				ret += tab + "<td> " + round(hPonctuelReel) + " </td>\n";
-				ret += tab + "<td> " + round(hPonctuelTheorique) + " </td>\n";
-				ret += tab + "<td> " + round(totalReel) + " </td>\n";
-				ret += tab + "<td> " + round(totalTheorique) + " </td>\n";
+				ret += tab + "<td> " + Math.round(tutoratReel*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(tutoratTheorique*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(hPonctuelReel*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(hPonctuelTheorique*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(totalReel*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(totalTheorique*100.0)/100.0 + " </td>\n";
 				break;
 			case 2:
 				ret += tab + "<td>  </td>\n";
@@ -373,32 +375,32 @@ public class Exportation {
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
-				ret += tab + "<td> " + round(saeReel) + " </td>\n";
-				ret += tab + "<td> " + round(saeTheorique) + " </td>\n";
-				ret += tab + "<td> " + round(tutoratReel) + " </td>\n";
-				ret += tab + "<td> " + round(tutoratTheorique) + " </td>\n";
-				ret += tab + "<td> " + round(hPonctuelReel) + " </td>\n";
-				ret += tab + "<td> " + round(hPonctuelTheorique) + " </td>\n";
-				ret += tab + "<td> " + round(totalReel) + " </td>\n";
-				ret += tab + "<td> " + round(totalTheorique) + " </td>\n";
+				ret += tab + "<td> " + Math.round(saeReel*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(saeTheorique*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(tutoratReel*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(tutoratTheorique*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(hPonctuelReel*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(hPonctuelTheorique*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(totalReel*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(totalTheorique*100.0)/100.0 + " </td>\n";
 				break;
 			case 3:
-				ret += tab + "<td> " + round(cmReel) + " </td>\n";
-				ret += tab + "<td> " + round(cmTheorique) + " </td>\n";
-				ret += tab + "<td> " + round(tdReel) + " </td>\n";
-				ret += tab + "<td> " + round(tdTheorique) + " </td>\n";
-				ret += tab + "<td> " + round(tpReel) + " </td>\n";
-				ret += tab + "<td> " + round(tpTheorique) + " </td>\n";
+				ret += tab + "<td> " + Math.round(cmReel*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(cmTheorique*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(tdReel*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(tdTheorique*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(tpReel*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(tpTheorique*100.0)/100.0 + " </td>\n";
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
-				ret += tab + "<td> " + round(hPonctuelReel) + " </td>\n";
-				ret += tab + "<td> " + round(hPonctuelTheorique) + " </td>\n";
-				ret += tab + "<td> " + round(totalReel) + " </td>\n";
-				ret += tab + "<td> " + round(totalTheorique) + " </td>\n";
+				ret += tab + "<td> " + Math.round(hPonctuelReel*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(hPonctuelTheorique*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(totalReel*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(totalTheorique*100.0)/100.0 + " </td>\n";
 				break;
 			case 4:
 				ret += tab + "<td>  </td>\n";
@@ -407,19 +409,19 @@ public class Exportation {
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
-				ret += tab + "<td> " + round(rehReel) + " </td>\n";
-				ret += tab + "<td> " + round(rehTheorique) + " </td>\n";
+				ret += tab + "<td> " + Math.round(rehReel*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(rehTheorique*100.0)/100.0 + " </td>\n";
 				ret += tab + "<td>  </td>\n";
 				ret += tab + "<td>  </td>\n";
-				ret += tab + "<td> " + round(tutoratReel) + " </td>\n";
-				ret += tab + "<td> " + round(tutoratTheorique) + " </td>\n";
-				ret += tab + "<td> " + round(hPonctuelReel) + " </td>\n";
-				ret += tab + "<td> " + round(hPonctuelTheorique) + " </td>\n";
-				ret += tab + "<td> " + round(totalReel) + " </td>\n";
-				ret += tab + "<td> " + round(totalTheorique) + " </td>\n";
+				ret += tab + "<td> " + Math.round(tutoratReel*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(tutoratTheorique*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(hPonctuelReel*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(hPonctuelTheorique*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(totalReel*100.0)/100.0 + " </td>\n";
+				ret += tab + "<td> " + Math.round(totalTheorique*100.0)/100.0 + " </td>\n";
 				break;
 		}
-		return ret + "\t".repeat(4) + "</tr\n";
+		return ret + "\t".repeat(4) + "</tr>\n";
 	}
 	
 	/*---------*/
@@ -554,18 +556,18 @@ public class Exportation {
 			
 			body += "					<tr>\n";
 			body += "						<th> " + intervenant.getNom() + " " + intervenant.getPrenom() + " </th>\n";
-			body += "						<td> " + round(cmReel) + " </td>\n";
-			body += "						<td> " + round(cmTheorique) + " </td>\n";
-			body += "						<td> " + round(tdReel) + " </td>\n";
-			body += "						<td> " + round(tdTheorique) + " </td>\n";
-			body += "						<td> " + round(tpReel) + " </td>\n";
-			body += "						<td> " + round(tpTheorique) + " </td>\n";
-			body += "						<td> " + round(tutoratReel) + " </td>\n";
-			body += "						<td> " + round(tutoratTheorique) + " </td>\n";
-			body += "						<td> " + round(hPonctuelReel) + " </td>\n";
-			body += "						<td> " + round(hPonctuelTheorique) + " </td>\n";
-			body += "						<td> " + round(totalReel) + " </td>\n";
-			body += "						<td> " + round(totalTheorique) + " </td>\n";
+			body += "						<td> " + Math.round(cmReel*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(cmTheorique*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(tdReel*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(tdTheorique*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(tpReel*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(tpTheorique*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(tutoratReel*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(tutoratTheorique*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(hPonctuelReel*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(hPonctuelTheorique*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(totalReel*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(totalTheorique*100.0)/100.0 + " </td>\n";
 			body += "					</tr>\n";
 		}
 		body += "				</tbody>\n";
@@ -573,18 +575,18 @@ public class Exportation {
 		body += "				<tfoot>\n";
 		body += "					<tr>\n";
 		body += "						<th> Total </th>\n";
-		body += "						<td> " + round(totcmReel) + " </td>\n";
-		body += "						<td> " + round(totcmTheorique) + " </td>\n";
-		body += "						<td> " + round(tottdReel) + " </td>\n";
-		body += "						<td> " + round(tottdTheorique) + " </td>\n";
-		body += "						<td> " + round(tottpReel) + " </td>\n";
-		body += "						<td> " + round(tottpTheorique) + " </td>\n";
-		body += "						<td> " + round(tottutoratReel) + " </td>\n";
-		body += "						<td> " + round(tottutoratTheorique) + " </td>\n";
-		body += "						<td> " + round(tothPonctuelReel) + " </td>\n";
-		body += "						<td> " + round(tothPonctuelTheorique) + " </td>\n";
-		body += "						<td> " + round(tottotalReel) + " </td>\n";
-		body += "						<td> " + round(tottotalTheorique) + " </td>\n";
+		body += "						<td> " + Math.round(totcmReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(totcmTheorique*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tottdReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tottdTheorique*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tottpReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tottpTheorique*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tottutoratReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tottutoratTheorique*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tothPonctuelReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tothPonctuelTheorique*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tottotalReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tottotalTheorique*100.0)/100.0 + " </td>\n";
 		body += "					</tr>\n";
 		body += "				</tfoot>\n";
 		body += "			</table>\n";
@@ -676,14 +678,14 @@ public class Exportation {
 			
 			body += "					<tr>\n";
 			body += "						<th> " + intervenant.getNom() + " " + intervenant.getPrenom() + " </th>\n";
-			body += "						<td> " + round(tutoratReel) + " </td>\n";
-			body += "						<td> " + round(tutoratTheorique) + " </td>\n";
-			body += "						<td> " + round(saeReel) + " </td>\n";
-			body += "						<td> " + round(saeTheorique) + " </td>\n";
-			body += "						<td> " + round(hPonctuelReel) + " </td>\n";
-			body += "						<td> " + round(hPonctuelTheorique) + " </td>\n";
-			body += "						<td> " + round(totalReel) + " </td>\n";
-			body += "						<td> " + round(totalTheorique) + " </td>\n";
+			body += "						<td> " + Math.round(tutoratReel*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(tutoratTheorique*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(saeReel*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(saeTheorique*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(hPonctuelReel*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(hPonctuelTheorique*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(totalReel*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(totalTheorique*100.0)/100.0 + " </td>\n";
 			body += "					</tr>\n";
 		}
 		body += "				</tbody>\n";
@@ -691,14 +693,14 @@ public class Exportation {
 		body += "				<tfoot>\n";
 		body += "					<tr>\n";
 		body += "						<th> Total </th>\n";
-		body += "						<td> " + round(tottutoratReel) + " </td>\n";
-		body += "						<td> " + round(tottutoratTheorique) + " </td>\n";
-		body += "						<td> " + round(totsaeReel) + " </td>\n";
-		body += "						<td> " + round(totsaeTheorique) + " </td>\n";
-		body += "						<td> " + round(tothPonctuelReel) + " </td>\n";
-		body += "						<td> " + round(tothPonctuelTheorique) + " </td>\n";
-		body += "						<td> " + round(tottotalReel) + " </td>\n";
-		body += "						<td> " + round(tottotalTheorique) + " </td>\n";
+		body += "						<td> " + Math.round(tottutoratReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tottutoratTheorique*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(totsaeReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(totsaeTheorique*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tothPonctuelReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tothPonctuelTheorique*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tottotalReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tottotalTheorique*100.0)/100.0 + " </td>\n";
 		body += "					</tr>\n";
 		body += "				</tfoot>\n";
 		body += "			</table>\n";
@@ -803,16 +805,16 @@ public class Exportation {
 			
 			body += "					<tr>\n";
 			body += "						<th> " + intervenant.getNom() + " " + intervenant.getPrenom() + " </th>\n";
-			body += "						<td> " + round(cmReel) + " </td>\n";
-			body += "						<td> " + round(cmTheorique) + " </td>\n";
-			body += "						<td> " + round(tdReel) + " </td>\n";
-			body += "						<td> " + round(tdTheorique) + " </td>\n";
-			body += "						<td> " + round(tpReel) + " </td>\n";
-			body += "						<td> " + round(tpTheorique) + " </td>\n";
-			body += "						<td> " + round(hPonctuelReel) + " </td>\n";
-			body += "						<td> " + round(hPonctuelTheorique) + " </td>\n";
-			body += "						<td> " + round(totalReel) + " </td>\n";
-			body += "						<td> " + round(totalTheorique) + " </td>\n";
+			body += "						<td> " + Math.round(cmReel*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(cmTheorique*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(tdReel*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(tdTheorique*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(tpReel*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(tpTheorique*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(hPonctuelReel*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(hPonctuelTheorique*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(totalReel*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(totalTheorique*100.0)/100.0 + " </td>\n";
 			body += "					</tr>\n";
 		}
 		body += "				</tbody>\n";
@@ -820,16 +822,16 @@ public class Exportation {
 		body += "				<tfoot>\n";
 		body += "					<tr>\n";
 		body += "						<th> Total </th>\n";
-		body += "						<td> " + round(totcmReel) + " </td>\n";
-		body += "						<td> " + round(totcmTheorique) + " </td>\n";
-		body += "						<td> " + round(tottdReel) + " </td>\n";
-		body += "						<td> " + round(tottdTheorique) + " </td>\n";
-		body += "						<td> " + round(tottpReel) + " </td>\n";
-		body += "						<td> " + round(tottpTheorique) + " </td>\n";
-		body += "						<td> " + round(tothPonctuelReel) + " </td>\n";
-		body += "						<td> " + round(tothPonctuelTheorique) + " </td>\n";
-		body += "						<td> " + round(tottotalReel) + " </td>\n";
-		body += "						<td> " + round(tottotalTheorique) + " </td>\n";
+		body += "						<td> " + Math.round(totcmReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(totcmTheorique*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tottdReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tottdTheorique*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tottpReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tottpTheorique*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tothPonctuelReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tothPonctuelTheorique*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tottotalReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tottotalTheorique*100.0)/100.0 + " </td>\n";
 		body += "					</tr>\n";
 		body += "				</tfoot>\n";
 		body += "			</table>\n";
@@ -920,14 +922,14 @@ public class Exportation {
 			
 			body += "					<tr>\n";
 			body += "						<th> " + intervenant.getNom() + " " + intervenant.getPrenom() + " </th>\n";
-			body += "						<td> " + round(tutoratReel) + " </td>\n";
-			body += "						<td> " + round(tutoratTheorique) + " </td>\n";
-			body += "						<td> " + round(rehReel) + " </td>\n";
-			body += "						<td> " + round(rehTheorique) + " </td>\n";
-			body += "						<td> " + round(hPonctuelReel) + " </td>\n";
-			body += "						<td> " + round(hPonctuelTheorique) + " </td>\n";
-			body += "						<td> " + round(totalReel) + " </td>\n";
-			body += "						<td> " + round(totalTheorique) + " </td>\n";
+			body += "						<td> " + Math.round(tutoratReel*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(tutoratTheorique*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(rehReel*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(rehTheorique*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(hPonctuelReel*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(hPonctuelTheorique*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(totalReel*100.0)/100.0 + " </td>\n";
+			body += "						<td> " + Math.round(totalTheorique*100.0)/100.0 + " </td>\n";
 			body += "					</tr>\n";
 		}
 		body += "				</tbody>\n";
@@ -935,14 +937,14 @@ public class Exportation {
 		body += "				<tfoot>\n";
 		body += "					<tr>\n";
 		body += "						<th> Total </th>\n";
-		body += "						<td> " + round(tottutoratReel) + " </td>\n";
-		body += "						<td> " + round(tottutoratTheorique) + " </td>\n";
-		body += "						<td> " + round(totrehReel) + " </td>\n";
-		body += "						<td> " + round(totrehTheorique) + " </td>\n";
-		body += "						<td> " + round(tothPonctuelReel) + " </td>\n";
-		body += "						<td> " + round(tothPonctuelTheorique) + " </td>\n";
-		body += "						<td> " + round(tottotalReel) + " </td>\n";
-		body += "						<td> " + round(tottotalTheorique) + " </td>\n";
+		body += "						<td> " + Math.round(tottutoratReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tottutoratTheorique*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(totrehReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(totrehTheorique*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tothPonctuelReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tothPonctuelTheorique*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tottotalReel*100.0)/100.0 + " </td>\n";
+		body += "						<td> " + Math.round(tottotalTheorique*100.0)/100.0 + " </td>\n";
 		body += "					</tr>\n";
 		body += "				</tfoot>\n";
 		body += "			</table>\n";
@@ -966,7 +968,7 @@ public class Exportation {
 		ret += "tbody th{text-align: left;}\n";
 		ret += "header {background: #bcb7e7;color: #000000;padding: 20px;text-align: center;}";
 		for (Semestre semestre : model.getHmSemestres().values()) {
-			ret += ".semestre"+ semestre.getId() + "{background-color: rgba(" + Integer.parseInt(semestre.getCouleur().substring(1,3),16) + "," + Integer.parseInt(semestre.getCouleur().substring(3,5),16) + "," + Integer.parseInt(semestre.getCouleur().substring(5,7),16) + ", 0.5);}\n";
+			ret += ".semestre"+ semestre.getId() + "{background-color: rgba(" + Integer.parseInt(semestre.getCouleur().substring(1,3),16) + "," + Integer.parseInt(semestre.getCouleur().substring(3,5),16) + "," + Integer.parseInt(semestre.getCouleur().substring(5,7),16)+ ", 0.5);}\n";
 		}
 		return this.ecrireFichier(chemin + "tab.css", ret);
 	}
@@ -1069,25 +1071,25 @@ public class Exportation {
 					break;
 			}
 		}
-		ret += round(s1theorique) + ","; // s1 theorique
-		ret += round(s1reel) + ","; // s1 reel
-		ret += round(s3theorique) + ","; // s3 theorique
-		ret += round(s3reel) + ","; // s3 reel
-		ret += round(s5reel) + ","; // s5 theorique
-		ret += round(s5theorique) + ","; // s5 reel
-		ret += round(s1theorique + s3theorique + s5theorique) + ","; // total theorique partie 1
-		ret += round(s1reel + s3reel + s5reel) + ","; // total reel partie 1
-		ret += round(s2reel) + ","; // s2 theorique
-		ret += round(s2theorique) + ","; // s2 reel
-		ret += round(s4reel) + ","; // s4 theorique
-		ret += round(s4theorique) + ","; // s4 reel
-		ret += round(s6reel) + ","; // s6 theorique
-		ret += round(s6theorique) + ","; // s6 reel
-		ret += round(s2theorique + s4theorique + s6theorique) + ","; // total theorique partie 2
-		ret += round(s2reel + s4reel + s6reel) + ","; // total reel partie 2
+		ret += Math.round(s1theorique*100.0)/100.0 + ","; // s1 theorique
+		ret += Math.round(s1reel*100.0)/100.0 + ","; // s1 reel
+		ret += Math.round(s3theorique*100.0)/100.0 + ","; // s3 theorique
+		ret += Math.round(s3reel*100.0)/100.0 + ","; // s3 reel
+		ret += Math.round(s5reel*100.0)/100.0 + ","; // s5 theorique
+		ret += Math.round(s5theorique*100.0)/100.0 + ","; // s5 reel
+		ret += Math.round((s1theorique + s3theorique + s5theorique)*100.0)/100.0 + ","; // total theorique partie 1
+		ret += Math.round((s1reel + s3reel + s5reel)*100.0)/100.0 + ","; // total reel partie 1
+		ret += Math.round(s2reel*100.0)/100.0 + ","; // s2 theorique
+		ret += Math.round(s2theorique*100.0)/100.0 + ","; // s2 reel
+		ret += Math.round(s4reel*100.0)/100.0 + ","; // s4 theorique
+		ret += Math.round(s4theorique*100.0)/100.0 + ","; // s4 reel
+		ret += Math.round(s6reel*100.0)/100.0 + ","; // s6 theorique
+		ret += Math.round(s6theorique*100.0)/100.0 + ","; // s6 reel
+		ret += Math.round((s2theorique + s4theorique + s6theorique)*100.0)/100.0 + ","; // total theorique partie 2
+		ret += Math.round((s2reel + s4reel + s6reel)*100.0)/100.0 + ","; // total reel partie 2
 		ret += hMin(intervenant) + ","; // minimum d'heure
-		ret += round(s1theorique + s2theorique + s3theorique + s4theorique + s5theorique + s6theorique) + ","; // total theorique
-		ret += round(s1reel + s2reel + s3reel + s4reel + s5reel + s6reel) + ","; // total reel
+		ret += Math.round((s1theorique + s2theorique + s3theorique + s4theorique + s5theorique + s6theorique)*100.0)/100.0 + ","; // total theorique
+		ret += Math.round((s1reel + s2reel + s3reel + s4reel + s5reel + s6reel)*100.0)/100.0 + ","; // total reel
 		ret += hMax(intervenant) + ","; // maximum d'heure
 		return ret + "\n";
 	}
@@ -1101,17 +1103,24 @@ public class Exportation {
 	/*----------------------------------------------------------------------------------------------------------------*/
 	
 	private double reelIntervention(Intervenant intervenant, Intervention intervention) {
-		Categorie categ = model.getHmCategories().get(intervenant.getIdCategorie());
-		double ret = categ.getRatioTp() *  intervention.getNbGroupe();
-		if (intervention.getIdTypeCours() < 4)
-			ret = ret * intervention.getNbSemaines();
+		Categorie categ = model.getHmCategories().get(intervenant.getIdCategorie());            // categorie de l'intervenant
+		double ret =  intervention.getNbGroupe();                                               // nombre de groupe
+		ret = ret * categ.getRatioTp();                                                         // ratio TP
+		ret = ret * model.getHmTypeCours().get(intervention.getIdTypeCours()).getCoefficient(); // coef de typecours
+		if (intervention.getIdTypeCours()<4){
+			ret = ret*intervention.getNbSemaines();                                             // nombre semaines
+			ret = ret*model.getHeureCour(intervention).gethParSemaine();                        // nombre d'heure par semaine
+		}
 		return ret;
 	}
-	
+
 	private double theoriqueIntervention(Intervenant intervenant, Intervention intervention) {
-		double ret = intervention.getNbGroupe();
-		if (intervention.getIdTypeCours() < 4)
-			ret = ret * intervention.getNbSemaines();
+		double ret = intervention.getNbGroupe();                                                // nombre de groupe
+		ret = ret * model.getHmTypeCours().get(intervention.getIdTypeCours()).getCoefficient(); // coef de typecours
+		if (intervention.getIdTypeCours()<4){
+			ret = ret*intervention.getNbSemaines();                                             // nombre semaines
+			ret = ret*model.getHeureCour(intervention).gethParSemaine();                        // nombre d'heure par semaine
+		}
 		return ret;
 	}
 	

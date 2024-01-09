@@ -43,6 +43,8 @@ import modele.Module;
 import modele.Semestre;
 import modele.TypeCours;
 import modele.TypeModule;
+import vue.modeleIHM.InterventionIHM;
+import vue.modeleIHM.RecapInterventionIHM;
 
 public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListener<String> {
 
@@ -128,8 +130,9 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		flowrButton.setAlignment(Pos.CENTER);
 
 		this.hmIntervenants = this.ctrl.getModele().getHmIntervenants();
-
+		
 		this.chBoxIntervenants = new ChoiceBox<>();
+		this.chBoxIntervenants.getStyleClass().add("choice-intervention");
 		for (Intervenant intervenant : this.hmIntervenants.values())
 			this.chBoxIntervenants.getItems().add(intervenant);
 

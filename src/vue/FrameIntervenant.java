@@ -49,6 +49,8 @@ import modele.Module;
 import modele.Semestre;
 import modele.TypeCours;
 import vue.ControleurIHM.Notification;
+import vue.modeleIHM.IntervenantIHM;
+import vue.modeleIHM.RecapIntervenantIHM;
 
 public class FrameIntervenant implements EventHandler<Event>, ChangeListener<String> {
 	

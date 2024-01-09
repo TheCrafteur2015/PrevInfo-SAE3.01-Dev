@@ -11,8 +11,12 @@
 
 .confirmBtn {
 	-fx-background-radius: 150;
-	-fx-background-color: #758AFF;
+	-fx-background-color:#4D61CC;
 	-fx-text-fill: white;
+}
+
+.confirmBtn:hover {
+	-fx-background-color: #758AFF;
 }
 /*
 .textField, .choiceBox {

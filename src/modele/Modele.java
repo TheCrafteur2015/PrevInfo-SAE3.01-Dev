@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import controleur.Controleur;
-import vue.ControleurIHM;
 import vue.App;
+import vue.ControleurIHM;
 
 public class Modele {
 
@@ -702,6 +702,14 @@ public class Modele {
 			}
 		}
 		return hmModuleIntervenant;
+	}
+	
+	public HeureCours getHeureCour(Intervention interv)
+	{
+		for (HeureCours heureCours : hmHeuresCours.values()) {
+			if (heureCours.memHeure(interv)) return heureCours;
+		}
+		return null;
 	}
 
 }
