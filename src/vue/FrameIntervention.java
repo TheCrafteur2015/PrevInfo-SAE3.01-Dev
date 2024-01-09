@@ -311,7 +311,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 				} else {
 					olInterventionIHMs.add(new InterventionIHM(intervenant.getPrenom(), intervenant.getNom(),
 							i.getNbSemaines() + "", i.getNbGroupe() + "",
-							typeCours.getNom(), heureCours + "", heureCoursReelles + "", i.getCommentaire(), btnSup));
+							typeCours.getNom(), String.format("%.2f", heureCours).replace(",", "."), String.format("%.2f", heureCoursReelles).replace(",", ".") + "", i.getCommentaire(), btnSup));
 				}
 			} else {
 				olInterventionIHMs.add(new InterventionIHM(intervenant.getPrenom(), intervenant.getNom(),
@@ -449,6 +449,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		tbVRecap.setEditable(false);
 		tbVRecap.setPrefHeight(103);
 		tbVRecap.setPrefWidth(150);
+		tbVRecap.getStyleClass().add("tbV-module");
 		
 		String[] col = new String[lstHeureCours.size() + 2];
 		col[0] = "info";

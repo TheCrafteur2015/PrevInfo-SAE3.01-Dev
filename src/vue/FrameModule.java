@@ -190,6 +190,7 @@ public class FrameModule implements EventHandler<Event> {
 				.toString().replace("0x", "#");
 		String couleurSombre = new Color(couleurPick.getRed(), couleurPick.getGreen(), couleurPick.getBlue(), 0.2)
 				.toString().replace("0x", "#");
+		this.tbV.getStyleClass().add("tbV-module");
 
 		if (tbV.getColumns().size() < 11) {
 			for (String colonne : colonnes) {
@@ -200,7 +201,6 @@ public class FrameModule implements EventHandler<Event> {
 				tbcl.setResizable(false);
 				tbcl.setReorderable(false);
 				tbcl.setSortable(false);
-
 				/*
 				 * if (cptColonne % 2 == 0) {
 				 * tbcl.setStyle(tbcl.getStyle() + ";" + "-fx-background-color:" +
@@ -275,20 +275,19 @@ public class FrameModule implements EventHandler<Event> {
 				if (colonne.equals("id"))
 					tbcl.setVisible(false);
 				else if (colonne.equals("Nom"))
-					tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.28));
+					tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.265));
 				else if (colonne.equals("supprimer"))
 					tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.093));
 				else if (colonne.equals("info"))
 					tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.05685));
 				else if (colonne.equals("validation"))
-					tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.095));
+					tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.11));
 				else
 					tbcl.prefWidthProperty().bind(tbV.widthProperty().multiply(0.05685));
-
 				tbV.getColumns().add(tbcl);
+				
 			}
 		}
-		this.tbV.getStyleClass().add("tbV-module");
 
 
 		this.tbV.setEditable(true);

@@ -35,6 +35,7 @@ public class AlternatingColorTableView<T> extends TableView<T> {
         int columnIndex = 0;
         for (TableColumn<T, ?> col : getColumns()) {
             col.setStyle("-fx-background-color: " + (columnIndex % 2 == 0 ? couleurClair : couleurSombre) + ";");
+            if (col.getText().equals("supprimer")) col.setStyle(col.getStyle() + ";-fx-alignment:CENTER;-fx-padding: 2 0 2 0px;");
             columnIndex++;
         }
     }
