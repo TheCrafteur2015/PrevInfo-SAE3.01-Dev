@@ -114,6 +114,16 @@ public class FrameExporter implements EventHandler<Event> {
 			this.choiceBoxModule.setDisable(true);
 			this.btnModule.setDisable(true);
 		} 
+		
+		if (this.hmIntervenants.size() > 15) {
+			this.choiceBoxIntervenant.getStyleClass().remove("choice-exporter");
+			this.choiceBoxIntervenant.getStyleClass().add("choice-exporter-long");
+		}
+		
+		if (this.hmModules.size() > 15) {
+			this.choiceBoxModule.getStyleClass().remove("choice-exporter");
+			this.choiceBoxModule.getStyleClass().add("choice-exporter-long");
+		}
 
 		AnchorPane.setTopAnchor(vbox, 200.0);
 		AnchorPane.setLeftAnchor(vbox, 200.0);

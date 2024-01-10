@@ -16,6 +16,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContentDisplay;
@@ -27,6 +28,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -561,21 +563,53 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		
 		double totalImpair = lstParSem.get(0) + lstParSem.get(2) + lstParSem.get(4);
 		double totalPair = lstParSem.get(1) + lstParSem.get(3) + lstParSem.get(5);
-		olRecap.add(new RecapIntervenantIHM("Total", String.format("%.2f", lstParSem.get(0)) + "", String.format("%.2f", lstParSem.get(2)) + "",
-				String.format("%.2f", lstParSem.get(4)) + "", String.format("%.2f", totalImpair) + "",
-				String.format("%.2f", lstParSem.get(1)) + "", String.format("%.2f", lstParSem.get(3)) + "",String.format("%.2f", lstParSem.get(5)) + "", String.format("%.2f", totalPair) + "",
-				String.format("%.2f", (totalImpair+totalPair)) + ""));
+		RecapIntervenantIHM totaux = new RecapIntervenantIHM("Total", String.format("%.2f", lstParSem.get(0)).replace(",", ".") + "", String.format("%.2f", lstParSem.get(2)).replace(",", ".") + "",
+				String.format("%.2f", lstParSem.get(4)).replace(",", ".") + "", String.format("%.2f", totalImpair).replace(",", ".") + "",
+				String.format("%.2f", lstParSem.get(1)).replace(",", ".") + "", String.format("%.2f", lstParSem.get(3)).replace(",", ".") + "",String.format("%.2f", lstParSem.get(5)).replace(",", ".") + "", String.format("%.2f", totalPair).replace(",", ".") + "",
+				String.format("%.2f", (totalImpair+totalPair)).replace(",", ".") + "");
+		olRecap.add(totaux);
 		
 		tbVRecap.setItems(olRecap);
-		tbVRecap.setPrefHeight(41 * olRecap.size());
+		tbVRecap.setMaxHeight(1000);
+		tbVRecap.setMinHeight(60);
+		
+		if (olRecap.size() < 4) tbVRecap.setPrefHeight(44 * olRecap.size());
+		else if (olRecap.size() < 8) tbVRecap.setPrefHeight(38 * olRecap.size());
+		else tbVRecap.setPrefHeight(34 * olRecap.size());
+		
 		if (olRecap.size() == 1)
 			tbVRecap.setPrefHeight(80);
 		if (olRecap.size() == 2)
 			tbVRecap.setPrefHeight(tbVRecap.getPrefHeight() + 20);
-		
+					
 		gridPaneInfoInter.setAlignment(Pos.CENTER);
+		
+		ObservableList<PieChart.Data> pieChartData =FXCollections.observableArrayList();
+		double valueTmp = Double.parseDouble(totaux.getS1())/Double.parseDouble(totaux.getTotal());
+        pieChartData.add(new PieChart.Data("s1 ("+String.format("%.2f",valueTmp*100 ) + "%)" , valueTmp));
+		valueTmp = Double.parseDouble(totaux.getS2())/Double.parseDouble(totaux.getTotal());
+        pieChartData.add(new PieChart.Data("s2 ("+String.format("%.2f",valueTmp*100 ) + "%)" , valueTmp));
+		valueTmp = Double.parseDouble(totaux.getS3())/Double.parseDouble(totaux.getTotal());
+        pieChartData.add(new PieChart.Data("s3 ("+String.format("%.2f",valueTmp*100 ) + "%)" , valueTmp));
+		valueTmp = Double.parseDouble(totaux.getS4())/Double.parseDouble(totaux.getTotal());
+        pieChartData.add(new PieChart.Data("s4 ("+String.format("%.2f",valueTmp*100 ) + "%)" , valueTmp));
+		valueTmp = Double.parseDouble(totaux.getS5())/Double.parseDouble(totaux.getTotal());
+        pieChartData.add(new PieChart.Data("s5 ("+String.format("%.2f",valueTmp*100 ) + "%)" , valueTmp));
+		valueTmp = Double.parseDouble(totaux.getS6())/Double.parseDouble(totaux.getTotal());
+        pieChartData.add(new PieChart.Data("s6 ("+String.format("%.2f",valueTmp*100 ) + "%)" , valueTmp));
+
+        final PieChart chart = new PieChart(pieChartData);
+		chart.setPrefWidth(300);
+		chart.setLabelsVisible(true);
+		
+		BorderPane borderPaneHaut = new BorderPane();
+		borderPaneHaut.setCenter(gridPaneInfoInter);
+		borderPaneHaut.setRight(chart);
+		borderPaneHaut.setPrefHeight(150);
+		
+		
 		GridPane gridPaneInfoErreur = new GridPane();
-		gridPaneInfoErreur.add(gridPaneInfoInter, 0, 0);
+		gridPaneInfoErreur.add(borderPaneHaut, 0, 0);
 		Label lblErreur = new Label(erreur);
 		lblErreur.setStyle("-fx-text-fill: red;");
 		lblErreur.setPadding(new Insets(10));
@@ -585,8 +619,12 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		gridPaneTotal.add(gridPaneInfoErreur, 0, 0);
 		gridPaneTotal.add(tbVRecap, 0, 1);
 		
+		
+		
+		
+		
 		VBox vbox = new VBox(5);
-		vbox.setMaxSize(800, tbVRecap.getPrefHeight() + 130);
+		vbox.setMaxSize(800, tbVRecap.getPrefHeight() + 205);
 		vbox.setPadding(new Insets(10));
 		vbox.setAlignment(Pos.CENTER);
 		vbox.setSpacing(30);
@@ -596,9 +634,9 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		popupLayout.setAlignment(Pos.CENTER);
 		popupLayout.getChildren().add(vbox);
 		popupLayout.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
-		Scene popupScene = new Scene(popupLayout, 820, tbVRecap.getPrefHeight() + 150);
+		Scene popupScene = new Scene(popupLayout, 820, tbVRecap.getPrefHeight() + 225);
 		popupStage.setScene(popupScene);
-		popupStage.setResizable(false);
+		//popupStage.setResizable(false);
 		popupStage.showAndWait();
 	}
 	

@@ -2,16 +2,12 @@ package vue;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.controlsfx.control.Notifications;
 
 import controleur.Controleur;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -25,11 +21,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -38,7 +32,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import modele.Modele;
-import modele.TypeCours;
 
 public class ControleurIHM implements Initializable, EventHandler<Event> {
 	
@@ -67,9 +60,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event> {
 	private FrameIntervenant frameIntervenant;
 	
 	private Controleur ctrl;
-	
-	//private Button btnConfirmerIntervenant;
-	
+		
 	@FXML
 	private ImageView imageAccueil;
 	
@@ -108,9 +99,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event> {
 		this.root = FXMLLoader.load(ResourceManager.ACCUEIL);
 		this.stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		
-		this.scene = new Scene(this.root);
-		// Supposons que primaryStage est votre objet Stage
-		
+		this.scene = new Scene(this.root);		
 		scene.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
 		
 		this.stage.setScene(this.scene);	
@@ -252,7 +241,7 @@ public class ControleurIHM implements Initializable, EventHandler<Event> {
 	}
 	
 	public void popupValider() {
-		//popoUp pour demander si il souhaite vraiment supprimer
+		//popUp pour demander si il souhaite vraiment supprimer
 		Stage popupStage = new Stage();
 		popupStage.initModality(Modality.APPLICATION_MODAL);
 		popupStage.centerOnScreen();
