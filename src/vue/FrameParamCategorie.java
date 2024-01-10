@@ -25,6 +25,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 import controleur.Controleur;
@@ -60,6 +61,7 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 		popupStage.setResizable(false);
 		popupStage.initModality(Modality.APPLICATION_MODAL);
 		popupStage.setTitle("Paramétrer les catégories");
+		popupStage.setOnCloseRequest(this::closeWindowEvent);
 		
 		ObservableList<CategorieIHM> olCategorie = FXCollections.observableArrayList();
 		
@@ -188,8 +190,14 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 		popupStage.setScene(popupScene);
 		
 		popupStage.showAndWait();
+		
+		
 	}
 	
+	private void closeWindowEvent(WindowEvent event) {
+		this.ctrl.getVue().getFrameIntervenant().init();
+	}
+
 	public void maj() {
 		this.hmCategorie = this.ctrl.getModele().getHmCategories();
 		ObservableList<CategorieIHM> olCategorie = FXCollections.observableArrayList();
@@ -267,8 +275,13 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 				c.sethMin(Double.parseDouble(this.tfHeureMin.getText()));
 				c.sethMax(Double.parseDouble(this.tfHeureMax.getText()));
 				c.setRatioTp(ratioTp);
+				
 				this.ctrl.getModele().updateCategorie(c);
 				this.maj();
+				this.ctrl.getVue().getFrameIntervenant().majTableIntervenant();
+				
+				
+				
 			}
 		}
 	}
