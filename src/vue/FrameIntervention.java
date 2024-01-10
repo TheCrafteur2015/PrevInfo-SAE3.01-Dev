@@ -313,7 +313,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 				}
 
 			if (this.nomTypeModule.equals("Ressource") || this.nomTypeModule.equals("PPP")) {
-				if (typeCours.getNom().equals("HP")) {
+				if (typeCours.getNom().equals("HP") || typeCours.getNom().equals("Tut")) {
 					olInterventionIHMs.add(new InterventionIHM(intervenant.getPrenom(), intervenant.getNom(),
 							"" + "", "" + "",
 							typeCours.getNom(), i.getNbGroupe() + "", i.getNbGroupe() * typeCours.getCoefficient() + "",
@@ -636,14 +636,14 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 			}
 
 			if ((this.nomTypeModule.equals("Ressource") || this.nomTypeModule.equals("PPP"))
-					&& !selectedRadioButton.getText().equals("HP") && this.tfNbGroupes.getText().isEmpty()) {
+					&& !selectedRadioButton.getText().equals("HP") && !selectedRadioButton.getText().equals("Tut") && this.tfNbGroupes.getText().isEmpty()) {
 				this.ctrl.getVue().afficherNotification("Ajouter une intervention",
 						"Il faut saisir un nombre de groupes", ControleurIHM.Notification.ERREUR);
 				return;
 			}
 
 			if ((this.nomTypeModule.equals("Ressource") || this.nomTypeModule.equals("PPP"))
-					&& !selectedRadioButton.getText().equals("HP") && this.tfNbSemaines.getText().isEmpty()) {
+					&& !selectedRadioButton.getText().equals("HP") && !selectedRadioButton.getText().equals("Tut") && this.tfNbSemaines.getText().isEmpty()) {
 				this.ctrl.getVue().afficherNotification("Ajouter une intervention",
 						"Il faut saisir un nombre de semaines", ControleurIHM.Notification.ERREUR);
 				return;
@@ -679,7 +679,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 				}
 			}
 
-			if (!selectedRadioButton.getText().equals("HP") && hc != null && nbSemaines > hc.getNbSemaine()) {
+			if (!selectedRadioButton.getText().equals("HP") && !selectedRadioButton.getText().equals("Tut") && hc != null && nbSemaines > hc.getNbSemaine()) {
 				this.ctrl.getVue().afficherNotification("Ajouter une intervention",
 						"Le nombre de semaines est supérieur au nombre de semaines du module (" + hc.getNbSemaine()
 								+ ")",
@@ -694,7 +694,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 				case "CM" -> nbGroupeTc = this.semestre.getNbGCM();
 			}
 
-			if (!selectedRadioButton.getText().equals("HP") && nbGroupes > nbGroupeTc) {
+			if (!selectedRadioButton.getText().equals("HP") && !selectedRadioButton.getText().equals("Tut") && nbGroupes > nbGroupeTc) {
 				this.ctrl.getVue().afficherNotification("Ajouter une intervention",
 						"Le nombre de groupe est supérieur au nombre de groupe du module (" + nbGroupeTc + ")",
 						ControleurIHM.Notification.ERREUR);
@@ -702,7 +702,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 			}
 
 			if (this.nomTypeModule.equals("Stage") || this.nomTypeModule.equals("SAE")
-					|| selectedRadioButton.getText().equals("HP")) {
+					|| selectedRadioButton.getText().equals("HP") || selectedRadioButton.getText().equals("Tut")) {
 				if (this.tfNbHeures.getText().isEmpty()) {
 					this.ctrl.getVue().afficherNotification("Ajouter une intervention",
 							"Il faut saisir un nombre d'heures", ControleurIHM.Notification.ERREUR);
@@ -718,7 +718,7 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		}
 
 		if (this.nomTypeModule.equals("SAE") || this.nomTypeModule.equals("Stage")
-				|| (selectedRadioButton != null && selectedRadioButton.getText().equals("HP"))) {
+				|| (selectedRadioButton != null && selectedRadioButton.getText().equals("HP")) || (selectedRadioButton != null && selectedRadioButton.getText().equals("Tut")) ) {
 			String txtH = "";
 			if (this.tfNbHeures != null)
 				txtH = this.tfNbHeures.getText();
