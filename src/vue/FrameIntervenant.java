@@ -642,13 +642,20 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 	@Override
 	public void handle(Event event) {
 		if (event.getSource() == this.btnParamCategorie)
+		{
+		
+		
 			this.frameParamCategorie = new FrameParamCategorie(this.ctrl, this.centerPaneAccueil);
+			this.tableViewIntervenant.getSelectionModel().clearSelection();
+			this.btnParamIntervenants.setText("Ajouter un intervenant");
+		}
 		
 		if (event.getSource() == this.btnParamIntervenants) {
 			if (this.tableViewIntervenant.getSelectionModel().getSelectedItems().size() != 0)
 			{
 				this.popupParamIntervenant(this.tableViewIntervenant.getSelectionModel().getSelectedItems().get(0));
 				this.tableViewIntervenant.getSelectionModel().clearSelection();
+				
 			}
 			else
 				this.popupParamIntervenant(null);
@@ -715,6 +722,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 				}
 			}
 		}
+		
 	}
 	
 	public ObservableList<String> getStylesheets() {

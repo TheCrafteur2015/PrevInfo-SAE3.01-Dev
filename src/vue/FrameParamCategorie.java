@@ -198,7 +198,7 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 	
 	private void closeWindowEvent(WindowEvent event) {
 		this.ctrl.getVue().getFrameIntervenant().init();
-		System.out.println("fermeture");
+		
 	}
 
 	public void maj() {
@@ -281,7 +281,7 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 				
 				this.ctrl.getModele().updateCategorie(c);
 				this.maj();
-				System.out.println("maj");
+				
 				this.ctrl.getVue().getFrameIntervenant().majTableIntervenant();
 				
 				
