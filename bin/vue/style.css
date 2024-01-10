@@ -87,9 +87,15 @@
 	-fx-background-insets: 0, 0 0 0 0, 0 0 0 0, 0 0 0 0;
 }
 
-.choice-intervention  .context-menu {
+.choice-intervention-long  .context-menu {
 	-fx-pref-width: 150px;
 	-fx-pref-height : 300px;
+	
+	-fx-background-insets: 0, 0 0 0 0, 0 0 0 0, 0 0 0 0;
+}
+
+.choice-intervention-long  .context-menu {
+	-fx-pref-width: 150px;
 	
 	-fx-background-insets: 0, 0 0 0 0, 0 0 0 0, 0 0 0 0;
 }

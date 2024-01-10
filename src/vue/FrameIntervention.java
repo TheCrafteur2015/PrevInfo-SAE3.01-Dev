@@ -132,7 +132,11 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 		this.hmIntervenants = this.ctrl.getModele().getHmIntervenants();
 		
 		this.chBoxIntervenants = new ChoiceBox<>();
-		this.chBoxIntervenants.getStyleClass().add("choice-intervention");
+		if (this.hmIntervenants.size() > 15)
+			this.chBoxIntervenants.getStyleClass().add("choice-intervention-long");	
+		else 
+			this.chBoxIntervenants.getStyleClass().add("choice-intervention");
+
 		for (Intervenant intervenant : this.hmIntervenants.values())
 			this.chBoxIntervenants.getItems().add(intervenant);
 
@@ -420,11 +424,11 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 			if (nbGroupeCM != this.semestre.getNbGCM() || nbGroupeTD != this.semestre.getNbGTD()
 					|| nbGroupeTP != this.semestre.getNbGTP()) {
 				this.lblErreurGrp.setText("ERREUR GROUPE :");
-				if (nbGroupeCM != this.semestre.getNbGCM() && heureCoursCM.getHeure() != 0)
+				if (nbGroupeCM != this.semestre.getNbGCM())
 					this.lblErreurGrp.setText(this.lblErreurGrp.getText() + " CM ");
-				if (nbGroupeTD != this.semestre.getNbGTD() && heureCoursTD.getHeure() != 0)
+				if (nbGroupeTD != this.semestre.getNbGTD())
 					this.lblErreurGrp.setText(this.lblErreurGrp.getText() + " TD ");
-				if (nbGroupeTP != this.semestre.getNbGTP() && heureCoursTP.getHeure() != 0)
+				if (nbGroupeTP != this.semestre.getNbGTP())
 					this.lblErreurGrp.setText(this.lblErreurGrp.getText() + " TP ");
 				if (this.lblErreurGrp.getText().equals("ERREUR GROUPE :"))
 					this.lblErreurGrp.setText("");
