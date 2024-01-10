@@ -424,11 +424,11 @@ public class FrameIntervention implements EventHandler<ActionEvent>, ChangeListe
 			if (nbGroupeCM != this.semestre.getNbGCM() || nbGroupeTD != this.semestre.getNbGTD()
 					|| nbGroupeTP != this.semestre.getNbGTP()) {
 				this.lblErreurGrp.setText("ERREUR GROUPE :");
-				if (nbGroupeCM != this.semestre.getNbGCM())
+				if (nbGroupeCM != this.semestre.getNbGCM() && heureCoursCM.getHeure() != 0)
 					this.lblErreurGrp.setText(this.lblErreurGrp.getText() + " CM ");
-				if (nbGroupeTD != this.semestre.getNbGTD())
+				if (nbGroupeTD != this.semestre.getNbGTD() && heureCoursTD.getHeure() != 0)
 					this.lblErreurGrp.setText(this.lblErreurGrp.getText() + " TD ");
-				if (nbGroupeTP != this.semestre.getNbGTP())
+				if (nbGroupeTP != this.semestre.getNbGTP() && heureCoursTP.getHeure() != 0)
 					this.lblErreurGrp.setText(this.lblErreurGrp.getText() + " TP ");
 				if (this.lblErreurGrp.getText().equals("ERREUR GROUPE :"))
 					this.lblErreurGrp.setText("");

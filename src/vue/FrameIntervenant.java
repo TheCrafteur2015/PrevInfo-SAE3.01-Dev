@@ -646,7 +646,10 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		
 		if (event.getSource() == this.btnParamIntervenants) {
 			if (this.tableViewIntervenant.getSelectionModel().getSelectedItems().size() != 0)
+			{
 				this.popupParamIntervenant(this.tableViewIntervenant.getSelectionModel().getSelectedItems().get(0));
+				this.tableViewIntervenant.getSelectionModel().clearSelection();
+			}
 			else
 				this.popupParamIntervenant(null);
 		}

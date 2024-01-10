@@ -127,9 +127,11 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 							tfHeureMin.setText(c.gethMin() + "");
 							tfHeureMax.setText(c.gethMax() + "");
 							String ratioTp =  c.getRatioTp() + "";
-							tfRatioTp.setText(String.format("%.3f",c.getRatioTp()));
+							if (FrameMultiplicateur.isInteger(c.getRatioTp()) != null) tfRatioTp.setText(FrameMultiplicateur.isInteger(c.getRatioTp()) + "");
+							else tfRatioTp.setText(String.format("%.3f",c.getRatioTp()).replace(",", "."));
 							if (ratioTp.startsWith("0.666")) tfRatioTp.setText("2/3");
 							btnAjouter.setText("Modifier");
+
 						}
 					}
 				});
@@ -196,6 +198,7 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 	
 	private void closeWindowEvent(WindowEvent event) {
 		this.ctrl.getVue().getFrameIntervenant().init();
+		System.out.println("fermeture");
 	}
 
 	public void maj() {
@@ -278,6 +281,7 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 				
 				this.ctrl.getModele().updateCategorie(c);
 				this.maj();
+				System.out.println("maj");
 				this.ctrl.getVue().getFrameIntervenant().majTableIntervenant();
 				
 				
