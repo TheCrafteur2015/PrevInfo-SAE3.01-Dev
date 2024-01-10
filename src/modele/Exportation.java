@@ -10,9 +10,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Level;
 
-import controleur.Controleur;
 import vue.App;
-import java.util.Comparator;
 
 public class Exportation {
 	
@@ -27,6 +25,7 @@ public class Exportation {
 		this.model = model;
 	}
 	
+	/*
 	private static double round(double d) {
 		double rounded = Math.ceil(d * 10.0) / 10.0;
 		double decimal = rounded - ((int) rounded);
@@ -37,6 +36,7 @@ public class Exportation {
 			rounded -= 0.1;
 		return Math.ceil(rounded * 10.0) / 10.0;
 	}
+	*/
 	
 	/*----------------------------------------------------------------------------------------------------------------*/
 	/*                                                                                                                */

@@ -124,7 +124,9 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 							nomCategorie.setText(c.getNom());
 							tfHeureMin.setText(c.gethMin() + "");
 							tfHeureMax.setText(c.gethMax() + "");
-							tfRatioTp.setText(c.getRatioTp() + "");
+							String ratioTp =  c.getRatioTp() + "";
+							tfRatioTp.setText(String.format("%.3f",c.getRatioTp()));
+							if (ratioTp.startsWith("0.666")) tfRatioTp.setText("2/3");
 							btnAjouter.setText("Modifier");
 						}
 					}
@@ -147,7 +149,7 @@ public class FrameParamCategorie implements ChangeListener<String>, EventHandler
 		this.tfHeureMin.textProperty().addListener(this);
 		this.tfHeureMin.setMaxWidth(8 * 7);
 		
-		Text tHeureMax = new Text("Heure maximales: ");
+		Text tHeureMax = new Text("Heures maximales: ");
 		this.tfHeureMax = new TextField();
 		this.tfHeureMax.textProperty().addListener(this);
 		this.tfHeureMax.setMaxWidth(8 * 7);
