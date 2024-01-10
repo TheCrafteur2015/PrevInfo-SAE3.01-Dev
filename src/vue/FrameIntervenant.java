@@ -89,6 +89,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		this.modifIntervenant = null;
 		this.centerPaneAccueil.getStylesheets().add(ResourceManager.STYLESHEET.toExternalForm());
 		this.init();
+		this.ctrl.getVue().setFrameIntervenant(this);
 	}
 	
 	public void init() {

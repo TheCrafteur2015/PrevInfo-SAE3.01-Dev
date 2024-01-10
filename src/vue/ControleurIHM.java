@@ -309,6 +309,10 @@ public class ControleurIHM implements Initializable, EventHandler<Event> {
 		ERREUR,
 		INFO;
 	}
+
+	public void setFrameIntervenant(FrameIntervenant frameIntervenant2) {
+	this.frameIntervenant = frameIntervenant2;
+	}
 	
 
 }
