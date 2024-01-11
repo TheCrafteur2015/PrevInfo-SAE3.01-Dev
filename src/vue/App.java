@@ -26,7 +26,7 @@ public class App extends Application {
 			FileHandler fh = new FileHandler(path + ResourceManager.SEPARATOR + "output.log");
 			fh.setFormatter(new SimpleFormatter());
 			App.LOGGER.addHandler(fh);
-			App.LOGGER.setUseParentHandlers(true);
+			App.LOGGER.setUseParentHandlers(false);
 			App.log(Level.INFO, "Logger initiated!");
 		} catch (IOException e) {
 			App.log(Level.SEVERE, e);

@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Level;
 
+import controleur.Controleur;
 import vue.App;
 
 public class Exportation {
@@ -21,8 +22,8 @@ public class Exportation {
 	 * 
 	 * @throws SQLException
 	 */
-	public Exportation(Modele model) {
-		this.model = model;
+	public Exportation(Controleur ctrl) {
+		this.model = ctrl.getModele();
 	}
 	
 	/*
@@ -1103,11 +1104,9 @@ public class Exportation {
 	/*----------------------------------------------------------------------------------------------------------------*/
 	
 	private double reelIntervention(Intervenant intervenant, Intervention intervention) {
-		Categorie categ = model.getHmCategories().get(intervenant.getIdCategorie());            // categorie de l'intervenant
 		double ret =  intervention.getNbGroupe();                                               // nombre de groupe
-		ret = ret * categ.getRatioTp();                                                         // ratio TP
-		ret = ret * model.getHmTypeCours().get(intervention.getIdTypeCours()).getCoefficient(); // coef de typecours
-		if (intervention.getIdTypeCours()<4){
+		TypeCours tc = this.model.getHmTypeCours().get(intervention.getIdTypeCours());
+		if (tc.getNom().equals("TD") || tc.getNom().equals("TP") || tc.getNom().equals("CM")){
 			ret = ret*intervention.getNbSemaines();                                             // nombre semaines
 			ret = ret*model.getHeureCour(intervention).gethParSemaine();                        // nombre d'heure par semaine
 		}
@@ -1117,6 +1116,11 @@ public class Exportation {
 	private double theoriqueIntervention(Intervenant intervenant, Intervention intervention) {
 		double ret = intervention.getNbGroupe();                                                // nombre de groupe
 		ret = ret * model.getHmTypeCours().get(intervention.getIdTypeCours()).getCoefficient(); // coef de typecours
+	
+		TypeCours tc = this.model.getHmTypeCours().get(intervention.getIdTypeCours());
+		Categorie c = this.model.getHmCategories().get(intervenant.getIdCategorie());           // Ajouter le ratioTp si le TypeCours est TP
+		if (tc.getNom().equals("TP")) ret = ret * c.getRatioTp();
+		
 		if (intervention.getIdTypeCours()<4){
 			ret = ret*intervention.getNbSemaines();                                             // nombre semaines
 			ret = ret*model.getHeureCour(intervention).gethParSemaine();                        // nombre d'heure par semaine

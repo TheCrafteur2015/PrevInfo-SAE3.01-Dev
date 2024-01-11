@@ -18,13 +18,3 @@
 .confirmBtn:hover {
 	-fx-background-color: #758AFF;
 }
-/*
-.textField, .choiceBox {
-	-fx-background-radius: 10;
-	-fx-background-color: -fx-control-inner-background;
-}
-
-.button:hover, .choice-box:hover {
-	-fx-cursor: hand;
-}
-*/

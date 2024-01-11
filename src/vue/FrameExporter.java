@@ -42,7 +42,7 @@ public class FrameExporter implements EventHandler<Event> {
 	public FrameExporter(Controleur ctrl, AnchorPane centerPaneAccueil) {
 		this.ctrl = ctrl;
 		this.centerPaneAccueil = centerPaneAccueil;
-		this.export = new Exportation(this.ctrl.getModele());
+		this.export = new Exportation(this.ctrl);
 		this.init();
 	}
 

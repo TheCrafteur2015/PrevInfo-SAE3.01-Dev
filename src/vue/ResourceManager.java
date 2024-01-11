@@ -31,12 +31,9 @@ public final class ResourceManager {
 	// Fichiers CSS
 	public static final URL STYLESHEET = ResourceManager.class.getResource("style.css");
 	public static final URL STYLESHEET_POPUP = ResourceManager.class.getResource("stylePopup.css");
-	public static final URL TAB_TEMPLATE = ResourceManager.class.getResource("/templates/_tab.css");
-	
-	public static final String TAB_TEMPLATE_CONTENT = ResourceManager.loadFileFromSource("/templates/_tab.css");
-	
+		
 	// Fichiers SVG
-	public static final URL BOOK = ResourceManager.class.getResource("book.svg");
+	public static final URL BOOK = ResourceManager.class.getResource("/images/book.svg");
 	
 	// Images
 	public static final URL HOUSE       = ResourceManager.class.getResource("/images/accueil_icone.png");
@@ -56,33 +53,10 @@ public final class ResourceManager {
 				if (field.get(null) == null) {
 					String name = field.getName();
 					throw new MissingResourceException("Resource file missing: " + name, ResourceManager.class.getSimpleName(), name);
-				} else if (field.get(null) instanceof URL url) {
-					ResourceManager.updateFile(url);
-				}
+				} 
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				App.log(Level.SEVERE, e);
 			}
-		}
-		try {
-			// System.out.println(ResourceManager.PWD);
-			// for (File f : new File(ResourceManager.PWD).getParentFile().listFiles())
-			// 	if (f.isFile())
-			// 		System.out.println(f);
-			// File root = new File(ResourceManager.class.getResource("/").toURI());
-			// for (File file : root.listFiles())
-			// 	System.out.println(file);
-			// System.out.println(Arrays.toString(root.listFiles()));
-			// System.out.println(root);
-			// System.out.println(root.getParentFile());
-			// System.out.println(ResourceManager.);
-			//String file = "";
-			// Scanner sc = new Scanner(new File(ResourceManager.TAB_TEMPLATE.toURI()));
-			// while (sc.hasNextLine())
-			// 	file += sc.nextLine() + "\n";
-			// sc.close();
-			// System.out.println(file);
-		} catch (Exception e) {
-			App.log(Level.WARNING, e);
 		}
 		
 		File folder = null;
@@ -130,8 +104,6 @@ public final class ResourceManager {
 	private ResourceManager() {}
 	
 	public static String loadFile(URL url) {
-		// InputStream stream = ResourceManager.class.getResourceAsStream(path);
-		// try (Scanner sc = new Scanner(url.openStream())) {
 		try (Scanner sc = new Scanner(new File(url.toURI()))) {
 			String content = "";
 			while (sc.hasNextLine())
@@ -170,25 +142,6 @@ public final class ResourceManager {
 		}
 	}
 	
-	// FIXME
-	private static void updateFile(URL url) {
-		try {
-			if (url == null)
-				return;
-			// System.out.println(new File(url.toURI()));
-			// System.out.println(url);
-			//URL srcUrl = new URL(url.toString().replace("bin", "src"));
-			// String content = ResourceManager.loadFile(srcUrl);
-			if (url.toString().contains("_tab.css")) {
-				// System.out.println(ResourceManager.loadFile(url));
-			}
-			// System.out.println(content);
-			// System.out.println("-".repeat(50));
-			//ResourceManager.saveFile(new File(url.toURI()).toString());
-		} catch (Exception e) {
-			App.log(Level.WARNING, e);
-		}
-	}
 	
 	public static String getData(String key) {
 		return ResourceManager.DATA.get(key);
