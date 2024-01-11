@@ -1147,7 +1147,6 @@ public class Exportation {
 	 *                              données.
 	 * @param body contenu du Fichier
 	 */
-	 @SuppressWarnings("deprecation")
 	private URL ecrireFichier(String nomFichierDestination, String body) {
 		try (PrintWriter pw = new PrintWriter(new FileOutputStream(nomFichierDestination))) {
 			pw.println(body);

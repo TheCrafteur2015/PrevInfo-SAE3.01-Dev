@@ -1,5 +1,6 @@
 package vue;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -18,12 +19,12 @@ public class App extends Application {
 	private static final Logger LOGGER = Logger.getLogger(ResourceManager.APP_NAME);
 	
 	// Initialisation et configuration du Logger
-	static {
+	private static void configureLogger() {
 		try {
 			String path = ResourceManager.PWD;
-			if (path.endsWith(ResourceManager.SEPARATOR + "bin"))
-				path = path.substring(0, path.lastIndexOf(ResourceManager.SEPARATOR + "bin"));
-			FileHandler fh = new FileHandler(path + ResourceManager.SEPARATOR + "output.log");
+			if (path.endsWith(File.separator + "bin"))
+				path = path.substring(0, path.lastIndexOf(File.separator + "bin"));
+			FileHandler fh = new FileHandler(ResourceManager.getAppLocation() + File.separator + "output.log");
 			fh.setFormatter(new SimpleFormatter());
 			App.LOGGER.addHandler(fh);
 			App.LOGGER.setUseParentHandlers(false);
@@ -72,6 +73,8 @@ public class App extends Application {
 	}
 	
 	public static void main(String[] args) {
+		ResourceManager.setConfigs(args);
+		App.configureLogger();
 		Application.launch(args);
 	}
 }

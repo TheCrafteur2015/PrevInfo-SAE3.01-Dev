@@ -1,11 +1,9 @@
 package vue;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.MissingResourceException;
@@ -22,8 +20,11 @@ import javafx.scene.shape.StrokeLineJoin;
 public final class ResourceManager {
 	
 	public static final String APP_NAME = "PrevInfo";
-	public static final String PWD = new File("").getAbsolutePath();
-	public static final String SEPARATOR = System.getProperty("file.separator");
+	public static final String PWD = System.getProperty("user.dir");
+	
+	private static String appLocation = null;
+	private static String idFilePath = null;
+	private static String dbHost = "woody";
 	
 	// Fichiers FXML
 	public static final URL ACCUEIL = ResourceManager.class.getResource("Accueil.fxml");
@@ -31,9 +32,6 @@ public final class ResourceManager {
 	// Fichiers CSS
 	public static final URL STYLESHEET = ResourceManager.class.getResource("style.css");
 	public static final URL STYLESHEET_POPUP = ResourceManager.class.getResource("stylePopup.css");
-		
-	// Fichiers SVG
-	public static final URL BOOK = ResourceManager.class.getResource("/images/book.svg");
 	
 	// Images
 	public static final URL HOUSE       = ResourceManager.class.getResource("/images/accueil_icone.png");
@@ -58,30 +56,6 @@ public final class ResourceManager {
 				App.log(Level.SEVERE, e);
 			}
 		}
-		
-		File folder = null;
-		try {
-			folder = Paths.get(ResourceManager.class.getResource("").toURI()).toFile();
-		} catch (Exception e) {
-			App.log(Level.WARNING, e);
-		}
-		for (File file : folder.listFiles()) {
-			if (!file.isFile())
-				continue;
-			String name = file.getName();
-			String suffix = name.substring(name.lastIndexOf("."));
-			if (suffix.equals(".data")) {
-				String data = "";
-				try (Scanner sc = new Scanner(file)) {
-					while (sc.hasNextLine())
-						data += sc.nextLine() + "\n";
-				} catch (IOException e) {
-					App.log(Level.WARNING, e);
-				} finally {
-					ResourceManager.DATA.put(name.substring(0, name.length() - suffix.length()).toLowerCase(), data);
-				}
-			}
-		}
 	}
 	
 	public static Button getSupButton() {
@@ -103,6 +77,31 @@ public final class ResourceManager {
 	
 	private ResourceManager() {}
 	
+	public static void setConfigs(String[] args) {
+		if (args == null || args.length == 0)
+			return;
+		switch (args.length) {
+			case 1 -> ResourceManager.idFilePath = args[0];
+			case 2 -> {
+				ResourceManager.idFilePath = args[0];
+				ResourceManager.dbHost = args[1];
+			}
+		}
+		ResourceManager.appLocation = ResourceManager.idFilePath.substring(0, ResourceManager.idFilePath.indexOf("/identifiants.txt"));
+	}
+	
+	public static String getAppLocation() {
+		return ResourceManager.appLocation;
+	}
+	
+	public static String getIdFile() {
+		return ResourceManager.idFilePath;
+	}
+	
+	public static String getDBHost() {
+		return ResourceManager.dbHost;
+	}
+	
 	public static String loadFile(URL url) {
 		try (Scanner sc = new Scanner(new File(url.toURI()))) {
 			String content = "";
@@ -116,7 +115,6 @@ public final class ResourceManager {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static String loadFileFromSource(String path) {
 		try {
 			URL url = ResourceManager.class.getResource(path);

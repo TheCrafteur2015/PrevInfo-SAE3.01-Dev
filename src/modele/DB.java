@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import vue.App;
+import vue.ResourceManager;
 
 /**
  * Classe de liaison à la base de données
@@ -82,8 +83,8 @@ public class DB {
 		}
 		
 		try {
-			LireFichier lf = new LireFichier("/DB/identifiants.txt");
-			this.connec = DriverManager.getConnection("jdbc:postgresql://woody/" + lf.getIdentifiant(), lf.getIdentifiant(), lf.getMotDePasse());
+			LireFichier lf = new LireFichier(ResourceManager.getIdFile());
+			this.connec = DriverManager.getConnection("jdbc:postgresql://" + ResourceManager.getDBHost() + "/" + lf.getIdentifiant(), lf.getIdentifiant(), lf.getMotDePasse());
 			this.psSelectCategorie                 = this.connec.prepareStatement("SELECT * FROM Categorie WHERE idAnnee = ?");
 			this.psSelectIntervenant               = this.connec.prepareStatement("SELECT * FROM Intervenant WHERE idAnnee = ?");
 			this.psSelectIntervention              = this.connec.prepareStatement("SELECT * FROM Intervention WHERE idAnnee = ?");

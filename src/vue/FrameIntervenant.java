@@ -281,7 +281,6 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 
 	public Button getInfoButton() {
 		SVGPath infosvg = new SVGPath();
-		// infosvg.setContent(ResourceManager.getData("book"));
 		infosvg.setContent(
 				"M11.8626 4.02794C9.87308 2.05641 7.29356 0.967859 4.62087 0.971936C3.35115 0.971936 2.13213 1.21194 1 1.6546V20.6546C2.16305 20.2013 3.38756 19.9704 4.62087 19.9719C7.40291 19.9719 9.94114 21.1279 11.8626 23.0279M11.8626 4.02794C13.8521 2.0563 16.4317 0.967733 19.1044 0.971936C20.3741 0.971936 21.5931 1.21194 22.7252 1.6546V20.6546C21.5622 20.2013 20.3377 19.9704 19.1044 19.9719C16.4317 19.9679 13.8522 21.0564 11.8626 23.0279M11.8626 4.02794V23.0279");
 		infosvg.setStroke(Color.BLACK);
@@ -745,6 +744,7 @@ public class FrameIntervenant implements EventHandler<Event>, ChangeListener<Str
 		return this.centerPaneAccueil.getStylesheets();
 	}
 
+	@Override
 	public void changed(ObservableValue<? extends String> observable, String oldStr, String newStr) {
 		if ((observable == this.tfPrenom.textProperty() || observable == this.tfNom.textProperty())
 				&& (!(this.tfPrenom.getText().isEmpty() || this.tfNom.getText().isEmpty()))) {

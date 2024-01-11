@@ -1,2 +1,0 @@
-# identifiant:motDePasse
-la220984:toto

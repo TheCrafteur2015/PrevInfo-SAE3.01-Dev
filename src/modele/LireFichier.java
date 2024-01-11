@@ -1,8 +1,11 @@
 package modele;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.util.logging.Level;
 
 import vue.App;
@@ -17,11 +20,15 @@ public class LireFichier {
 		this.nomFichier = nomFichier;
 		this.identifiant = "";
 		this.motDePasse = "";
-		this.lireFichier();
+		try {
+			this.lireFichier();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	private void lireFichier() {
-		InputStream ips = this.getClass().getResourceAsStream(this.nomFichier);
+	private void lireFichier() throws MalformedURLException, IOException {
+		InputStream ips = new File(this.nomFichier).toURI().toURL().openStream();
 		String ligne = null;
 		// ouverture de la ressource vue comme flux de données
 		try (BufferedReader file = new BufferedReader(new InputStreamReader(ips))) {
